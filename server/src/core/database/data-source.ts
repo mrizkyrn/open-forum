@@ -1,4 +1,6 @@
 import 'dotenv/config';
+import { Attachment } from 'src/modules/attachment/entities/attachment.entity';
+import { Discussion } from 'src/modules/discussion/entities/discussion.entity';
 import { User } from 'src/modules/user/entities/user.entity';
 import { DataSource } from 'typeorm';
 
@@ -11,7 +13,7 @@ export default new DataSource({
   database: process.env.DB_NAME,
   synchronize: process.env.NODE_ENV === 'development',
   logging: process.env.NODE_ENV === 'development',
-  entities: [User],
+  entities: [User, Discussion, Attachment],
   migrations: ['src/core/database/migrations/*{.ts,.js}'],
   migrationsTableName: 'typeorm_migrations',
 });

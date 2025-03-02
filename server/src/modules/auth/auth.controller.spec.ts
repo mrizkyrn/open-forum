@@ -151,16 +151,6 @@ describe('AuthController', () => {
     });
   });
 
-  describe('getProfile', () => {
-    it('should return the user profile', async () => {
-      const user = { id: 1, username: '2110511091', role: UserRole.STUDENT };
-
-      const result = await authController.getProfile(user);
-
-      expect(result).toEqual(user);
-    });
-  });
-
   describe('logout', () => {
     it('should clear refresh token cookie', async () => {
       await authController.logout(mockResponse as any);

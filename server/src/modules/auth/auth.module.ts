@@ -8,16 +8,13 @@ import { UserModule } from '../user/user.module';
 import { JwtRefreshStrategy } from './strategies/jwt-refresh.strategy';
 
 @Module({
-  imports: [
-    UserModule,
-    JwtModule,
-  ],
+  imports: [UserModule, JwtModule],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy, JwtRefreshStrategy],
   exports: [AuthService],
 })
 export class AuthModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(cookieParser()).forRoutes('*');
+    consumer.apply(cookieParser()).forRoutes('auth/refresh');
   }
 }

@@ -17,6 +17,12 @@ export class UserResponseDto {
     example: 'student',
   })
   role: UserRole;
+
+  @ApiProperty({ description: 'Creation date of the user account', example: '2021-09-01T00:00:00.000Z' })
+  createdAt: Date;
+
+  @ApiProperty({ description: 'Last update date of the user account', example: '2021-09-01T00:00:00.000Z' })
+  updatedAt: Date;
 }
 
 export class LoginResponseDto {

@@ -117,6 +117,8 @@ describe('AuthService', () => {
           username: mockUser.username,
           fullName: mockUser.fullName,
           role: mockUser.role,
+          createdAt: mockUser.createdAt,
+          updatedAt: mockUser.updatedAt,
         },
         accessToken: 'mock-access-token',
         refreshToken: 'mock-refresh-token',

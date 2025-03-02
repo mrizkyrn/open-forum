@@ -5,12 +5,16 @@ import { AppService } from './app.service';
 import { databaseConfig, appConfig, jwtConfig } from './config';
 import { DatabaseModule } from './core/database/database.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { DiscussionModule } from './modules/discussion/discussion.module';
+import { AttachmentModule } from './modules/attachment/attachment.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, load: [databaseConfig, appConfig, jwtConfig] }),
     DatabaseModule,
     AuthModule,
+    DiscussionModule,
+    AttachmentModule,
   ],
   controllers: [AppController],
   providers: [AppService],

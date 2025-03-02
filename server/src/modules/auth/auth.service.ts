@@ -43,6 +43,8 @@ export class AuthService {
         username: user.username,
         fullName: user.fullName,
         role: user.role,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
       },
       ...tokens,
     };
