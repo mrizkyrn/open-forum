@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { UserResponseDto } from '../../auth/dto/auth-response.dto';
+import { UserResponseDto } from '../../user/dto/user-response.dto';
 import { Attachment } from '../../attachment/entities/attachment.entity';
 
 export class DiscussionResponseDto {

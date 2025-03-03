@@ -1,23 +1,32 @@
-// import {
-//   IsBoolean,
-//   IsEnum,
-//   IsNumber,
-//   IsOptional,
-//   IsString,
-// } from 'class-validator';
-// import { SearchDto } from 'src/common/dtos/search.dto';
+import { IsEnum, IsOptional } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
+import { UserRole } from '../../../common/enums/user-role.enum';
+import { SearchDto } from '../../../common/dto/search.dto';
 
-// export enum SortBy {
-//   createdAt = 'createdAt',
-//   updatedAt = 'updatedAt',
-// }
+export enum UserSortBy {
+  createdAt = 'createdAt',
+  updatedAt = 'updatedAt',
+  username = 'username',
+  fullName = 'fullName',
+}
 
-// export class SearchUserDto extends SearchDto {
-//   @IsOptional()
-//   @IsString()
-//   role?: string;
+export class SearchUserDto extends SearchDto {
+  @ApiProperty({
+    description: 'Filter by user role',
+    enum: UserRole,
+    required: false,
+  })
+  @IsOptional()
+  @IsEnum(UserRole)
+  role?: UserRole;
 
-//   @IsOptional()
-//   @IsString()
-//   sortBy: SortBy = SortBy.createdAt;
-// }
+  @ApiProperty({
+    description: 'Field to sort by',
+    enum: UserSortBy,
+    default: UserSortBy.createdAt,
+    required: false,
+  })
+  @IsOptional()
+  @IsEnum(UserSortBy)
+  sortBy: UserSortBy = UserSortBy.createdAt;
+}

@@ -1,14 +1,15 @@
 import { Controller, Post, Body, HttpCode, HttpStatus, UseGuards, Res } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBody, ApiBearerAuth } from '@nestjs/swagger';
+import { Response } from 'express';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
-import { CreateUserDto } from './dto/register.dto';
+import { RegisterDto } from './dto/register.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { JwtRefreshGuard } from './guards/jwt-refresh.guard';
-import { Response } from 'express';
 import { ReqUser } from '../../common/decorators/user.decorator';
 import { COOKIE_OPTIONS } from './auth.constants';
-import { LoginResponseDto, TokenResponseDto, UserResponseDto } from './dto/auth-response.dto';
+import { LoginResponseDto, TokenResponseDto } from './dto/auth-response.dto';
+import { UserResponseDto } from '../user/dto/user-response.dto';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -17,11 +18,11 @@ export class AuthController {
 
   @Post('register')
   @ApiOperation({ summary: 'Register a new user' })
-  @ApiBody({ type: CreateUserDto })
+  @ApiBody({ type: RegisterDto })
   @ApiResponse({ status: 201, description: 'User created successfully', type: UserResponseDto })
   @ApiResponse({ status: 400, description: 'Bad request' })
   @ApiResponse({ status: 409, description: 'Username already exists' })
-  async register(@Body() registerDto: CreateUserDto): Promise<UserResponseDto> {
+  async register(@Body() registerDto: RegisterDto): Promise<UserResponseDto> {
     return this.authService.register(registerDto);
   }
 
@@ -32,16 +33,12 @@ export class AuthController {
   @ApiResponse({ status: 200, description: 'Login successful', type: LoginResponseDto })
   @ApiResponse({ status: 401, description: 'Invalid credentials' })
   async login(@Body() loginDto: LoginDto, @Res({ passthrough: true }) response: Response): Promise<LoginResponseDto> {
-    // Get tokens and user info from auth service
     const result = await this.authService.login(loginDto);
 
-    // Extract refresh token and remove it from the response
     const { refreshToken, ...responseData } = result;
 
-    // Store refresh token in HTTP-only cookie
     response.cookie('refreshToken', refreshToken, COOKIE_OPTIONS);
 
-    // Return everything else (access token and user data)
     return responseData;
   }
 
@@ -52,13 +49,10 @@ export class AuthController {
   @ApiResponse({ status: 200, description: 'Token refreshed successfully', type: TokenResponseDto })
   @ApiResponse({ status: 401, description: 'Invalid refresh token' })
   async refreshToken(@ReqUser() user: any, @Res({ passthrough: true }) response: Response): Promise<TokenResponseDto> {
-    // Generate new tokens
     const tokens = await this.authService.refreshToken(user.id);
 
-    // Set the new refresh token in cookie
     response.cookie('refreshToken', tokens.refreshToken, COOKIE_OPTIONS);
 
-    // Return only the access token
     return { accessToken: tokens.accessToken };
   }
 

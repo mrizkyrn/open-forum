@@ -3,7 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { UserService } from '../user/user.service';
 import { LoginDto } from './dto/login.dto';
-import { CreateUserDto } from './dto/register.dto';
+import { RegisterDto } from './dto/register.dto';
 import { User } from '../user/entities/user.entity';
 import { JWTConfig } from '../../config';
 
@@ -15,7 +15,7 @@ export class AuthService {
     private readonly configService: ConfigService,
   ) {}
 
-  async register(registerDto: CreateUserDto) {
+  async register(registerDto: RegisterDto) {
     return await this.userService.create(registerDto);
   }
 

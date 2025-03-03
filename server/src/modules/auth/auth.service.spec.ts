@@ -4,7 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import { UnauthorizedException } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { UserService } from '../user/user.service';
-import { CreateUserDto } from './dto/register.dto';
+import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { UserRole } from '../../common/enums/user-role.enum';
 
@@ -81,7 +81,7 @@ describe('AuthService', () => {
 
   describe('register', () => {
     it('should register a new user', async () => {
-      const createUserDto: CreateUserDto = {
+      const registerDto: RegisterDto = {
         username: '2110511091',
         password: 'Password123',
         fullName: 'Test User',
@@ -89,9 +89,9 @@ describe('AuthService', () => {
 
       mockUserService.create.mockResolvedValue(mockUser);
 
-      const result = await authService.register(createUserDto);
+      const result = await authService.register(registerDto);
 
-      expect(mockUserService.create).toHaveBeenCalledWith(createUserDto);
+      expect(mockUserService.create).toHaveBeenCalledWith(registerDto);
       expect(result).toEqual(mockUser);
     });
   });

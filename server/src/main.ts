@@ -41,7 +41,9 @@ async function bootstrap() {
     .setTitle('UPNVJ Forum API')
     .setDescription('The UPNVJ Forum API documentation')
     .setVersion('1.0')
-    .addTag('auth')
+    .addTag('Auth', 'Authentication API')
+    .addTag('Users', 'Users API')
+    .addTag('Discussions', 'Discussions API')
     .addBearerAuth(
       {
         type: 'http',

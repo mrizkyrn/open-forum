@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UnauthorizedException } from '@nestjs/common';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { CreateUserDto } from './dto/register.dto';
+import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { UserRole } from '../../common/enums/user-role.enum';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
@@ -55,7 +55,7 @@ describe('AuthController', () => {
 
   describe('register', () => {
     it('should create a new user', async () => {
-      const createUserDto: CreateUserDto = {
+      const registerDto: RegisterDto = {
         username: '2110511091',
         password: 'StrongP@ssw0rd',
         fullName: 'Test User',
@@ -63,9 +63,9 @@ describe('AuthController', () => {
 
       mockAuthService.register.mockResolvedValue(mockUser);
 
-      const result = await authController.register(createUserDto);
+      const result = await authController.register(registerDto);
 
-      expect(mockAuthService.register).toHaveBeenCalledWith(createUserDto);
+      expect(mockAuthService.register).toHaveBeenCalledWith(registerDto);
       expect(result).toEqual(mockUser);
     });
   });
@@ -88,11 +88,7 @@ describe('AuthController', () => {
       const result = await authController.login(loginDto, mockResponse as any);
 
       expect(mockAuthService.login).toHaveBeenCalledWith(loginDto);
-      expect(mockResponse.cookie).toHaveBeenCalledWith(
-        'refreshToken',
-        'refresh-token',
-        expect.any(Object),
-      );
+      expect(mockResponse.cookie).toHaveBeenCalledWith('refreshToken', 'refresh-token', expect.any(Object));
       expect(result).toEqual({
         user: mockUser,
         accessToken: 'access-token',
@@ -109,9 +105,7 @@ describe('AuthController', () => {
 
       mockAuthService.login.mockRejectedValue(new UnauthorizedException('Invalid credentials'));
 
-      await expect(authController.login(loginDto, mockResponse as any)).rejects.toThrow(
-        UnauthorizedException,
-      );
+      await expect(authController.login(loginDto, mockResponse as any)).rejects.toThrow(UnauthorizedException);
       expect(mockAuthService.login).toHaveBeenCalledWith(loginDto);
       expect(mockResponse.cookie).not.toHaveBeenCalled();
     });
@@ -130,11 +124,7 @@ describe('AuthController', () => {
       const result = await authController.refreshToken(user, mockResponse as any);
 
       expect(mockAuthService.refreshToken).toHaveBeenCalledWith(user.id);
-      expect(mockResponse.cookie).toHaveBeenCalledWith(
-        'refreshToken',
-        'new-refresh-token',
-        expect.any(Object),
-      );
+      expect(mockResponse.cookie).toHaveBeenCalledWith('refreshToken', 'new-refresh-token', expect.any(Object));
       expect(result).toEqual({ accessToken: 'new-access-token' });
     });
 
@@ -143,9 +133,7 @@ describe('AuthController', () => {
 
       mockAuthService.refreshToken.mockRejectedValue(new UnauthorizedException('Invalid refresh token'));
 
-      await expect(authController.refreshToken(user, mockResponse as any)).rejects.toThrow(
-        UnauthorizedException,
-      );
+      await expect(authController.refreshToken(user, mockResponse as any)).rejects.toThrow(UnauthorizedException);
       expect(mockAuthService.refreshToken).toHaveBeenCalledWith(user.id);
       expect(mockResponse.cookie).not.toHaveBeenCalled();
     });

@@ -12,7 +12,6 @@ export class CreateUserDto {
   @IsString()
   @IsNotEmpty()
   @Length(3, 100)
-  @Matches(/^\d+$/, { message: 'Username can only contain numeric characters' })
   username: string;
 
   @ApiProperty({
@@ -25,7 +24,7 @@ export class CreateUserDto {
   @IsNotEmpty()
   @Length(8, 100)
   @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d\W]{8,}$/, {
-    message: 'Password must contain at least 8 characters, including upper and lowercase letters and numbers',
+    message: 'Password must include upper and lowercase letters and numbers',
   })
   password: string;
 

@@ -8,7 +8,7 @@ import { CreateDiscussionDto } from './dto/create-discussion.dto';
 import { User } from '../user/entities/user.entity';
 import { AttachmentService } from '../attachment/attachment.service';
 import { Attachment, AttachmentType } from '../attachment/entities/attachment.entity';
-import { UserResponseDto } from '../auth/dto/auth-response.dto';
+import { UserResponseDto } from '../user/dto/user-response.dto';
 import { DiscussionResponseDto } from './dto/discussion-response.dto';
 
 @Injectable()
@@ -36,13 +36,11 @@ export class DiscussionService {
         throw new BadRequestException('User information is required');
       }
 
-      // Start a transaction for discussion + attachments
       const queryRunner = this.discussionRepository.manager.connection.createQueryRunner();
       await queryRunner.connect();
       await queryRunner.startTransaction();
 
       try {
-        // Create new discussion entity
         const discussion = this.discussionRepository.create({
           ...createDiscussionDto,
           authorId: currentUser.id,
@@ -122,7 +120,6 @@ export class DiscussionService {
   }
 
   formatDiscussionResponse(discussion: Discussion, currentUser?: User): DiscussionResponseDto {
-    // Handle anonymous discussions
     let author: UserResponseDto | null = null;
     if (!discussion.isAnonymous) {
       author = {

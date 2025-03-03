@@ -25,12 +25,18 @@ export class TransformInterceptor<T> implements NestInterceptor<T, ApiResponse<T
     const method = request.method;
     const path = request.route.path;
 
-    // Customize messages based on HTTP method and path
     if (method === 'POST' && path === `/${apiPrefix}/auth/login`) return 'Login successful';
     if (method === 'POST' && path === `/${apiPrefix}/auth/register`) return 'Registration successful';
     if (method === 'POST' && path === `/${apiPrefix}/auth/logout`) return 'Logout successful';
     if (method === 'POST' && path === `/${apiPrefix}/auth/refresh`) return 'Token refreshed successfully';
     if (method === 'GET' && path ===`/${apiPrefix}/auth/profile`) return 'Profile retrieved successfully';
+
+    if (method === 'POST' && path === `/${apiPrefix}/users`) return 'User created successfully';
+    if (method === 'GET' && path === `/${apiPrefix}/users`) return 'Users retrieved successfully';
+    if (method === 'GET' && path === `/${apiPrefix}/users/me`) return 'Profile retrieved successfully';
+    if (method === 'GET' && path === `/${apiPrefix}/users/:id`) return 'User retrieved successfully';
+    if (method === 'PUT' && path === `/${apiPrefix}/users/:id`) return 'User updated successfully';
+    if (method === 'DELETE' && path === `/${apiPrefix}/users/:id`) return 'User deleted successfully';
 
     return 'Operation successful';
   }
