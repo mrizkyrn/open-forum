@@ -62,6 +62,7 @@ describe('DiscussionService', () => {
     role: 'student',
     createdAt: new Date(),
     updatedAt: new Date(),
+    isDeleted: false,
   } as User;
 
   const mockDiscussion: Discussion = {
@@ -77,6 +78,7 @@ describe('DiscussionService', () => {
     createdAt: new Date(),
     updatedAt: new Date(),
     attachments: [],
+    isDeleted: false,
   } as Discussion;
 
   const mockAttachment: Attachment = {

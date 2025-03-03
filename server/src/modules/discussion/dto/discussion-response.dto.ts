@@ -1,6 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { UserResponseDto } from '../../user/dto/user-response.dto';
-import { Attachment } from '../../attachment/entities/attachment.entity';
+import { PaginationMetaDto } from '../../../common/dto/pagination-meta.dto';
+import { AttachmentResponseDto } from '../../../modules/attachment/dto/attachment-response.dto';
 
 export class DiscussionResponseDto {
   @ApiProperty({
@@ -49,11 +50,11 @@ export class DiscussionResponseDto {
 
   @ApiProperty({
     description: 'Attachment files uploaded with the discussion',
-    type: () => Attachment,
+    type: () => AttachmentResponseDto,
     isArray: true,
     nullable: true,
   })
-  attachments: Attachment[];
+  attachments: AttachmentResponseDto[];
 
   @ApiProperty({
     description: 'Number of comments on the discussion',
@@ -75,4 +76,25 @@ export class DiscussionResponseDto {
     default: 0,
   })
   downvoteCount: number;
+
+  @ApiProperty({
+    description: 'Whether the current user has bookmarked this discussion',
+    example: false,
+  })
+  isBookmarked?: boolean;
+}
+
+export class PageableDiscussionResponseDto {
+  @ApiProperty({
+    type: DiscussionResponseDto,
+    description: 'List of users',
+    isArray: true,
+  })
+  items: DiscussionResponseDto[];
+
+  @ApiProperty({
+    type: PaginationMetaDto,
+    description: 'Pagination metadata',
+  })
+  meta: PaginationMetaDto;
 }

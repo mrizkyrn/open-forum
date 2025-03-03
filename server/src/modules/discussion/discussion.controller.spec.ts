@@ -71,6 +71,7 @@ describe('DiscussionController', () => {
     downvoteCount: 0,
     createdAt: mockDiscussion.createdAt,
     updatedAt: mockDiscussion.updatedAt,
+    isBookmarked: false,
   };
 
   const createDiscussionDto: CreateDiscussionDto = {

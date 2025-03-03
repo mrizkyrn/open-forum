@@ -45,7 +45,9 @@ export class UserService {
 
     let queryBuilder = this.userRepository
       .createQueryBuilder('user')
-      .where('user.isDeleted = :isDeleted', { isDeleted: false });
+      .orderBy(`user.${sortBy}`, sortOrder)
+      .skip(offset)
+      .take(limit);
 
     if (search) {
       queryBuilder = queryBuilder.where('user.username ILIKE :search OR user.fullName ILIKE :search', {
@@ -57,11 +59,8 @@ export class UserService {
       queryBuilder = queryBuilder.andWhere('user.role = :role', { role });
     }
 
-    queryBuilder.orderBy(`user.${sortBy}`, sortOrder);
+    const [users, totalItems] = await queryBuilder.getManyAndCount();
 
-    const totalItems = await queryBuilder.getCount();
-
-    const users = await queryBuilder.skip(offset).take(limit).getMany();
     const userDtos = users.map((user) => this.mapToUserResponseDto(user));
 
     const totalPages = Math.ceil(totalItems / limit);
@@ -119,10 +118,8 @@ export class UserService {
     if (!user) {
       throw new NotFoundException(`User with ID ${id} not found`);
     }
-
-    user.isDeleted = true;
-
-    await this.userRepository.save(user);
+    
+    await this.userRepository.softDelete(id);
   }
 
   async verifyPassword(plainTextPassword: string, hashedPassword: string): Promise<boolean> {

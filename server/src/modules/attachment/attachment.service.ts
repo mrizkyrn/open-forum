@@ -1,10 +1,10 @@
+import * as fs from 'fs';
+import * as path from 'path';
 import { Injectable, BadRequestException, NotFoundException, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
-import { Attachment, AttachmentType } from './entities/attachment.entity';
 import { v4 as uuidv4 } from 'uuid';
-import * as fs from 'fs';
-import * as path from 'path';
+import { Attachment, AttachmentType } from './entities/attachment.entity';
 
 @Injectable()
 export class AttachmentService {
@@ -62,7 +62,7 @@ export class AttachmentService {
         displayOrder,
         isImage,
       });
-      
+
       if (manager) {
         return manager.save(Attachment, attachment);
       } else {
@@ -113,27 +113,29 @@ export class AttachmentService {
     return attachment;
   }
 
-  async deleteAttachment(id: number): Promise<void> {
+  async deleteAttachment(id: number, manager?: EntityManager): Promise<void> {
     const attachment = await this.getAttachmentById(id);
 
     try {
-      // Delete physical file
       const filePath = path.join(this.uploadDir, attachment.url.replace('/uploads/', ''));
       await fs.promises.unlink(filePath);
 
-      // Delete database record
-      await this.attachmentRepository.remove(attachment);
+      if (manager) {
+        await manager.remove(Attachment, attachment);
+      } else {
+        await this.attachmentRepository.remove(attachment);
+      }
     } catch (error) {
       console.error('Error deleting attachment:', error);
       throw new InternalServerErrorException('Failed to delete attachment');
     }
   }
 
-  async deleteAttachmentsByEntity(entityType: AttachmentType, entityId: number): Promise<void> {
+  async deleteAttachmentsByEntity(entityType: AttachmentType, entityId: number, manager?: EntityManager): Promise<void> {
     const attachments = await this.getAttachmentsByEntity(entityType, entityId);
 
     for (const attachment of attachments) {
-      await this.deleteAttachment(attachment.id);
+      await this.deleteAttachment(attachment.id, manager);
     }
   }
 

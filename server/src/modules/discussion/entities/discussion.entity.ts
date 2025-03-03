@@ -27,7 +27,7 @@ export class Discussion extends BaseEntity {
   @Column({ name: 'downvote_count', type: 'integer', default: 0 })
   downvoteCount: number;
 
-  @Column({ type: 'simple-array', nullable: true })
+  @Column({ type: 'text', array: true, nullable: true, default: '{}' })
   tags: string[];
 
   @OneToMany(() => Attachment, (attachment) => attachment.entityId)
