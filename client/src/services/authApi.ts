@@ -1,45 +1,23 @@
 import { handleApiError } from '@/utils/helpers';
-import { authClient } from './client';
-import { User } from '@/contexts/auth/types';
-
-export interface LoginResponse {
-  user: User;
-  accessToken: string;
-}
-
-export interface RegisterResponse {
-  user: User;
-  accessToken: string;
-}
-
-export interface RefreshTokenResponse {
-  accessToken: string;
-}
-
-export interface ApiResponse<T> {
-  success: boolean;
-  message: string;
-  data: T;
-  error?: string;
-  statusCode: number;
-}
+import { apiClient } from './client';
+import { LoginResponse, RefreshTokenResponse, RegisterResponse } from '@/types/AuthTypes';
+import { ApiResponse } from '@/types/ResponseTypes';
 
 export const authApi = {
   async login(username: string, password: string): Promise<LoginResponse> {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
     try {
-      const response = await authClient.post<ApiResponse<LoginResponse>>('/auth/login', { username, password });
+      const response = await apiClient.post<ApiResponse<LoginResponse>>('/auth/login', { username, password });
       return response.data.data;
     } catch (error: any) {
       return handleApiError(error, 'Authentication failed');
     }
   },
 
-  async register(username: string, email: string, password: string): Promise<RegisterResponse> {
+  async register(username: string, fullName: string, password: string): Promise<RegisterResponse> {
     try {
-      const response = await authClient.post<ApiResponse<RegisterResponse>>('/auth/register', {
+      const response = await apiClient.post<ApiResponse<RegisterResponse>>('/auth/register', {
         username,
-        email,
+        fullName,
         password,
       });
       return response.data.data;
@@ -49,9 +27,8 @@ export const authApi = {
   },
 
   async refreshToken(): Promise<RefreshTokenResponse> {
-    console.log('refreshToken');
     try {
-      const response = await authClient.post<ApiResponse<RefreshTokenResponse>>('/auth/refresh', {});
+      const response = await apiClient.post<ApiResponse<RefreshTokenResponse>>('/auth/refresh', {});
       return response.data.data;
     } catch (error: any) {
       return handleApiError(error, 'Token refresh failed');
@@ -60,7 +37,7 @@ export const authApi = {
 
   async logout(): Promise<void> {
     try {
-      await authClient.post('/auth/logout', {}, { withCredentials: true });
+      await apiClient.post('/auth/logout', {});
     } catch (error) {
       console.error('Logout error', error);
     }

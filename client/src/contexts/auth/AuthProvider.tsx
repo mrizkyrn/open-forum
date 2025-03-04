@@ -13,7 +13,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       dispatch({ type: 'REFRESH_TOKEN', payload: { accessToken } });
       return accessToken;
     } catch (error) {
-      console.error('Token refresh failed:', error);
+      dispatch({
+        type: 'AUTH_FAILURE',
+        payload: error instanceof Error ? error.message : 'Token refresh failed',
+      });
       throw error;
     }
   }, []);
@@ -46,7 +49,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     initialize();
-  }, []);
+  }, [refreshToken]);
 
   const login = async (username: string, password: string): Promise<void> => {
     try {
