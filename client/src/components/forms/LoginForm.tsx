@@ -1,24 +1,20 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
-
-interface LoginFormState {
-  username: string;
-  password: string;
-}
+import { LoginRequest } from '@/types/AuthTypes';
 
 const LoginForm: React.FC = () => {
   const navigate = useNavigate();
   const { login, isLoading, error } = useAuth();
 
-  const [form, setForm] = useState<LoginFormState>({
+  const [formData, setFormData] = useState<LoginRequest>({
     username: '',
     password: '',
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setForm((prev) => ({
+    setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
@@ -27,7 +23,7 @@ const LoginForm: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await login(form.username, form.password);
+      await login(formData);
       navigate('/');
     } catch (error) {
       console.error('Login failed:', error);
@@ -38,11 +34,7 @@ const LoginForm: React.FC = () => {
     <div className="relative flex w-full max-w-sm flex-col gap-7 rounded-2xl bg-white px-6 py-8">
       <div className="bg-primary absolute top-0 right-0 h-1.5 w-full rounded-t-2xl" />
       <div className="flex justify-center gap-4 py-5">
-        <img
-          src="src/assets/logo-upnvj.png"
-          alt="UPNVJ Logo"
-          className="h-20 w-20"
-        />
+        <img src="src/assets/logo-upnvj.png" alt="UPNVJ Logo" className="h-20 w-20" />
         <div className="flex flex-col justify-center">
           <h1 className="text-sm font-bold text-gray-600">UPNVJ</h1>
           <h1 className="text-primary text-4xl font-bold">FORUM</h1>
@@ -77,7 +69,7 @@ const LoginForm: React.FC = () => {
             type="text"
             id="username"
             name="username"
-            value={form.username}
+            value={formData.username}
             onChange={handleChange}
             className="focus:ring-primary-dark w-full rounded-lg border border-gray-300 px-4 py-3 focus:ring-1 focus:outline-none"
             placeholder="Type here"
@@ -92,7 +84,7 @@ const LoginForm: React.FC = () => {
             type="password"
             id="password"
             name="password"
-            value={form.password}
+            value={formData.password}
             onChange={handleChange}
             className="focus:ring-primary-dark w-full rounded-lg border border-gray-300 px-4 py-3 focus:ring-1 focus:outline-none"
             placeholder="Type here"

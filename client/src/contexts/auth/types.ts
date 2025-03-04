@@ -1,3 +1,5 @@
+import { LoginRequest, RegisterRequest } from '@/types/AuthTypes';
+
 export interface User {
   id: number;
   username: string;
@@ -23,9 +25,9 @@ export type AuthAction =
   | { type: 'CLEAR_ERROR' };
 
 export interface AuthContextType extends AuthState {
-  login: (email: string, password: string) => Promise<void>;
+  login: (credentials: LoginRequest) => Promise<void>;
   logout: () => void;
-  register: (username: string, email: string, password: string) => Promise<void>;
+  register: (userData: RegisterRequest) => Promise<void>;
   clearError: () => void;
   refreshToken: () => Promise<string>;
 }

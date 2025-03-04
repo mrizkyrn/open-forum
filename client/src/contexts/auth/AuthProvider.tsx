@@ -3,6 +3,7 @@ import { AuthContext } from './AuthContext';
 import { authReducer, initialState } from './reducer';
 import { authApi } from '@/services/authApi';
 import { storageUtils } from '@/utils/storage';
+import { LoginRequest, RegisterRequest } from '@/types/AuthTypes';
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
@@ -51,10 +52,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     initialize();
   }, [refreshToken]);
 
-  const login = async (username: string, password: string): Promise<void> => {
+  const login = async (credentials: LoginRequest): Promise<void> => {
     try {
       dispatch({ type: 'AUTH_START' });
-      const { user, accessToken } = await authApi.login(username, password);
+      const { user, accessToken } = await authApi.login(credentials);
 
       storageUtils.setUser(user);
 
@@ -69,10 +70,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const register = async (username: string, fullName: string, password: string): Promise<void> => {
+  const register = async (userData: RegisterRequest): Promise<void> => {
     try {
       dispatch({ type: 'AUTH_START' });
-      const { user, accessToken } = await authApi.register(username, fullName, password);
+      const { user, accessToken } = await authApi.register(userData);
 
       dispatch({ type: 'AUTH_SUCCESS', payload: { user, accessToken } });
     } catch (error) {

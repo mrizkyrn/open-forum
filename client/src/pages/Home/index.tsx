@@ -1,16 +1,18 @@
+import CreateDiscussionModal from '@/components/CreateDiscussionModal';
 import DiscussionCard from '@/components/features/discussions/DiscussionCard';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import { useInfiniteDiscussions } from '@/hooks/useInfiniteDiscussions';
 import { useIntersectionObserver } from '@/hooks/useIntersectionObserver';
-import { PencilLine } from 'lucide-react';
-import { useEffect } from 'react';
+import { PencilLine, PlusCircle } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 const Home = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status, error, refetch } = useInfiniteDiscussions({
     limit: 5,
   });
-
   const { entry, observerRef } = useIntersectionObserver({
     threshold: 0.5,
     enabled: !!hasNextPage && !isFetchingNextPage,
@@ -70,13 +72,23 @@ const Home = () => {
 
   return (
     <div className="container mx-auto px-4">
-      <div className="flex flex-col gap-2 items-center">
+      <div className="mb-4 flex justify-end">
+        <button
+          onClick={() => setIsModalOpen(true)}
+          className="flex items-center gap-2 rounded-lg bg-green-600 px-4 py-2 text-white hover:bg-green-700"
+        >
+          <PlusCircle size={20} />
+          New Discussion
+        </button>
+      </div>
+
+      <div className="flex flex-col items-center gap-2">
         {discussions.map((discussion) => (
           <DiscussionCard key={discussion.id} discussion={discussion} />
         ))}
 
         {/* Loading more indicator */}
-        {isFetchingNextPage && <LoadingSpinner text='Loading more discussions...' />}
+        {isFetchingNextPage && <LoadingSpinner text="Loading more discussions..." />}
 
         {/* Invisible element for intersection observer */}
         {hasNextPage && <div ref={observerRef} className="h-5" />}
@@ -86,6 +98,11 @@ const Home = () => {
           <div className="py-6 text-center text-gray-500">You've reached the end of discussions</div>
         )}
       </div>
+
+      <CreateDiscussionModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+      />
     </div>
   );
 };
