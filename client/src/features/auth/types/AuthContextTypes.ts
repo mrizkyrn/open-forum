@@ -1,0 +1,27 @@
+import { User } from '@/features/users/types/UserTypes';
+import { LoginRequest, RegisterRequest } from './AuthRequestTypes';
+
+export interface AuthState {
+  user: User | null;
+  accessToken: string | null;
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  error: string | null;
+}
+
+export type AuthAction =
+  | { type: 'AUTH_START' }
+  | { type: 'AUTH_SUCCESS'; payload: { user: User; accessToken: string } }
+  | { type: 'AUTH_FAILURE'; payload: string }
+  | { type: 'AUTH_INIT_COMPLETE' }
+  | { type: 'REFRESH_TOKEN'; payload: { accessToken: string } }
+  | { type: 'LOGOUT' }
+  | { type: 'CLEAR_ERROR' };
+
+export interface AuthContextType extends AuthState {
+  login: (credentials: LoginRequest) => Promise<void>;
+  logout: () => void;
+  register: (userData: RegisterRequest) => Promise<void>;
+  clearError: () => void;
+  refreshToken: () => Promise<string>;
+}

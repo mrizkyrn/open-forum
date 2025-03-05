@@ -1,4 +1,4 @@
-import { User } from '@/contexts/auth/types';
+import { User } from '@/features/users/types/UserTypes';
 
 const USER_KEY = 'user';
 

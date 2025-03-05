@@ -1,8 +1,8 @@
 import { lazy, Suspense } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
-import { ErrorBoundary } from '@/components/ErrorBoundary';
-import MainLayout from '@/layouts/MainLayout';
+import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
 import Loading from '@/components/ui/Loading';
+import MainLayout from '@/components/layouts/MainLayout';
 
 // Lazy-loaded components
 const Home = lazy(() => import('@/pages/Home'));
