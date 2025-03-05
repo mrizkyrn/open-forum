@@ -14,7 +14,7 @@ import {
   Delete,
   Put,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiConsumes, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { ReqUser } from '../../common/decorators/user.decorator';
@@ -26,7 +26,7 @@ import { SearchDiscussionDto } from './dto/search-discussion.dto';
 import { Pageable } from '../../common/interfaces/pageable.interface';
 import { UpdateDiscussionDto } from './dto/update-discussion.dto';
 
-@ApiTags('discussions')
+@ApiTags('Discussions')
 @Controller('discussions')
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
@@ -35,6 +35,7 @@ export class DiscussionController {
 
   @Post()
   @ApiOperation({ summary: 'Create a new discussion' })
+  @ApiConsumes('multipart/form-data')
   @ApiResponse({
     status: 201,
     description: 'Discussion created successfully',
@@ -68,6 +69,29 @@ export class DiscussionController {
     return this.discussionService.findAll(searchDto, currentUser);
   }
 
+  @Get('tags/popular')
+  @ApiOperation({ summary: 'Get popular tags' })
+  @ApiResponse({ status: 200, description: 'Returns list of popular tags' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  async getPopularTags(): Promise<{ tag: string; count: number }[]> {
+    return this.discussionService.getPopularTags();
+  }
+
+  @Get('bookmarked')
+  @ApiOperation({ summary: 'Get user bookmarked discussions' })
+  @ApiResponse({
+    status: 200,
+    description: 'Returns paginated list of bookmarked discussions',
+    type: PageableDiscussionResponseDto,
+  })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  async getBookmarkedDiscussions(
+    @ReqUser() currentUser: User,
+    @Query() searchDto: SearchDiscussionDto,
+  ): Promise<Pageable<DiscussionResponseDto>> {
+    return this.discussionService.getBookmarkedDiscussions(currentUser.id, searchDto);
+  }
+
   @Get(':id')
   @ApiOperation({ summary: 'Get discussion by ID' })
   @ApiParam({ name: 'id', description: 'Discussion ID', type: Number })
@@ -81,16 +105,9 @@ export class DiscussionController {
     return this.discussionService.getDiscussionById(id, currentUser);
   }
 
-  @Get('tags/popular')
-  @ApiOperation({ summary: 'Get popular tags' })
-  @ApiResponse({ status: 200, description: 'Returns list of popular tags' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  async getPopularTags(): Promise<{ tag: string; count: number }[]> {
-    return this.discussionService.getPopularTags();
-  }
-
   @Put(':id')
   @ApiOperation({ summary: 'Update discussion' })
+  @ApiConsumes('multipart/form-data')
   @ApiParam({ name: 'id', description: 'Discussion ID', type: Number })
   @ApiResponse({ status: 200, description: 'Discussion updated successfully', type: DiscussionResponseDto })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
@@ -127,21 +144,6 @@ export class DiscussionController {
   @ApiResponse({ status: 404, description: 'Discussion not found' })
   async bookmarkDiscussion(@Param('id', ParseIntPipe) id: number, @ReqUser() currentUser: User): Promise<void> {
     await this.discussionService.bookmarkDiscussion(id, currentUser.id);
-  }
-
-  @Get('bookmarked')
-  @ApiOperation({ summary: 'Get user bookmarked discussions' })
-  @ApiResponse({
-    status: 200,
-    description: 'Returns paginated list of bookmarked discussions',
-    type: PageableDiscussionResponseDto,
-  })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  async getBookmarkedDiscussions(
-    @ReqUser() currentUser: User,
-    @Query() searchDto: SearchDiscussionDto,
-  ): Promise<Pageable<DiscussionResponseDto>> {
-    return this.discussionService.getBookmarkedDiscussions(currentUser.id, searchDto);
   }
 
   @Delete(':id/bookmark')

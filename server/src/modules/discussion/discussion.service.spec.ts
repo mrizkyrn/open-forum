@@ -78,6 +78,7 @@ describe('DiscussionService', () => {
     createdAt: new Date(),
     updatedAt: new Date(),
     attachments: [],
+    comments: [],
     isDeleted: false,
   } as Discussion;
 

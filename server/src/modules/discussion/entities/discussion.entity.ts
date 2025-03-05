@@ -2,6 +2,7 @@ import { Column, Entity, JoinColumn, ManyToOne, Index, OneToMany } from 'typeorm
 import { BaseEntity } from '../../../core/database/entities/base.entity';
 import { User } from '../../user/entities/user.entity';
 import { Attachment } from '../../attachment/entities/attachment.entity';
+import { Comment } from '../../comment/entities/comment.entity';
 
 @Entity('discussions')
 export class Discussion extends BaseEntity {
@@ -18,7 +19,10 @@ export class Discussion extends BaseEntity {
   @JoinColumn({ name: 'author_id' })
   author: User;
 
-  @Column({ name: 'reply_count', type: 'integer', default: 0 })
+  @OneToMany(() => Comment, (comment) => comment.discussion)
+  comments: Comment[];
+
+  @Column({ name: 'comment_count', type: 'integer', default: 0 })
   commentCount: number;
 
   @Column({ name: 'upvote_count', type: 'integer', default: 0 })

@@ -7,6 +7,7 @@ import { DatabaseModule } from './core/database/database.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { DiscussionModule } from './modules/discussion/discussion.module';
 import { AttachmentModule } from './modules/attachment/attachment.module';
+import { CommentModule } from './modules/comment/comment.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { AttachmentModule } from './modules/attachment/attachment.module';
     AuthModule,
     DiscussionModule,
     AttachmentModule,
+    CommentModule,
   ],
   controllers: [AppController],
   providers: [AppService],
