@@ -7,6 +7,7 @@ import MainLayout from '@/components/layouts/MainLayout';
 // Lazy-loaded components
 const Home = lazy(() => import('@/pages/Home'));
 const Login = lazy(() => import('@/pages/Login'));
+const DiscussionDetail = lazy(() => import('@/pages/DiscussionDetail'));
 const NotFound = lazy(() => import('@/pages/NotFound'));
 
 // Wrap Suspense in a reusable function
@@ -25,6 +26,10 @@ const routes = [
       {
         index: true,
         element: lazyLoad(Home),
+      },
+      {
+        path: '/discussions/:id',
+        element: lazyLoad(DiscussionDetail),
       },
     ],
   },

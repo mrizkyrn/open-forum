@@ -1,0 +1,179 @@
+import { useParams, useNavigate } from 'react-router-dom';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { discussionApi } from '@/features/discussions/services/discussionApi';
+import { ArrowLeft, Loader2 } from 'lucide-react';
+import DiscussionCardHeader from '@/features/discussions/components/DiscussionCardHeader';
+import DiscussionCardBody from '@/features/discussions/components/DiscussionCardBody';
+import DiscussionCardFooter from '@/features/discussions/components/DiscussionCardFooter';
+import Comments from '@/features/comments/components/Comments';
+import CommentForm from '@/features/comments/components/CommentForm';
+import UpdateDiscussionModal from '@/features/discussions/components/UpdateDiscussionModal';
+import { useState, useRef } from 'react';
+import { toast } from 'react-toastify';
+import { commentApi } from '@/features/comments/services/commentApi';
+
+const DiscussionDetail = () => {
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [commentText, setCommentText] = useState('');
+  const commentFormRef = useRef<HTMLTextAreaElement>(null);
+
+  const discussionId = parseInt(id || '0', 10);
+
+  const {
+    data: discussion,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ['discussion', discussionId],
+    queryFn: () => discussionApi.getDiscussionById(discussionId),
+    enabled: !!discussionId && !isNaN(discussionId),
+  });
+
+  // Submit comment mutation
+  const { mutate: submitComment, isPending: isSubmittingComment } = useMutation({
+    mutationFn: (content: string) => {
+      return commentApi.createComment({
+        content,
+        discussionId,
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['comments', discussionId] });
+      // Also update the discussion to refresh comment count
+      queryClient.invalidateQueries({ queryKey: ['discussion', discussionId] });
+      toast.success('Comment posted successfully');
+      setCommentText('');
+    },
+    onError: (error) => {
+      toast.error('Failed to post comment');
+      console.error('Submit comment error:', error);
+    },
+  });
+
+  const handleSubmitComment = () => {
+    if (!commentText.trim()) return;
+    submitComment(commentText);
+  };
+
+  const handleEditClick = () => {
+    setShowEditModal(true);
+  };
+
+  const handleBackClick = () => {
+    navigate(-1);
+  };
+
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="flex h-[calc(100vh-64px)] items-center justify-center">
+        <div className="flex flex-col items-center">
+          <Loader2 className="h-10 w-10 animate-spin text-green-600" />
+          <p className="mt-4 text-gray-600">Loading discussion...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Error state
+  if (isError || !discussion) {
+    return (
+      <div className="container mx-auto max-w-4xl px-4 py-8">
+        <div className="flex flex-col items-center rounded-lg bg-red-50 p-8 text-center">
+          <h2 className="mb-3 text-2xl font-bold text-red-700">Error Loading Discussion</h2>
+          <p className="mb-6 text-red-600">
+            {error instanceof Error ? error.message : 'This discussion could not be found or may have been deleted.'}
+          </p>
+          <button
+            onClick={handleBackClick}
+            className="flex items-center gap-2 rounded-md bg-red-600 px-4 py-2 text-white hover:bg-red-700"
+          >
+            <ArrowLeft size={18} />
+            Go Back
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <>
+      {/* <Helmet>
+        <title>{discussion.title || 'Discussion'} | UPNVJ Forum</title>
+      </Helmet> */}
+
+      <div className="container mx-auto max-w-4xl px-4 py-8">
+        {/* Back button */}
+        <button onClick={handleBackClick} className="mb-4 flex items-center gap-2 text-gray-600 hover:text-gray-900">
+          <ArrowLeft size={18} />
+          <span>Back to discussions</span>
+        </button>
+
+        {/* Main discussion card */}
+        <div className="mb-8 overflow-hidden rounded-xl bg-white">
+          {/* Discussion content */}
+          <div className="flex flex-col gap-4 px-6 py-6">
+            <DiscussionCardHeader
+              imageUrl="src/assets/profile-picture.png"
+              fullName={discussion.author?.fullName}
+              discussionId={discussion.id}
+              authorId={discussion.author?.id}
+              isBookmarked={discussion.isBookmarked}
+              onEditClick={handleEditClick}
+            />
+
+            <DiscussionCardBody content={discussion.content} attachments={discussion.attachments} />
+
+            {/* Tags */}
+            {discussion.tags && discussion.tags.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {discussion.tags.map((tag) => (
+                  <span key={tag} className="rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-800">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            )}
+
+            <hr className="my-2 border-gray-200" />
+
+            <DiscussionCardFooter
+              discussionId={discussion.id}
+              upvoteCount={discussion.upvoteCount}
+              downvoteCount={discussion.downvoteCount}
+              commentCount={discussion.commentCount}
+            />
+          </div>
+        </div>
+
+        {/* Comments section - now properly separated */}
+        <div className="mt-8 rounded-xl bg-white p-6">
+          <h2 className="mb-4 text-xl font-semibold text-gray-900">Comments ({discussion.commentCount || 0})</h2>
+
+          {/* Comment form - moved outside of the comments list */}
+          <div className="mb-6">
+            <CommentForm
+              ref={commentFormRef}
+              value={commentText}
+              onChange={setCommentText}
+              onSubmit={handleSubmitComment}
+              isSubmitting={isSubmittingComment}
+            />
+          </div>
+
+          {/* Comments list */}
+          <Comments discussionId={discussion.id} />
+        </div>
+      </div>
+
+      {/* Edit discussion modal */}
+      <UpdateDiscussionModal isOpen={showEditModal} onClose={() => setShowEditModal(false)} discussion={discussion} />
+    </>
+  );
+};
+
+export default DiscussionDetail;
