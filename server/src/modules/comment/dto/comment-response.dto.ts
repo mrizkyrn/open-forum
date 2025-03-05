@@ -36,6 +36,12 @@ export class CommentResponseDto {
   parentId: number | null;
 
   @ApiProperty({
+    description: 'Replies to this comment',
+    type: [CommentResponseDto],
+  })
+  replies?: CommentResponseDto[];
+
+  @ApiProperty({
     description: 'Number of replies to this comment',
     example: 5,
   })
@@ -81,8 +87,8 @@ export class PageableCommentResponseDto {
   items: CommentResponseDto[];
 
   @ApiProperty({
-      type: PaginationMetaDto,
-      description: 'Pagination metadata',
-    })
-    meta: PaginationMetaDto;
+    type: PaginationMetaDto,
+    description: 'Pagination metadata',
+  })
+  meta: PaginationMetaDto;
 }

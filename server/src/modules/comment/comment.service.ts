@@ -18,6 +18,7 @@ import { CreateCommentDto } from './dto/create-comment.dto';
 import { CommentResponseDto } from './dto/comment-response.dto';
 import { Pageable } from '../../common/interfaces/pageable.interface';
 import { SearchCommentDto } from './dto/search-comment.dto';
+import { UpdateCommentDto } from './dto/update-comment.dto';
 
 @Injectable()
 export class CommentService {
@@ -154,7 +155,7 @@ export class CommentService {
 
     // Get replies if this is a parent comment
     if (comment.replyCount > 0) {
-      comment.replies = await this.findRepliesByParentId(comment.id);
+      comment.replies = await this.commentRepository.find({ where: { parentId: comment.id }, relations: ['author'] });
 
       // Get attachments for each reply
       for (const reply of comment.replies) {
@@ -209,18 +210,180 @@ export class CommentService {
     };
   }
 
-  async findRepliesByParentId(parentId: number): Promise<Comment[]> {
-    const replies = await this.commentRepository.find({
-      where: { parentId },
-      relations: ['author'],
-      order: { createdAt: 'ASC' },
-    });
+  async findRepliesByParentId(parentId: number, searchDto: SearchCommentDto): Promise<Pageable<CommentResponseDto>> {
+    const { page = 1, limit = 10, sortBy = 'createdAt', sortOrder = 'DESC' } = searchDto;
+    const offset = (page - 1) * limit;
 
+    const parentComment = await this.commentRepository.findOne({ where: { id: parentId } });
+    if (!parentComment) {
+      throw new NotFoundException(`Comment with ID ${parentId} not found`);
+    }
+
+    // Get replies with pagination
+    const queryBuilder = this.commentRepository
+      .createQueryBuilder('comment')
+      .leftJoinAndSelect('comment.author', 'author')
+      .where('comment.parentId = :parentId', { parentId })
+      .orderBy(`comment.${sortBy}`, sortOrder)
+      .skip(offset)
+      .take(limit);
+
+    const [replies, totalItems] = await queryBuilder.getManyAndCount();
+
+    // Get attachments for each reply
     for (const reply of replies) {
       reply.attachments = await this.attachmentService.getAttachmentsByEntity(AttachmentType.COMMENT, reply.id);
     }
 
-    return replies;
+    // Format replies
+    const responseItems: CommentResponseDto[] = replies.map((reply) => this.formatCommentResponse(reply));
+
+    // Calculate pagination metadata
+    const totalPages = Math.ceil(totalItems / limit);
+
+    return {
+      items: responseItems,
+      meta: {
+        totalItems,
+        itemsPerPage: limit,
+        currentPage: page,
+        totalPages,
+        hasNextPage: page < totalPages,
+        hasPreviousPage: page > 1,
+      },
+    };
+  }
+
+  async update(
+    id: number,
+    updateCommentDto: UpdateCommentDto,
+    currentUser: User,
+    files?: Express.Multer.File[],
+  ): Promise<CommentResponseDto> {
+    const comment = await this.commentRepository.findOne({ where: { id } });
+    if (!comment) {
+      throw new NotFoundException(`Comment with ID ${id} not found`);
+    }
+
+    // Check if the current user is the author
+    if (comment.authorId !== currentUser.id) {
+      throw new ForbiddenException('You do not have permission to update this comment');
+    }
+
+    // Get existing attachments
+    const existingAttachments = await this.attachmentService.getAttachmentsByEntity(AttachmentType.COMMENT, id);
+
+    // Validate attachment limits
+    const attachmentsToRemoveCount = updateCommentDto.attachmentsToRemove?.length || 0;
+    const newAttachmentsCount = files?.length || 0;
+    const remainingAttachmentsCount = existingAttachments.length - attachmentsToRemoveCount;
+
+    if (remainingAttachmentsCount + newAttachmentsCount > 2) {
+      throw new BadRequestException(
+        'A comment can have a maximum of 2 attachments. Please remove some existing attachments or upload fewer new ones.',
+      );
+    }
+
+    // Validate that attachments being removed belong to this comment
+    if (updateCommentDto.attachmentsToRemove?.length) {
+      for (const attachmentId of updateCommentDto.attachmentsToRemove) {
+        const attachment = await this.attachmentService.getAttachmentById(attachmentId);
+
+        if (!attachment || attachment.entityId !== comment.id || attachment.entityType !== AttachmentType.COMMENT) {
+          throw new BadRequestException(`Invalid attachment ID: ${attachmentId}`);
+        }
+      }
+    }
+
+    const createdFilePaths: string[] = [];
+
+    const queryRunner = this.commentRepository.manager.connection.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      // Update fields if provided
+      if (updateCommentDto.content !== undefined) {
+        comment.content = updateCommentDto.content;
+      }
+
+      // Save the updated comment
+      await queryRunner.manager.save(comment);
+
+      // Remove attachments if specified
+      if (updateCommentDto.attachmentsToRemove?.length) {
+        for (const attachmentId of updateCommentDto.attachmentsToRemove) {
+          await this.attachmentService.deleteAttachment(attachmentId);
+        }
+      }
+
+      // Add new attachments if provided
+      if (files?.length) {
+        const newAttachments = await this.attachmentService.createMultipleAttachments(
+          files,
+          AttachmentType.COMMENT,
+          comment.id,
+          queryRunner.manager,
+        );
+
+        for (const attachment of newAttachments) {
+          const fullPath = path.join(process.cwd(), attachment.url.replace(/^\//, ''));
+          createdFilePaths.push(fullPath);
+        }
+      }
+
+      await queryRunner.commitTransaction();
+
+      const updatedComment = await this.getCommentById(id);
+      return this.formatCommentResponse(updatedComment);
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      await this.cleanupFiles(createdFilePaths);
+      throw error;
+    } finally {
+      await queryRunner.release();
+    }
+  }
+
+  async delete(id: number, currentUser: User): Promise<void> {
+    const comment = await this.getCommentById(id);
+
+    if (comment.authorId !== currentUser.id) {
+      throw new ForbiddenException('You do not have permission to delete this comment');
+    }
+
+    const queryRunner = this.commentRepository.manager.connection.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      // Delete all replies
+      if (comment.replyCount > 0) {
+        await queryRunner.manager.delete(Comment, { parentId: comment.id });
+      }
+
+      // Delete attachments
+      await this.attachmentService.deleteAttachmentsByEntity(AttachmentType.COMMENT, id);
+
+      // Delete the comment
+      await queryRunner.manager.softDelete(Comment, { id });
+
+      // If this is a reply, update the parent's reply count
+      if (comment.parentId) {
+        await queryRunner.manager.decrement(Comment, { id: comment.parentId }, 'replyCount', 1);
+      }
+
+      // Update the discussion's comment count
+      const decrementCount = comment.replyCount + 1;
+      await queryRunner.manager.decrement(Discussion, { id: comment.discussionId }, 'commentCount', decrementCount);
+
+      await queryRunner.commitTransaction();
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      throw new InternalServerErrorException('Failed to delete comment');
+    } finally {
+      await queryRunner.release();
+    }
   }
 
   async getCommentById(id: number): Promise<Comment> {
@@ -233,7 +396,6 @@ export class CommentService {
       throw new NotFoundException(`Comment with ID ${id} not found`);
     }
 
-    // Fetch attachments
     const attachments = await this.attachmentService.getAttachmentsByEntity(AttachmentType.COMMENT, id);
     comment.attachments = attachments;
 
