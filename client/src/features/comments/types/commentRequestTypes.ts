@@ -6,4 +6,5 @@ export interface CreateCommentRequest {
 
 export interface UpdateCommentRequest {
   content: string;
+  attachmentsToRemove?: number[];
 }

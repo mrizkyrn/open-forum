@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from 'react-router-dom';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { discussionApi } from '@/features/discussions/services/discussionApi';
 import { ArrowLeft, Loader2 } from 'lucide-react';
 import DiscussionCardHeader from '@/features/discussions/components/DiscussionCardHeader';
@@ -8,17 +8,12 @@ import DiscussionCardFooter from '@/features/discussions/components/DiscussionCa
 import Comments from '@/features/comments/components/Comments';
 import CommentForm from '@/features/comments/components/CommentForm';
 import UpdateDiscussionModal from '@/features/discussions/components/UpdateDiscussionModal';
-import { useState, useRef } from 'react';
-import { toast } from 'react-toastify';
-import { commentApi } from '@/features/comments/services/commentApi';
+import { useState } from 'react';
 
 const DiscussionDetail = () => {
   const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
-  const queryClient = useQueryClient();
   const [showEditModal, setShowEditModal] = useState(false);
-  const [commentText, setCommentText] = useState('');
-  const commentFormRef = useRef<HTMLTextAreaElement>(null);
+  const navigate = useNavigate();
 
   const discussionId = parseInt(id || '0', 10);
 
@@ -32,32 +27,6 @@ const DiscussionDetail = () => {
     queryFn: () => discussionApi.getDiscussionById(discussionId),
     enabled: !!discussionId && !isNaN(discussionId),
   });
-
-  // Submit comment mutation
-  const { mutate: submitComment, isPending: isSubmittingComment } = useMutation({
-    mutationFn: (content: string) => {
-      return commentApi.createComment({
-        content,
-        discussionId,
-      });
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['comments', discussionId] });
-      // Also update the discussion to refresh comment count
-      queryClient.invalidateQueries({ queryKey: ['discussion', discussionId] });
-      toast.success('Comment posted successfully');
-      setCommentText('');
-    },
-    onError: (error) => {
-      toast.error('Failed to post comment');
-      console.error('Submit comment error:', error);
-    },
-  });
-
-  const handleSubmitComment = () => {
-    if (!commentText.trim()) return;
-    submitComment(commentText);
-  };
 
   const handleEditClick = () => {
     setShowEditModal(true);
@@ -150,19 +119,13 @@ const DiscussionDetail = () => {
           </div>
         </div>
 
-        {/* Comments section - now properly separated */}
+        {/* Comments section */}
         <div className="mt-8 rounded-xl bg-white p-6">
           <h2 className="mb-4 text-xl font-semibold text-gray-900">Comments ({discussion.commentCount || 0})</h2>
 
-          {/* Comment form - moved outside of the comments list */}
+          {/* Comment form */}
           <div className="mb-6">
-            <CommentForm
-              ref={commentFormRef}
-              value={commentText}
-              onChange={setCommentText}
-              onSubmit={handleSubmitComment}
-              isSubmitting={isSubmittingComment}
-            />
+            <CommentForm discussionId={discussion.id} />
           </div>
 
           {/* Comments list */}

@@ -1,4 +1,5 @@
-export const MAX_FILES = 4;
+export const MAX_DISCUSSION_FILES = 4;
+export const MAX_COMMENT_FILES = 2;
 export const MAX_FILE_SIZE = 3 * 1024 * 1024; // 3MB
 export const ALLOWED_FILE_TYPES = [
   'image/jpeg',

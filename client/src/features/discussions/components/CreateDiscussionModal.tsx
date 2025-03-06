@@ -3,7 +3,7 @@ import { toast } from 'react-toastify';
 import { X, FileText, Image, Loader2, XCircle, Tag as TagIcon, CheckCircle } from 'lucide-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { discussionApi } from '@/features/discussions/services/discussionApi';
-import { ALLOWED_FILE_TYPES, MAX_FILE_SIZE, MAX_FILES } from '../constants/DiscusisonConstants';
+import { ALLOWED_FILE_TYPES, MAX_FILE_SIZE, MAX_DISCUSSION_FILES } from '../../../constants/fileConstants';
 
 interface CreateDiscussionModalProps {
   isOpen: boolean;
@@ -39,8 +39,8 @@ const CreateDiscussionModal: React.FC<CreateDiscussionModalProps> = ({ isOpen, o
   });
 
   const validateFiles = (filesToCheck: File[]): boolean => {
-    if (filesToCheck.length > MAX_FILES) {
-      setFileErrors(`Maximum ${MAX_FILES} files allowed`);
+    if (filesToCheck.length > MAX_DISCUSSION_FILES) {
+      setFileErrors(`Maximum ${MAX_DISCUSSION_FILES} files allowed`);
       return false;
     }
 
@@ -64,7 +64,7 @@ const CreateDiscussionModal: React.FC<CreateDiscussionModalProps> = ({ isOpen, o
     const selectedFiles = Array.from(e.target.files || []);
 
     if (validateFiles([...files, ...selectedFiles])) {
-      if (files.length + selectedFiles.length <= MAX_FILES) {
+      if (files.length + selectedFiles.length <= MAX_DISCUSSION_FILES) {
         setFiles((prev) => [...prev, ...selectedFiles]);
       }
     }
@@ -270,7 +270,7 @@ const CreateDiscussionModal: React.FC<CreateDiscussionModalProps> = ({ isOpen, o
                 </div>
               ))}
             </div>
-            {files.length < MAX_FILES && (
+            {files.length < MAX_DISCUSSION_FILES && (
               <div className="mt-2">
                 <input
                   ref={fileInputRef}
