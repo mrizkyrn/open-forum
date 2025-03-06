@@ -1,10 +1,12 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { X, FileText, Image, Loader2, XCircle, Tag as TagIcon, CheckCircle } from 'lucide-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { discussionApi } from '@/features/discussions/services/discussionApi';
 import { Discussion } from '@/features/discussions/types';
 import { Attachment } from '@/types/AttachmentTypes';
+import { ALLOWED_FILE_TYPES, MAX_DISCUSSION_FILES, MAX_FILE_SIZE } from '@/constants/fileConstants';
+import { useFileHandling } from '../hooks/useFileHandling';
 
 interface UpdateDiscussionModalProps {
   isOpen: boolean;
@@ -12,36 +14,22 @@ interface UpdateDiscussionModalProps {
   discussion: Discussion | null;
 }
 
-const MAX_FILES = 4;
-const MAX_FILE_SIZE = 3 * 1024 * 1024; // 3MB
-const ALLOWED_FILE_TYPES = [
-  'image/jpeg',
-  'image/png',
-  'image/gif',
-  'application/pdf',
-  'application/msword',
-  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-  'application/vnd.ms-excel',
-  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-  'application/vnd.ms-powerpoint',
-  'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-  'application/zip',
-  'application/x-rar-compressed',
-];
-
 const UpdateDiscussionModal: React.FC<UpdateDiscussionModalProps> = ({ isOpen, onClose, discussion }) => {
   const queryClient = useQueryClient();
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [content, setContent] = useState<string>('');
   const [isAnonymous, setIsAnonymous] = useState<boolean>(false);
   const [tags, setTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState<string>('');
-  const [files, setFiles] = useState<File[]>([]);
   const [existingAttachments, setExistingAttachments] = useState<Attachment[]>([]);
   const [attachmentsToRemove, setAttachmentsToRemove] = useState<number[]>([]);
-  const [fileErrors, setFileErrors] = useState<string | null>(null);
   const [contentError, setContentError] = useState<string | null>(null);
+
+  const { files, fileErrors, fileInputRef, handleFileChange, removeFile, clearFiles, validateFiles } = useFileHandling(
+    MAX_DISCUSSION_FILES,
+    ALLOWED_FILE_TYPES,
+    MAX_FILE_SIZE,
+  );
 
   useEffect(() => {
     if (discussion && isOpen) {
@@ -50,10 +38,10 @@ const UpdateDiscussionModal: React.FC<UpdateDiscussionModalProps> = ({ isOpen, o
       setTags(discussion.tags || []);
       setExistingAttachments(discussion.attachments || []);
       setAttachmentsToRemove([]);
-      setFiles([]);
-      setFileErrors(null);
+      clearFiles();
       setContentError(null);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [discussion, isOpen]);
 
   const { mutate: updateDiscussion, isPending } = useMutation({
@@ -74,59 +62,9 @@ const UpdateDiscussionModal: React.FC<UpdateDiscussionModalProps> = ({ isOpen, o
     },
   });
 
-  const validateFiles = (filesToCheck: File[]): boolean => {
-    // Check if total files exceed the limit
-    const remainingExistingAttachments = existingAttachments.filter(
-      (attachment) => !attachmentsToRemove.includes(attachment.id),
-    ).length;
-
-    const totalAttachments = remainingExistingAttachments + filesToCheck.length;
-
-    if (totalAttachments > MAX_FILES) {
-      setFileErrors(`Maximum ${MAX_FILES} files allowed (including existing)`);
-      return false;
-    }
-
-    for (const file of filesToCheck) {
-      if (file.size > MAX_FILE_SIZE) {
-        setFileErrors(`${file.name} is too large (max 3MB)`);
-        return false;
-      }
-
-      if (!ALLOWED_FILE_TYPES.includes(file.type)) {
-        setFileErrors(`${file.name} has an unsupported file type`);
-        return false;
-      }
-    }
-
-    setFileErrors(null);
-    return true;
-  };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFiles = Array.from(e.target.files || []);
-
-    if (validateFiles([...files, ...selectedFiles])) {
-      const remainingExistingCount = existingAttachments.filter((a) => !attachmentsToRemove.includes(a.id)).length;
-
-      if (files.length + selectedFiles.length + remainingExistingCount <= MAX_FILES) {
-        setFiles((prev) => [...prev, ...selectedFiles]);
-      }
-    }
-
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
-  };
-
-  const removeFile = (index: number) => {
-    setFiles((prev) => prev.filter((_, i) => i !== index));
-    setFileErrors(null);
-  };
-
   const markExistingAttachmentForRemoval = (id: number) => {
     setAttachmentsToRemove((prev) => [...prev, id]);
-    setFileErrors(null);
+    clearFiles();
   };
 
   const undoMarkForRemoval = (id: number) => {
@@ -193,7 +131,7 @@ const UpdateDiscussionModal: React.FC<UpdateDiscussionModalProps> = ({ isOpen, o
     }
 
     // Add new files
-    files.forEach((file) => {
+    files.forEach((file: File) => {
       formData.append('files', file);
     });
 
@@ -205,10 +143,9 @@ const UpdateDiscussionModal: React.FC<UpdateDiscussionModalProps> = ({ isOpen, o
     setIsAnonymous(false);
     setTags([]);
     setTagInput('');
-    setFiles([]);
     setExistingAttachments([]);
     setAttachmentsToRemove([]);
-    setFileErrors(null);
+    clearFiles();
     setContentError(null);
     onClose();
   };
@@ -370,7 +307,7 @@ const UpdateDiscussionModal: React.FC<UpdateDiscussionModalProps> = ({ isOpen, o
 
             {/* New files */}
             <div className="flex flex-wrap gap-2">
-              {files.map((file, index) => (
+              {files.map((file: File, index: number) => (
                 <div
                   key={index}
                   className="relative flex items-center gap-2 rounded-md border border-gray-200 bg-gray-50 px-3 py-2"
@@ -394,7 +331,7 @@ const UpdateDiscussionModal: React.FC<UpdateDiscussionModalProps> = ({ isOpen, o
 
             {/* Upload button - only show if we haven't reached the max files yet */}
             {existingAttachments.filter((a) => !attachmentsToRemove.includes(a.id)).length + files.length <
-              MAX_FILES && (
+              MAX_DISCUSSION_FILES && (
               <div className="mt-2">
                 <input
                   ref={fileInputRef}

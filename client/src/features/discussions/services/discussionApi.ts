@@ -29,7 +29,7 @@ export const discussionApi = {
     }
   },
 
-  async getDiscussionById(id: string | number): Promise<Discussion> {
+  async getDiscussionById(id: number): Promise<Discussion> {
     try {
       const response = await apiClient.get<ApiResponse<Discussion>>(`/discussions/${id}`);
       return response.data.data;

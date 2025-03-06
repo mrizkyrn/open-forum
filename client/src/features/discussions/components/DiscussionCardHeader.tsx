@@ -5,9 +5,9 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/features/auth/hooks/useAuth';
 import { discussionApi } from '@/features/discussions/services/discussionApi';
 import { useBookmark } from '@/features/discussions/hooks/useBookmark';
+import AvatarImage from '@/features/users/components/AvatarImage';
 
 interface DiscussionCardHeaderProps {
-  imageUrl: string;
   fullName: string | undefined;
   discussionId: number;
   authorId?: number;
@@ -17,7 +17,6 @@ interface DiscussionCardHeaderProps {
 }
 
 const DiscussionCardHeader: React.FC<DiscussionCardHeaderProps> = ({
-  imageUrl,
   fullName,
   discussionId,
   authorId,
@@ -102,7 +101,7 @@ const DiscussionCardHeader: React.FC<DiscussionCardHeaderProps> = ({
       <div className="flex items-start justify-between">
         {/* Profile image and user details */}
         <div className="flex items-center gap-2">
-          <img src={imageUrl} alt="Profile" className="h-10 w-10 rounded-full object-cover" />
+          <AvatarImage fullName={fullName} size={10} />
           <div className="flex flex-col justify-center">
             {fullName ? (
               <h3 className="text-base font-semibold">{fullName}</h3>

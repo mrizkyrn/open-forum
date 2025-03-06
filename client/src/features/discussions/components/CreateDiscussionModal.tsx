@@ -1,9 +1,11 @@
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { toast } from 'react-toastify';
-import { X, FileText, Image, Loader2, XCircle, Tag as TagIcon, CheckCircle } from 'lucide-react';
+import { X, Loader2, Tag as TagIcon, CheckCircle } from 'lucide-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { discussionApi } from '@/features/discussions/services/discussionApi';
 import { ALLOWED_FILE_TYPES, MAX_FILE_SIZE, MAX_DISCUSSION_FILES } from '../../../constants/fileConstants';
+import FilePreview from '@/components/ui/FilePreview';
+import { useFileHandling } from '../hooks/useFileHandling';
 
 interface CreateDiscussionModalProps {
   isOpen: boolean;
@@ -12,15 +14,18 @@ interface CreateDiscussionModalProps {
 
 const CreateDiscussionModal: React.FC<CreateDiscussionModalProps> = ({ isOpen, onClose }) => {
   const queryClient = useQueryClient();
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [content, setContent] = useState<string>('');
   const [isAnonymous, setIsAnonymous] = useState<boolean>(false);
   const [tags, setTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState<string>('');
-  const [files, setFiles] = useState<File[]>([]);
-  const [fileErrors, setFileErrors] = useState<string | null>(null);
   const [contentError, setContentError] = useState<string | null>(null);
+
+  const { files, fileErrors, fileInputRef, handleFileChange, removeFile, clearFiles, validateFiles } = useFileHandling(
+    MAX_DISCUSSION_FILES,
+    ALLOWED_FILE_TYPES,
+    MAX_FILE_SIZE,
+  );
 
   // Create discussion mutation
   const { mutate: createDiscussion, isPending } = useMutation({
@@ -37,48 +42,6 @@ const CreateDiscussionModal: React.FC<CreateDiscussionModalProps> = ({ isOpen, o
       toast.error('Failed to create discussion');
     },
   });
-
-  const validateFiles = (filesToCheck: File[]): boolean => {
-    if (filesToCheck.length > MAX_DISCUSSION_FILES) {
-      setFileErrors(`Maximum ${MAX_DISCUSSION_FILES} files allowed`);
-      return false;
-    }
-
-    for (const file of filesToCheck) {
-      if (file.size > MAX_FILE_SIZE) {
-        setFileErrors(`${file.name} is too large (max 10MB)`);
-        return false;
-      }
-
-      if (!ALLOWED_FILE_TYPES.includes(file.type)) {
-        setFileErrors(`${file.name} has an unsupported file type`);
-        return false;
-      }
-    }
-
-    setFileErrors(null);
-    return true;
-  };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFiles = Array.from(e.target.files || []);
-
-    if (validateFiles([...files, ...selectedFiles])) {
-      if (files.length + selectedFiles.length <= MAX_DISCUSSION_FILES) {
-        setFiles((prev) => [...prev, ...selectedFiles]);
-      }
-    }
-
-    // Reset input so the same file can be selected again if removed
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
-  };
-
-  const removeFile = (index: number) => {
-    setFiles((prev) => prev.filter((_, i) => i !== index));
-    setFileErrors(null);
-  };
 
   const handleAddTag = () => {
     const trimmedTag = tagInput.trim();
@@ -145,8 +108,7 @@ const CreateDiscussionModal: React.FC<CreateDiscussionModalProps> = ({ isOpen, o
     setIsAnonymous(false);
     setTags([]);
     setTagInput('');
-    setFiles([]);
-    setFileErrors(null);
+    clearFiles();
     setContentError(null);
     onClose();
   };
@@ -250,24 +212,12 @@ const CreateDiscussionModal: React.FC<CreateDiscussionModalProps> = ({ isOpen, o
             </label>
             <div className="flex flex-wrap gap-2">
               {files.map((file, index) => (
-                <div
+                <FilePreview
                   key={index}
-                  className="relative flex items-center gap-2 rounded-md border border-gray-200 bg-gray-50 px-3 py-2"
-                >
-                  {file.type.startsWith('image/') ? (
-                    <Image size={18} className="text-blue-500" />
-                  ) : (
-                    <FileText size={18} className="text-orange-500" />
-                  )}
-                  <span className="max-w-xs truncate text-sm">{file.name}</span>
-                  <button
-                    type="button"
-                    onClick={() => removeFile(index)}
-                    className="rounded-full text-gray-500 hover:text-red-500"
-                  >
-                    <XCircle size={18} />
-                  </button>
-                </div>
+                  fileName={file.name}
+                  isImage={file.type.includes('image')}
+                  onRemove={() => removeFile(index)}
+                />
               ))}
             </div>
             {files.length < MAX_DISCUSSION_FILES && (

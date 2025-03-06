@@ -7,31 +7,33 @@ import CommentCardBody from './CommentCardBody';
 import { Comment } from '../types/commentTypes';
 import CommentForm from './CommentForm';
 import { commentApi } from '../services/commentApi';
+import AvatarImage from '@/features/users/components/AvatarImage';
 
 interface CommentCardProps {
   comment: Comment;
   isReply?: boolean;
-  onToggleReply?: (commentId: number) => void;
   showReplyForm?: boolean;
+  onToggleReply?: (commentId: number) => void;
 }
 
 const CommentCard: React.FC<CommentCardProps> = ({
   comment,
   isReply = false,
-  onToggleReply,
   showReplyForm = false,
+  onToggleReply,
 }) => {
   const { user } = useAuth();
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [showReplies, setShowReplies] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const isAuthor = user?.id === comment.author.id;
   const voteCount = comment.upvoteCount - comment.downvoteCount;
   const hasReplies = comment.replyCount > 0;
+  const formattedDate = comment.createdAt ? formatDistanceToNow(new Date(comment.createdAt), { addSuffix: true }) : '';
 
-  // Use infinite query for paginated replies
   const {
     data: repliesData,
     fetchNextPage: fetchNextReplies,
@@ -48,10 +50,7 @@ const CommentCard: React.FC<CommentCardProps> = ({
     staleTime: 1000 * 60 * 5,
   });
 
-  // Flatten replies from all pages
   const replies = repliesData?.pages.flatMap((page) => page.items) || [];
-
-  const formattedDate = comment.createdAt ? formatDistanceToNow(new Date(comment.createdAt), { addSuffix: true }) : '';
 
   const getVoteColor = (count: number) => {
     if (count > 0) return 'text-green-500';
@@ -163,11 +162,7 @@ const CommentCard: React.FC<CommentCardProps> = ({
   return (
     <div className="w-full border-t border-t-gray-300 pt-2">
       <div className="flex gap-2">
-        <img
-          src={`https://ui-avatars.com/api/?name=${comment.author.fullName}&background=random`}
-          alt={comment.author.fullName}
-          className="h-8 w-8 rounded-full object-cover"
-        />
+        <AvatarImage fullName={comment.author.fullName} size={10} />
         <div className="flex flex-1 flex-col gap-1">
           {/* Comment header */}
           <div className="flex items-start justify-between">
@@ -233,7 +228,7 @@ const CommentCard: React.FC<CommentCardProps> = ({
             <CommentForm
               discussionId={comment.discussionId}
               isReply={isReply}
-              parentId={comment.parentId || undefined}
+              parentId={comment.parentId}
               initialValue={comment.content}
               existingAttachments={comment.attachments}
               isEditing={true}
@@ -241,7 +236,6 @@ const CommentCard: React.FC<CommentCardProps> = ({
               onCancel={handleCancelEdit}
               onSuccess={() => {
                 setIsEditing(false);
-                // If editing a reply within a nested context, show the replies
               }}
               initialFocus={true}
             />
@@ -288,7 +282,7 @@ const CommentCard: React.FC<CommentCardProps> = ({
             </>
           )}
 
-          {/* Inline reply form */}
+          {/* Reply form */}
           {showReplyForm && (
             <div className="mt-2">
               <CommentForm
@@ -297,7 +291,12 @@ const CommentCard: React.FC<CommentCardProps> = ({
                 parentId={comment.id}
                 onClickOutside={handleFormClickOutside}
                 initialFocus={true}
-                onSuccess={() => setShowReplies(true)}
+                onSuccess={() => {
+                  if (onToggleReply) {
+                    onToggleReply(comment.id);
+                  }
+                  setShowReplies(true);
+                }}
               />
             </div>
           )}

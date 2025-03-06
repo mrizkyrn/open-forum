@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { discussionApi } from '@/features/discussions/services/discussionApi';
-import { ArrowLeft, Loader2 } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import DiscussionCardHeader from '@/features/discussions/components/DiscussionCardHeader';
 import DiscussionCardBody from '@/features/discussions/components/DiscussionCardBody';
 import DiscussionCardFooter from '@/features/discussions/components/DiscussionCardFooter';
@@ -9,6 +9,7 @@ import Comments from '@/features/comments/components/Comments';
 import CommentForm from '@/features/comments/components/CommentForm';
 import UpdateDiscussionModal from '@/features/discussions/components/UpdateDiscussionModal';
 import { useState } from 'react';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
 
 const DiscussionDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -38,20 +39,13 @@ const DiscussionDetail = () => {
 
   // Loading state
   if (isLoading) {
-    return (
-      <div className="flex h-[calc(100vh-64px)] items-center justify-center">
-        <div className="flex flex-col items-center">
-          <Loader2 className="h-10 w-10 animate-spin text-green-600" />
-          <p className="mt-4 text-gray-600">Loading discussion...</p>
-        </div>
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
   // Error state
   if (isError || !discussion) {
     return (
-      <div className="container mx-auto max-w-4xl px-4 py-8">
+      <div className="container mx-auto max-w-xl px-4 py-8">
         <div className="flex flex-col items-center rounded-lg bg-red-50 p-8 text-center">
           <h2 className="mb-3 text-2xl font-bold text-red-700">Error Loading Discussion</h2>
           <p className="mb-6 text-red-600">
@@ -87,7 +81,6 @@ const DiscussionDetail = () => {
           {/* Discussion content */}
           <div className="flex flex-col gap-4 px-6 py-6">
             <DiscussionCardHeader
-              imageUrl="src/assets/profile-picture.png"
               fullName={discussion.author?.fullName}
               discussionId={discussion.id}
               authorId={discussion.author?.id}

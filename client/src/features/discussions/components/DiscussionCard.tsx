@@ -18,14 +18,17 @@ const DiscussionCard: React.FC<DiscussionCardProps> = ({ discussion }) => {
     setShowEditModal(true);
   };
 
+  const handleCardClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    const target = e.target as HTMLElement;
+    console.log(target.tagName);
+    if (target.tagName === 'BUTTON' || target.tagName === 'a') return;
+    navigate(`/discussions/${discussion.id}`);
+  };
+
   return (
     <>
-      <div
-        className="flex w-full flex-col gap-3 rounded-xl bg-white p-4"
-        onClick={() => navigate(`/discussions/${discussion.id}`)}
-      >
+      <div className="flex w-full cursor-pointer flex-col gap-3 rounded-xl bg-white p-4" onClick={handleCardClick}>
         <DiscussionCardHeader
-          imageUrl="src/assets/profile-picture.png"
           fullName={discussion.author?.fullName}
           discussionId={discussion.id}
           authorId={discussion.author?.id}

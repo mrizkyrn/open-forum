@@ -47,11 +47,6 @@ export const commentApi = {
   },
 
   async updateComment(commentId: number, formData: FormData): Promise<Comment> {
-    console.log('commentId', commentId);
-    // log all form data
-    for (var pair of formData.entries()) {
-      console.log(pair[0] + ', ' + pair[1]);
-    }
     try {
       const response = await apiClient.put<ApiResponse<Comment>>(`/comments/${commentId}`, formData, {
         headers: {

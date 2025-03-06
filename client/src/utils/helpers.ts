@@ -11,3 +11,7 @@ export const handleApiError = (error: any, defaultMessage: string): never => {
 
   throw new Error(error.message || 'Network error');
 };
+
+export const getFileUrl = (url: string) => {
+  return import.meta.env.VITE_API_URL + url;
+};
