@@ -82,6 +82,13 @@ export class DiscussionResponseDto {
     example: false,
   })
   isBookmarked?: boolean;
+
+  @ApiProperty({
+    description: 'Vote value by the current user (1 for upvote, -1 for downvote, null if not voted)',
+    example: 1,
+    nullable: true,
+  })
+  voteStatus?: number | null;
 }
 
 export class PageableDiscussionResponseDto {

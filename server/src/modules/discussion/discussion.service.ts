@@ -19,6 +19,8 @@ import { Bookmark } from './entities/bookmark.entity';
 import { SearchDiscussionDto } from './dto/search-discussion.dto';
 import { Pageable } from '../../common/interfaces/pageable.interface';
 import { UpdateDiscussionDto } from './dto/update-discussion.dto';
+import { VoteService } from '../vote/vote.service';
+import { VoteEntityType } from '../vote/entities/vote.entity';
 
 @Injectable()
 export class DiscussionService {
@@ -28,6 +30,7 @@ export class DiscussionService {
     @InjectRepository(Bookmark)
     private readonly bookmarkRepository: Repository<Bookmark>,
     private readonly attachmentService: AttachmentService,
+    private readonly voteService: VoteService,
   ) {}
 
   async create(
@@ -161,6 +164,11 @@ export class DiscussionService {
 
       if (currentUser) {
         formatted.isBookmarked = await this.isDiscussionBookmarked(discussion.id, currentUser.id);
+        formatted.voteStatus = await this.voteService.getUserVoteStatus(
+          currentUser.id,
+          VoteEntityType.DISCUSSION,
+          discussion.id,
+        );
       }
 
       responseItems.push(formatted);
@@ -205,6 +213,11 @@ export class DiscussionService {
 
     if (currentUser) {
       response.isBookmarked = await this.isDiscussionBookmarked(discussion.id, currentUser.id);
+      response.voteStatus = await this.voteService.getUserVoteStatus(
+        currentUser.id,
+        VoteEntityType.DISCUSSION,
+        discussion.id,
+      );
     }
 
     return response;

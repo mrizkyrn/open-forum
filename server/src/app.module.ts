@@ -8,6 +8,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { DiscussionModule } from './modules/discussion/discussion.module';
 import { AttachmentModule } from './modules/attachment/attachment.module';
 import { CommentModule } from './modules/comment/comment.module';
+import { VoteModule } from './modules/vote/vote.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { CommentModule } from './modules/comment/comment.module';
     DiscussionModule,
     AttachmentModule,
     CommentModule,
+    VoteModule,
   ],
   controllers: [AppController],
   providers: [AppService],

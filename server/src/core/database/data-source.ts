@@ -4,6 +4,7 @@ import { Comment } from 'src/modules/comment/entities/comment.entity';
 import { Bookmark } from 'src/modules/discussion/entities/bookmark.entity';
 import { Discussion } from 'src/modules/discussion/entities/discussion.entity';
 import { User } from 'src/modules/user/entities/user.entity';
+import { Vote } from 'src/modules/vote/entities/vote.entity';
 import { DataSource } from 'typeorm';
 
 export default new DataSource({
@@ -15,7 +16,7 @@ export default new DataSource({
   database: process.env.DB_NAME,
   synchronize: process.env.NODE_ENV === 'development',
   logging: process.env.NODE_ENV === 'development',
-  entities: [User, Discussion, Bookmark, Attachment, Comment],
+  entities: [User, Discussion, Bookmark, Attachment, Comment, Vote],
   migrations: ['src/core/database/migrations/*{.ts,.js}'],
   migrationsTableName: 'typeorm_migrations',
 });
