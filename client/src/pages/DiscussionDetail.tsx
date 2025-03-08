@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { discussionApi } from '@/features/discussions/services/discussionApi';
 import { ArrowLeft } from 'lucide-react';
 import DiscussionCardHeader from '@/features/discussions/components/DiscussionCardHeader';
@@ -8,15 +8,73 @@ import DiscussionCardFooter from '@/features/discussions/components/DiscussionCa
 import Comments from '@/features/comments/components/Comments';
 import CommentForm from '@/features/comments/components/CommentForm';
 import UpdateDiscussionModal from '@/features/discussions/components/UpdateDiscussionModal';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
+import { useSocket } from '@/hooks/useSocket';
 
 const DiscussionDetail = () => {
   const { id } = useParams<{ id: string }>();
+  const { socket, isConnected } = useSocket();
+
   const [showEditModal, setShowEditModal] = useState(false);
+
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const discussionId = parseInt(id || '0', 10);
+
+  useEffect(() => {
+    // Only proceed if we have a valid socket connection and discussion ID
+    if (!socket || !isConnected || !discussionId || isNaN(discussionId)) return;
+
+    // Join the discussion room
+    socket.emit('joinDiscussion', { discussionId });
+    console.log(`Joined discussion room: ${discussionId}`);
+
+    // Listen for discussion updates
+    const handleDiscussionUpdate = (data: any) => {
+      console.log('Discussion updated:', data);
+      // Invalidate query to refresh discussion data
+      queryClient.invalidateQueries({ queryKey: ['discussions', discussionId] });
+    };
+
+    // Listen for new comments
+    const handleNewComment = (data: any) => {
+      console.log('New comment added', data);
+
+      // Always invalidate the main comments list
+      queryClient.invalidateQueries({ queryKey: ['comments', discussionId] });
+
+      if (data && data.parentId) {
+        // It's a reply - invalidate the specific parent's replies
+        queryClient.invalidateQueries({ queryKey: ['commentReplies', data.parentId] });
+      } else {
+        // When we don't know the parent ID or it's a top-level comment,
+        // invalidate all comment replies for this discussion
+        queryClient.invalidateQueries({
+          queryKey: ['commentReplies'],
+          predicate: (query) => {
+            // This is a broader invalidation that will catch all reply queries
+            return query.queryKey[0] === 'commentReplies';
+          },
+        });
+      }
+    };
+
+    // Register event listeners
+    socket.on('discussionUpdate', handleDiscussionUpdate);
+    socket.on('newComment', handleNewComment);
+
+    // Cleanup: Leave the discussion room when component unmounts
+    return () => {
+      socket.emit('leaveDiscussion', { discussionId });
+      console.log(`Left discussion room: ${discussionId}`);
+
+      // Remove event listeners
+      socket.off('discussionUpdate', handleDiscussionUpdate);
+      socket.off('newComment', handleNewComment);
+    };
+  }, [socket, isConnected, discussionId, queryClient]);
 
   const {
     data: discussion,

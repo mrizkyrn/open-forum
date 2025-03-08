@@ -19,6 +19,9 @@ import { CommentResponseDto } from './dto/comment-response.dto';
 import { Pageable } from '../../common/interfaces/pageable.interface';
 import { SearchCommentDto } from './dto/search-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
+import { VoteService } from '../vote/vote.service';
+import { VoteEntityType } from '../vote/entities/vote.entity';
+import { WebsocketGateway } from 'src/core/websocket/websocket.gateway';
 
 @Injectable()
 export class CommentService {
@@ -28,6 +31,8 @@ export class CommentService {
     @InjectRepository(Discussion)
     private readonly discussionRepository: Repository<Discussion>,
     private readonly attachmentService: AttachmentService,
+    private readonly voteService: VoteService,
+    private readonly websocketGateway: WebsocketGateway,
   ) {}
 
   async create(
@@ -126,6 +131,10 @@ export class CommentService {
 
         // Fetch the complete comment with all relations
         const createdComment = await this.getCommentById(savedComment.id);
+
+        // Notify users of the new comment
+        this.websocketGateway.notifyNewComment(createdComment);
+
         return this.formatCommentResponse(createdComment);
       } catch (error) {
         await queryRunner.rollbackTransaction();
@@ -150,7 +159,7 @@ export class CommentService {
     }
   }
 
-  async findById(id: number): Promise<CommentResponseDto> {
+  async findById(id: number, currentUser?: User): Promise<CommentResponseDto> {
     const comment = await this.getCommentById(id);
 
     // Get replies if this is a parent comment
@@ -163,10 +172,14 @@ export class CommentService {
       }
     }
 
-    return this.formatCommentResponse(comment);
+    return this.formatCommentResponse(comment, currentUser);
   }
 
-  async findByDiscussionId(discussionId: number, searchDto: SearchCommentDto): Promise<Pageable<CommentResponseDto>> {
+  async findByDiscussionId(
+    discussionId: number,
+    searchDto: SearchCommentDto,
+    currentUser?: User,
+  ): Promise<Pageable<CommentResponseDto>> {
     const { page = 1, limit = 10, sortBy = 'createdAt', sortOrder = 'DESC' } = searchDto;
     const offset = (page - 1) * limit;
 
@@ -188,11 +201,9 @@ export class CommentService {
     }
 
     // Format comments
-    const responseItems: CommentResponseDto[] = [];
-    for (const comment of comments) {
-      const formatted = this.formatCommentResponse(comment);
-      responseItems.push(formatted);
-    }
+    const responseItems: CommentResponseDto[] = await Promise.all(
+      comments.map((comment) => this.formatCommentResponse(comment, currentUser)),
+    );
 
     // Calculate pagination metadata
     const totalPages = Math.ceil(totalItems / limit);
@@ -210,7 +221,11 @@ export class CommentService {
     };
   }
 
-  async findRepliesByParentId(parentId: number, searchDto: SearchCommentDto): Promise<Pageable<CommentResponseDto>> {
+  async findRepliesByParentId(
+    parentId: number,
+    searchDto: SearchCommentDto,
+    currentUser?: User,
+  ): Promise<Pageable<CommentResponseDto>> {
     const { page = 1, limit = 10, sortBy = 'createdAt', sortOrder = 'DESC' } = searchDto;
     const offset = (page - 1) * limit;
 
@@ -236,7 +251,9 @@ export class CommentService {
     }
 
     // Format replies
-    const responseItems: CommentResponseDto[] = replies.map((reply) => this.formatCommentResponse(reply));
+    const responseItems: CommentResponseDto[] = await Promise.all(
+      replies.map((reply) => this.formatCommentResponse(reply, currentUser)),
+    );
 
     // Calculate pagination metadata
     const totalPages = Math.ceil(totalItems / limit);
@@ -402,8 +419,8 @@ export class CommentService {
     return comment;
   }
 
-  formatCommentResponse(comment: Comment): CommentResponseDto {
-    const response = {
+  async formatCommentResponse(comment: Comment, currentUser?: User): Promise<CommentResponseDto> {
+    const response: CommentResponseDto = {
       id: comment.id,
       content: comment.content,
       createdAt: comment.createdAt,
@@ -422,12 +439,20 @@ export class CommentService {
         createdAt: comment.author.createdAt,
         updatedAt: comment.author.updatedAt,
       },
-      replies: comment.replies ? comment.replies.map((reply) => this.formatCommentResponse(reply)) : undefined,
     };
 
     // Sort attachments by display order
     if (response.attachments && response.attachments.length > 0) {
       response.attachments.sort((a, b) => a.displayOrder - b.displayOrder);
+    }
+
+    // Add vote status for the current user if available
+    if (currentUser) {
+      response.voteStatus = await this.voteService.getUserVoteStatus(
+        currentUser.id,
+        VoteEntityType.COMMENT,
+        comment.id,
+      );
     }
 
     return response;

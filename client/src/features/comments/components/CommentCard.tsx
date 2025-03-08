@@ -74,6 +74,12 @@ const CommentCard: React.FC<CommentCardProps> = ({
       toast.success('Comment deleted successfully');
 
       queryClient.invalidateQueries({ queryKey: ['comments', comment.discussionId] });
+
+      if (isReply && comment.parentId) {
+        queryClient.invalidateQueries({ queryKey: ['commentReplies', comment.parentId] });
+      } else {
+        queryClient.invalidateQueries({ queryKey: ['commentReplies', comment.id] });
+      }
     } catch (error) {
       console.error('Failed to delete comment:', error);
       toast.error('Failed to delete comment');

@@ -68,8 +68,9 @@ export class CommentController {
   async getCommentsByDiscussionId(
     @Param('discussionId', ParseIntPipe) discussionId: number,
     @Query() searchDto: SearchCommentDto,
+    @ReqUser() currentUser: User,
   ): Promise<Pageable<CommentResponseDto>> {
-    return this.commentService.findByDiscussionId(discussionId, searchDto);
+    return this.commentService.findByDiscussionId(discussionId, searchDto, currentUser);
   }
 
   @Get('comments/:commentId')
@@ -83,9 +84,11 @@ export class CommentController {
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 404, description: 'Comment not found' })
-  async getCommentById(@Param('commentId', ParseIntPipe) commentId: number): Promise<CommentResponseDto> {
-    const comment = await this.commentService.findById(commentId);
-    return comment;
+  async getCommentById(
+    @Param('commentId', ParseIntPipe) commentId: number,
+    @ReqUser() currentUser: User,
+  ): Promise<CommentResponseDto> {
+    return await this.commentService.findById(commentId, currentUser);
   }
 
   @Get('comments/:commentId/replies')
@@ -101,8 +104,9 @@ export class CommentController {
   async getRepliesByCommentId(
     @Param('commentId', ParseIntPipe) commentId: number,
     @Query() searchDto: SearchCommentDto,
+    @ReqUser() currentUser: User,
   ): Promise<Pageable<CommentResponseDto>> {
-    return this.commentService.findRepliesByParentId(commentId, searchDto);
+    return this.commentService.findRepliesByParentId(commentId, searchDto, currentUser);
   }
 
   @Put('comments/:commentId')

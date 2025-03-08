@@ -65,8 +65,8 @@ const CreateDiscussionModal: React.FC<CreateDiscussionModalProps> = ({ isOpen, o
   const validateForm = (): boolean => {
     let isValid = true;
 
-    if (!content.trim()) {
-      setContentError('Discussion content is required');
+    if (!content.trim() || content.trim().length < 10) {
+      setContentError('Discussion content must be at least 10 characters long');
       isValid = false;
     } else {
       setContentError(null);
@@ -75,7 +75,7 @@ const CreateDiscussionModal: React.FC<CreateDiscussionModalProps> = ({ isOpen, o
     if (!validateFiles(files)) {
       isValid = false;
     }
-
+    console.log('isValid:', isValid);
     return isValid;
   };
 

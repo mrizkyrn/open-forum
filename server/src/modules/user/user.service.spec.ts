@@ -35,10 +35,10 @@ describe('UserService', () => {
 
     userService = module.get<UserService>(UserService);
     userRepository = module.get<Repository<User>>(getRepositoryToken(User));
-    
+
     // Reset mocks
     jest.clearAllMocks();
-    
+
     // Default bcrypt mock implementation
     (bcrypt.hash as jest.Mock).mockImplementation(() => Promise.resolve('hashed_password'));
     (bcrypt.compare as jest.Mock).mockImplementation(() => Promise.resolve(true));
@@ -53,7 +53,7 @@ describe('UserService', () => {
         fullName: 'Test User',
         role: UserRole.STUDENT,
       };
-      
+
       const expectedUser = {
         id: 1,
         username: '2110511091',
@@ -95,7 +95,7 @@ describe('UserService', () => {
         fullName: 'Test User',
         role: UserRole.STUDENT,
       };
-      
+
       const existingUser = {
         id: 1,
         username: '2110511091',
@@ -187,22 +187,22 @@ describe('UserService', () => {
     it('should return true when password matches', async () => {
       // Arrange
       (bcrypt.compare as jest.Mock).mockResolvedValue(true);
-      
+
       // Act
       const result = await userService.verifyPassword('password123', 'hashed_password');
-      
+
       // Assert
       expect(bcrypt.compare).toHaveBeenCalledWith('password123', 'hashed_password');
       expect(result).toBe(true);
     });
-    
+
     it('should return false when password does not match', async () => {
       // Arrange
       (bcrypt.compare as jest.Mock).mockResolvedValue(false);
-      
+
       // Act
       const result = await userService.verifyPassword('wrong_password', 'hashed_password');
-      
+
       // Assert
       expect(bcrypt.compare).toHaveBeenCalledWith('wrong_password', 'hashed_password');
       expect(result).toBe(false);

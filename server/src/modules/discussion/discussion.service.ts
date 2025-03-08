@@ -21,6 +21,7 @@ import { Pageable } from '../../common/interfaces/pageable.interface';
 import { UpdateDiscussionDto } from './dto/update-discussion.dto';
 import { VoteService } from '../vote/vote.service';
 import { VoteEntityType } from '../vote/entities/vote.entity';
+import { WebsocketGateway } from 'src/core/websocket/websocket.gateway';
 
 @Injectable()
 export class DiscussionService {
@@ -31,6 +32,7 @@ export class DiscussionService {
     private readonly bookmarkRepository: Repository<Bookmark>,
     private readonly attachmentService: AttachmentService,
     private readonly voteService: VoteService,
+    private readonly websocketGateway: WebsocketGateway,
   ) {}
 
   async create(
@@ -92,7 +94,11 @@ export class DiscussionService {
         // Commit the transaction
         await queryRunner.commitTransaction();
 
-        return this.findById(savedDiscussion.id);
+        const createdDiscussion = await this.findById(savedDiscussion.id);
+
+        this.websocketGateway.notifyNewDiscussion();
+
+        return createdDiscussion;
       } catch (error) {
         await queryRunner.rollbackTransaction();
 

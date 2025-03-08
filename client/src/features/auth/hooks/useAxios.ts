@@ -74,6 +74,8 @@ export const useAxios = (): AxiosInstance => {
           // If the error is not 401 or already retried, just reject.
           return Promise.reject(error);
         }
+
+        return Promise.reject(error);
       },
     );
 
