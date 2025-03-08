@@ -14,4 +14,5 @@ export interface Discussion {
   upvoteCount: number;
   downvoteCount: number;
   isBookmarked?: boolean;
+  voteStatus?: number | null;
 }

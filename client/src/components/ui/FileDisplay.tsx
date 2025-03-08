@@ -52,28 +52,22 @@ const FileDisplay: React.FC<FileDisplayProps> = ({ file }) => {
       'image/gif': 'GIF',
     };
 
-    // Check if MIME type is in the map
     if (mimeType in typeMap) {
       return typeMap[mimeType];
     }
 
-    // Split the MIME type by '/'
     const parts = mimeType.split('/');
     if (parts.length === 2) {
-      // Get the second part and convert to uppercase
       let extension = parts[1].toUpperCase();
 
-      // Handle special cases with multiple dots
       if (extension.includes('.')) {
         const subParts = extension.split('.');
         extension = subParts[subParts.length - 1];
       }
 
-      // If the extension is too long, use just the first part
       return extension.length > 5 ? parts[0].toUpperCase() : extension;
     }
 
-    // Fallback
     return 'FILE';
   };
 
@@ -92,7 +86,7 @@ const FileDisplay: React.FC<FileDisplayProps> = ({ file }) => {
     >
       <div className="mr-3">{getFileIcon(file.mimeType)}</div>
       <div className="min-w-0 flex-grow">
-        <p className="truncate text-sm font-medium text-gray-700">{file.originalName}</p>
+        <p className="text-sm font-medium text-gray-700 line-clamp-1">{file.originalName}</p>
         <p className="text-xs text-gray-500">{getFileSizeText(file.size)}</p>
       </div>
       <div className="ml-2 rounded bg-gray-100 px-2 py-1 text-xs text-gray-600">

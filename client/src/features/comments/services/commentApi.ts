@@ -9,6 +9,7 @@ export const commentApi = {
     page: number,
     limit: number,
   ): Promise<PaginatedResponse<Comment>> {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     try {
       const response = await apiClient.get<ApiResponse<PaginatedResponse<Comment>>>(
         `/discussions/${discussionId}/comments`,
@@ -23,6 +24,7 @@ export const commentApi = {
   },
 
   async getCommentReplies(commentId: number, page: number, limit: number): Promise<PaginatedResponse<Comment>> {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     try {
       const response = await apiClient.get<ApiResponse<PaginatedResponse<Comment>>>(`/comments/${commentId}/replies`, {
         params: { page, limit },
@@ -34,6 +36,7 @@ export const commentApi = {
   },
 
   async createComment(discussionId: number, formData: FormData): Promise<Comment> {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     try {
       const response = await apiClient.post<ApiResponse<Comment>>(`/discussions/${discussionId}/comments`, formData, {
         headers: {
@@ -47,6 +50,7 @@ export const commentApi = {
   },
 
   async updateComment(commentId: number, formData: FormData): Promise<Comment> {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     try {
       const response = await apiClient.put<ApiResponse<Comment>>(`/comments/${commentId}`, formData, {
         headers: {
@@ -60,6 +64,7 @@ export const commentApi = {
   },
 
   async deleteComment(commentId: number): Promise<void> {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     try {
       await apiClient.delete<ApiResponse<void>>(`/comments/${commentId}`);
     } catch (error: any) {

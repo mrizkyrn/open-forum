@@ -1,4 +1,5 @@
 import { User } from "@/features/users/types/UserTypes";
+import { VoteValue } from "@/features/votes/services/voteApi";
 import { Attachment } from "@/types/AttachmentTypes";
 
 export interface Comment {
@@ -14,4 +15,5 @@ export interface Comment {
   createdAt: Date;
   updatedAt: Date;
   attachments: Attachment[];
+  voteStatus?: VoteValue | null;
 }

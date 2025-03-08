@@ -1,13 +1,15 @@
-import { useState, useRef, useEffect } from 'react';
-import { useAuth } from '@/features/auth/hooks/useAuth';
-import { useInfiniteQuery } from '@tanstack/react-query';
-import { ArrowBigUp, ArrowBigDown, MessageCircle, MoreVertical, Trash, Edit, Reply, Flag, Loader2 } from 'lucide-react';
-import { formatDistanceToNow } from 'date-fns';
+import { useState } from 'react';
+import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
+import { Loader2 } from 'lucide-react';
 import CommentCardBody from './CommentCardBody';
+import CommentCardHeader from './CommentCardHeader';
+import CommentCardFooter from './CommentCardFooter';
 import { Comment } from '../types/commentTypes';
 import CommentForm from './CommentForm';
 import { commentApi } from '../services/commentApi';
 import AvatarImage from '@/features/users/components/AvatarImage';
+import { toast } from 'react-toastify';
+import DeleteConfirmationModal from '@/components/ui/DeleteConfirmationModal';
 
 interface CommentCardProps {
   comment: Comment;
@@ -22,17 +24,12 @@ const CommentCard: React.FC<CommentCardProps> = ({
   showReplyForm = false,
   onToggleReply,
 }) => {
-  const { user } = useAuth();
-  const dropdownRef = useRef<HTMLDivElement>(null);
-
-  const [dropdownOpen, setDropdownOpen] = useState(false);
   const [showReplies, setShowReplies] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
-  const isAuthor = user?.id === comment.author.id;
-  const voteCount = comment.upvoteCount - comment.downvoteCount;
-  const hasReplies = comment.replyCount > 0;
-  const formattedDate = comment.createdAt ? formatDistanceToNow(new Date(comment.createdAt), { addSuffix: true }) : '';
+  const queryClient = useQueryClient();
 
   const {
     data: repliesData,
@@ -45,18 +42,12 @@ const CommentCard: React.FC<CommentCardProps> = ({
     queryKey: ['commentReplies', comment.id],
     queryFn: ({ pageParam = 1 }) => commentApi.getCommentReplies(comment.id, pageParam, 3),
     getNextPageParam: (lastPage) => (lastPage.meta.hasNextPage ? lastPage.meta.currentPage + 1 : undefined),
-    enabled: showReplies && hasReplies,
+    enabled: showReplies && comment.replyCount > 0,
     initialPageParam: 1,
     staleTime: 1000 * 60 * 5,
   });
 
   const replies = repliesData?.pages.flatMap((page) => page.items) || [];
-
-  const getVoteColor = (count: number) => {
-    if (count > 0) return 'text-green-500';
-    if (count < 0) return 'text-red-500';
-    return '';
-  };
 
   const handleReplyClick = () => {
     if (onToggleReply) {
@@ -66,15 +57,38 @@ const CommentCard: React.FC<CommentCardProps> = ({
 
   const handleEditClick = () => {
     setIsEditing(true);
-    setDropdownOpen(false);
   };
 
   const handleCancelEdit = () => {
     setIsEditing(false);
   };
 
-  const handleReportClick = () => {
-    setDropdownOpen(false);
+  const handleDeleteClick = () => {
+    setShowDeleteModal(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    setIsDeleting(true);
+    try {
+      await commentApi.deleteComment(comment.id);
+      toast.success('Comment deleted successfully');
+
+      queryClient.invalidateQueries({ queryKey: ['comments', comment.discussionId] });
+    } catch (error) {
+      console.error('Failed to delete comment:', error);
+      toast.error('Failed to delete comment');
+    } finally {
+      setShowDeleteModal(false);
+      setIsDeleting(false);
+    }
+  };
+
+  const handleDeleteCancel = () => {
+    setShowDeleteModal(false);
+  };
+
+  const handleReport = () => {
+    console.log('Report comment', comment.id);
   };
 
   const handleFormClickOutside = () => {
@@ -82,18 +96,6 @@ const CommentCard: React.FC<CommentCardProps> = ({
       onToggleReply(comment.id);
     }
   };
-
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setDropdownOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
 
   const renderReplies = () => {
     if (!showReplies) return null;
@@ -160,152 +162,92 @@ const CommentCard: React.FC<CommentCardProps> = ({
   };
 
   return (
-    <div className="w-full border-t border-t-gray-300 pt-2">
-      <div className="flex gap-2">
-        <AvatarImage fullName={comment.author.fullName} size={10} />
-        <div className="flex flex-1 flex-col gap-1">
-          {/* Comment header */}
-          <div className="flex items-start justify-between">
-            <div className="flex items-center gap-2">
-              <div>
-                <div className="flex items-center gap-1">
-                  <span className="font-medium">{comment.author.fullName}</span>
-                  <span className="text-xs text-gray-500">·</span>
-                  <span className="text-xs text-gray-500">{formattedDate}</span>
-                </div>
-                {comment.parentId && !isReply && (
-                  <span className="text-xs text-gray-500">Replying to another comment</span>
-                )}
-              </div>
-            </div>
-            {/* Comment actions dropdown */}
-            {!isEditing && ( // Only show dropdown when not editing
-              <div className="relative" ref={dropdownRef}>
-                <button
-                  onClick={() => setDropdownOpen(!dropdownOpen)}
-                  className="cursor-pointer rounded-full p-1 hover:bg-gray-100"
-                >
-                  <MoreVertical size={16} />
-                </button>
-
-                {dropdownOpen && (
-                  <div className="absolute top-full right-0 z-10 mt-1 w-40 rounded-md border border-gray-200 bg-white py-1 shadow-lg">
-                    {isAuthor && (
-                      <>
-                        <button
-                          onClick={handleEditClick}
-                          className="flex w-full cursor-pointer items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        >
-                          <Edit size={14} className="mr-2" />
-                          Edit
-                        </button>
-                        <button
-                          onClick={() => console.log('Delete comment')}
-                          className="flex w-full cursor-pointer items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50"
-                        >
-                          <Trash size={14} className="mr-2" />
-                          Delete
-                        </button>
-                      </>
-                    )}
-                    {!isAuthor && (
-                      <button
-                        onClick={handleReportClick}
-                        className="flex w-full cursor-pointer items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                      >
-                        <Flag size={14} className="mr-2" />
-                        Report
-                      </button>
-                    )}
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-
-          {/* Comment body */}
-          {isEditing ? (
-            <CommentForm
-              discussionId={comment.discussionId}
-              isReply={isReply}
-              parentId={comment.parentId}
-              initialValue={comment.content}
-              existingAttachments={comment.attachments}
-              isEditing={true}
-              commentId={comment.id}
-              onCancel={handleCancelEdit}
-              onSuccess={() => {
-                setIsEditing(false);
-              }}
-              initialFocus={true}
+    <>
+      {' '}
+      <div className="w-full border-t border-t-gray-300 pt-2">
+        <div className="flex gap-2">
+          <AvatarImage fullName={comment.author.fullName} size={10} />
+          <div className="flex flex-1 flex-col gap-1">
+            {/* Comment header */}
+            <CommentCardHeader
+              author={comment.author}
+              createdAt={comment.createdAt}
+              isEditing={isEditing}
+              onEditClick={handleEditClick}
+              onDeleteClick={handleDeleteClick}
+              onReport={handleReport}
             />
-          ) : (
-            <>
-              <CommentCardBody content={comment.content} attachments={comment.attachments} />
 
-              {/* Comment footer */}
-              <div className="flex items-center gap-4 text-sm">
-                {/* Vote buttons */}
-                <div className="flex items-center gap-1">
-                  <button className="rounded-full p-1 hover:bg-gray-100">
-                    <ArrowBigUp strokeWidth={1.5} size={20} />
-                  </button>
-                  <span className={`text-xs ${getVoteColor(voteCount)}`}>{voteCount}</span>
-                  <button className="rounded-full p-1 hover:bg-gray-100">
-                    <ArrowBigDown strokeWidth={1.5} size={20} />
-                  </button>
-                </div>
-
-                {/* Reply button */}
-                <button
-                  onClick={handleReplyClick}
-                  className={`flex items-center gap-1 rounded px-2 py-1 text-xs hover:bg-gray-100 ${
-                    showReplyForm ? 'bg-gray-100 font-medium' : ''
-                  }`}
-                >
-                  <Reply size={14} />
-                  {showReplyForm ? 'Cancel Reply' : 'Reply'}
-                </button>
-
-                {/* Show replies button (if has replies) */}
-                {hasReplies && !isReply && (
-                  <button
-                    onClick={() => setShowReplies((prev) => !prev)}
-                    className="flex items-center gap-1 rounded px-2 py-1 text-xs hover:bg-gray-100"
-                  >
-                    <MessageCircle size={14} />
-                    {showReplies ? 'Hide' : 'Show'} {comment.replyCount}{' '}
-                    {comment.replyCount === 1 ? 'reply' : 'replies'}
-                  </button>
-                )}
-              </div>
-            </>
-          )}
-
-          {/* Reply form */}
-          {showReplyForm && (
-            <div className="mt-2">
+            {/* Edit form */}
+            {isEditing ? (
               <CommentForm
                 discussionId={comment.discussionId}
-                isReply={true}
-                parentId={comment.id}
-                onClickOutside={handleFormClickOutside}
-                initialFocus={true}
+                isReply={isReply}
+                parentId={comment.parentId}
+                initialValue={comment.content}
+                existingAttachments={comment.attachments}
+                isEditing={true}
+                commentId={comment.id}
+                onCancel={handleCancelEdit}
                 onSuccess={() => {
-                  if (onToggleReply) {
-                    onToggleReply(comment.id);
-                  }
-                  setShowReplies(true);
+                  setIsEditing(false);
                 }}
+                initialFocus={true}
               />
-            </div>
-          )}
+            ) : (
+              <>
+                {/* Comment body */}
+                <CommentCardBody content={comment.content} attachments={comment.attachments} />
 
-          {/* Replies section */}
-          {renderReplies()}
+                {/* Comment footer */}
+                <CommentCardFooter
+                  commentId={comment.id}
+                  upvoteCount={comment.upvoteCount}
+                  downvoteCount={comment.downvoteCount}
+                  voteStatus={comment.voteStatus}
+                  replyCount={comment.replyCount}
+                  showReplyForm={showReplyForm}
+                  showReplies={showReplies}
+                  isReply={isReply}
+                  onToggleReply={handleReplyClick}
+                  onToggleShowReplies={() => setShowReplies((prev) => !prev)}
+                />
+              </>
+            )}
+
+            {/* Reply form */}
+            {showReplyForm && (
+              <div className="mt-2">
+                <CommentForm
+                  discussionId={comment.discussionId}
+                  isReply={true}
+                  parentId={comment.id}
+                  onClickOutside={handleFormClickOutside}
+                  initialFocus={true}
+                  onSuccess={() => {
+                    if (onToggleReply) {
+                      onToggleReply(comment.id);
+                    }
+                    setShowReplies(true);
+                  }}
+                />
+              </div>
+            )}
+
+            {/* Replies section */}
+            {renderReplies()}
+          </div>
         </div>
       </div>
-    </div>
+      <DeleteConfirmationModal
+        isOpen={showDeleteModal}
+        title="Delete Comment"
+        message="Are you sure you want to delete this comment? This action cannot be undone."
+        isDeleting={isDeleting}
+        onCancel={handleDeleteCancel}
+        onConfirm={handleDeleteConfirm}
+      />
+    </>
   );
 };
 

@@ -18,10 +18,7 @@ const DiscussionCard: React.FC<DiscussionCardProps> = ({ discussion }) => {
     setShowEditModal(true);
   };
 
-  const handleCardClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    const target = e.target as HTMLElement;
-    console.log(target.tagName);
-    if (target.tagName === 'BUTTON' || target.tagName === 'a') return;
+  const handleCardClick = () => {
     navigate(`/discussions/${discussion.id}`);
   };
 
@@ -41,6 +38,7 @@ const DiscussionCard: React.FC<DiscussionCardProps> = ({ discussion }) => {
           upvoteCount={discussion.upvoteCount}
           downvoteCount={discussion.downvoteCount}
           commentCount={discussion.commentCount}
+          voteStatus={discussion.voteStatus}
         />
       </div>
       {/* Edit discussion modal */}

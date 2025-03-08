@@ -6,6 +6,7 @@ import { useAuth } from '@/features/auth/hooks/useAuth';
 import { discussionApi } from '@/features/discussions/services/discussionApi';
 import { useBookmark } from '@/features/discussions/hooks/useBookmark';
 import AvatarImage from '@/features/users/components/AvatarImage';
+import DeleteConfirmationModal from '@/components/ui/DeleteConfirmationModal';
 
 interface DiscussionCardHeaderProps {
   fullName: string | undefined;
@@ -34,17 +35,14 @@ const DiscussionCardHeader: React.FC<DiscussionCardHeaderProps> = ({
   const queryClient = useQueryClient();
   const isAuthor = user?.id === authorId;
 
-  const handleBookmark = () => {
+  const handleBookmark = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
     toggleBookmark({ discussionId, isCurrentlyBookmarked: isBookmarked ?? false });
     setDropdownOpen(false);
   };
 
-  const handleReport = () => {
-    toast.success('Report submitted');
-    setDropdownOpen(false);
-  };
-
-  const handleCopyLink = () => {
+  const handleCopyLink = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
     const url = `${window.location.origin}/discussions/${discussionId}`;
     navigator.clipboard
       .writeText(url)
@@ -53,7 +51,20 @@ const DiscussionCardHeader: React.FC<DiscussionCardHeaderProps> = ({
     setDropdownOpen(false);
   };
 
-  const handleDeleteClick = () => {
+  const handleReport = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    toast.success('Report submitted');
+    setDropdownOpen(false);
+  };
+
+  const handleEdit = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    onEditClick();
+    setDropdownOpen(false);
+  };
+
+  const handleDeleteClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
     setShowDeleteConfirm(true);
     setDropdownOpen(false);
   };
@@ -65,7 +76,6 @@ const DiscussionCardHeader: React.FC<DiscussionCardHeaderProps> = ({
       toast.success('Discussion deleted successfully');
       console.log('Discussion deleted:', discussionId);
 
-      // Invalidate and refetch discussions cache
       queryClient.invalidateQueries({ queryKey: ['discussions'] });
     } catch (error) {
       console.error('Failed to delete discussion:', error);
@@ -80,9 +90,9 @@ const DiscussionCardHeader: React.FC<DiscussionCardHeaderProps> = ({
     setShowDeleteConfirm(false);
   };
 
-  const handleEdit = () => {
-    onEditClick();
-    setDropdownOpen(false);
+  const handleDropdownClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    setDropdownOpen(!dropdownOpen);
   };
 
   useEffect(() => {
@@ -116,7 +126,7 @@ const DiscussionCardHeader: React.FC<DiscussionCardHeaderProps> = ({
         {!isDeleting && (
           <div className="relative" ref={dropdownRef}>
             <button
-              onClick={() => setDropdownOpen(!dropdownOpen)}
+              onClick={handleDropdownClick}
               className="cursor-pointer rounded-full p-1 hover:bg-gray-100"
               aria-label="More options"
             >
@@ -187,39 +197,14 @@ const DiscussionCardHeader: React.FC<DiscussionCardHeaderProps> = ({
       </div>
 
       {/* Delete confirmation dialog */}
-      {showDeleteConfirm && (
-        <div className="bg-opacity-50 fixed inset-0 z-50 flex items-center justify-center bg-black p-4">
-          <div className="w-full max-w-md rounded-md bg-white p-6 shadow-xl">
-            <h3 className="mb-4 text-lg font-medium">Delete Discussion</h3>
-            <p className="mb-6 text-gray-600">
-              Are you sure you want to delete this discussion? This action cannot be undone.
-            </p>
-            <div className="flex justify-end gap-2">
-              <button
-                onClick={handleDeleteCancel}
-                className="rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-                disabled={isDeleting}
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleDeleteConfirm}
-                className="rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
-                disabled={isDeleting}
-              >
-                {isDeleting ? (
-                  <>
-                    <Loader2 size={16} className="mr-2 inline animate-spin" />
-                    Deleting...
-                  </>
-                ) : (
-                  'Delete'
-                )}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <DeleteConfirmationModal
+        isOpen={showDeleteConfirm}
+        title="Delete Discussion"
+        message="Are you sure you want to delete this discussion? This action cannot be undone."
+        isDeleting={isDeleting}
+        onCancel={handleDeleteCancel}
+        onConfirm={handleDeleteConfirm}
+      />
     </>
   );
 };

@@ -23,8 +23,9 @@ const DiscussionDetail = () => {
     isLoading,
     isError,
     error,
+    refetch,
   } = useQuery({
-    queryKey: ['discussion', discussionId],
+    queryKey: ['discussions', discussionId],
     queryFn: () => discussionApi.getDiscussionById(discussionId),
     enabled: !!discussionId && !isNaN(discussionId),
   });
@@ -35,6 +36,10 @@ const DiscussionDetail = () => {
 
   const handleBackClick = () => {
     navigate(-1);
+  };
+
+  const handleVoteChange = () => {
+    refetch();
   };
 
   // Loading state
@@ -65,11 +70,7 @@ const DiscussionDetail = () => {
 
   return (
     <>
-      {/* <Helmet>
-        <title>{discussion.title || 'Discussion'} | UPNVJ Forum</title>
-      </Helmet> */}
-
-      <div className="container mx-auto max-w-4xl px-4 py-8">
+      <div className="container mx-auto max-w-xl px-4 py-8">
         {/* Back button */}
         <button onClick={handleBackClick} className="mb-4 flex items-center gap-2 text-gray-600 hover:text-gray-900">
           <ArrowLeft size={18} />
@@ -103,12 +104,19 @@ const DiscussionDetail = () => {
 
             <hr className="my-2 border-gray-200" />
 
-            <DiscussionCardFooter
-              discussionId={discussion.id}
-              upvoteCount={discussion.upvoteCount}
-              downvoteCount={discussion.downvoteCount}
-              commentCount={discussion.commentCount}
-            />
+            {/* Enhanced vote UI with status and callback */}
+            <div className="px-2">
+              {' '}
+              {/* Add padding for better spacing */}
+              <DiscussionCardFooter
+                discussionId={discussion.id}
+                upvoteCount={discussion.upvoteCount}
+                downvoteCount={discussion.downvoteCount}
+                commentCount={discussion.commentCount}
+                voteStatus={discussion.voteStatus}
+                onVoteChange={handleVoteChange}
+              />
+            </div>
           </div>
         </div>
 

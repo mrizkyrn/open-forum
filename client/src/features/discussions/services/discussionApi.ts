@@ -5,6 +5,7 @@ import { ApiResponse, PaginatedResponse } from '@/types/ResponseTypes';
 
 export const discussionApi = {
   async createDiscussion(formData: FormData): Promise<Discussion> {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     try {
       const response = await apiClient.post<ApiResponse<Discussion>>('/discussions', formData, {
         headers: {
@@ -30,6 +31,7 @@ export const discussionApi = {
   },
 
   async getDiscussionById(id: number): Promise<Discussion> {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     try {
       const response = await apiClient.get<ApiResponse<Discussion>>(`/discussions/${id}`);
       return response.data.data;
@@ -39,6 +41,7 @@ export const discussionApi = {
   },
 
   async updateDiscussion(id: number, formData: FormData): Promise<Discussion> {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     try {
       const response = await apiClient.put<ApiResponse<Discussion>>(`/discussions/${id}`, formData, {
         headers: {
@@ -52,6 +55,7 @@ export const discussionApi = {
   },
 
   async deleteDiscussion(id: string | number): Promise<void> {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     try {
       await apiClient.delete<ApiResponse<void>>(`/discussions/${id}`);
     } catch (error: any) {
@@ -60,6 +64,7 @@ export const discussionApi = {
   },
 
   async bookmarkDiscussion(id: string | number): Promise<void> {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     try {
       await apiClient.post<ApiResponse<void>>(`/discussions/${id}/bookmark`);
     } catch (error: any) {
@@ -68,6 +73,7 @@ export const discussionApi = {
   },
 
   async unbookmarkDiscussion(id: string | number): Promise<void> {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     try {
       await apiClient.delete<ApiResponse<void>>(`/discussions/${id}/bookmark`);
     } catch (error: any) {
