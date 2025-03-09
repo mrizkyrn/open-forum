@@ -26,6 +26,7 @@ const DiscussionCard: React.FC<DiscussionCardProps> = ({ discussion }) => {
     <>
       <div className="flex w-full cursor-pointer flex-col gap-3 rounded-xl bg-white p-4" onClick={handleCardClick}>
         <DiscussionCardHeader
+          avatarUrl={discussion.author?.avatarUrl}
           fullName={discussion.author?.fullName}
           discussionId={discussion.id}
           authorId={discussion.author?.id}

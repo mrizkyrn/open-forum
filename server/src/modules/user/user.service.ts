@@ -8,12 +8,14 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UserResponseDto } from './dto/user-response.dto';
 import { SearchUserDto } from './dto/search-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { FileService } from 'src/core/file/file.service';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    private readonly fileService: FileService,
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<UserResponseDto> {
@@ -112,13 +114,57 @@ export class UserService {
     return this.userRepository.save(user);
   }
 
+  async updateAvatar(userId: number, file: Express.Multer.File): Promise<User> {
+    const user = await this.findById(userId);
+
+    if (!user) {
+      throw new NotFoundException(`User with ID ${userId} not found`);
+    }
+
+    try {
+      // Delete old avatar if exists
+      if (user.avatarUrl) {
+        await this.fileService.deleteFile(user.avatarUrl);
+      }
+
+      // Upload new avatar
+      const avatarUrl = await this.fileService.uploadUserAvatar(file);
+
+      // Update user record
+      user.avatarUrl = avatarUrl;
+      await this.userRepository.save(user);
+
+      return user;
+    } catch (error) {
+      console.error('Error updating avatar:', error);
+      throw error;
+    }
+  }
+
+  async removeAvatar(userId: number): Promise<User> {
+    const user = await this.findById(userId);
+
+    if (!user) {
+      throw new NotFoundException(`User with ID ${userId} not found`);
+    }
+
+    // Remove avatar file if exists
+    if (user.avatarUrl) {
+      await this.fileService.deleteFile(user.avatarUrl);
+      // user.avatarUrl = null;
+      await this.userRepository.save(user);
+    }
+
+    return user;
+  }
+
   async delete(id: number): Promise<void> {
     const user = await this.findById(id);
 
     if (!user) {
       throw new NotFoundException(`User with ID ${id} not found`);
     }
-    
+
     await this.userRepository.softDelete(id);
   }
 
@@ -132,6 +178,7 @@ export class UserService {
       username: user.username,
       fullName: user.fullName,
       role: user.role,
+      avatarUrl: user.avatarUrl,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
     };

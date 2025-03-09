@@ -5,18 +5,15 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { Attachment, AttachmentType } from './entities/attachment.entity';
+import { FileService, FileType } from 'src/core/file/file.service';
 
 @Injectable()
 export class AttachmentService {
-  private readonly uploadDir: string;
-
   constructor(
     @InjectRepository(Attachment)
-    private attachmentRepository: Repository<Attachment>,
-  ) {
-    this.uploadDir = path.join(process.cwd(), 'uploads');
-    this.ensureDirectoryExists(this.uploadDir);
-  }
+    private readonly attachmentRepository: Repository<Attachment>,
+    private readonly fileService: FileService,
+  ) {}
 
   async createAttachment(
     file: Express.Multer.File,
@@ -26,37 +23,17 @@ export class AttachmentService {
     manager?: EntityManager,
   ): Promise<Attachment> {
     try {
-      // Validate file
-      this.validateFile(file);
-
-      // Create directory path by date (year/month)
-      const now = new Date();
-      const year = now.getFullYear().toString();
-      const month = (now.getMonth() + 1).toString().padStart(2, '0');
-      const dirPath = path.join(this.uploadDir, year, month);
-
-      // Ensure directory exists
-      this.ensureDirectoryExists(dirPath);
-
-      // Generate unique filename
-      const fileExt = path.extname(file.originalname);
-      const uniqueFilename = `${Date.now()}-${uuidv4()}${fileExt}`;
-      const filePath = path.join(dirPath, uniqueFilename);
-      const relativePath = path.join(year, month, uniqueFilename).replace(/\\/g, '/');
-
-      // Save file to disk
-      await fs.promises.writeFile(filePath, file.buffer);
-
-      // Determine if file is an image
+      const fileType = this.mapAttachmentTypeToFileType(entityType);
+      const fileUrl = await this.fileService.uploadFile(file, fileType);
+      const filename = fileUrl.split('/').pop();
       const isImage = file.mimetype.startsWith('image/');
 
-      // Create attachment record
       const attachment = this.attachmentRepository.create({
         originalName: file.originalname,
-        name: uniqueFilename,
+        name: filename,
         mimeType: file.mimetype,
         size: file.size,
-        url: `/uploads/${relativePath}`,
+        url: fileUrl,
         entityType,
         entityId,
         displayOrder,
@@ -117,9 +94,10 @@ export class AttachmentService {
     const attachment = await this.getAttachmentById(id);
 
     try {
-      const filePath = path.join(this.uploadDir, attachment.url.replace('/uploads/', ''));
-      await fs.promises.unlink(filePath);
+      // Use FileService to delete the file
+      await this.fileService.deleteFile(attachment.url);
 
+      // Delete database record
       if (manager) {
         await manager.remove(Attachment, attachment);
       } else {
@@ -131,7 +109,11 @@ export class AttachmentService {
     }
   }
 
-  async deleteAttachmentsByEntity(entityType: AttachmentType, entityId: number, manager?: EntityManager): Promise<void> {
+  async deleteAttachmentsByEntity(
+    entityType: AttachmentType,
+    entityId: number,
+    manager?: EntityManager,
+  ): Promise<void> {
     const attachments = await this.getAttachmentsByEntity(entityType, entityId);
 
     for (const attachment of attachments) {
@@ -162,40 +144,14 @@ export class AttachmentService {
     }
   }
 
-  private ensureDirectoryExists(dir: string): void {
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir, { recursive: true });
-    }
-  }
-
-  private validateFile(file: Express.Multer.File): void {
-    // Check file size (max 3MB)
-    const maxSize = 3 * 1024 * 1024; // 3MB
-    if (file.size > maxSize) {
-      throw new BadRequestException(`File size exceeds maximum allowed (${maxSize / (1024 * 1024)}MB)`);
-    }
-
-    // Check file type
-    const allowedMimeTypes = [
-      // Images
-      'image/jpg',
-      'image/jpeg',
-      'image/png',
-      // Documents
-      'application/pdf',
-      'application/msword',
-      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-      'application/vnd.ms-excel',
-      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-      'application/vnd.ms-powerpoint',
-      'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-      // Archives
-      'application/zip',
-      'application/x-rar-compressed',
-    ];
-
-    if (!allowedMimeTypes.includes(file.mimetype)) {
-      throw new BadRequestException('Invalid file type');
+  private mapAttachmentTypeToFileType(attachmentType: AttachmentType): FileType {
+    switch (attachmentType) {
+      case AttachmentType.DISCUSSION:
+        return FileType.DISCUSSION_ATTACHMENT;
+      case AttachmentType.COMMENT:
+        return FileType.COMMENT_ATTACHMENT;
+      default:
+        return FileType.DISCUSSION_ATTACHMENT; // Default fallback
     }
   }
 }

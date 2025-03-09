@@ -37,17 +37,12 @@ export const commentApi = {
 
   async createComment(discussionId: number, formData: FormData): Promise<Comment> {
     // await new Promise((resolve) => setTimeout(resolve, 1000));
-    console.log('discussionId', discussionId);
-    for(const pair of formData.entries()) {
-      console.log(pair[0]+ ', '+ pair[1]);
-    }
     try {
       const response = await apiClient.post<ApiResponse<Comment>>(`/discussions/${discussionId}/comments`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
-      console.log('response', response);
       return response.data.data;
     } catch (error: any) {
       throw handleApiError(error, 'Failed to create comment');

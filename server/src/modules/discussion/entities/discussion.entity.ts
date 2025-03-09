@@ -3,6 +3,7 @@ import { BaseEntity } from '../../../core/database/entities/base.entity';
 import { User } from '../../user/entities/user.entity';
 import { Attachment } from '../../attachment/entities/attachment.entity';
 import { Comment } from '../../comment/entities/comment.entity';
+import { DiscussionSpace } from './discussion-space.entity';
 
 @Entity('discussions')
 export class Discussion extends BaseEntity {
@@ -36,4 +37,11 @@ export class Discussion extends BaseEntity {
 
   @OneToMany(() => Attachment, (attachment) => attachment.entityId)
   attachments: Attachment[];
+
+  @Column({ name: 'space_id', nullable: true })
+  spaceId: number;
+
+  @ManyToOne(() => DiscussionSpace, (space) => space.discussions)
+  @JoinColumn({ name: 'space_id' })
+  space: DiscussionSpace;
 }

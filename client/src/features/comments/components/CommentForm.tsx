@@ -51,7 +51,7 @@ const CommentForm: React.FC<CommentFormProps> = ({
   const queryClient = useQueryClient();
   const commentFormRef = useRef<HTMLFormElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
-
+  
   // Set initial value and adjust textarea height
   useEffect(() => {
     onChange(initialValue);
@@ -206,7 +206,9 @@ const CommentForm: React.FC<CommentFormProps> = ({
     <div className="w-full">
       <form ref={commentFormRef} onSubmit={handleSubmit} className="flex flex-col gap-2 rounded-lg bg-white">
         <div className="flex items-start gap-2">
-          {isReply || isEditing ? null : <AvatarImage fullName={user?.fullName} size="10" />}
+          {isReply || isEditing ? null : (
+            <AvatarImage avatarUrl={user?.avatarUrl} fullName={user?.fullName} size="10" />
+          )}
           <div className="flex w-full flex-col gap-3">
             <textarea
               ref={textareaRef}

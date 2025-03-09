@@ -8,11 +8,14 @@ import CreateDiscussionModal from './CreateDiscussionModal';
 import DiscussionCard from './DiscussionCard';
 import DiscussionPostSkeleton from './DiscussionPostSkeleton';
 import { useSocket } from '@/hooks/useSocket';
+import AvatarImage from '@/features/users/components/AvatarImage';
+import { useAuth } from '@/features/auth/hooks/useAuth';
 
 const DiscussionPost = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newDiscussions, setNewDiscussions] = useState(0);
 
+  const { user } = useAuth();
   const { socket, isConnected } = useSocket();
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status, error, refetch } =
     useInfiniteDiscussions({
@@ -109,7 +112,7 @@ const DiscussionPost = () => {
       <div className="flex flex-col items-center gap-2">
         {/* Create new discussion input */}
         <div className="flex w-full items-center gap-2 rounded-xl bg-white p-4">
-          <img src="src/assets/profile-picture.png" alt="Profile" className="h-10 w-10 rounded-full object-cover" />
+          <AvatarImage avatarUrl={user?.avatarUrl} fullName={user?.fullName} size={10} />
           <button
             onClick={() => setIsModalOpen(true)}
             className="bg-light w-full rounded-full px-4 py-1 text-left text-gray-600 focus:outline-none"

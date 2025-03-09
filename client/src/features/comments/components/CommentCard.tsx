@@ -172,7 +172,7 @@ const CommentCard: React.FC<CommentCardProps> = ({
       {' '}
       <div className="w-full border-t border-t-gray-300 pt-2">
         <div className="flex gap-2">
-          <AvatarImage fullName={comment.author.fullName} size={10} />
+          <AvatarImage avatarUrl={comment.author.avatarUrl} fullName={comment.author.fullName} size={10} />
           <div className="flex flex-1 flex-col gap-1">
             {/* Comment header */}
             <CommentCardHeader

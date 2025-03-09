@@ -60,10 +60,11 @@ describe('DiscussionService', () => {
     email: 'test@example.com',
     password: 'hashedpassword',
     role: 'student',
+    avatarUrl: null,
     createdAt: new Date(),
     updatedAt: new Date(),
     isDeleted: false,
-  } as User;
+  } as unknown as User;
 
   const mockDiscussion: Discussion = {
     id: 1,
@@ -80,7 +81,7 @@ describe('DiscussionService', () => {
     attachments: [],
     comments: [],
     isDeleted: false,
-  } as Discussion;
+  } as unknown as Discussion;
 
   const mockAttachment: Attachment = {
     id: 1,

@@ -10,6 +10,7 @@ import { AttachmentModule } from './modules/attachment/attachment.module';
 import { CommentModule } from './modules/comment/comment.module';
 import { VoteModule } from './modules/vote/vote.module';
 import { WebsocketModule } from './core/websocket/websocket.module';
+import { FileModule } from './core/file/file.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { WebsocketModule } from './core/websocket/websocket.module';
     CommentModule,
     VoteModule,
     WebsocketModule,
+    FileModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -2,15 +2,12 @@ import { Module } from '@nestjs/common';
 import { AttachmentService } from './attachment.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Attachment } from './entities/attachment.entity';
-import { MulterModule } from '@nestjs/platform-express';
-import { memoryStorage } from 'multer';
+import { FileModule } from 'src/core/file/file.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Attachment]),
-    MulterModule.register({
-      storage: memoryStorage(),
-    }),
+    FileModule,
   ],
   providers: [AttachmentService],
   exports: [AttachmentService],

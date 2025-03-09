@@ -521,6 +521,7 @@ export class DiscussionService {
             username: discussion.author.username,
             fullName: discussion.author.fullName,
             role: discussion.author.role,
+            avatarUrl: discussion.author.avatarUrl || null,
             createdAt: discussion.author.createdAt,
             updatedAt: discussion.author.updatedAt,
           }
@@ -534,6 +535,7 @@ export class DiscussionService {
         username: '(You - Anonymous)',
         fullName: '(You - Anonymous)',
         role: discussion.author.role,
+        avatarUrl: null,
         createdAt: discussion.author.createdAt,
         updatedAt: discussion.author.updatedAt,
       };

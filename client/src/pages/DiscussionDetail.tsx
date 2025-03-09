@@ -140,6 +140,7 @@ const DiscussionDetail = () => {
           {/* Discussion content */}
           <div className="flex flex-col gap-4 px-6 py-6">
             <DiscussionCardHeader
+              avatarUrl={discussion.author?.avatarUrl}
               fullName={discussion.author?.fullName}
               discussionId={discussion.id}
               authorId={discussion.author?.id}

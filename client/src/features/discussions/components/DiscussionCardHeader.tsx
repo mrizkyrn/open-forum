@@ -10,6 +10,7 @@ import DeleteConfirmationModal from '@/components/ui/DeleteConfirmationModal';
 
 interface DiscussionCardHeaderProps {
   fullName: string | undefined;
+  avatarUrl?: string | null;
   discussionId: number;
   authorId?: number;
   isBookmarked?: boolean;
@@ -19,6 +20,7 @@ interface DiscussionCardHeaderProps {
 
 const DiscussionCardHeader: React.FC<DiscussionCardHeaderProps> = ({
   fullName,
+  avatarUrl,
   discussionId,
   authorId,
   isBookmarked,
@@ -74,7 +76,6 @@ const DiscussionCardHeader: React.FC<DiscussionCardHeaderProps> = ({
     try {
       await discussionApi.deleteDiscussion(discussionId);
       toast.success('Discussion deleted successfully');
-      console.log('Discussion deleted:', discussionId);
 
       queryClient.invalidateQueries({ queryKey: ['discussions'] });
     } catch (error) {
@@ -111,7 +112,7 @@ const DiscussionCardHeader: React.FC<DiscussionCardHeaderProps> = ({
       <div className="flex items-start justify-between">
         {/* Profile image and user details */}
         <div className="flex items-center gap-2">
-          <AvatarImage fullName={fullName} size={10} />
+          <AvatarImage avatarUrl={avatarUrl} fullName={fullName} size={10} />
           <div className="flex flex-col justify-center">
             {fullName ? (
               <h3 className="text-base font-semibold">{fullName}</h3>

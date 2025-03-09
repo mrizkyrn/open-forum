@@ -14,6 +14,9 @@ export class User extends BaseEntity {
   @Column({ name: 'full_name', type: 'varchar', length: 100 })
   fullName: string;
 
+  @Column({ name: 'avatar_url', type: 'varchar', length: 255, nullable: true })
+  avatarUrl: string;
+
   @Column({ type: 'enum', enum: UserRole, default: UserRole.STUDENT })
   role: UserRole;
 }

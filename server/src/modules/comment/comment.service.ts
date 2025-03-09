@@ -436,6 +436,7 @@ export class CommentService {
         username: comment.author.username,
         fullName: comment.author.fullName,
         role: comment.author.role,
+        avatarUrl: comment.author.avatarUrl || null,
         createdAt: comment.author.createdAt,
         updatedAt: comment.author.updatedAt,
       },

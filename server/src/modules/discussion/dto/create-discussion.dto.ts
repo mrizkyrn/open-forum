@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsArray, IsBoolean, IsNotEmpty, IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
+import { IsArray, IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
 import { Transform } from 'class-transformer';
 
 export class CreateDiscussionDto {
@@ -48,4 +48,13 @@ export class CreateDiscussionDto {
     return value;
   })
   tags?: string[];
+
+  @ApiPropertyOptional({
+    description: 'ID of the space this discussion belongs to',
+    example: 1,
+  })
+  @IsNumber()
+  @IsOptional()
+  @Transform(({ value }) => (value ? parseInt(value, 10) : undefined))
+  spaceId?: number;
 }

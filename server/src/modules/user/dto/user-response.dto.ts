@@ -19,6 +19,9 @@ export class UserResponseDto {
   })
   role: UserRole;
 
+  @ApiProperty({ description: 'URL of the user avatar', example: 'https://example.com/avatar.jpg', nullable: true })
+  avatarUrl?: string | null;
+
   @ApiProperty({ description: 'Creation date of the user account', example: '2021-09-01T00:00:00.000Z' })
   createdAt: Date;
 

@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -10,9 +11,11 @@ import {
   Post,
   Put,
   Query,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UserService } from './user.service';
 import { User } from './entities/user.entity';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -25,6 +28,7 @@ import { PageableUserResponseDto, UserResponseDto } from './dto/user-response.dt
 import { SearchUserDto } from './dto/search-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiBearerAuth()
 @ApiTags('Users')
@@ -65,6 +69,34 @@ export class UserController {
     if (!user) {
       throw new NotFoundException('User not found');
     }
+    return this.userService.mapToUserResponseDto(user);
+  }
+
+  @Post('me/avatar')
+  @UseInterceptors(FileInterceptor('avatar'))
+  @ApiOperation({ summary: 'Upload avatar for current user' })
+  @ApiConsumes('multipart/form-data')
+  @ApiResponse({ status: 200, description: 'Avatar updated successfully' })
+  @ApiResponse({ status: 400, description: 'Invalid file' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  async uploadAvatar(
+    @UploadedFile() file: Express.Multer.File,
+    @ReqUser() currentUser: User,
+  ): Promise<UserResponseDto> {
+    if (!file) {
+      throw new BadRequestException('No file uploaded');
+    }
+    
+    const user = await this.userService.updateAvatar(currentUser.id, file);
+    return this.userService.mapToUserResponseDto(user);
+  }
+
+  @Delete('me/avatar')
+  @ApiOperation({ summary: 'Remove avatar for current user' })
+  @ApiResponse({ status: 200, description: 'Avatar removed successfully' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  async removeAvatar(@ReqUser() currentUser: User): Promise<UserResponseDto> {
+    const user = await this.userService.removeAvatar(currentUser.id);
     return this.userService.mapToUserResponseDto(user);
   }
 
