@@ -23,8 +23,4 @@ export class UpdateDiscussionSpaceDto {
   @MaxLength(100)
   @Transform(({ value }) => value?.toLowerCase().replace(/\s+/g, '-'))
   slug?: string;
-
-  @ApiPropertyOptional({ description: 'IDs of attachments to remove', type: [Number] })
-  @IsOptional()
-  attachmentsToRemove?: number[];
 }

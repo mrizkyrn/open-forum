@@ -48,13 +48,30 @@ export class TransformInterceptor<T> implements NestInterceptor<T, ApiResponse<T
       return 'Popular tags retrieved successfully';
     if (method === 'PUT' && path === `/${apiPrefix}/discussions/:id`) return 'Discussion updated successfully';
     if (method === 'DELETE' && path === `/${apiPrefix}/discussions/:id`) return 'Discussion deleted successfully';
-    // Bookmark messages
+
+    // Discussion Bookmark messages
     if (method === 'POST' && path === `/${apiPrefix}/discussions/:id/bookmark`)
       return 'Discussion bookmarked successfully';
     if (method === 'DELETE' && path === `/${apiPrefix}/discussions/:id/bookmark`)
       return 'Bookmark removed successfully';
     if (method === 'GET' && path === `/${apiPrefix}/discussions/bookmarked`)
       return 'Bookmarked discussions retrieved successfully';
+
+    // Discussion Space messages
+    if (method === 'POST' && path === `/${apiPrefix}/spaces`) return 'Discussion space created successfully';
+    if (method === 'GET' && path === `/${apiPrefix}/spaces`) return 'Discussion spaces retrieved successfully';
+    if (method === 'GET' && path === `/${apiPrefix}/spaces/slug/:slug`)
+      return 'Discussion space retrieved successfully';
+    if (method === 'GET' && path === `/${apiPrefix}/spaces/:id`) return 'Discussion space retrieved successfully';
+    if (method === 'PATCH' && path === `/${apiPrefix}/spaces/:id`) return 'Discussion space updated successfully';
+    if (method === 'DELETE' && path === `/${apiPrefix}/spaces/:id`) return 'Discussion space deleted successfully';
+    if (method === 'POST' && path === `/${apiPrefix}/spaces/:id/follow`)
+      return 'Successfully followed discussion space';
+    if (method === 'POST' && path === `/${apiPrefix}/spaces/:id/unfollow`)
+      return 'Successfully unfollowed discussion space';
+    if (method === 'GET' && path === `/${apiPrefix}/spaces/:id/is-following`)
+      return 'Following status retrieved successfully';
+
     return 'Operation successful';
   }
 }
