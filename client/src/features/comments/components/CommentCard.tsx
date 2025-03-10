@@ -1,15 +1,16 @@
 import { useState } from 'react';
 import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import { Loader2 } from 'lucide-react';
+import { toast } from 'react-toastify';
+import { Comment } from '@/features/comments/types';
+import { commentApi } from '@/features/comments/services/commentApi';
+import DeleteConfirmationModal from '@/components/modals/DeleteConfirmationModal';
+import AvatarImage from '@/features/users/components/AvatarImage';
 import CommentCardBody from './CommentCardBody';
 import CommentCardHeader from './CommentCardHeader';
 import CommentCardFooter from './CommentCardFooter';
-import { Comment } from '../types/commentTypes';
 import CommentForm from './CommentForm';
-import { commentApi } from '../services/commentApi';
-import AvatarImage from '@/features/users/components/AvatarImage';
-import { toast } from 'react-toastify';
-import DeleteConfirmationModal from '@/components/ui/DeleteConfirmationModal';
+import LoadingSpinner from '@/components/feedback/LoadingSpinner';
 
 interface CommentCardProps {
   comment: Comment;
@@ -107,12 +108,7 @@ const CommentCard: React.FC<CommentCardProps> = ({
     if (!showReplies) return null;
 
     if (isLoadingReplies && !isFetchingMoreReplies) {
-      return (
-        <div className="mt-2 flex items-center justify-center py-2 pl-8">
-          <Loader2 size={16} className="mr-2 animate-spin text-green-600" />
-          <span className="text-xs text-gray-500">Loading replies...</span>
-        </div>
-      );
+      return <LoadingSpinner text="Loading replies..." />;
     }
 
     if (isErrorReplies) {
@@ -169,7 +165,6 @@ const CommentCard: React.FC<CommentCardProps> = ({
 
   return (
     <>
-      {' '}
       <div className="w-full border-t border-t-gray-300 pt-2">
         <div className="flex gap-2">
           <AvatarImage avatarUrl={comment.author.avatarUrl} fullName={comment.author.fullName} size={10} />

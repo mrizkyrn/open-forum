@@ -1,6 +1,6 @@
+import { useState } from 'react';
 import { Attachment } from '@/types/AttachmentTypes';
 import { getFileUrl } from '@/utils/helpers';
-import { useState } from 'react';
 
 interface ImageDisplayProps {
   image: Attachment;
@@ -12,15 +12,12 @@ const ImageDisplay: React.FC<ImageDisplayProps> = ({ image }) => {
   const handleImageClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     setExpandedImageUrl(getFileUrl(image.url));
-  }
+  };
 
   return (
     <>
-      <button
-        key={image.id}
-        className="group relative cursor-pointer"
-        onClick={handleImageClick}
-      >
+      {/* Image thumbnail */}
+      <button key={image.id} className="group relative cursor-pointer" onClick={handleImageClick}>
         <img
           src={getFileUrl(image.url)}
           alt={image.originalName}
@@ -44,7 +41,7 @@ const ImageDisplay: React.FC<ImageDisplayProps> = ({ image }) => {
                 e.stopPropagation();
                 setExpandedImageUrl(null);
               }}
-              className="absolute -top-4 -right-4 rounded-full bg-white p-1 shadow-md hover:bg-gray-100"
+              className="absolute -top-4 -right-4 rounded-full bg-white p-1 hover:bg-gray-100"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"

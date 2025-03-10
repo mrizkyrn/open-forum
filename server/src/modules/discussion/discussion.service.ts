@@ -22,6 +22,7 @@ import { UpdateDiscussionDto } from './dto/update-discussion.dto';
 import { VoteService } from '../vote/vote.service';
 import { VoteEntityType } from '../vote/entities/vote.entity';
 import { WebsocketGateway } from 'src/core/websocket/websocket.gateway';
+import { DiscussionSpace } from './entities/discussion-space.entity';
 
 @Injectable()
 export class DiscussionService {
@@ -30,6 +31,8 @@ export class DiscussionService {
     private readonly discussionRepository: Repository<Discussion>,
     @InjectRepository(Bookmark)
     private readonly bookmarkRepository: Repository<Bookmark>,
+    @InjectRepository(DiscussionSpace)
+    private readonly spaceRepository: Repository<DiscussionSpace>,
     private readonly attachmentService: AttachmentService,
     private readonly voteService: VoteService,
     private readonly websocketGateway: WebsocketGateway,
@@ -50,6 +53,17 @@ export class DiscussionService {
 
       if (!currentUser || !currentUser.id) {
         throw new BadRequestException('User information is required');
+      }
+
+      // Check if the user is allowed to create a discussion in the specified space
+      if (createDiscussionDto.spaceId) {
+        const space = await this.spaceRepository.findOne({
+          where: { id: createDiscussionDto.spaceId },
+        });
+
+        if (!space) {
+          throw new NotFoundException(`Discussion space with ID ${createDiscussionDto.spaceId} not found`);
+        }
       }
 
       const queryRunner = this.discussionRepository.manager.connection.createQueryRunner();
@@ -94,7 +108,7 @@ export class DiscussionService {
         // Commit the transaction
         await queryRunner.commitTransaction();
 
-        const createdDiscussion = await this.findById(savedDiscussion.id);
+        const createdDiscussion = await this.getDiscussionById(savedDiscussion.id);
 
         this.websocketGateway.notifyNewDiscussion();
 
@@ -117,9 +131,7 @@ export class DiscussionService {
 
       console.error('Error creating discussion with attachments:', error);
 
-      throw new InternalServerErrorException(
-        'An error occurred while creating the discussion. Please try again later.',
-      );
+      throw error;
     }
   }
 
@@ -131,6 +143,7 @@ export class DiscussionService {
     const queryBuilder = this.discussionRepository
       .createQueryBuilder('discussion')
       .leftJoinAndSelect('discussion.author', 'author')
+      .leftJoinAndSelect('discussion.space', 'space')
       .orderBy(`discussion.${sortBy}`, sortOrder)
       .skip(offset)
       .take(limit);
@@ -150,6 +163,10 @@ export class DiscussionService {
 
     if (searchDto.tags && searchDto.tags.length > 0) {
       queryBuilder.andWhere('discussion.tags && :tags', { tags: searchDto.tags });
+    }
+
+    if (searchDto.spaceId) {
+      queryBuilder.andWhere('discussion.spaceId = :spaceId', { spaceId: searchDto.spaceId });
     }
 
     const [discussions, totalItems] = await queryBuilder.getManyAndCount();
@@ -196,24 +213,8 @@ export class DiscussionService {
     };
   }
 
-  async findById(id: number): Promise<Discussion> {
-    const discussion = await this.discussionRepository.findOne({
-      where: { id },
-      relations: ['author'],
-    });
-
-    if (!discussion) {
-      throw new NotFoundException(`Discussion with ID ${id} not found`);
-    }
-
-    const attachments = await this.attachmentService.getAttachmentsByEntity(AttachmentType.DISCUSSION, id);
-    discussion.attachments = attachments;
-
-    return discussion;
-  }
-
-  async getDiscussionById(id: number, currentUser?: User): Promise<DiscussionResponseDto> {
-    const discussion = await this.findById(id);
+  async findById(id: number, currentUser?: User): Promise<DiscussionResponseDto> {
+    const discussion = await this.getDiscussionById(id);
 
     const response = this.formatDiscussionResponse(discussion, currentUser);
 
@@ -327,7 +328,7 @@ export class DiscussionService {
 
       await queryRunner.commitTransaction();
 
-      const updatedDiscussion = await this.findById(id);
+      const updatedDiscussion = await this.getDiscussionById(id);
       return this.formatDiscussionResponse(updatedDiscussion, currentUser);
     } catch (error) {
       await queryRunner.rollbackTransaction();
@@ -339,7 +340,7 @@ export class DiscussionService {
   }
 
   async delete(id: number, currentUser: User): Promise<void> {
-    const discussion = await this.findById(id);
+    const discussion = await this.getDiscussionById(id);
 
     if (discussion.authorId !== currentUser.id) {
       throw new ForbiddenException('You do not have permission to delete this discussion');
@@ -349,7 +350,7 @@ export class DiscussionService {
   }
 
   async hardDelete(id: number, currentUser: User): Promise<void> {
-    const discussion = await this.findById(id);
+    const discussion = await this.getDiscussionById(id);
 
     if (discussion.authorId !== currentUser.id) {
       throw new ForbiddenException('You do not have permission to delete this discussion');
@@ -386,7 +387,7 @@ export class DiscussionService {
   }
 
   async bookmarkDiscussion(discussionId: number, userId: number): Promise<void> {
-    const discussion = await this.findById(discussionId);
+    const discussion = await this.getDiscussionById(discussionId);
 
     if (!discussion) {
       throw new NotFoundException(`Discussion with ID ${discussionId} not found`);
@@ -502,6 +503,35 @@ export class DiscussionService {
     return !!bookmark;
   }
 
+  private async getDiscussionById(id: number): Promise<Discussion> {
+    const discussion = await this.discussionRepository.findOne({
+      where: { id },
+      relations: ['author', 'space'],
+    });
+
+    if (!discussion) {
+      throw new NotFoundException(`Discussion with ID ${id} not found`);
+    }
+
+    const attachments = await this.attachmentService.getAttachmentsByEntity(AttachmentType.DISCUSSION, id);
+    discussion.attachments = attachments;
+
+    return discussion;
+  }
+
+  private async cleanupFiles(filePaths: string[]): Promise<void> {
+    for (const filePath of filePaths) {
+      try {
+        if (fs.existsSync(filePath)) {
+          await fs.promises.unlink(filePath);
+          console.log(`Cleaned up file: ${filePath}`);
+        }
+      } catch (error) {
+        console.error(`Failed to clean up file ${filePath}:`, error);
+      }
+    }
+  }
+
   formatDiscussionResponse(discussion: Discussion, currentUser?: User): DiscussionResponseDto {
     const response = {
       id: discussion.id,
@@ -515,6 +545,13 @@ export class DiscussionService {
       downvoteCount: discussion.downvoteCount,
       attachments: discussion.attachments || [],
       isBookmarked: false,
+      space: !discussion.space
+        ? null
+        : {
+            id: discussion.space.id,
+            name: discussion.space.name,
+            slug: discussion.space.slug,
+          },
       author: !discussion.isAnonymous
         ? {
             id: discussion.author.id,
@@ -547,18 +584,5 @@ export class DiscussionService {
     }
 
     return response;
-  }
-
-  private async cleanupFiles(filePaths: string[]): Promise<void> {
-    for (const filePath of filePaths) {
-      try {
-        if (fs.existsSync(filePath)) {
-          await fs.promises.unlink(filePath);
-          console.log(`Cleaned up file: ${filePath}`);
-        }
-      } catch (error) {
-        console.error(`Failed to clean up file ${filePath}:`, error);
-      }
-    }
   }
 }

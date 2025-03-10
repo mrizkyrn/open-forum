@@ -4,15 +4,16 @@ import { X, Loader2, Tag as TagIcon, CheckCircle } from 'lucide-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { discussionApi } from '@/features/discussions/services/discussionApi';
 import { ALLOWED_FILE_TYPES, MAX_FILE_SIZE, MAX_DISCUSSION_FILES } from '../../../constants/fileConstants';
-import FilePreview from '@/components/ui/FilePreview';
+import FilePreview from '@/components/ui/file-displays/FilePreview';
 import { useFileHandling } from '../hooks/useFileHandling';
 
 interface CreateDiscussionModalProps {
+  preselectedSpaceId?: number;
   isOpen: boolean;
   onClose: () => void;
 }
 
-const CreateDiscussionModal: React.FC<CreateDiscussionModalProps> = ({ isOpen, onClose }) => {
+const CreateDiscussionModal: React.FC<CreateDiscussionModalProps> = ({ preselectedSpaceId, isOpen, onClose }) => {
   const queryClient = useQueryClient();
 
   const [content, setContent] = useState<string>('');
@@ -75,7 +76,7 @@ const CreateDiscussionModal: React.FC<CreateDiscussionModalProps> = ({ isOpen, o
     if (!validateFiles(files)) {
       isValid = false;
     }
-    console.log('isValid:', isValid);
+
     return isValid;
   };
 
@@ -99,6 +100,13 @@ const CreateDiscussionModal: React.FC<CreateDiscussionModalProps> = ({ isOpen, o
     files.forEach((file) => {
       formData.append('files', file);
     });
+
+    // Add space ID if present
+    if (preselectedSpaceId) {
+      formData.append('spaceId', String(preselectedSpaceId));
+    } else {
+      formData.append('spaceId', '1');
+    }
 
     createDiscussion(formData);
   };

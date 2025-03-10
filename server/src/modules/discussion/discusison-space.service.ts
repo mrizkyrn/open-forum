@@ -72,7 +72,6 @@ export class DiscussionSpaceService {
 
       // Save with file URLs
       await queryRunner.manager.save(DiscussionSpace, savedSpace);
-      console.log('savedSpace', savedSpace);
 
       // Auto-follow created space
       // await this.followSpace(savedSpace.id, currentUser.id);

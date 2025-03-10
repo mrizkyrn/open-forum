@@ -7,7 +7,7 @@ import { ALLOWED_FILE_TYPES, MAX_COMMENT_FILES, MAX_FILE_SIZE } from '@/constant
 import { Attachment } from '@/types/AttachmentTypes';
 import AvatarImage from '@/features/users/components/AvatarImage';
 import { useAuth } from '@/features/auth/hooks/useAuth';
-import FilePreview from '@/components/ui/FilePreview';
+import FilePreview from '@/components/ui/file-displays/FilePreview';
 import { useFileHandling } from '@/features/discussions/hooks/useFileHandling';
 
 interface CommentFormProps {
@@ -51,7 +51,7 @@ const CommentForm: React.FC<CommentFormProps> = ({
   const queryClient = useQueryClient();
   const commentFormRef = useRef<HTMLFormElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
-  
+
   // Set initial value and adjust textarea height
   useEffect(() => {
     onChange(initialValue);
@@ -104,6 +104,7 @@ const CommentForm: React.FC<CommentFormProps> = ({
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['comments', discussionId] });
       queryClient.invalidateQueries({ queryKey: ['discussion', discussionId] });
+      queryClient.invalidateQueries({ queryKey: ['discussions'], exact: false });
 
       if (parentId) {
         queryClient.invalidateQueries({ queryKey: ['commentReplies', parentId] });

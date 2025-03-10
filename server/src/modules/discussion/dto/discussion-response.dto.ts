@@ -89,6 +89,16 @@ export class DiscussionResponseDto {
     nullable: true,
   })
   voteStatus?: number | null;
+
+  @ApiProperty({
+    description: 'Space where the discussion belongs',
+    example: 1,
+  })
+  space?: {
+    id: number;
+    name: string;
+    slug: string;
+  } | null;
 }
 
 export class PageableDiscussionResponseDto {

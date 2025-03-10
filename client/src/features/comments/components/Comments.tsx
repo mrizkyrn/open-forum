@@ -4,8 +4,8 @@ import { Comment } from '../types/commentTypes';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { commentApi } from '../services/commentApi';
 import { Loader2 } from 'lucide-react';
-import LoadingSpinner from '@/components/ui/LoadingSpinner';
-import ErrorFetching from '@/components/ui/ErrorFetching';
+import LoadingSpinner from '@/components/feedback/LoadingSpinner';
+import ErrorFetching from '@/components/feedback/ErrorFetching';
 
 interface CommentsProps {
   discussionId: number;

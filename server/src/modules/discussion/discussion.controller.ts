@@ -102,7 +102,7 @@ export class DiscussionController {
     @Param('id', ParseIntPipe) id: number,
     @ReqUser() currentUser: User,
   ): Promise<DiscussionResponseDto> {
-    return this.discussionService.getDiscussionById(id, currentUser);
+    return this.discussionService.findById(id, currentUser);
   }
 
   @Put(':id')

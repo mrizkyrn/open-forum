@@ -1,76 +1,62 @@
-import { useParams, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useSocket } from '@/hooks/useSocket';
 import { discussionApi } from '@/features/discussions/services/discussionApi';
-import { ArrowLeft } from 'lucide-react';
+import LoadingSpinner from '@/components/feedback/LoadingSpinner';
+import BackButton from '@/components/ui/buttons/BackButton';
 import DiscussionCardHeader from '@/features/discussions/components/DiscussionCardHeader';
 import DiscussionCardBody from '@/features/discussions/components/DiscussionCardBody';
 import DiscussionCardFooter from '@/features/discussions/components/DiscussionCardFooter';
 import Comments from '@/features/comments/components/Comments';
 import CommentForm from '@/features/comments/components/CommentForm';
 import UpdateDiscussionModal from '@/features/discussions/components/UpdateDiscussionModal';
-import { useEffect, useState } from 'react';
-import LoadingSpinner from '@/components/ui/LoadingSpinner';
-import { useSocket } from '@/hooks/useSocket';
 
 const DiscussionDetail = () => {
   const { id } = useParams<{ id: string }>();
-  const { socket, isConnected } = useSocket();
+  const queryClient = useQueryClient();
 
   const [showEditModal, setShowEditModal] = useState(false);
 
-  const navigate = useNavigate();
-  const queryClient = useQueryClient();
+  const { socket, isConnected } = useSocket();
 
   const discussionId = parseInt(id || '0', 10);
 
   useEffect(() => {
-    // Only proceed if we have a valid socket connection and discussion ID
     if (!socket || !isConnected || !discussionId || isNaN(discussionId)) return;
 
-    // Join the discussion room
     socket.emit('joinDiscussion', { discussionId });
     console.log(`Joined discussion room: ${discussionId}`);
 
-    // Listen for discussion updates
     const handleDiscussionUpdate = (data: any) => {
       console.log('Discussion updated:', data);
-      // Invalidate query to refresh discussion data
       queryClient.invalidateQueries({ queryKey: ['discussions', discussionId] });
     };
 
-    // Listen for new comments
     const handleNewComment = (data: any) => {
       console.log('New comment added', data);
 
-      // Always invalidate the main comments list
       queryClient.invalidateQueries({ queryKey: ['comments', discussionId] });
 
       if (data && data.parentId) {
-        // It's a reply - invalidate the specific parent's replies
         queryClient.invalidateQueries({ queryKey: ['commentReplies', data.parentId] });
       } else {
-        // When we don't know the parent ID or it's a top-level comment,
-        // invalidate all comment replies for this discussion
         queryClient.invalidateQueries({
           queryKey: ['commentReplies'],
           predicate: (query) => {
-            // This is a broader invalidation that will catch all reply queries
             return query.queryKey[0] === 'commentReplies';
           },
         });
       }
     };
 
-    // Register event listeners
     socket.on('discussionUpdate', handleDiscussionUpdate);
     socket.on('newComment', handleNewComment);
 
-    // Cleanup: Leave the discussion room when component unmounts
     return () => {
       socket.emit('leaveDiscussion', { discussionId });
       console.log(`Left discussion room: ${discussionId}`);
 
-      // Remove event listeners
       socket.off('discussionUpdate', handleDiscussionUpdate);
       socket.off('newComment', handleNewComment);
     };
@@ -83,7 +69,7 @@ const DiscussionDetail = () => {
     error,
     refetch,
   } = useQuery({
-    queryKey: ['discussions', discussionId],
+    queryKey: ['discussion', discussionId],
     queryFn: () => discussionApi.getDiscussionById(discussionId),
     enabled: !!discussionId && !isNaN(discussionId),
   });
@@ -92,20 +78,14 @@ const DiscussionDetail = () => {
     setShowEditModal(true);
   };
 
-  const handleBackClick = () => {
-    navigate(-1);
-  };
-
   const handleVoteChange = () => {
     refetch();
   };
 
-  // Loading state
   if (isLoading) {
     return <LoadingSpinner />;
   }
 
-  // Error state
   if (isError || !discussion) {
     return (
       <div className="container mx-auto max-w-xl px-4 py-8">
@@ -114,13 +94,7 @@ const DiscussionDetail = () => {
           <p className="mb-6 text-red-600">
             {error instanceof Error ? error.message : 'This discussion could not be found or may have been deleted.'}
           </p>
-          <button
-            onClick={handleBackClick}
-            className="flex items-center gap-2 rounded-md bg-red-600 px-4 py-2 text-white hover:bg-red-700"
-          >
-            <ArrowLeft size={18} />
-            Go Back
-          </button>
+          <BackButton />
         </div>
       </div>
     );
@@ -128,22 +102,19 @@ const DiscussionDetail = () => {
 
   return (
     <>
-      <div className="container mx-auto max-w-xl px-4 py-8">
+      <div className="w-full">
         {/* Back button */}
-        <button onClick={handleBackClick} className="mb-4 flex items-center gap-2 text-gray-600 hover:text-gray-900">
-          <ArrowLeft size={18} />
-          <span>Back to discussions</span>
-        </button>
+        <BackButton />
 
         {/* Main discussion card */}
         <div className="mb-8 overflow-hidden rounded-xl bg-white">
           {/* Discussion content */}
           <div className="flex flex-col gap-4 px-6 py-6">
             <DiscussionCardHeader
-              avatarUrl={discussion.author?.avatarUrl}
-              fullName={discussion.author?.fullName}
+              author={discussion.author ?? null}
+              space={discussion.space}
               discussionId={discussion.id}
-              authorId={discussion.author?.id}
+              createdAt={discussion.createdAt}
               isBookmarked={discussion.isBookmarked}
               onEditClick={handleEditClick}
             />

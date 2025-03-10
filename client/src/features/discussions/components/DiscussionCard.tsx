@@ -26,14 +26,14 @@ const DiscussionCard: React.FC<DiscussionCardProps> = ({ discussion }) => {
     <>
       <div className="flex w-full cursor-pointer flex-col gap-3 rounded-xl bg-white p-4" onClick={handleCardClick}>
         <DiscussionCardHeader
-          avatarUrl={discussion.author?.avatarUrl}
-          fullName={discussion.author?.fullName}
+          author={discussion.author ?? null}
+          space={discussion.space}
           discussionId={discussion.id}
-          authorId={discussion.author?.id}
+          createdAt={discussion.createdAt}
           isBookmarked={discussion.isBookmarked}
           onEditClick={handleEditClick}
         />
-        <DiscussionCardBody content={discussion.content} attachments={discussion.attachments} />
+        <DiscussionCardBody content={discussion.content} attachments={discussion.attachments} tags={discussion.tags} />
         <DiscussionCardFooter
           discussionId={discussion.id}
           upvoteCount={discussion.upvoteCount}

@@ -1,8 +1,6 @@
 import { Entity, Column, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 import { User } from '../../user/entities/user.entity';
-import { Discussion } from '../../discussion/entities/discussion.entity';
-import { Comment } from '../../comment/entities/comment.entity';
-import { BaseEntity } from 'src/core/database/entities/base.entity';
+import { BaseEntity } from '../../../core/database/entities/base.entity';
 
 export enum VoteEntityType {
   DISCUSSION = 'discussion',

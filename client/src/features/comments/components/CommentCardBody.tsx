@@ -1,6 +1,6 @@
 import { Attachment } from '@/types/AttachmentTypes';
-import ImageDisplay from '@/components/ui/ImageDisplay';
-import FileDisplay from '@/components/ui/FileDisplay';
+import ImageDisplay from '@/components/ui/file-displays/ImageDisplay';
+import FileDisplay from '@/components/ui/file-displays/FileDisplay';
 
 interface CommentCardBodyProps {
   content: string;

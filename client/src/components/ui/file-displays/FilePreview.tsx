@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { FileText, Image, XCircle } from 'lucide-react';
 
 interface FilePreviewProps {

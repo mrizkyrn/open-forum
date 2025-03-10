@@ -1,6 +1,6 @@
 import { handleApiError } from '@/utils/helpers';
 import { apiClient } from '@/services/client';
-import { Discussion } from '@/features/discussions/types';
+import { Discussion, SearchDiscussionDto } from '@/features/discussions/types';
 import { ApiResponse, PaginatedResponse } from '@/types/ResponseTypes';
 
 export const discussionApi = {
@@ -18,11 +18,11 @@ export const discussionApi = {
     }
   },
 
-  async getDiscussions(page = 1, limit = 10): Promise<PaginatedResponse<Discussion>> {
+  async getDiscussions(search: SearchDiscussionDto): Promise<PaginatedResponse<Discussion>> {
     // await new Promise((resolve) => setTimeout(resolve, 1000));
     try {
       const response = await apiClient.get<ApiResponse<PaginatedResponse<Discussion>>>('/discussions', {
-        params: { page, limit },
+        params: search,
       });
       return response.data.data;
     } catch (error: any) {

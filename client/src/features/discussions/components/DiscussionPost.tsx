@@ -3,24 +3,30 @@ import { Link } from 'react-router-dom';
 import { ArrowUp, PencilLine } from 'lucide-react';
 import { useIntersectionObserver } from '@/hooks/useIntersectionObserver';
 import { useInfiniteDiscussions } from '@/features/discussions/hooks/useInfiniteDiscussions';
-import LoadingSpinner from '@/components/ui/LoadingSpinner';
+import LoadingSpinner from '@/components/feedback/LoadingSpinner';
 import CreateDiscussionModal from './CreateDiscussionModal';
 import DiscussionCard from './DiscussionCard';
 import DiscussionPostSkeleton from './DiscussionPostSkeleton';
 import { useSocket } from '@/hooks/useSocket';
 import AvatarImage from '@/features/users/components/AvatarImage';
 import { useAuth } from '@/features/auth/hooks/useAuth';
+import { SearchDiscussionDto } from '../types';
 
-const DiscussionPost = () => {
+interface DiscussionPostProps {
+  search?: Partial<SearchDiscussionDto>;
+  preselectedSpaceId?: number;
+}
+
+const DiscussionPost: React.FC<DiscussionPostProps> = ({ search, preselectedSpaceId }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newDiscussions, setNewDiscussions] = useState(0);
 
   const { user } = useAuth();
   const { socket, isConnected } = useSocket();
+
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status, error, refetch } =
-    useInfiniteDiscussions({
-      limit: 5,
-    });
+    useInfiniteDiscussions(search);
+
   const { entry, observerRef } = useIntersectionObserver({
     threshold: 0.5,
     enabled: !!hasNextPage && !isFetchingNextPage,
@@ -64,10 +70,7 @@ const DiscussionPost = () => {
         <div className="text-dark">
           Error loading discussions: {error instanceof Error ? error.message : 'Unknown error'}
         </div>
-        <button
-          onClick={() => refetch()}
-          className="rounded-lg bg-green-600 px-4 py-2 text-white hover:bg-green-700"
-        >
+        <button onClick={() => refetch()} className="rounded-lg bg-green-600 px-4 py-2 text-white hover:bg-green-700">
           Try Again
         </button>
       </div>
@@ -94,8 +97,7 @@ const DiscussionPost = () => {
   }
 
   return (
-    <div className="container mx-auto max-w-xl px-4">
-
+    <div>
       {/* New discussions button - only show when there are new discussions */}
       {newDiscussions > 0 && (
         <div className="fixed top-8 left-1/2 z-50 -translate-x-1/2 transform">
@@ -138,7 +140,11 @@ const DiscussionPost = () => {
         )}
       </div>
 
-      <CreateDiscussionModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      <CreateDiscussionModal
+        preselectedSpaceId={preselectedSpaceId}
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
     </div>
   );
 };

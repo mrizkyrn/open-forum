@@ -9,6 +9,11 @@ export interface Discussion {
   createdAt: Date;
   updatedAt: Date;
   author?: User | null;
+  space: {
+    id: number;
+    name: string;
+    slug: string;
+  };
   attachments: Attachment[];
   commentCount: number;
   upvoteCount: number;

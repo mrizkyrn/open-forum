@@ -6,23 +6,30 @@ import { useAuth } from '@/features/auth/hooks/useAuth';
 import { discussionApi } from '@/features/discussions/services/discussionApi';
 import { useBookmark } from '@/features/discussions/hooks/useBookmark';
 import AvatarImage from '@/features/users/components/AvatarImage';
-import DeleteConfirmationModal from '@/components/ui/DeleteConfirmationModal';
+import DeleteConfirmationModal from '@/components/modals/DeleteConfirmationModal';
+import { User } from '@/features/users/types/UserTypes';
+import { formatDistanceToNow } from 'date-fns';
+import { useNavigate } from 'react-router-dom';
 
 interface DiscussionCardHeaderProps {
-  fullName: string | undefined;
-  avatarUrl?: string | null;
+  author: User | null;
+  space: {
+    id: number;
+    name: string;
+    slug: string;
+  };
   discussionId: number;
-  authorId?: number;
+  createdAt: Date;
   isBookmarked?: boolean;
   onEditClick: () => void;
   onDelete?: () => void;
 }
 
 const DiscussionCardHeader: React.FC<DiscussionCardHeaderProps> = ({
-  fullName,
-  avatarUrl,
+  author,
+  space,
   discussionId,
-  authorId,
+  createdAt,
   isBookmarked,
   onEditClick,
 }) => {
@@ -33,9 +40,11 @@ const DiscussionCardHeader: React.FC<DiscussionCardHeaderProps> = ({
   const [isDeleting, setIsDeleting] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
+  const navigate = useNavigate();
   const dropdownRef = useRef<HTMLDivElement>(null);
   const queryClient = useQueryClient();
-  const isAuthor = user?.id === authorId;
+  const isAuthor = user?.id === author?.id;
+  const formattedDate = createdAt ? formatDistanceToNow(new Date(createdAt), { addSuffix: true }) : '';
 
   const handleBookmark = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
@@ -96,6 +105,11 @@ const DiscussionCardHeader: React.FC<DiscussionCardHeaderProps> = ({
     setDropdownOpen(!dropdownOpen);
   };
 
+  const handleSpaceClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    navigate(`/spaces/${space.slug}`);
+  };
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -112,14 +126,23 @@ const DiscussionCardHeader: React.FC<DiscussionCardHeaderProps> = ({
       <div className="flex items-start justify-between">
         {/* Profile image and user details */}
         <div className="flex items-center gap-2">
-          <AvatarImage avatarUrl={avatarUrl} fullName={fullName} size={10} />
+          <AvatarImage avatarUrl={author?.avatarUrl} fullName={author?.fullName} size={10} />
           <div className="flex flex-col justify-center">
-            {fullName ? (
-              <h3 className="text-base font-semibold">{fullName}</h3>
+            {author?.fullName ? (
+              <h3 className="text-base font-semibold">{author?.fullName}</h3>
             ) : (
               <h3 className="text-base font-semibold">Anonymous</h3>
             )}
-            <p className="text-xs text-gray-500">University - 5 hours ago</p>
+            <div className="flex items-center gap-1 text-xs text-gray-500">
+              <button
+                onClick={handleSpaceClick}
+                className="hover:text-primary cursor-pointer font-medium hover:underline"
+              >
+                {space.name}
+              </button>
+              <span>·</span>
+              <span>{formattedDate}</span>
+            </div>
           </div>
         </div>
 

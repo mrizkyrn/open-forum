@@ -59,4 +59,14 @@ export class SearchDiscussionDto extends SearchDto {
   })
   @IsBoolean()
   isAnonymous?: boolean;
+
+  @ApiProperty({
+    description: 'Filter by space id',
+    example: 2,
+    required: false,
+  })
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  spaceId?: number;
 }

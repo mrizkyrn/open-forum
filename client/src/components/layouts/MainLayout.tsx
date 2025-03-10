@@ -17,12 +17,14 @@ const MainLayout = () => {
   };
 
   return (
-    <div className="font-poppins min-h-screen w-full bg-light sm:px-20 lg:px-64 py-5">
+    <div className="font-poppins bg-light min-h-screen w-full py-5 sm:px-20 lg:px-64">
       {/* logout button */}
-      <button onClick={onLogout} className="absolute top-5 right-5 rounded-md bg-red-500 px-3 py-1 text-white">
-        Logout
-      </button>
-      <Outlet />
+      <div className="container flex max-w-xl items-center gap-2 px-4">
+        <button onClick={onLogout} className="absolute top-5 right-5 rounded-md bg-red-500 px-3 py-1 text-white">
+          Logout
+        </button>
+        <Outlet />
+      </div>
     </div>
   );
 };

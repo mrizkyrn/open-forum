@@ -54,7 +54,6 @@ export class CreateDiscussionDto {
     example: 1,
   })
   @IsNumber()
-  @IsOptional()
   @Transform(({ value }) => (value ? parseInt(value, 10) : undefined))
-  spaceId?: number;
+  spaceId: number;
 }

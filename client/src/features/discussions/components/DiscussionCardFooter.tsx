@@ -39,9 +39,9 @@ const DiscussionCardFooter: React.FC<DiscussionCardFooterProps> = ({
   };
 
   return (
-    <div className="flex justify-between text-gray-600" onClick={(e) => e.stopPropagation()}>
+    <div className="flex justify-between text-gray-600">
       <div className="flex items-center gap-4">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
           <button
             className={`cursor-pointer rounded-full p-1 transition-colors hover:bg-gray-100 ${currentVoteStatus === 1 && 'text-primary bg-green-50'}`}
             onClick={() => handleVote(1)}
@@ -59,7 +59,9 @@ const DiscussionCardFooter: React.FC<DiscussionCardFooterProps> = ({
           </button>
         </div>
         <div className="flex items-center gap-1">
-          <button className="flex cursor-pointer items-center gap-1 rounded-full px-2 py-1 transition-colors hover:bg-gray-100">
+          <button
+            className="flex cursor-pointer items-center gap-1 rounded-full px-2 py-1 transition-colors hover:bg-gray-100"
+          >
             <MessageCircle strokeWidth={1.5} size={18} />
             <span>{commentCount}</span>
           </button>
