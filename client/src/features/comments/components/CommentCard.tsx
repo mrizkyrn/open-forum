@@ -11,6 +11,8 @@ import CommentCardHeader from './CommentCardHeader';
 import CommentCardFooter from './CommentCardFooter';
 import CommentForm from './CommentForm';
 import LoadingSpinner from '@/components/feedback/LoadingSpinner';
+import { useReport } from '@/features/reports/hooks/useReport';
+import { ReportTargetType } from '@/features/reports/types';
 
 interface CommentCardProps {
   comment: Comment;
@@ -31,6 +33,8 @@ const CommentCard: React.FC<CommentCardProps> = ({
   const [isDeleting, setIsDeleting] = useState(false);
 
   const queryClient = useQueryClient();
+  
+  const { openReportModal, ReportModal } = useReport();
 
   const {
     data: repliesData,
@@ -95,7 +99,7 @@ const CommentCard: React.FC<CommentCardProps> = ({
   };
 
   const handleReport = () => {
-    console.log('Report comment', comment.id);
+    openReportModal(ReportTargetType.COMMENT, comment.id, comment.content);
   };
 
   const handleFormClickOutside = () => {
@@ -248,6 +252,8 @@ const CommentCard: React.FC<CommentCardProps> = ({
         onCancel={handleDeleteCancel}
         onConfirm={handleDeleteConfirm}
       />
+
+      <ReportModal />
     </>
   );
 };

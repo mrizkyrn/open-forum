@@ -10,6 +10,8 @@ import DeleteConfirmationModal from '@/components/modals/DeleteConfirmationModal
 import { User } from '@/features/users/types/UserTypes';
 import { formatDistanceToNow } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
+import { useReport } from '@/features/reports/hooks/useReport';
+import { ReportTargetType } from '@/features/reports/types';
 
 interface DiscussionCardHeaderProps {
   author: User | null;
@@ -35,6 +37,7 @@ const DiscussionCardHeader: React.FC<DiscussionCardHeaderProps> = ({
 }) => {
   const { user } = useAuth();
   const { mutate: toggleBookmark, isPending: isBookmarkLoading } = useBookmark();
+  const { openReportModal, ReportModal } = useReport();
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -64,7 +67,7 @@ const DiscussionCardHeader: React.FC<DiscussionCardHeaderProps> = ({
 
   const handleReport = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
-    toast.success('Report submitted');
+    openReportModal(ReportTargetType.DISCUSSION, discussionId);
     setDropdownOpen(false);
   };
 
@@ -229,6 +232,9 @@ const DiscussionCardHeader: React.FC<DiscussionCardHeaderProps> = ({
         onCancel={handleDeleteCancel}
         onConfirm={handleDeleteConfirm}
       />
+
+      {/* Report modal */}
+      <ReportModal />
     </>
   );
 };
