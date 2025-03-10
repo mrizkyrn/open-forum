@@ -170,6 +170,7 @@ describe('DiscussionService', () => {
       content: 'Test discussion content',
       isAnonymous: false,
       tags: ['test', 'unit-testing'],
+      spaceId: 1,
     };
 
     it('should create a discussion without files', async () => {

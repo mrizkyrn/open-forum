@@ -22,5 +22,6 @@ import { FileModule } from '../../core/file/file.module';
   ],
   providers: [DiscussionService, DiscussionSpaceService],
   controllers: [DiscussionController, DiscussionSpaceController],
+  exports: [DiscussionService],
 })
 export class DiscussionModule {}

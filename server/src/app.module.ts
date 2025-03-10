@@ -11,6 +11,7 @@ import { CommentModule } from './modules/comment/comment.module';
 import { VoteModule } from './modules/vote/vote.module';
 import { WebsocketModule } from './core/websocket/websocket.module';
 import { FileModule } from './core/file/file.module';
+import { ReportModule } from './modules/report/report.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { FileModule } from './core/file/file.module';
     VoteModule,
     WebsocketModule,
     FileModule,
+    ReportModule,
   ],
   controllers: [AppController],
   providers: [AppService],

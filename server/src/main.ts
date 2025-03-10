@@ -46,6 +46,8 @@ async function bootstrap() {
     .addTag('Users', 'Users API')
     .addTag('Discussions', 'Discussions API')
     .addTag('Spaces', 'Discussion Spaces API')
+    .addTag('Comments', 'Comments API')
+    .addTag('Reports', 'Reports API')
     .addBearerAuth(
       {
         type: 'http',

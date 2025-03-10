@@ -12,5 +12,6 @@ import { WebsocketModule } from 'src/core/websocket/websocket.module';
   imports: [TypeOrmModule.forFeature([Comment, Discussion]), AttachmentModule, VoteModule, WebsocketModule],
   providers: [CommentService],
   controllers: [CommentController],
+  exports: [CommentService],
 })
 export class CommentModule {}
