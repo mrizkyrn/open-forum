@@ -3,12 +3,12 @@ import { Loader2, ImagePlus } from 'lucide-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { commentApi } from '../services/commentApi';
 import { toast } from 'react-toastify';
-import { ALLOWED_FILE_TYPES, MAX_COMMENT_FILES, MAX_FILE_SIZE } from '@/constants/fileConstants';
+import { ALLOWED_FILE_TYPES, MAX_COMMENT_FILES, MAX_FILE_SIZE } from '@/utils/constants';
 import { Attachment } from '@/types/AttachmentTypes';
 import AvatarImage from '@/features/users/components/AvatarImage';
 import { useAuth } from '@/features/auth/hooks/useAuth';
 import FilePreview from '@/components/ui/file-displays/FilePreview';
-import { useFileHandling } from '@/features/discussions/hooks/useFileHandling';
+import { useFileHandling } from '@/hooks/useFileHandling';
 
 interface CommentFormProps {
   discussionId: number;

@@ -1,4 +1,4 @@
-import { User } from '@/features/users/types/UserTypes';
+import { User } from '@/features/users/types';
 
 const USER_KEY = 'user';
 

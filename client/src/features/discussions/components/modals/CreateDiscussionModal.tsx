@@ -3,9 +3,10 @@ import { toast } from 'react-toastify';
 import { X, Loader2, Tag as TagIcon, CheckCircle } from 'lucide-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { discussionApi } from '@/features/discussions/services/discussionApi';
-import { ALLOWED_FILE_TYPES, MAX_FILE_SIZE, MAX_DISCUSSION_FILES } from '../../../constants/fileConstants';
+import { ALLOWED_FILE_TYPES, MAX_FILE_SIZE, MAX_DISCUSSION_FILES } from '@/utils/constants';
+import { useFileHandling } from '@/hooks/useFileHandling';
 import FilePreview from '@/components/ui/file-displays/FilePreview';
-import { useFileHandling } from '../hooks/useFileHandling';
+import Modal from '@/components/modals/Modal';
 
 interface CreateDiscussionModalProps {
   preselectedSpaceId?: number;
@@ -28,7 +29,6 @@ const CreateDiscussionModal: React.FC<CreateDiscussionModalProps> = ({ preselect
     MAX_FILE_SIZE,
   );
 
-  // Create discussion mutation
   const { mutate: createDiscussion, isPending } = useMutation({
     mutationFn: async (formData: FormData) => {
       return await discussionApi.createDiscussion(formData);
@@ -124,24 +124,23 @@ const CreateDiscussionModal: React.FC<CreateDiscussionModalProps> = ({ preselect
   if (!isOpen) return null;
 
   return (
-    <div className="bg-opacity-50 fixed inset-0 z-50 flex items-center justify-center overflow-hidden bg-black p-4">
-      <div
-        className="flex max-h-[90vh] w-full max-w-2xl flex-col rounded-lg bg-white shadow-xl"
-        onClick={(e) => e.stopPropagation()}
-      >
+    <Modal isOpen={isOpen} onClose={handleClose} size="xl">
+      <div className="flex max-h-[85vh] flex-col" onClick={(e) => e.stopPropagation()}>
         {/* Header */}
-        <div className="flex flex-shrink-0 items-center justify-between border-b border-gray-200 px-6 py-4">
-          <h2 className="text-xl font-semibold">Create New Discussion</h2>
-          <button
-            onClick={handleClose}
-            className="rounded-full p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"
-          >
-            <X size={20} />
-          </button>
+        <div className="flex-shrink-0 border-b border-gray-200 pb-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl font-semibold">Create New Discussion</h2>
+            <button
+              onClick={handleClose}
+              className="rounded-full p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"
+            >
+              <X size={20} />
+            </button>
+          </div>
         </div>
 
         {/* Form */}
-        <div className="flex-grow overflow-y-auto px-6 py-4">
+        <div className="flex-grow overflow-y-auto pt-4">
           {/* Content textarea */}
           <div className="mb-2">
             <label htmlFor="content" className="mb-1 block text-sm font-medium text-gray-700">
@@ -183,7 +182,7 @@ const CreateDiscussionModal: React.FC<CreateDiscussionModalProps> = ({ preselect
               {tags.map((tag, index) => (
                 <span
                   key={index}
-                  className="flex items-center gap-1 rounded-full bg-green-100 px-3 py-1 text-sm text-green-800"
+                  className="flex items-center gap-1 rounded-full bg-green-100 px-3 py-1 text-sm text-wrap text-green-800"
                 >
                   <TagIcon size={14} />
                   {tag}
@@ -255,34 +254,36 @@ const CreateDiscussionModal: React.FC<CreateDiscussionModalProps> = ({ preselect
         </div>
 
         {/* Footer */}
-        <div className="flex flex-shrink-0 items-center justify-end gap-2 border-t border-gray-200 bg-gray-50 px-6 py-3">
-          <button
-            onClick={handleClose}
-            className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50"
-            disabled={isPending}
-          >
-            Cancel
-          </button>
-          <button
-            onClick={handleSubmit}
-            disabled={isPending}
-            className="disabled:bg-opacity-70 flex items-center gap-2 rounded-md bg-green-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-green-700"
-          >
-            {isPending ? (
-              <>
-                <Loader2 size={18} className="animate-spin" />
-                Creating...
-              </>
-            ) : (
-              <>
-                <CheckCircle size={18} />
-                Create Discussion
-              </>
-            )}
-          </button>
+        <div className="flex-shrink-0 border-t border-gray-200 bg-gray-50 pt-4">
+          <div className="flex items-center justify-end gap-2">
+            <button
+              onClick={handleClose}
+              className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50"
+              disabled={isPending}
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleSubmit}
+              disabled={isPending}
+              className="disabled:bg-opacity-70 flex items-center gap-2 rounded-md bg-green-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-green-700"
+            >
+              {isPending ? (
+                <>
+                  <Loader2 size={18} className="animate-spin" />
+                  Creating...
+                </>
+              ) : (
+                <>
+                  <CheckCircle size={18} />
+                  Create Discussion
+                </>
+              )}
+            </button>
+          </div>
         </div>
       </div>
-    </div>
+    </Modal>
   );
 };
 

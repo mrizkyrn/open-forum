@@ -5,12 +5,10 @@ import { useSocket } from '@/hooks/useSocket';
 import { discussionApi } from '@/features/discussions/services/discussionApi';
 import LoadingSpinner from '@/components/feedback/LoadingSpinner';
 import BackButton from '@/components/ui/buttons/BackButton';
-import DiscussionCardHeader from '@/features/discussions/components/DiscussionCardHeader';
-import DiscussionCardBody from '@/features/discussions/components/DiscussionCardBody';
-import DiscussionCardFooter from '@/features/discussions/components/DiscussionCardFooter';
 import Comments from '@/features/comments/components/Comments';
 import CommentForm from '@/features/comments/components/CommentForm';
-import UpdateDiscussionModal from '@/features/discussions/components/UpdateDiscussionModal';
+import UpdateDiscussionModal from '@/features/discussions/components/modals/UpdateDiscussionModal';
+import { DiscussionCard } from '@/features/discussions/components';
 
 const DiscussionDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -67,20 +65,11 @@ const DiscussionDetail = () => {
     isLoading,
     isError,
     error,
-    refetch,
   } = useQuery({
     queryKey: ['discussion', discussionId],
     queryFn: () => discussionApi.getDiscussionById(discussionId),
     enabled: !!discussionId && !isNaN(discussionId),
   });
-
-  const handleEditClick = () => {
-    setShowEditModal(true);
-  };
-
-  const handleVoteChange = () => {
-    refetch();
-  };
 
   if (isLoading) {
     return <LoadingSpinner />;
@@ -107,48 +96,7 @@ const DiscussionDetail = () => {
         <BackButton />
 
         {/* Main discussion card */}
-        <div className="mb-8 overflow-hidden rounded-xl bg-white">
-          {/* Discussion content */}
-          <div className="flex flex-col gap-4 px-6 py-6">
-            <DiscussionCardHeader
-              author={discussion.author ?? null}
-              space={discussion.space}
-              discussionId={discussion.id}
-              createdAt={discussion.createdAt}
-              isBookmarked={discussion.isBookmarked}
-              onEditClick={handleEditClick}
-            />
-
-            <DiscussionCardBody content={discussion.content} attachments={discussion.attachments} />
-
-            {/* Tags */}
-            {discussion.tags && discussion.tags.length > 0 && (
-              <div className="flex flex-wrap gap-2">
-                {discussion.tags.map((tag) => (
-                  <span key={tag} className="rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-800">
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            )}
-
-            <hr className="my-2 border-gray-200" />
-
-            {/* Enhanced vote UI with status and callback */}
-            <div className="px-2">
-              {' '}
-              {/* Add padding for better spacing */}
-              <DiscussionCardFooter
-                discussionId={discussion.id}
-                upvoteCount={discussion.upvoteCount}
-                downvoteCount={discussion.downvoteCount}
-                commentCount={discussion.commentCount}
-                voteStatus={discussion.voteStatus}
-                onVoteChange={handleVoteChange}
-              />
-            </div>
-          </div>
-        </div>
+        <DiscussionCard discussion={discussion} />
 
         {/* Comments section */}
         <div className="mt-8 rounded-xl bg-white p-6">

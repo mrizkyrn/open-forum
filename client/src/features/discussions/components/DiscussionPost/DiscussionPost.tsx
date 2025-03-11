@@ -1,16 +1,16 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowUp, PencilLine } from 'lucide-react';
-import { useIntersectionObserver } from '@/hooks/useIntersectionObserver';
+import { CreateDiscussionModal, DiscussionCard } from '@/features/discussions/components';
 import { useInfiniteDiscussions } from '@/features/discussions/hooks/useInfiniteDiscussions';
-import LoadingSpinner from '@/components/feedback/LoadingSpinner';
-import CreateDiscussionModal from './CreateDiscussionModal';
-import DiscussionCard from './DiscussionCard';
-import DiscussionPostSkeleton from './DiscussionPostSkeleton';
-import { useSocket } from '@/hooks/useSocket';
-import AvatarImage from '@/features/users/components/AvatarImage';
 import { useAuth } from '@/features/auth/hooks/useAuth';
-import { SearchDiscussionDto } from '../types';
+import { SearchDiscussionDto } from '@/features/discussions/types';
+import { useIntersectionObserver } from '@/hooks/useIntersectionObserver';
+import { useSocket } from '@/hooks/useSocket';
+import LoadingSpinner from '@/components/feedback/LoadingSpinner';
+import DiscussionPostSkeleton from './DiscussionPostSkeleton';
+import AvatarImage from '@/features/users/components/AvatarImage';
+import ErrorFetching from '@/components/feedback/ErrorFetching';
 
 interface DiscussionPostProps {
   search?: Partial<SearchDiscussionDto>;
@@ -24,7 +24,7 @@ const DiscussionPost: React.FC<DiscussionPostProps> = ({ search, preselectedSpac
   const { user } = useAuth();
   const { socket, isConnected } = useSocket();
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status, error, refetch } =
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status, refetch } =
     useInfiniteDiscussions(search);
 
   const { entry, observerRef } = useIntersectionObserver({
@@ -65,16 +65,7 @@ const DiscussionPost: React.FC<DiscussionPostProps> = ({ search, preselectedSpac
   }
 
   if (status === 'error') {
-    return (
-      <div className="flex flex-col items-center gap-4 p-8 text-center">
-        <div className="text-dark">
-          Error loading discussions: {error instanceof Error ? error.message : 'Unknown error'}
-        </div>
-        <button onClick={() => refetch()} className="rounded-lg bg-green-600 px-4 py-2 text-white hover:bg-green-700">
-          Try Again
-        </button>
-      </div>
-    );
+    return <ErrorFetching text='Failed to load discussions' onRetry={refetch} />;
   }
 
   const discussions = data?.pages
@@ -114,7 +105,7 @@ const DiscussionPost: React.FC<DiscussionPostProps> = ({ search, preselectedSpac
       <div className="flex flex-col items-center gap-2">
         {/* Create new discussion input */}
         <div className="flex w-full items-center gap-2 rounded-xl bg-white p-4">
-          <AvatarImage avatarUrl={user?.avatarUrl} fullName={user?.fullName} size={10} />
+          <AvatarImage fullName={user?.fullName} avatarUrl={user?.avatarUrl} size="sm" />
           <button
             onClick={() => setIsModalOpen(true)}
             className="bg-light w-full rounded-full px-4 py-1 text-left text-gray-600 focus:outline-none"

@@ -1,5 +1,6 @@
-import { useVote } from '@/features/votes/hooks/useVote';
 import { ArrowBigDown, ArrowBigUp, MessageCircle } from 'lucide-react';
+import { useVote } from '@/features/votes/hooks/useVote';
+import { useNavigate } from 'react-router-dom';
 
 interface DiscussionCardFooterProps {
   discussionId: number;
@@ -31,6 +32,7 @@ const DiscussionCardFooter: React.FC<DiscussionCardFooterProps> = ({
     initialVoteStatus: voteStatus,
     onVoteChange,
   });
+  const navigate = useNavigate();
 
   const getVoteColor = (count: number) => {
     if (count > 0) return 'text-green-500';
@@ -60,6 +62,7 @@ const DiscussionCardFooter: React.FC<DiscussionCardFooterProps> = ({
         </div>
         <div className="flex items-center gap-1">
           <button
+            onClick={() => navigate(`/discussions/${discussionId}`)}
             className="flex cursor-pointer items-center gap-1 rounded-full px-2 py-1 transition-colors hover:bg-gray-100"
           >
             <MessageCircle strokeWidth={1.5} size={18} />

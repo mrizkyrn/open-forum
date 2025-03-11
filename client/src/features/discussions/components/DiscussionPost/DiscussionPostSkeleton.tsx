@@ -1,5 +1,5 @@
 import React from 'react';
-import DiscussionCardSkeleton from './DiscussionCardSkeleton';
+import DiscussionCardSkeleton from '../DiscussionCard/DiscussionCardSkeleton';
 
 interface DiscussionPostSkeletonProps {
   count?: number;

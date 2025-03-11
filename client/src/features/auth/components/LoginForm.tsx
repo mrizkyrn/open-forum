@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/features/auth/hooks/useAuth';
 import { LoginRequest } from '@/features/auth/types';
+import MainButton from '@/components/ui/buttons/MainButton';
 
 const LoginForm: React.FC = () => {
   const navigate = useNavigate();
@@ -33,6 +34,8 @@ const LoginForm: React.FC = () => {
   return (
     <div className="relative flex w-full max-w-sm flex-col gap-7 rounded-2xl bg-white px-6 py-8">
       <div className="bg-primary absolute top-0 right-0 h-1.5 w-full rounded-t-2xl" />
+
+      {/* Logo */}
       <div className="flex justify-center gap-4 py-5">
         <img src="src/assets/logo-upnvj.png" alt="UPNVJ Logo" className="h-20 w-20" />
         <div className="flex flex-col justify-center">
@@ -41,6 +44,7 @@ const LoginForm: React.FC = () => {
         </div>
       </div>
 
+      {/* Error message */}
       {error && (
         <div className="rounded-md bg-red-50 p-4">
           <div className="flex">
@@ -60,6 +64,7 @@ const LoginForm: React.FC = () => {
         </div>
       )}
 
+      {/* Form */}
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="space-y-2">
           <label htmlFor="username" className="block text-xs font-semibold text-gray-600">
@@ -92,13 +97,9 @@ const LoginForm: React.FC = () => {
           />
         </div>
         <div className="mt-6">
-          <button
-            type="submit"
-            disabled={isLoading}
-            className="bg-primary text-light hover:bg-primary-dark focus:ring-primary-darker w-full cursor-pointer rounded-lg px-4 py-3 focus:ring-1 focus:outline-none"
-          >
-            {isLoading ? 'Loading...' : 'Login'}
-          </button>
+          <MainButton type="submit" isLoading={isLoading} fullWidth>
+            Login
+          </MainButton>
         </div>
       </form>
     </div>

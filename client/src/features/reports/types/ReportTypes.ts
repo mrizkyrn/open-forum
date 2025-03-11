@@ -1,5 +1,4 @@
-import { User } from "@/features/users/types/UserTypes";
-
+import { User } from '@/features/users/types';
 
 export enum ReportTargetType {
   DISCUSSION = 'discussion',

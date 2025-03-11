@@ -1,5 +1,5 @@
 import { Attachment } from '../../../types/AttachmentTypes';
-import { User } from '../../users/types/UserTypes';
+import { User } from '../../users/types';
 
 export interface Discussion {
   id: number;

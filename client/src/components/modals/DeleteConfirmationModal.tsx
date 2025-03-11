@@ -1,5 +1,5 @@
 import { Loader2 } from 'lucide-react';
-import { useEffect } from 'react';
+import Modal from './Modal';
 
 interface DeleteConfirmationModalProps {
   isOpen: boolean;
@@ -22,41 +22,9 @@ const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = ({
   onCancel,
   onConfirm,
 }) => {
-  // Lock scroll when modal is open
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, [isOpen]);
-
-  // Handle escape key to close modal
-  useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isOpen && !isDeleting) {
-        onCancel();
-      }
-    };
-
-    if (isOpen) {
-      window.addEventListener('keydown', handleEscape);
-    }
-
-    return () => {
-      window.removeEventListener('keydown', handleEscape);
-    };
-  }, [isOpen, isDeleting, onCancel]);
-
-  if (!isOpen) return null;
-
   return (
-    <div className="bg-opacity-50 fixed inset-0 z-50 flex items-center justify-center bg-black p-4">
-      <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-xl" onClick={(e) => e.stopPropagation()}>
+    <Modal isOpen={isOpen} onClose={onCancel}>
+      <div>
         <h3 className="mb-4 text-lg font-medium">{title}</h3>
         <p className="mb-6 text-gray-600">{message}</p>
 
@@ -85,7 +53,7 @@ const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = ({
           </button>
         </div>
       </div>
-    </div>
+    </Modal>
   );
 };
 

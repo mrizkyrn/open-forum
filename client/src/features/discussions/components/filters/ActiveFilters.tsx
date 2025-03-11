@@ -1,5 +1,5 @@
 import { X } from 'lucide-react';
-import { SearchDiscussionDto } from '../types/DiscussionRequestTypes';
+import { SearchDiscussionDto } from '@/features/discussions/types';
 
 interface ActiveFiltersProps {
   currentFilters: SearchDiscussionDto;
@@ -20,19 +20,6 @@ const ActiveFilters: React.FC<ActiveFiltersProps> = ({ currentFilters, onFilterC
 
   return (
     <div className="mt-3 flex flex-wrap items-center gap-2">
-      {/* Search term */}
-      {currentFilters.search && (
-        <div className="flex items-center gap-1 rounded-full bg-green-100 px-3 py-1 text-sm text-green-700">
-          <span>"{currentFilters.search}"</span>
-          <button
-            onClick={() => onFilterChange({ search: undefined })}
-            className="ml-1 rounded-full p-0.5 hover:bg-green-200"
-          >
-            <X size={14} />
-          </button>
-        </div>
-      )}
-
       {/* Tag filters */}
       {currentFilters.tags &&
         currentFilters.tags.map((tag) => (
@@ -50,19 +37,6 @@ const ActiveFilters: React.FC<ActiveFiltersProps> = ({ currentFilters, onFilterC
             </button>
           </div>
         ))}
-
-      {/* Anonymity filter */}
-      {currentFilters.isAnonymous !== undefined && (
-        <div className="flex items-center gap-1 rounded-full bg-green-100 px-3 py-1 text-sm text-green-700">
-          <span>{currentFilters.isAnonymous ? 'Anonymous only' : 'Named authors only'}</span>
-          <button
-            onClick={() => onFilterChange({ isAnonymous: undefined })}
-            className="ml-1 rounded-full p-0.5 hover:bg-green-200"
-          >
-            <X size={14} />
-          </button>
-        </div>
-      )}
 
       {/* Clear all button */}
       {hasActiveFilters && (

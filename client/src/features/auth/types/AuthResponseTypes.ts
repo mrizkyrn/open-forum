@@ -1,4 +1,4 @@
-import { User } from '@/features/users/types/UserTypes';
+import { User } from '@/features/users/types';
 
 export interface LoginResponse {
   user: User;

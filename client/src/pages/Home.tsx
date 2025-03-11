@@ -1,5 +1,5 @@
 import { DiscussionSortBy, SortOrder, SearchDiscussionDto } from '@/features/discussions/types/DiscussionRequestTypes';
-import DiscussionPost from '@/features/discussions/components/DiscussionPost';
+import DiscussionPost from '@/features/discussions/components/DiscussionPost/DiscussionPost';
 
 const Home = () => {
   const searchRequest: SearchDiscussionDto = {

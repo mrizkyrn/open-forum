@@ -1,6 +1,6 @@
-import { User } from "@/features/users/types/UserTypes";
-import { VoteValue } from "@/features/votes/services/voteApi";
-import { Attachment } from "@/types/AttachmentTypes";
+import { User } from '@/features/users/types';
+import { VoteValue } from '@/features/votes/services/voteApi';
+import { Attachment } from '@/types/AttachmentTypes';
 
 export interface Comment {
   id: number;

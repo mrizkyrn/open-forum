@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { SlidersHorizontal, Calendar, MessageCircle, ThumbsUp, ChevronDown, Tags, User } from 'lucide-react';
-import { DiscussionSortBy, SortOrder, SearchDiscussionDto } from '../types/DiscussionRequestTypes';
+import { DiscussionSortBy, SortOrder, SearchDiscussionDto } from '@/features/discussions/types';
 
 interface FilterToolbarProps {
   currentFilters: SearchDiscussionDto;

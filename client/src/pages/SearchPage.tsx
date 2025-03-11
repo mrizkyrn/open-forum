@@ -2,10 +2,10 @@ import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Search as SearchIcon } from 'lucide-react';
 import { DiscussionSortBy, SortOrder, SearchDiscussionDto } from '@/features/discussions/types/DiscussionRequestTypes';
-import DiscussionPost from '@/features/discussions/components/DiscussionPost';
+import DiscussionPost from '@/features/discussions/components/DiscussionPost/DiscussionPost';
 import BackButton from '@/components/ui/buttons/BackButton';
-import FilterToolbar from '@/features/discussions/components/FilterToolbar';
-import ActiveFilters from '@/features/discussions/components/ActiveFilters';
+import FilterToolbar from '@/features/discussions/components/filters/FilterToolbar';
+import ActiveFilters from '@/features/discussions/components/filters/ActiveFilters';
 
 const SearchPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -96,7 +96,7 @@ const SearchPage = () => {
       <BackButton />
 
       {/* Search input and filter toolbar */}
-      <div className="flex flex-col gap-4 bg-white p-4 rounded-lg">
+      <div className="flex flex-col gap-4 rounded-lg bg-white p-4">
         {/* Search input */}
         <form onSubmit={handleSearchSubmit} className="relative">
           <div className="relative">

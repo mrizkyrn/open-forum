@@ -2,7 +2,7 @@ import { MoreVertical, Edit, Trash, Flag } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { useRef, useEffect, useState } from 'react';
 import { useAuth } from '@/features/auth/hooks/useAuth';
-import { User } from '@/features/users/types/UserTypes';
+import { User } from '@/features/users/types';
 
 interface CommentCardHeaderProps {
   author: User;

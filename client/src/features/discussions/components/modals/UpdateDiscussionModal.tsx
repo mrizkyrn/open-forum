@@ -5,8 +5,10 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { discussionApi } from '@/features/discussions/services/discussionApi';
 import { Discussion } from '@/features/discussions/types';
 import { Attachment } from '@/types/AttachmentTypes';
-import { ALLOWED_FILE_TYPES, MAX_DISCUSSION_FILES, MAX_FILE_SIZE } from '@/constants/fileConstants';
-import { useFileHandling } from '../hooks/useFileHandling';
+import { ALLOWED_FILE_TYPES, MAX_DISCUSSION_FILES, MAX_FILE_SIZE } from '@/utils/constants';
+import { useFileHandling } from '@/hooks/useFileHandling';
+import { getFileUrl } from '@/utils/helpers';
+import Modal from '@/components/modals/Modal';
 
 interface UpdateDiscussionModalProps {
   isOpen: boolean;
@@ -150,20 +152,13 @@ const UpdateDiscussionModal: React.FC<UpdateDiscussionModalProps> = ({ isOpen, o
     onClose();
   };
 
-  const getFileUrl = (url: string) => {
-    return import.meta.env.VITE_API_URL + url;
-  };
-
   if (!isOpen || !discussion) return null;
 
   return (
-    <div className="bg-opacity-50 fixed inset-0 z-50 flex items-center justify-center overflow-hidden bg-black p-4">
-      <div
-        className="flex max-h-[90vh] w-full max-w-2xl flex-col rounded-lg bg-white shadow-xl"
-        onClick={(e) => e.stopPropagation()}
-      >
+    <Modal isOpen={isOpen} onClose={handleClose} size="xl">
+      <div className="flex max-h-[85vh] flex-col" onClick={(e) => e.stopPropagation()}>
         {/* Header */}
-        <div className="flex flex-shrink-0 items-center justify-between border-b border-gray-200 px-6 py-4">
+        <div className="flex flex-shrink-0 items-center justify-between border-b border-gray-200 pb-4">
           <h2 className="text-xl font-semibold">Update Discussion</h2>
           <button
             onClick={handleClose}
@@ -174,7 +169,7 @@ const UpdateDiscussionModal: React.FC<UpdateDiscussionModalProps> = ({ isOpen, o
         </div>
 
         {/* Form */}
-        <div className="flex-grow overflow-y-auto px-6 py-4">
+        <div className="flex-grow overflow-y-auto py-4">
           {/* Content textarea */}
           <div className="mb-2">
             <label htmlFor="content" className="mb-1 block text-sm font-medium text-gray-700">
@@ -359,7 +354,7 @@ const UpdateDiscussionModal: React.FC<UpdateDiscussionModalProps> = ({ isOpen, o
         </div>
 
         {/* Footer */}
-        <div className="flex flex-shrink-0 items-center justify-end gap-2 border-t border-gray-200 bg-gray-50 px-6 py-3">
+        <div className="flex flex-shrink-0 items-center justify-end gap-2 border-t border-gray-200 pt-4">
           <button
             onClick={handleClose}
             className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50"
@@ -386,7 +381,7 @@ const UpdateDiscussionModal: React.FC<UpdateDiscussionModalProps> = ({ isOpen, o
           </button>
         </div>
       </div>
-    </div>
+    </Modal>
   );
 };
 
