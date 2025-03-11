@@ -1,14 +1,14 @@
 import { useState, useRef, useEffect } from 'react';
 import { Loader2, ImagePlus } from 'lucide-react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { commentApi } from '../services/commentApi';
 import { toast } from 'react-toastify';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { commentApi } from '@/features/comments/services/commentApi';
 import { ALLOWED_FILE_TYPES, MAX_COMMENT_FILES, MAX_FILE_SIZE } from '@/utils/constants';
 import { Attachment } from '@/types/AttachmentTypes';
-import AvatarImage from '@/features/users/components/AvatarImage';
 import { useAuth } from '@/features/auth/hooks/useAuth';
-import FilePreview from '@/components/ui/file-displays/FilePreview';
 import { useFileHandling } from '@/hooks/useFileHandling';
+import AvatarImage from '@/features/users/components/AvatarImage';
+import FilePreview from '@/components/ui/file-displays/FilePreview';
 
 interface CommentFormProps {
   discussionId: number;
@@ -74,13 +74,18 @@ const CommentForm: React.FC<CommentFormProps> = ({
 
   // Handle clicks outside the form to remove focus
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (commentFormRef.current && !commentFormRef.current.contains(event.target as Node)) {
-        setIsFocused(false);
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        (e.target as Element).closest('button') ||
+        (e.target as Element).closest('a') ||
+        (e.target as Element).closest('[role="button"]')
+      ) {
+        return;
+      }
+      setIsFocused(false);
 
-        if (onClickOutside && !value.trim()) {
-          onClickOutside();
-        }
+      if (onClickOutside && !value.trim()) {
+        onClickOutside();
       }
     };
 
@@ -208,7 +213,7 @@ const CommentForm: React.FC<CommentFormProps> = ({
       <form ref={commentFormRef} onSubmit={handleSubmit} className="flex flex-col gap-2 rounded-lg bg-white">
         <div className="flex items-start gap-2">
           {isReply || isEditing ? null : (
-            <AvatarImage avatarUrl={user?.avatarUrl} fullName={user?.fullName} size="10" />
+            <AvatarImage fullName={user?.fullName} avatarUrl={user?.avatarUrl} size="md" />
           )}
           <div className="flex w-full flex-col gap-3">
             <textarea

@@ -2,10 +2,8 @@ import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Search as SearchIcon } from 'lucide-react';
 import { DiscussionSortBy, SortOrder, SearchDiscussionDto } from '@/features/discussions/types/DiscussionRequestTypes';
-import DiscussionPost from '@/features/discussions/components/DiscussionPost/DiscussionPost';
+import { DiscussionPost, FilterToolbar, ActiveFilters } from '@/features/discussions/components';
 import BackButton from '@/components/ui/buttons/BackButton';
-import FilterToolbar from '@/features/discussions/components/filters/FilterToolbar';
-import ActiveFilters from '@/features/discussions/components/filters/ActiveFilters';
 
 const SearchPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();

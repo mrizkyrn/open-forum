@@ -1,17 +1,17 @@
 import { useState } from 'react';
-import CommentCard from './CommentCard';
-import { Comment } from '../types/commentTypes';
+import { CommentCard } from '@/features/comments/components';
+import { Comment } from '../../types/commentTypes';
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { commentApi } from '../services/commentApi';
+import { commentApi } from '../../services/commentApi';
 import { Loader2 } from 'lucide-react';
 import LoadingSpinner from '@/components/feedback/LoadingSpinner';
 import ErrorFetching from '@/components/feedback/ErrorFetching';
 
-interface CommentsProps {
+interface CommentsSectionProps {
   discussionId: number;
 }
 
-const Comments: React.FC<CommentsProps> = ({ discussionId }) => {
+const CommentsSection: React.FC<CommentsSectionProps> = ({ discussionId }) => {
   const [activeReplyId, setActiveReplyId] = useState<number | null>(null);
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isError, refetch } = useInfiniteQuery({
@@ -22,7 +22,6 @@ const Comments: React.FC<CommentsProps> = ({ discussionId }) => {
     staleTime: 1000 * 60 * 5,
   });
 
-  // Toggle reply form
   const handleToggleReply = (commentId: number) => {
     setActiveReplyId((prev) => (prev === commentId ? null : commentId));
   };
@@ -37,15 +36,20 @@ const Comments: React.FC<CommentsProps> = ({ discussionId }) => {
     return <ErrorFetching text="Failed to fetch comments" onRetry={refetch} />;
   }
 
-  return comments.length === 0 ? (
-    <div className="rounded-lg bg-gray-50 p-4 text-center text-gray-500">No comments yet. Be the first to comment!</div>
-  ) : (
+  if (comments.length === 0) {
+    return (
+      <div className="rounded-lg bg-gray-50 p-4 text-center text-gray-500">
+        No comments yet. Be the first to comment!
+      </div>
+    );
+  }
+
+  return (
     <div className="flex flex-col gap-4">
-      {/* Render all comments from all pages */}
+      {/* Comments */}
       {comments.map((comment: Comment) => (
         <CommentCard
           key={comment.id}
-          isReply={false}
           comment={comment}
           onToggleReply={handleToggleReply}
           showReplyForm={activeReplyId === comment.id}
@@ -75,4 +79,4 @@ const Comments: React.FC<CommentsProps> = ({ discussionId }) => {
   );
 };
 
-export default Comments;
+export default CommentsSection;

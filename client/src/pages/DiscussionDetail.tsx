@@ -3,12 +3,10 @@ import { useParams } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useSocket } from '@/hooks/useSocket';
 import { discussionApi } from '@/features/discussions/services/discussionApi';
+import { CommentsSection, CommentForm } from '@/features/comments/components';
+import { DiscussionCard, UpdateDiscussionModal } from '@/features/discussions/components';
 import LoadingSpinner from '@/components/feedback/LoadingSpinner';
 import BackButton from '@/components/ui/buttons/BackButton';
-import Comments from '@/features/comments/components/Comments';
-import CommentForm from '@/features/comments/components/CommentForm';
-import UpdateDiscussionModal from '@/features/discussions/components/modals/UpdateDiscussionModal';
-import { DiscussionCard } from '@/features/discussions/components';
 
 const DiscussionDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -108,7 +106,7 @@ const DiscussionDetail = () => {
           </div>
 
           {/* Comments list */}
-          <Comments discussionId={discussion.id} />
+          <CommentsSection discussionId={discussion.id} />
         </div>
       </div>
 

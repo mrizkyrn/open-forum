@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Flag, Loader2, X } from 'lucide-react';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import { reportApi } from '../services/reportApi';
 import { ReportReason, ReportTargetType } from '../types/ReportTypes';
+import Modal from '@/components/modals/Modal';
 
 interface ReportModalProps {
   isOpen: boolean;
@@ -18,29 +19,6 @@ const ReportModal: React.FC<ReportModalProps> = ({ isOpen, onClose, targetType, 
   const [description, setDescription] = useState('');
   const [validationError, setValidationError] = useState<string | null>(null);
 
-  // Reset form when modal opens/closes
-  useEffect(() => {
-    if (!isOpen) {
-      setSelectedReason(null);
-      setDescription('');
-      setValidationError(null);
-    }
-  }, [isOpen]);
-
-  // Lock scroll when modal is open (same as in DeleteConfirmationModal)
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, [isOpen]);
-
-  // Fetch report reasons with TanStack Query
   const {
     data: reasons = [],
     isLoading: isLoadingReasons,
@@ -53,7 +31,6 @@ const ReportModal: React.FC<ReportModalProps> = ({ isOpen, onClose, targetType, 
     staleTime: 5 * 60 * 1000,
   });
 
-  // Submit report mutation
   const {
     mutate: submitReport,
     isPending: isSubmitting,
@@ -106,8 +83,8 @@ const ReportModal: React.FC<ReportModalProps> = ({ isOpen, onClose, targetType, 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black bg-opacity-50 p-4">
-      <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-xl" onClick={(e) => e.stopPropagation()}>
+    <Modal isOpen={isOpen} onClose={onClose} size='lg'>
+      <div onClick={(e) => e.stopPropagation()}>
         <div className="mb-4 flex items-center justify-between">
           <h3 className="flex items-center text-lg font-medium text-gray-900">
             <Flag size={18} className="mr-2 text-red-500" />
@@ -156,7 +133,7 @@ const ReportModal: React.FC<ReportModalProps> = ({ isOpen, onClose, targetType, 
                 No report reasons available. Please try again later.
               </div>
             ) : (
-              <div className="flex max-h-60 flex-col gap-2 overflow-auto">
+              <div className="flex flex-col max-h-[50vh] gap-2 overflow-y-auto py-3">
                 {reasons.map((reason: ReportReason) => (
                   <label
                     key={reason.id}
@@ -226,7 +203,7 @@ const ReportModal: React.FC<ReportModalProps> = ({ isOpen, onClose, targetType, 
           </div>
         </form>
       </div>
-    </div>
+    </Modal>
   );
 };
 

@@ -3,7 +3,7 @@ import { Users } from 'lucide-react';
 import { useSpace } from '@/features/spaces/hooks/useSpace';
 import { useSpaceFollow } from '@/features/spaces/hooks/useSpaceFollow';
 import { getFileUrl } from '@/utils/helpers';
-import DiscussionPost from '@/features/discussions/components/DiscussionPost/DiscussionPost';
+import { DiscussionPost } from '@/features/discussions/components';
 import LoadingSpinner from '@/components/feedback/LoadingSpinner';
 import BackButton from '@/components/ui/buttons/BackButton';
 
