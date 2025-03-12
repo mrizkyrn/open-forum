@@ -19,7 +19,7 @@ export type AuthAction =
   | { type: 'CLEAR_ERROR' };
 
 export interface AuthContextType extends AuthState {
-  login: (credentials: LoginRequest) => Promise<void>;
+  login: (credentials: LoginRequest) => Promise<User>;
   logout: () => void;
   register: (userData: RegisterRequest) => Promise<void>;
   clearError: () => void;

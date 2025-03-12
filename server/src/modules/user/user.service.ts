@@ -8,10 +8,13 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UserResponseDto } from './dto/user-response.dto';
 import { SearchUserDto } from './dto/search-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { FileService } from 'src/core/file/file.service';
+import { FileService } from '../../core/file/file.service';
 
 @Injectable()
 export class UserService {
+  private lastUpdateMap = new Map<number, number>();
+  private readonly UPDATE_INTERVAL = 5 * 60 * 1000; // 5 minutes
+
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
@@ -170,6 +173,22 @@ export class UserService {
 
   async verifyPassword(plainTextPassword: string, hashedPassword: string): Promise<boolean> {
     return bcrypt.compare(plainTextPassword, hashedPassword);
+  }
+  
+  async updateLastActive(userId: number): Promise<void> {
+    const now = Date.now();
+    const lastUpdate = this.lastUpdateMap.get(userId) || 0;
+    
+    if (now - lastUpdate > this.UPDATE_INTERVAL) {
+      this.lastUpdateMap.set(userId, now);
+      try {
+        await this.userRepository.update(userId, {
+          lastActiveAt: new Date()
+        });
+      } catch (error) {
+        console.error(`Failed to update lastActiveAt for user ${userId}:`, error);
+      }
+    }
   }
 
   mapToUserResponseDto(user: User): UserResponseDto {

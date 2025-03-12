@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/features/auth/hooks/useAuth';
 import { LoginRequest } from '@/features/auth/types';
+import { UserRole } from '@/features/users/types';
 import MainButton from '@/components/ui/buttons/MainButton';
 
 const LoginForm: React.FC = () => {
@@ -24,8 +25,13 @@ const LoginForm: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await login(formData);
-      navigate('/');
+      const user = await login(formData);
+
+      if (user.role === UserRole.ADMIN) {
+        navigate('/admin');
+      } else {
+        navigate('/');
+      }
     } catch (error) {
       console.error('Login failed:', error);
     }

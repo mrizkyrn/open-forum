@@ -10,6 +10,8 @@ const Login = lazy(() => import('@/pages/Login'));
 const DiscussionDetail = lazy(() => import('@/pages/DiscussionDetail'));
 const SpaceDetailPage = lazy(() => import('@/pages/SpaceDetail'));
 const SearchPage = lazy(() => import('@/pages/SearchPage'));
+const AdminDashboard = lazy(() => import('@/pages/Admin/AdminDashboard'));
+const OverviewPage = lazy(() => import('@/pages/Admin/OverviewPage'));
 const NotFound = lazy(() => import('@/pages/NotFound'));
 
 // Wrap Suspense in a reusable function
@@ -40,6 +42,16 @@ const routes = [
       {
         path: '/search',
         element: lazyLoad(SearchPage),
+      },
+    ],
+  },
+  {
+    path: '/admin',
+    element: lazyLoad(AdminDashboard),
+    children: [
+      {
+        index: true,
+        element: lazyLoad(OverviewPage),
       },
     ],
   },

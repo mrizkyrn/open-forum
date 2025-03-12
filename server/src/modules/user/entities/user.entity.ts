@@ -19,4 +19,7 @@ export class User extends BaseEntity {
 
   @Column({ type: 'enum', enum: UserRole, default: UserRole.STUDENT })
   role: UserRole;
+
+  @Column({ name: 'last_active_at', type: 'timestamp', nullable: true })
+  lastActiveAt: Date;
 }
