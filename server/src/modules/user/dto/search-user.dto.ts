@@ -8,6 +8,8 @@ export enum UserSortBy {
   updatedAt = 'updatedAt',
   username = 'username',
   fullName = 'fullName',
+  role = 'role',
+  lastActiveAt = 'lastActiveAt',
 }
 
 export class SearchUserDto extends SearchDto {

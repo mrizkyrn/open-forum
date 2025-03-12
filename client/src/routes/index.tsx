@@ -12,6 +12,7 @@ const SpaceDetailPage = lazy(() => import('@/pages/SpaceDetail'));
 const SearchPage = lazy(() => import('@/pages/SearchPage'));
 const AdminDashboard = lazy(() => import('@/pages/Admin/AdminDashboard'));
 const OverviewPage = lazy(() => import('@/pages/Admin/OverviewPage'));
+const UsersPage = lazy(() => import('@/pages/Admin/UsersPage'));
 const NotFound = lazy(() => import('@/pages/NotFound'));
 
 // Wrap Suspense in a reusable function
@@ -52,6 +53,10 @@ const routes = [
       {
         index: true,
         element: lazyLoad(OverviewPage),
+      },
+      {
+        path: 'users',
+        element: lazyLoad(UsersPage),
       },
     ],
   },

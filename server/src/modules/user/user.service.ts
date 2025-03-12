@@ -1,5 +1,12 @@
 import * as bcrypt from 'bcrypt';
-import { Injectable, ConflictException, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  ConflictException,
+  NotFoundException,
+  Logger,
+  InternalServerErrorException,
+  BadRequestException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
@@ -83,8 +90,63 @@ export class UserService {
     };
   }
 
-  async findByUsername(username: string): Promise<User | null> {
-    return this.userRepository.findOne({ where: { username } });
+  async findById(id: number): Promise<UserResponseDto> {
+    const user = await this.getUserById(id);
+    return this.mapToUserResponseDto(user);
+  }
+
+  async update(id: number, updateUserDto: UpdateUserDto): Promise<UserResponseDto> {
+    const user = await this.getUserById(id);
+
+    if (updateUserDto.fullName) {
+      user.fullName = updateUserDto.fullName;
+    }
+    if (updateUserDto.role !== undefined) {
+      user.role = updateUserDto.role;
+    }
+
+    const updatedUser = await this.userRepository.save(user);
+    return this.mapToUserResponseDto(updatedUser);
+  }
+
+  async updateAvatar(userId: number, file: Express.Multer.File): Promise<UserResponseDto> {
+    const user = await this.getUserById(userId);
+
+    try {
+      if (user.avatarUrl) {
+        await this.fileService.deleteFile(user.avatarUrl);
+      }
+
+      const avatarUrl = await this.fileService.uploadUserAvatar(file);
+
+      user.avatarUrl = avatarUrl;
+      await this.userRepository.save(user);
+
+      return this.mapToUserResponseDto(user);
+    } catch (error) {
+      console.error('Error updating avatar:', error);
+      throw error;
+    }
+  }
+
+  async removeAvatar(userId: number): Promise<UserResponseDto> {
+    const user = await this.getUserById(userId);
+
+    if (user.avatarUrl) {
+      await this.fileService.deleteFile(user.avatarUrl);
+      await this.userRepository.save(user);
+    }
+
+    return this.mapToUserResponseDto(user);
+  }
+
+  async delete(id: number): Promise<void> {
+    const user = await this.getUserById(id);
+    if (user.id === id) {
+      throw new BadRequestException('You cannot delete your own account');
+    }
+
+    await this.userRepository.softDelete(id);
   }
 
   async getUserWithPassword(username: string): Promise<User | null> {
@@ -95,100 +157,33 @@ export class UserService {
       .getOne();
   }
 
-  async findById(id: number): Promise<User | null> {
-    return this.userRepository.findOne({ where: { id } });
-  }
-
-  async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
-    const user = await this.findById(id);
-
-    if (!user) {
-      throw new NotFoundException(`User with ID ${id} not found`);
-    }
-
-    if (updateUserDto.fullName) {
-      user.fullName = updateUserDto.fullName;
-    }
-
-    if (updateUserDto.role !== undefined) {
-      user.role = updateUserDto.role;
-    }
-
-    return this.userRepository.save(user);
-  }
-
-  async updateAvatar(userId: number, file: Express.Multer.File): Promise<User> {
-    const user = await this.findById(userId);
-
-    if (!user) {
-      throw new NotFoundException(`User with ID ${userId} not found`);
-    }
-
-    try {
-      // Delete old avatar if exists
-      if (user.avatarUrl) {
-        await this.fileService.deleteFile(user.avatarUrl);
-      }
-
-      // Upload new avatar
-      const avatarUrl = await this.fileService.uploadUserAvatar(file);
-
-      // Update user record
-      user.avatarUrl = avatarUrl;
-      await this.userRepository.save(user);
-
-      return user;
-    } catch (error) {
-      console.error('Error updating avatar:', error);
-      throw error;
-    }
-  }
-
-  async removeAvatar(userId: number): Promise<User> {
-    const user = await this.findById(userId);
-
-    if (!user) {
-      throw new NotFoundException(`User with ID ${userId} not found`);
-    }
-
-    // Remove avatar file if exists
-    if (user.avatarUrl) {
-      await this.fileService.deleteFile(user.avatarUrl);
-      // user.avatarUrl = null;
-      await this.userRepository.save(user);
-    }
-
-    return user;
-  }
-
-  async delete(id: number): Promise<void> {
-    const user = await this.findById(id);
-
-    if (!user) {
-      throw new NotFoundException(`User with ID ${id} not found`);
-    }
-
-    await this.userRepository.softDelete(id);
-  }
-
   async verifyPassword(plainTextPassword: string, hashedPassword: string): Promise<boolean> {
     return bcrypt.compare(plainTextPassword, hashedPassword);
   }
-  
+
   async updateLastActive(userId: number): Promise<void> {
     const now = Date.now();
     const lastUpdate = this.lastUpdateMap.get(userId) || 0;
-    
+
     if (now - lastUpdate > this.UPDATE_INTERVAL) {
       this.lastUpdateMap.set(userId, now);
       try {
         await this.userRepository.update(userId, {
-          lastActiveAt: new Date()
+          lastActiveAt: new Date(),
         });
       } catch (error) {
         console.error(`Failed to update lastActiveAt for user ${userId}:`, error);
       }
     }
+  }
+
+  private async getUserById(id: number): Promise<User> {
+    const user = await this.userRepository.findOne({ where: { id } });
+    if (!user) {
+      throw new NotFoundException(`User with ID ${id} not found`);
+    }
+
+    return user;
   }
 
   mapToUserResponseDto(user: User): UserResponseDto {
@@ -198,6 +193,7 @@ export class UserService {
       fullName: user.fullName,
       role: user.role,
       avatarUrl: user.avatarUrl,
+      lastActiveAt: user.lastActiveAt,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
     };

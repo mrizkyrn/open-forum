@@ -32,3 +32,14 @@
 .pulse-animation {
   animation: pulse-green 2s infinite;
 }
+
+a,
+button,
+input[type='submit'],
+input[type='button'],
+input[type='reset'],
+label[for],
+select,
+.cursor-pointer {
+  cursor: pointer;
+}

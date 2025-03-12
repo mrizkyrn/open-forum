@@ -4,8 +4,8 @@ import { ConfigService } from '@nestjs/config';
 import { UserService } from '../user/user.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
-import { User } from '../user/entities/user.entity';
 import { JWTConfig } from '../../config';
+import { UserResponseDto } from '../user/dto/user-response.dto';
 
 @Injectable()
 export class AuthService {
@@ -61,7 +61,7 @@ export class AuthService {
     return this.generateTokens(user);
   }
 
-  private async generateTokens(user: User) {
+  private async generateTokens(user: UserResponseDto) {
     const payload = { sub: user.id, username: user.username, role: user.role };
 
     const [accessToken, refreshToken] = await Promise.all([

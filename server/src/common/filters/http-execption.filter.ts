@@ -7,7 +7,6 @@ export class HttpExceptionFilter implements ExceptionFilter {
   catch(exception: HttpException, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
-    const request = ctx.getRequest<Request>();
     const status = exception.getStatus();
     const errorResponse = exception.getResponse() as any;
 
@@ -16,7 +15,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
     const responseBody: ApiResponse<null> = {
       success: false,
-      message: this.getErrorMessage(request.method, request.url, status),
+      message: this.getErrorMessage(status),
       error: Array.isArray(errorMessage) ? errorMessage : [errorMessage],
       statusCode: status,
     };
@@ -24,11 +23,15 @@ export class HttpExceptionFilter implements ExceptionFilter {
     response.status(status).json(responseBody);
   }
 
-  private getErrorMessage(method: string, url: string, status: number): string {
+  private getErrorMessage(status: number): string {
     if (status === HttpStatus.UNAUTHORIZED) return 'Authentication failed';
     if (status === HttpStatus.FORBIDDEN) return 'You do not have permission';
     if (status === HttpStatus.NOT_FOUND) return 'Resource not found';
     if (status === HttpStatus.CONFLICT) return 'Resource conflict';
+    if (status === HttpStatus.BAD_REQUEST) return 'Invalid request';
+    if (status === HttpStatus.INTERNAL_SERVER_ERROR) return 'Internal server error';
+    if (status === HttpStatus.NOT_IMPLEMENTED) return 'Not implemented';
+    if (status === HttpStatus.SERVICE_UNAVAILABLE) return 'Service unavailable';
 
     return 'Operation failed';
   }

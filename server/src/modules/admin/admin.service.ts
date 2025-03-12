@@ -1,4 +1,4 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { Injectable, BadRequestException, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Between } from 'typeorm';
 import { User } from '../user/entities/user.entity';
@@ -7,6 +7,11 @@ import { Comment } from '../comment/entities/comment.entity';
 import { Report, ReportStatus } from '../report/entities/report.entity';
 import { Vote } from '../vote/entities/vote.entity';
 import { subDays, startOfDay } from 'date-fns';
+import { UserService } from '../user/user.service';
+import { CreateUserDto } from '../user/dto/create-user.dto';
+import { UserResponseDto } from '../user/dto/user-response.dto';
+import { UpdateUserDto } from '../user/dto/update-user.dto';
+import { UserRole } from 'src/common/enums/user-role.enum';
 
 @Injectable()
 export class AdminService {
@@ -21,6 +26,7 @@ export class AdminService {
     private readonly reportRepository: Repository<Report>,
     @InjectRepository(Vote)
     private readonly voteRepository: Repository<Vote>,
+    private readonly userService: UserService,
   ) {}
 
   /**
@@ -153,6 +159,9 @@ export class AdminService {
 
   /**
    * Calculate start and end dates for current and previous periods
+   * @param now - Current date
+   * @param currentPeriod - Current period type
+   * @param comparisonPeriod - Comparison period type
    */
   private calculatePeriodRanges(
     now: Date,
@@ -308,5 +317,38 @@ export class AdminService {
       date: item.date,
       value: parseInt(item.count, 10),
     }));
+  }
+
+  async createUser(createUserDto: CreateUserDto): Promise<UserResponseDto> {
+    return await this.userService.create(createUserDto);
+  }
+
+  async updateUser(id: number, updateUserDto: UpdateUserDto): Promise<UserResponseDto> {
+    return await this.userService.update(id, updateUserDto);
+  }
+
+  async deleteUser(id: number): Promise<void> {
+    await this.userService.delete(id);
+  }
+
+  async changeUserRole(id: number, role: UserRole, adminId: number): Promise<UserResponseDto> {
+    const user = await this.userRepository.findOne({ where: { id } });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    if (user.role === role) {
+      throw new BadRequestException('User already has the specified role');
+    }
+
+    if (user.id === adminId) {
+      throw new ForbiddenException('Cannot change role for own account');
+    }
+
+    user.role = role;
+    await this.userRepository.save(user);
+
+    return this.userService.mapToUserResponseDto(user);
   }
 }

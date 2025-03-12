@@ -37,17 +37,6 @@ import { FileInterceptor } from '@nestjs/platform-express';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Post()
-  @Roles([UserRole.ADMIN])
-  @ApiOperation({ summary: 'Create new user' })
-  @ApiResponse({ status: 201, description: 'User created successfully', type: UserResponseDto })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 403, description: 'Forbidden' })
-  @ApiResponse({ status: 409, description: 'Username already exists' })
-  async createUser(@Body() createUserDto: CreateUserDto): Promise<UserResponseDto> {
-    return this.userService.create(createUserDto);
-  }
-
   @Get()
   @ApiOperation({ summary: 'Get all users with pagination' })
   @ApiResponse({
@@ -65,39 +54,7 @@ export class UserController {
   @ApiResponse({ status: 200, description: 'Returns current user profile', type: UserResponseDto })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   async getCurrentUser(@ReqUser() currentUser: User): Promise<UserResponseDto> {
-    const user = await this.userService.findById(currentUser.id);
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
-    return this.userService.mapToUserResponseDto(user);
-  }
-
-  @Post('me/avatar')
-  @UseInterceptors(FileInterceptor('avatar'))
-  @ApiOperation({ summary: 'Upload avatar for current user' })
-  @ApiConsumes('multipart/form-data')
-  @ApiResponse({ status: 200, description: 'Avatar updated successfully' })
-  @ApiResponse({ status: 400, description: 'Invalid file' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  async uploadAvatar(
-    @UploadedFile() file: Express.Multer.File,
-    @ReqUser() currentUser: User,
-  ): Promise<UserResponseDto> {
-    if (!file) {
-      throw new BadRequestException('No file uploaded');
-    }
-    
-    const user = await this.userService.updateAvatar(currentUser.id, file);
-    return this.userService.mapToUserResponseDto(user);
-  }
-
-  @Delete('me/avatar')
-  @ApiOperation({ summary: 'Remove avatar for current user' })
-  @ApiResponse({ status: 200, description: 'Avatar removed successfully' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  async removeAvatar(@ReqUser() currentUser: User): Promise<UserResponseDto> {
-    const user = await this.userService.removeAvatar(currentUser.id);
-    return this.userService.mapToUserResponseDto(user);
+    return await this.userService.findById(currentUser.id);
   }
 
   @Get(':id')
@@ -107,41 +64,45 @@ export class UserController {
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 404, description: 'User not found' })
   async getUserById(@Param('id', ParseIntPipe) id: number): Promise<UserResponseDto> {
-    const user = await this.userService.findById(id);
-    if (!user) {
-      throw new NotFoundException(`User with ID ${id} not found`);
-    }
-    return this.userService.mapToUserResponseDto(user);
+    return await this.userService.findById(id);
   }
 
-  @Put(':id')
-  @Roles([UserRole.ADMIN])
-  @ApiOperation({ summary: 'Update user' })
+  @Put('me')
+  @ApiOperation({ summary: 'Update current user' })
   @ApiParam({ name: 'id', description: 'User ID', type: Number })
   @ApiResponse({ status: 200, description: 'User updated successfully', type: UserResponseDto })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 404, description: 'User not found' })
-  async updateUser(
-    @Param('id', ParseIntPipe) id: number,
+  async updateCurrentUser(
+    @ReqUser() currentUser: User,
     @Body() updateUserDto: UpdateUserDto,
   ): Promise<UserResponseDto> {
-    const user = await this.userService.update(id, updateUserDto);
-    return this.userService.mapToUserResponseDto(user);
+    return await this.userService.update(currentUser.id, updateUserDto);
   }
 
-  @Delete(':id')
-  @Roles([UserRole.ADMIN])
-  @ApiOperation({ summary: 'Delete user' })
-  @ApiParam({ name: 'id', description: 'User ID', type: Number })
-  @ApiResponse({ status: 200, description: 'User deleted successfully' })
+  @Post('me/avatar')
+  @UseInterceptors(FileInterceptor('avatar'))
+  @ApiOperation({ summary: 'Upload avatar for current user' })
+  @ApiConsumes('multipart/form-data')
+  @ApiResponse({ status: 200, description: 'Avatar updated successfully' })
+  @ApiResponse({ status: 400, description: 'Invalid file' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 403, description: 'Cannot delete own account' })
-  @ApiResponse({ status: 404, description: 'User not found' })
-  async deleteUser(@Param('id', ParseIntPipe) id: number, @ReqUser() currentUser: User): Promise<void> {
-    if (currentUser.id === id) {
-      throw new ForbiddenException('You cannot delete your own account');
+  async uploadCurrentUserAvatar(
+    @UploadedFile() file: Express.Multer.File,
+    @ReqUser() currentUser: User,
+  ): Promise<UserResponseDto> {
+    if (!file) {
+      throw new BadRequestException('No file uploaded');
     }
 
-    await this.userService.delete(id);
+    return await this.userService.updateAvatar(currentUser.id, file);
+  }
+
+  @Delete('me/avatar')
+  @ApiOperation({ summary: 'Remove avatar for current user' })
+  @ApiResponse({ status: 200, description: 'Avatar removed successfully' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  async removeCurrentUserAvatar(@ReqUser() currentUser: User): Promise<UserResponseDto> {
+    return await this.userService.removeAvatar(currentUser.id);
   }
 }
