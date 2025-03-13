@@ -15,7 +15,7 @@ import {
 import { useAuth } from '@/features/auth/hooks/useAuth';
 import { UserRole } from '@/features/users/types';
 
-const AdminDashboard = () => {
+const AdminLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
   const { user, logout, isLoading } = useAuth();
   const navigate = useNavigate();
@@ -141,4 +141,4 @@ const AdminDashboard = () => {
   );
 };
 
-export default AdminDashboard;
+export default AdminLayout;

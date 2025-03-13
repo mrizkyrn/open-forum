@@ -29,20 +29,18 @@ const UsersPage = () => {
 
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const { isOpen: isDropdownOpen, toggle: toggleDropdown, close: closeDropdown } = useDropdown(dropdownRef);
+  const { isOpen: isDropdownOpen, toggle: toggleDropdown, close: closeDropdown } = useDropdown(dropdownRef as React.RefObject<HTMLElement>);
 
   const {
     users,
     meta,
     isLoading,
-    isError,
     filters,
     handlePageChange,
     handleLimitChange,
     handleSearchChange,
     handleRoleFilterChange,
     handleSortChange,
-    refetch,
   } = useUsers();
 
   const handleToggleDropdown = (userId: number) => {
@@ -244,8 +242,6 @@ const UsersPage = () => {
           data={users}
           columns={columns}
           isLoading={isLoading}
-          isError={isError}
-          onRetry={refetch}
           keyExtractor={(user) => user.id}
           currentSortKey={filters.sortBy}
           sortOrder={filters.sortOrder}

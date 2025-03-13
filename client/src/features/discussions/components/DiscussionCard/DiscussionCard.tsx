@@ -13,9 +13,10 @@ import DeleteConfirmationModal from '@/components/modals/DeleteConfirmationModal
 interface DiscussionCardProps {
   discussion: Discussion;
   onDiscussionDeleted?: () => void;
+  source?: string;
 }
 
-const DiscussionCard: React.FC<DiscussionCardProps> = ({ discussion, onDiscussionDeleted }) => {
+const DiscussionCard: React.FC<DiscussionCardProps> = ({ discussion, onDiscussionDeleted, source }) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [showEditModal, setShowEditModal] = useState(false);
@@ -56,7 +57,7 @@ const DiscussionCard: React.FC<DiscussionCardProps> = ({ discussion, onDiscussio
     ) {
       return;
     }
-    navigate(`/discussions/${discussion.id}`);
+    navigate(`/discussions/${discussion.id}?source=${source ?? 'feed'}`);
   };
 
   return (

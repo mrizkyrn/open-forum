@@ -3,7 +3,6 @@ import { useSearchParams } from 'react-router-dom';
 import { Search as SearchIcon } from 'lucide-react';
 import { DiscussionSortBy, SortOrder, SearchDiscussionDto } from '@/features/discussions/types/DiscussionRequestTypes';
 import { DiscussionPost, FilterToolbar, ActiveFilters } from '@/features/discussions/components';
-import BackButton from '@/components/ui/buttons/BackButton';
 
 const SearchPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -91,8 +90,6 @@ const SearchPage = () => {
 
   return (
     <div className="w-full">
-      <BackButton />
-
       {/* Search input and filter toolbar */}
       <div className="flex flex-col gap-4 rounded-lg bg-white p-4">
         {/* Search input */}
