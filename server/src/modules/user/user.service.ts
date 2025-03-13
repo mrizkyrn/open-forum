@@ -140,13 +140,18 @@ export class UserService {
     return this.mapToUserResponseDto(user);
   }
 
-  async delete(id: number): Promise<void> {
-    const user = await this.getUserById(id);
-    if (user.id === id) {
-      throw new BadRequestException('You cannot delete your own account');
+  async delete(id: number, currenUserId?: number): Promise<void> {
+    if (id === currenUserId) {
+      throw new BadRequestException('Cannot delete own account');
     }
 
-    await this.userRepository.softDelete(id);
+    const user = await this.getUserById(id);
+
+    if (user.avatarUrl) {
+      await this.fileService.deleteFile(user.avatarUrl);
+    }
+
+    await this.userRepository.delete(id);
   }
 
   async getUserWithPassword(username: string): Promise<User | null> {

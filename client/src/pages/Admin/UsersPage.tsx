@@ -1,19 +1,32 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { SearchUserParams, User, UserRole, UserSortBy } from '@/features/users/types';
 import { format } from 'date-fns';
+import { toast } from 'react-toastify';
 import { Users, Search, Filter, MoreHorizontal, Edit, Trash2, UserCheck, Download, RefreshCw } from 'lucide-react';
+import { User, UserRole } from '@/features/users/types';
 import { adminApi } from '@/features/admin/services/adminApi';
-import AvatarImage from '@/features/users/components/AvatarImage';
 import { useUsers } from '@/features/users/hooks/useUsers';
+import { useDropdown } from '@/hooks/useDropdown';
 import MainButton from '@/components/ui/buttons/MainButton';
+import AvatarImage from '@/features/users/components/AvatarImage';
+import DeleteConfirmationModal from '@/components/modals/DeleteConfirmationModal';
+import UserFormModal from '@/features/users/components/UserFormModal';
 
 const UsersPage = () => {
   const queryClient = useQueryClient();
   const [isUserModalOpen, setIsUserModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
-  const [dropdownUserIds, setDropdownUserIds] = useState<Set<number>>(new Set());
+  const [activeDropdownId, setActiveDropdownId] = useState<number | null>(null);
+
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const {
+    isOpen: isDropdownOpen,
+    toggle: toggleDropdown,
+    close: closeDropdown,
+  } = useDropdown(dropdownRef as React.RefObject<HTMLElement>);
 
   const {
     users,
@@ -28,60 +41,53 @@ const UsersPage = () => {
     handleSortChange,
   } = useUsers();
 
-  const toggleDropdown = (userId: number) => {
-    setDropdownUserIds((prev) => {
-      const newSet = new Set(prev);
-      if (newSet.has(userId)) {
-        newSet.delete(userId);
-      } else {
-        newSet.add(userId);
-      }
-      return newSet;
-    });
+  const handleToggleDropdown = (userId: number) => {
+    if (activeDropdownId === userId) {
+      toggleDropdown();
+    } else {
+      setActiveDropdownId(userId);
+      setTimeout(() => toggleDropdown(), 0);
+    }
   };
 
-  const handleEditUser = (user: any) => {
+  const handleNewUser = () => {
+    setSelectedUser(null);
+    setIsUserModalOpen(true);
+  };
+
+  const handleEditUser = (user: User) => {
     setSelectedUser(user);
     setIsUserModalOpen(true);
-    setDropdownUserIds(new Set());
+    closeDropdown();
   };
 
-  const handleDeletePrompt = (user: any) => {
+  const handleDeletePrompt = (user: User) => {
     setSelectedUser(user);
     setIsDeleteModalOpen(true);
-    setDropdownUserIds(new Set());
+    closeDropdown();
   };
 
-  // const handleDeleteUser = async () => {
-  //   if (selectedUser) {
-  //     try {
-  //       await adminApi.deleteUser(selectedUser.id);
-  //       queryClient.invalidateQueries({ queryKey: ['users'] });
-  //       setIsDeleteModalOpen(false);
-  //     } catch (error) {
-  //       console.error('Error deleting user:', error);
-  //     }
-  //   }
-  // };
+  const handleDeleteUser = async () => {
+    if (selectedUser) {
+      try {
+        setIsDeleting(true);
+        await adminApi.deleteUser(selectedUser.id);
+        queryClient.invalidateQueries({ queryKey: ['users'] });
+        setIsDeleteModalOpen(false);
+        toast.success('User deleted successfully');
+      } catch (error) {
+        console.error('Error deleting user:', error);
+        toast.error('Failed to delete user');
+      } finally {
+        setIsDeleting(false);
+      }
+    }
+  };
 
-  // const handleUserSubmit = async (userData: any) => {
-  //   try {
-  //     if (selectedUser) {
-  //       // Update existing user
-  //       await adminApi.updateUser(selectedUser.id, userData);
-  //     } else {
-  //       // Create new user
-  //       await adminApi.createUser(userData);
-  //     }
-
-  //     queryClient.invalidateQueries({ queryKey: ['users'] });
-  //     setIsUserModalOpen(false);
-  //     setSelectedUser(null);
-  //   } catch (error) {
-  //     console.error('Error saving user:', error);
-  //     // Handle form errors
-  //   }
-  // };
+  const handleDeleteCancel = () => {
+    setIsDeleteModalOpen(false);
+    setSelectedUser(null);
+  };
 
   const getRoleColor = (role: string) => {
     switch (role) {
@@ -96,9 +102,7 @@ const UsersPage = () => {
     }
   };
 
-  // Function to handle exporting users data
   const handleExportUsers = () => {
-    // Implementation for exporting users
     console.log('Export users');
   };
 
@@ -123,7 +127,7 @@ const UsersPage = () => {
       {/* Page Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <h1 className="text-2xl font-semibold tracking-tight text-gray-900">Users Management</h1>
-        <MainButton onClick={() => setIsUserModalOpen(true)} leftIcon={<UserCheck size={16} />}>
+        <MainButton onClick={handleNewUser} leftIcon={<UserCheck size={16} />}>
           New User
         </MainButton>
       </div>
@@ -274,7 +278,6 @@ const UsersPage = () => {
                       >
                         {user.role}
                       </span>
-                      {/* <Badge className={getRoleColor(user.role)}>{user.role}</Badge> */}
                     </td>
                     <td className="px-6 py-4 text-sm whitespace-nowrap text-gray-500">
                       {user.createdAt ? format(new Date(user.createdAt), 'MMM d, yyyy') : 'N/A'}
@@ -283,16 +286,16 @@ const UsersPage = () => {
                       {user.lastActiveAt ? format(new Date(user.lastActiveAt), 'MMM d, yyyy HH:mm') : 'Never'}
                     </td>
                     <td className="px-6 py-4 text-right text-sm whitespace-nowrap">
-                      <div className="relative">
+                      <div className="relative" ref={user.id === activeDropdownId ? dropdownRef : undefined}>
                         <button
                           className="inline-flex items-center rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-500"
-                          onClick={() => toggleDropdown(user.id)}
+                          onClick={() => handleToggleDropdown(user.id)}
                         >
                           <span className="sr-only">Open actions menu</span>
                           <MoreHorizontal className="h-5 w-5" />
                         </button>
-                        {dropdownUserIds.has(user.id) && (
-                          <div className="ring-opacity-5 absolute right-0 z-10 mt-1 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black focus:outline-none">
+                        {isDropdownOpen && user.id === activeDropdownId && (
+                          <div className="absolute right-0 z-10 mt-1 w-48 origin-top-right rounded-md border border-gray-100 bg-white py-1 shadow-sm">
                             <button
                               className="flex w-full items-center px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50"
                               onClick={() => handleEditUser(user)}
@@ -423,27 +426,24 @@ const UsersPage = () => {
       </div>
 
       {/* User Form Modal */}
-      {/* <UserFormModal
+      <UserFormModal
         isOpen={isUserModalOpen}
         onClose={() => {
           setIsUserModalOpen(false);
           setSelectedUser(null);
         }}
-        onSubmit={handleUserSubmit}
         user={selectedUser}
-      /> */}
+      />
 
       {/* Delete Confirmation Modal */}
-      {/* <DeleteConfirmModal
+      <DeleteConfirmationModal
         isOpen={isDeleteModalOpen}
-        onClose={() => {
-          setIsDeleteModalOpen(false);
-          setSelectedUser(null);
-        }}
-        onConfirm={handleDeleteUser}
         title="Delete User"
         message={`Are you sure you want to delete the user "${selectedUser?.fullName}"? This action cannot be undone.`}
-      /> */}
+        isDeleting={isDeleting}
+        onCancel={handleDeleteCancel}
+        onConfirm={handleDeleteUser}
+      />
     </div>
   );
 };

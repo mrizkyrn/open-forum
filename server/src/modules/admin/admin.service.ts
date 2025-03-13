@@ -327,8 +327,8 @@ export class AdminService {
     return await this.userService.update(id, updateUserDto);
   }
 
-  async deleteUser(id: number): Promise<void> {
-    await this.userService.delete(id);
+  async deleteUser(id: number, currentUserId: number): Promise<void> {
+    await this.userService.delete(id, currentUserId);
   }
 
   async changeUserRole(id: number, role: UserRole, adminId: number): Promise<UserResponseDto> {

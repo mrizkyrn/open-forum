@@ -12,6 +12,8 @@ import { UserRole } from '../../common/enums/user-role.enum';
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import { UserResponseDto } from '../user/dto/user-response.dto';
 import { UpdateUserDto } from '../user/dto/update-user.dto';
+import { ReqUser } from 'src/common/decorators/user.decorator';
+import { User } from '../user/entities/user.entity';
 
 @ApiTags('Admin')
 @Controller('admin')
@@ -56,7 +58,7 @@ export class AdminController {
     return this.adminService.createUser(createUserDto);
   }
 
-  @Put(':id')
+  @Put('users/:id')
   @Roles([UserRole.ADMIN])
   @ApiOperation({ summary: 'Update user' })
   @ApiParam({ name: 'id', description: 'User ID', type: Number })
@@ -70,7 +72,7 @@ export class AdminController {
     return this.adminService.updateUser(id, updateUserDto);
   }
 
-  @Delete(':id')
+  @Delete('users/:id')
   @Roles([UserRole.ADMIN])
   @ApiOperation({ summary: 'Delete user' })
   @ApiParam({ name: 'id', description: 'User ID', type: Number })
@@ -78,7 +80,7 @@ export class AdminController {
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Cannot delete own account' })
   @ApiResponse({ status: 404, description: 'User not found' })
-  async deleteUser(@Param('id', ParseIntPipe) id: number): Promise<void> {
-    return this.adminService.deleteUser(id);
+  async deleteUser(@Param('id', ParseIntPipe) id: number, @ReqUser() currentUser: User): Promise<void> {
+    return this.adminService.deleteUser(id, currentUser.id);
   }
 }
