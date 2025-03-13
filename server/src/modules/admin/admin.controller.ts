@@ -1,4 +1,17 @@
-import { Controller, Get, UseGuards, Query, Post, Body, Put, Param, ParseIntPipe, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  UseGuards,
+  Query,
+  Post,
+  Body,
+  Put,
+  Param,
+  ParseIntPipe,
+  Delete,
+  HttpCode,
+  HttpStatus,
+} from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AdminService } from './admin.service';
 import { StatsResponseDto } from './dto/stats-response.dto';
@@ -14,6 +27,8 @@ import { UserResponseDto } from '../user/dto/user-response.dto';
 import { UpdateUserDto } from '../user/dto/update-user.dto';
 import { ReqUser } from 'src/common/decorators/user.decorator';
 import { User } from '../user/entities/user.entity';
+import { UpdateReportStatusDto } from '../report/dto/update-report-status.dto';
+import { ReportResponseDto } from '../report/dto/report-response.dto';
 
 @ApiTags('Admin')
 @Controller('admin')
@@ -82,5 +97,24 @@ export class AdminController {
   @ApiResponse({ status: 404, description: 'User not found' })
   async deleteUser(@Param('id', ParseIntPipe) id: number, @ReqUser() currentUser: User): Promise<void> {
     return this.adminService.deleteUser(id, currentUser.id);
+  }
+
+  // Report management endpoints
+
+  @Put('reports/:id/status')
+  @Roles([UserRole.ADMIN])
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Update report status' })
+  @ApiParam({ name: 'id', description: 'Report ID', type: Number })
+  @ApiResponse({ status: 200, description: 'Report status updated successfully', type: ReportResponseDto })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Forbidden - Not authorized to update reports' })
+  @ApiResponse({ status: 404, description: 'Report not found' })
+  async updateReportStatus(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateStatusDto: UpdateReportStatusDto,
+    @ReqUser() currentUser: User,
+  ): Promise<ReportResponseDto> {
+    return this.adminService.updateReportStatus(id, updateStatusDto, currentUser);
   }
 }

@@ -109,21 +109,4 @@ export class ReportController {
     return this.reportService.findById(id, currentUser);
   }
 
-  @Put(':id/status')
-  @UseGuards(RolesGuard)
-  @Roles([UserRole.ADMIN])
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Update report status' })
-  @ApiParam({ name: 'id', description: 'Report ID', type: Number })
-  @ApiResponse({ status: 200, description: 'Report status updated successfully', type: ReportResponseDto })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 403, description: 'Forbidden - Not authorized to update reports' })
-  @ApiResponse({ status: 404, description: 'Report not found' })
-  async updateReportStatus(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() updateStatusDto: UpdateReportStatusDto,
-    @ReqUser() currentUser: User,
-  ): Promise<ReportResponseDto> {
-    return this.reportService.updateStatus(id, updateStatusDto, currentUser);
-  }
 }

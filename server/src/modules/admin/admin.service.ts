@@ -12,6 +12,9 @@ import { CreateUserDto } from '../user/dto/create-user.dto';
 import { UserResponseDto } from '../user/dto/user-response.dto';
 import { UpdateUserDto } from '../user/dto/update-user.dto';
 import { UserRole } from 'src/common/enums/user-role.enum';
+import { ReportService } from '../report/report.service';
+import { UpdateReportStatusDto } from '../report/dto/update-report-status.dto';
+import { ReportResponseDto } from '../report/dto/report-response.dto';
 
 @Injectable()
 export class AdminService {
@@ -27,6 +30,7 @@ export class AdminService {
     @InjectRepository(Vote)
     private readonly voteRepository: Repository<Vote>,
     private readonly userService: UserService,
+    private readonly reportService: ReportService,
   ) {}
 
   /**
@@ -319,6 +323,7 @@ export class AdminService {
     }));
   }
 
+  // User management methods
   async createUser(createUserDto: CreateUserDto): Promise<UserResponseDto> {
     return await this.userService.create(createUserDto);
   }
@@ -350,5 +355,14 @@ export class AdminService {
     await this.userRepository.save(user);
 
     return this.userService.mapToUserResponseDto(user);
+  }
+
+  // Report management methods
+  async updateReportStatus(
+    id: number,
+    updateStatusDto: UpdateReportStatusDto,
+    currentUser: User,
+  ): Promise<ReportResponseDto> {
+    return await this.reportService.updateStatus(id, updateStatusDto, currentUser);
   }
 }

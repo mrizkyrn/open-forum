@@ -17,16 +17,16 @@ import { UserRole } from '@/features/users/types';
 
 const AdminDashboard = () => {
   const [collapsed, setCollapsed] = useState(false);
-  const { user, logout } = useAuth();
+  const { user, logout, isLoading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
   // Check admin permission and redirect if not admin
   useEffect(() => {
-    if (!user?.role || user.role !== UserRole.ADMIN) {
+    if (!isLoading && user?.role !== UserRole.ADMIN) {
       navigate('/', { replace: true });
     }
-  }, [user, navigate]);
+  }, [user, navigate, isLoading]);
 
   const menuItems = [
     { icon: <LayoutDashboard size={18} />, label: 'Overview', path: '/admin' },

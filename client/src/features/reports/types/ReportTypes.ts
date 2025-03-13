@@ -5,6 +5,12 @@ export enum ReportTargetType {
   COMMENT = 'comment',
 }
 
+export enum ReportStatus {
+  PENDING = 'pending',
+  RESOLVED = 'resolved',
+  DISMISSED = 'dismissed'
+}
+
 export interface ReportReason {
   id: number;
   name: string;
@@ -30,7 +36,7 @@ export interface Report {
     deleted: boolean;
   };
   reason: ReportReason;
-  status: string;
+  status: ReportStatus;
   reviewer: User | null;
   reviewedAt: string | null;
 }

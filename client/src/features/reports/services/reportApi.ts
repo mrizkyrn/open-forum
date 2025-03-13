@@ -12,6 +12,24 @@ export const reportApi = {
     }
   },
 
+  async getReports(): Promise<any> {
+    try {
+      const response = await apiClient.get<ApiResponse<any>>('/reports');
+      return response.data.data;
+    } catch (error: any) {
+      return handleApiError(error, 'Failed to fetch reports');
+    }
+  },
+
+  async getReportStats(): Promise<any> {
+    try {
+      const response = await apiClient.get<ApiResponse<any>>('/reports/stats');
+      return response.data.data;
+    } catch (error: any) {
+      return handleApiError(error, 'Failed to fetch report statistics');
+    }
+  },
+
   async getReportReasons(): Promise<ReportReason[]> {
     try {
       const response = await apiClient.get<ApiResponse<ReportReason[]>>('/reports/reasons');

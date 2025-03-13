@@ -3,6 +3,7 @@ import { apiClient } from '@/services/client';
 import { ApiResponse } from '@/types/ResponseTypes';
 import { ActivityData, ActivityDataParams, DashboardStats, StatsParams } from '../types';
 import { User, UserRole } from '@/features/users/types';
+import { ReportStatus } from '@/features/reports/types';
 
 // export type VoteValue = -1 | 1;
 
@@ -38,7 +39,6 @@ export interface UpdateUserDto {
   fullName?: string;
   role?: UserRole;
 }
-
 
 export const adminApi = {
   async getDashboardStats(params: StatsParams): Promise<DashboardStats> {
@@ -107,30 +107,6 @@ export const adminApi = {
   },
 
   /**
-   * Ban a user (admin only)
-   */
-  async banUser(id: number, reason: string): Promise<User> {
-    try {
-      const response = await apiClient.put<ApiResponse<User>>(`/admin/users/${id}/ban`, { reason });
-      return response.data.data;
-    } catch (error: any) {
-      throw handleApiError(error, 'Failed to ban user');
-    }
-  },
-
-  /**
-   * Unban a user (admin only)
-   */
-  async unbanUser(id: number): Promise<User> {
-    try {
-      const response = await apiClient.put<ApiResponse<User>>(`/admin/users/${id}/unban`);
-      return response.data.data;
-    } catch (error: any) {
-      throw handleApiError(error, 'Failed to unban user');
-    }
-  },
-
-  /**
    * Get user activity statistics (admin only)
    */
   async getUserActivity(id: number, days: number = 30): Promise<any> {
@@ -144,23 +120,11 @@ export const adminApi = {
     }
   },
 
-  /**
-   * Perform bulk action on multiple users (admin only)
-   */
-  async bulkUserAction(
-    userIds: number[],
-    action: 'ban' | 'unban' | 'delete' | 'changeRole',
-    actionData?: any,
-  ): Promise<any> {
+  async updateReportStatus(id: number, status: ReportStatus): Promise<void> {
     try {
-      const response = await apiClient.post<ApiResponse<any>>('/admin/users/bulk', {
-        userIds,
-        action,
-        actionData,
-      });
-      return response.data.data;
+      await apiClient.put<ApiResponse<void>>(`/admin/reports/${id}/status`, { status });
     } catch (error: any) {
-      throw handleApiError(error, `Failed to perform bulk ${action} operation`);
+      throw handleApiError(error, 'Failed to update report status');
     }
   },
 };

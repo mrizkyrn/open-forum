@@ -66,7 +66,7 @@ export class ReportService {
   }
 
   async findAll(searchDto: SearchReportDto, currentUser: User): Promise<Pageable<ReportResponseDto>> {
-    const { page = 1, limit = 10, status, targetType } = searchDto;
+    const { page = 1, limit = 10, sortBy, sortOrder, status, targetType } = searchDto;
     const offset = (page - 1) * limit;
 
     // Build query
@@ -75,7 +75,7 @@ export class ReportService {
       .leftJoinAndSelect('report.reporter', 'reporter')
       .leftJoinAndSelect('report.reviewer', 'reviewer')
       .leftJoinAndSelect('report.reason', 'reason')
-      .orderBy('report.createdAt', 'DESC')
+      .orderBy(`report.${sortBy}`, sortOrder)
       .skip(offset)
       .take(limit);
 
