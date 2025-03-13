@@ -9,6 +9,7 @@ import { Vote } from '../../modules/vote/entities/vote.entity';
 import { ReportReason } from '../../modules/report/entities/report-reason.entity';
 import { Report } from '../../modules/report/entities/report.entity';
 import { DataSource } from 'typeorm';
+import { Notification } from 'src/modules/notification/entities/notification.entity';
 
 export default new DataSource({
   type: 'postgres',
@@ -19,7 +20,18 @@ export default new DataSource({
   database: process.env.DB_NAME,
   synchronize: process.env.NODE_ENV === 'development',
   logging: process.env.NODE_ENV === 'development',
-  entities: [User, Discussion, Bookmark, Attachment, Comment, Vote, DiscussionSpace, Report, ReportReason],
+  entities: [
+    User,
+    Discussion,
+    Bookmark,
+    Attachment,
+    Comment,
+    Vote,
+    DiscussionSpace,
+    Report,
+    ReportReason,
+    Notification,
+  ],
   migrations: ['src/core/database/migrations/*{.ts,.js}'],
   migrationsTableName: 'typeorm_migrations',
 });

@@ -55,6 +55,10 @@ export const SocketProvider: React.FC<React.PropsWithChildren<object>> = ({ chil
       setIsConnected(false);
     });
 
+    socketInstance.on('notification', (data) => {
+      console.log('New notification:', data);
+    });
+
     // Store socket instance
     setSocket(socketInstance);
 
@@ -67,20 +71,16 @@ export const SocketProvider: React.FC<React.PropsWithChildren<object>> = ({ chil
   }, [isAuthenticated, accessToken]);
 
   // Provide socket context
-  return (
-    <SocketContext.Provider value={{ socket, isConnected }}>
-      {children}
-    </SocketContext.Provider>
-  );
+  return <SocketContext.Provider value={{ socket, isConnected }}>{children}</SocketContext.Provider>;
 };
 
 // Create hook for consuming socket context
 export const useSocket = () => {
   const context = useContext(SocketContext);
-  
+
   if (context === undefined) {
     throw new Error('useSocket must be used within a SocketProvider');
   }
-  
+
   return context;
 };

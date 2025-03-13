@@ -16,6 +16,7 @@ import { AdminModule } from './modules/admin/admin.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { UserActivityInterceptor } from './common/interceptors/user-activity.interceptor';
 import { UserModule } from './modules/user/user.module';
+import { NotificationModule } from './modules/notification/notification.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { UserModule } from './modules/user/user.module';
     ReportModule,
     AdminModule,
     UserModule,
+    NotificationModule,
   ],
   controllers: [AppController],
   providers: [

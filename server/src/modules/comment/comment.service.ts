@@ -22,6 +22,8 @@ import { UpdateCommentDto } from './dto/update-comment.dto';
 import { VoteService } from '../vote/vote.service';
 import { VoteEntityType } from '../vote/entities/vote.entity';
 import { WebsocketGateway } from 'src/core/websocket/websocket.gateway';
+import { NotificationEntityType, NotificationType } from '../notification/entities/notification.entity';
+import { NotificationService } from '../notification/notification.service';
 
 @Injectable()
 export class CommentService {
@@ -33,6 +35,7 @@ export class CommentService {
     private readonly attachmentService: AttachmentService,
     private readonly voteService: VoteService,
     private readonly websocketGateway: WebsocketGateway,
+    private readonly notificationService: NotificationService,
   ) {}
 
   async create(
@@ -132,8 +135,11 @@ export class CommentService {
         // Fetch the complete comment with all relations
         const createdComment = await this.getCommentById(savedComment.id);
 
-        // Notify users of the new comment
+        // Notify users of the new comment via websocket
         this.websocketGateway.notifyNewComment(createdComment);
+
+        // Create database notifications
+        await this.createCommentNotifications(createdComment, discussion, currentUser);
 
         return this.formatCommentResponse(createdComment);
       } catch (error) {
@@ -469,6 +475,119 @@ export class CommentService {
       } catch (error) {
         console.error(`Failed to clean up file ${filePath}:`, error);
       }
+    }
+  }
+
+  // Add this new method to handle notification creation
+  private async createCommentNotifications(comment: Comment, discussion: Discussion, currentUser: User): Promise<void> {
+    try {
+      // Don't notify yourself
+      if (comment.parentId) {
+        // This is a reply to another comment
+        // Get the parent comment to find its author
+        const parentComment = await this.commentRepository.findOne({
+          where: { id: comment.parentId },
+          relations: ['author'],
+        });
+
+        if (parentComment && parentComment.author.id !== currentUser.id) {
+          // Create notification for the parent comment author
+          const notification = await this.notificationService.createNotification(
+            parentComment.author.id,
+            currentUser.id,
+            NotificationType.REPLY_TO_COMMENT,
+            NotificationEntityType.COMMENT,
+            comment.id,
+            {
+              discussionId: comment.discussionId,
+              parentCommentContent: parentComment.content.substring(0, 100),
+              commentContent: comment.content.substring(0, 100),
+            },
+          );
+
+          // Send real-time notification
+          this.websocketGateway.sendNotification(parentComment.author.id, {
+            id: notification.id,
+            type: notification.type,
+            entityType: notification.entityType,
+            entityId: notification.entityId,
+            data: notification.data,
+            createdAt: notification.createdAt,
+            actor: {
+              id: currentUser.id,
+              username: currentUser.username,
+              fullName: currentUser.fullName,
+              avatarUrl: currentUser.avatarUrl,
+            },
+          });
+        }
+        // Also notify the discussion author (if different from both commenter and parent comment author)
+        if (
+          discussion.authorId !== currentUser.id &&
+          (!parentComment || discussion.authorId !== parentComment.author.id)
+        ) {
+          const notification = await this.notificationService.createNotification(
+            discussion.authorId,
+            currentUser.id,
+            NotificationType.COMMENT_ON_DISCUSSION,
+            NotificationEntityType.COMMENT,
+            comment.id,
+            {
+              discussionId: comment.discussionId,
+              commentContent: comment.content.substring(0, 100),
+            },
+          );
+
+          this.websocketGateway.sendNotification(discussion.authorId, {
+            id: notification.id,
+            type: notification.type,
+            entityType: notification.entityType,
+            entityId: notification.entityId,
+            data: notification.data,
+            createdAt: notification.createdAt,
+            actor: {
+              id: currentUser.id,
+              username: currentUser.username,
+              fullName: currentUser.fullName,
+              avatarUrl: currentUser.avatarUrl,
+            },
+          });
+        }
+      } else {
+        // This is a top-level comment on a discussion
+        // Notify the discussion author if they're not the commenter
+        if (discussion.authorId !== currentUser.id) {
+          const notification = await this.notificationService.createNotification(
+            discussion.authorId,
+            currentUser.id,
+            NotificationType.COMMENT_ON_DISCUSSION,
+            NotificationEntityType.COMMENT,
+            comment.id,
+            {
+              discussionId: discussion.id,
+              commentContent: comment.content.substring(0, 100),
+            },
+          );
+
+          // Send real-time notification
+          this.websocketGateway.sendNotification(discussion.authorId, {
+            id: notification.id,
+            type: notification.type,
+            entityType: notification.entityType,
+            entityId: notification.entityId,
+            data: notification.data,
+            createdAt: notification.createdAt,
+            actor: {
+              id: currentUser.id,
+              username: currentUser.username,
+              fullName: currentUser.fullName,
+              avatarUrl: currentUser.avatarUrl,
+            },
+          });
+        }
+      }
+    } catch (error) {
+      console.error('Failed to create comment notifications:', error);
     }
   }
 }

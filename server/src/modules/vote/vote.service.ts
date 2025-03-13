@@ -6,6 +6,10 @@ import { Discussion } from '../discussion/entities/discussion.entity';
 import { Comment } from '../comment/entities/comment.entity';
 import { User } from '../user/entities/user.entity';
 import { VoteCountsDto, VoteResponseDto } from './dto/vote-response.dto';
+import { NotificationEntityType, NotificationType } from '../notification/entities/notification.entity';
+import { UserService } from '../user/user.service';
+import { NotificationService } from '../notification/notification.service';
+import { WebsocketGateway } from 'src/core/websocket/websocket.gateway';
 
 @Injectable()
 export class VoteService {
@@ -16,19 +20,26 @@ export class VoteService {
     private readonly discussionRepository: Repository<Discussion>,
     @InjectRepository(Comment)
     private readonly commentRepository: Repository<Comment>,
+    private readonly userService: UserService,
+    private readonly notificationService: NotificationService,
+    private readonly websocketGateway: WebsocketGateway,
   ) {}
 
   async voteDiscussion(userId: number, discussionId: number, value: VoteValue): Promise<VoteResponseDto | null> {
     const queryRunner = this.discussionRepository.manager.connection.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
-
+  
     try {
-      const discussion = await queryRunner.manager.findOne(Discussion, { where: { id: discussionId } });
+      const discussion = await queryRunner.manager.findOne(Discussion, { 
+        where: { id: discussionId },
+        relations: ['author']  // Add author relation
+      });
+      
       if (!discussion) {
         throw new NotFoundException('Discussion not found');
       }
-
+  
       const existingVote = await queryRunner.manager.findOne(Vote, {
         where: {
           user: { id: userId },
@@ -37,9 +48,10 @@ export class VoteService {
         },
         relations: ['user'],
       });
-
+  
       let result: Vote | null = null;
-
+      let shouldNotify = false;
+  
       if (existingVote) {
         // If same vote exists, remove it (toggle behavior)
         if (existingVote.value === value) {
@@ -53,10 +65,12 @@ export class VoteService {
           // Update existing vote
           existingVote.value = value;
           result = await queryRunner.manager.save(Vote, existingVote);
-
+  
           if (value === VoteValue.UPVOTE) {
+            console.log('Upvote');
             discussion.upvoteCount += 1;
             discussion.downvoteCount -= 1;
+            shouldNotify = true;
           } else {
             discussion.downvoteCount += 1;
             discussion.upvoteCount -= 1;
@@ -70,23 +84,35 @@ export class VoteService {
           entityId: discussionId,
           value,
         });
-
+  
         result = await queryRunner.manager.save(Vote, vote);
-
+  
         if (value === VoteValue.UPVOTE) {
           discussion.upvoteCount += 1;
+          shouldNotify = true;
         } else {
           discussion.downvoteCount += 1;
         }
       }
-
+  
       // Ensure counts are never negative
       discussion.upvoteCount = Math.max(0, discussion.upvoteCount);
       discussion.downvoteCount = Math.max(0, discussion.downvoteCount);
-
+  
       await queryRunner.manager.save(Discussion, discussion);
       await queryRunner.commitTransaction();
-
+  
+      // Create notification after successful transaction
+      if (shouldNotify && discussion.authorId !== userId) {
+        await this.createVoteNotification(
+          VoteEntityType.DISCUSSION,
+          discussionId,
+          userId,
+          discussion.authorId,
+          value
+        );
+      }
+  
       return result ? this.formatVoteResponse(result) : null;
     } catch (error) {
       await queryRunner.rollbackTransaction();
@@ -238,6 +264,81 @@ export class VoteService {
 
     const votes = await query.getRawMany();
     return votes.map((v) => v.entityId);
+  }
+
+  private async createVoteNotification(
+    entityType: VoteEntityType,
+    entityId: number,
+    voterId: number,
+    recipientId: number,
+    value: VoteValue,
+  ): Promise<void> {
+    // Only send notifications for upvotes, not downvotes
+    if (value !== VoteValue.UPVOTE || voterId === recipientId) {
+      return;
+    }
+  
+    try {
+      const notificationType =
+        entityType === VoteEntityType.DISCUSSION 
+          ? NotificationType.DISCUSSION_UPVOTE 
+          : NotificationType.COMMENT_UPVOTE;
+  
+      const notificationEntityType =
+        entityType === VoteEntityType.DISCUSSION 
+          ? NotificationEntityType.DISCUSSION 
+          : NotificationEntityType.COMMENT;
+  
+      // Check if a notification already exists for this voter on this content
+      const existingNotification = await this.notificationService.findExistingNotification(
+        recipientId,
+        voterId,
+        notificationType,
+        notificationEntityType,
+        entityId,
+      );
+  
+      // If a notification already exists, don't create another one
+      if (existingNotification) {
+        console.log('Notification already exists for this vote, skipping');
+        return;
+      }
+  
+      // Get voter info
+      const voter = await this.userService.findById(voterId);
+  
+      // Create notification
+      const notification = await this.notificationService.createNotification(
+        recipientId,
+        voterId,
+        notificationType,
+        notificationEntityType,
+        entityId,
+        {
+          entityType,
+          entityId,
+        },
+      );
+  
+      // Send real-time notification
+      this.websocketGateway.sendNotification(recipientId, {
+        id: notification.id,
+        type: notification.type,
+        entityType: notification.entityType,
+        entityId: notification.entityId,
+        data: notification.data,
+        createdAt: notification.createdAt,
+        actor: {
+          id: voter.id,
+          username: voter.username,
+          fullName: voter.fullName,
+          avatarUrl: voter.avatarUrl,
+        },
+      });
+    } catch (error) {
+      console.error('Error creating vote notification:', error);
+      // Don't throw - notifications are non-critical
+    }
   }
 
   formatVoteResponse(vote: Vote): VoteResponseDto {

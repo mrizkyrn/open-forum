@@ -185,7 +185,10 @@ export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection, OnG
 
   // Send notification to specific user
   sendNotification(userId: number, notification: any) {
-    this.server.to(`user:${userId}`).emit('notification', notification);
+    this.server.to(`user:${userId}`).emit('notification', {
+      ...notification,
+      timestamp: new Date(),
+    });
     return true;
   }
 

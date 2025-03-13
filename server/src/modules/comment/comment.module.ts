@@ -7,9 +7,10 @@ import { Discussion } from '../discussion/entities/discussion.entity';
 import { AttachmentModule } from '../attachment/attachment.module';
 import { VoteModule } from '../vote/vote.module';
 import { WebsocketModule } from 'src/core/websocket/websocket.module';
+import { NotificationModule } from '../notification/notification.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Comment, Discussion]), AttachmentModule, VoteModule, WebsocketModule],
+  imports: [TypeOrmModule.forFeature([Comment, Discussion]), AttachmentModule, VoteModule, NotificationModule, WebsocketModule],
   providers: [CommentService],
   controllers: [CommentController],
   exports: [CommentService],
