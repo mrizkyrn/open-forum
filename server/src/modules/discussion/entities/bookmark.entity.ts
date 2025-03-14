@@ -1,7 +1,7 @@
-import { Entity, ManyToOne, JoinColumn, Column, Unique } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, Unique } from 'typeorm';
 import { BaseEntity } from '../../../core/database/entities/base.entity';
-import { User } from '../../user/entities/user.entity';
 import { Discussion } from '../../discussion/entities/discussion.entity';
+import { User } from '../../user/entities/user.entity';
 
 @Entity('bookmarks')
 @Unique(['userId', 'discussionId'])

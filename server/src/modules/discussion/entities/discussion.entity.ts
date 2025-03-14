@@ -1,8 +1,8 @@
-import { Column, Entity, JoinColumn, ManyToOne, Index, OneToMany } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { BaseEntity } from '../../../core/database/entities/base.entity';
-import { User } from '../../user/entities/user.entity';
 import { Attachment } from '../../attachment/entities/attachment.entity';
 import { Comment } from '../../comment/entities/comment.entity';
+import { User } from '../../user/entities/user.entity';
 import { DiscussionSpace } from './discussion-space.entity';
 
 @Entity('discussions')

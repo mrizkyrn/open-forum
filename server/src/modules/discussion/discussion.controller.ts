@@ -1,34 +1,38 @@
 import {
   Body,
   Controller,
-  Post,
-  UseGuards,
-  UseInterceptors,
-  UploadedFiles,
+  Delete,
+  Get,
   HttpCode,
   HttpStatus,
   Param,
   ParseIntPipe,
-  Query,
-  Get,
-  Delete,
+  Post,
   Put,
+  Query,
+  UploadedFiles,
+  UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiConsumes, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { FilesInterceptor } from '@nestjs/platform-express';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { ApiBearerAuth, ApiConsumes, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ReqUser } from '../../common/decorators/user.decorator';
+import { Pageable } from '../../common/interfaces/pageable.interface';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { User } from '../user/entities/user.entity';
 import { DiscussionService } from './discussion.service';
 import { CreateDiscussionDto } from './dto/create-discussion.dto';
-import { DiscussionResponseDto, PageableDiscussionResponseDto } from './dto/discussion-response.dto';
+import {
+  DiscussionResponseDto,
+  PageableDiscussionResponseDto,
+  PopularTagsResponseDto,
+} from './dto/discussion-response.dto';
 import { SearchDiscussionDto } from './dto/search-discussion.dto';
-import { Pageable } from '../../common/interfaces/pageable.interface';
 import { UpdateDiscussionDto } from './dto/update-discussion.dto';
 
+@ApiBearerAuth()
 @ApiTags('Discussions')
 @Controller('discussions')
-@ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
 export class DiscussionController {
   constructor(private readonly discussionService: DiscussionService) {}
@@ -49,9 +53,7 @@ export class DiscussionController {
     @ReqUser() currentUser: User,
     @UploadedFiles() files?: Express.Multer.File[],
   ): Promise<DiscussionResponseDto> {
-    const discussion = await this.discussionService.create(createDiscussionDto, currentUser, files);
-
-    return this.discussionService.formatDiscussionResponse(discussion, currentUser);
+    return this.discussionService.create(createDiscussionDto, currentUser, files);
   }
 
   @Get()
@@ -71,10 +73,10 @@ export class DiscussionController {
 
   @Get('tags/popular')
   @ApiOperation({ summary: 'Get popular tags' })
-  @ApiResponse({ status: 200, description: 'Returns list of popular tags' })
+  @ApiResponse({ status: 200, description: 'Returns list of popular tags', type: [PopularTagsResponseDto] })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
-  async getPopularTags(): Promise<{ tag: string; count: number }[]> {
-    return this.discussionService.getPopularTags();
+  async getPopularTags(@Query('limit', ParseIntPipe) limit: number = 10): Promise<PopularTagsResponseDto[]> {
+    return this.discussionService.getPopularTags(limit);
   }
 
   @Get('bookmarked')
@@ -110,6 +112,7 @@ export class DiscussionController {
   @ApiConsumes('multipart/form-data')
   @ApiParam({ name: 'id', description: 'Discussion ID', type: Number })
   @ApiResponse({ status: 200, description: 'Discussion updated successfully', type: DiscussionResponseDto })
+  @ApiResponse({ status: 400, description: 'Bad request' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Forbidden - Not the author of the discussion' })
   @ApiResponse({ status: 404, description: 'Discussion not found' })

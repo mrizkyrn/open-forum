@@ -1,7 +1,20 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { UserResponseDto } from '../../user/dto/user-response.dto';
 import { PaginationMetaDto } from '../../../common/dto/pagination-meta.dto';
 import { AttachmentResponseDto } from '../../../modules/attachment/dto/attachment-response.dto';
+import { UserResponseDto } from '../../user/dto/user-response.dto';
+import { User } from '../../user/entities/user.entity';
+import { Discussion } from '../entities/discussion.entity';
+
+class DiscussionSpaceDto {
+  @ApiProperty({ description: 'Space ID', example: 1 })
+  id: number;
+
+  @ApiProperty({ description: 'Space name', example: 'General Discussion' })
+  name: string;
+
+  @ApiProperty({ description: 'Space URL slug', example: 'general-discussion' })
+  slug: string;
+}
 
 export class DiscussionResponseDto {
   @ApiProperty({
@@ -92,13 +105,61 @@ export class DiscussionResponseDto {
 
   @ApiProperty({
     description: 'Space where the discussion belongs',
-    example: 1,
+    nullable: true,
+    type: () => DiscussionSpaceDto,
   })
-  space?: {
-    id: number;
-    name: string;
-    slug: string;
-  } | null;
+  space?: DiscussionSpaceDto | null;
+
+  static fromEntity(
+    discussion: Discussion,
+    currentUser?: User,
+    isBookmarked: boolean = false,
+    voteStatus: number | null = null,
+  ): DiscussionResponseDto {
+    const dto = new DiscussionResponseDto();
+
+    // Map basic properties
+    dto.id = discussion.id;
+    dto.content = discussion.content;
+    dto.isAnonymous = discussion.isAnonymous;
+    dto.tags = discussion.tags || [];
+    dto.createdAt = discussion.createdAt;
+    dto.updatedAt = discussion.updatedAt;
+    dto.commentCount = discussion.commentCount ?? 0;
+    dto.upvoteCount = discussion.upvoteCount ?? 0;
+    dto.downvoteCount = discussion.downvoteCount ?? 0;
+
+    // Map user-specific data
+    dto.isBookmarked = isBookmarked;
+    dto.voteStatus = voteStatus;
+
+    // Map space if available
+    dto.space = discussion.space
+      ? {
+          id: discussion.space.id,
+          name: discussion.space.name,
+          slug: discussion.space.slug,
+        }
+      : null;
+
+    // Handle author based on anonymity
+    if (!discussion.isAnonymous) {
+      dto.author = discussion.author ? UserResponseDto.fromEntity(discussion.author) : null;
+    } else if (currentUser && currentUser.id === discussion.authorId) {
+      dto.author = UserResponseDto.createAnonymous(true);
+    } else {
+      dto.author = UserResponseDto.createAnonymous();
+    }
+
+    // Process attachments
+    if (discussion.attachments?.length > 0) {
+      dto.attachments = [...discussion.attachments].sort((a, b) => a.displayOrder - b.displayOrder);
+    } else {
+      dto.attachments = [];
+    }
+
+    return dto;
+  }
 }
 
 export class PageableDiscussionResponseDto {
@@ -114,4 +175,12 @@ export class PageableDiscussionResponseDto {
     description: 'Pagination metadata',
   })
   meta: PaginationMetaDto;
+}
+
+export class PopularTagsResponseDto {
+  @ApiProperty({ description: 'Tag name', example: 'nestjs' })
+  tag: string;
+
+  @ApiProperty({ description: 'Number of times the tag is used', example: 42 })
+  count: number;
 }

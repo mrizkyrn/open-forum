@@ -1,7 +1,7 @@
-import { Column, Entity, OneToMany, ManyToMany, JoinTable, Index } from 'typeorm';
+import { Column, Entity, Index, JoinTable, ManyToMany, OneToMany } from 'typeorm';
 import { BaseEntity } from '../../../core/database/entities/base.entity';
-import { Discussion } from './discussion.entity';
 import { User } from '../../user/entities/user.entity';
+import { Discussion } from './discussion.entity';
 
 @Entity('discussion_spaces')
 export class DiscussionSpace extends BaseEntity {

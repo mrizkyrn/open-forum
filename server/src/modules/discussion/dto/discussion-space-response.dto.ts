@@ -1,5 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { PaginationMetaDto } from '../../../common/dto/pagination-meta.dto';
+import { DiscussionSpace } from '../entities/discussion-space.entity';
 
 export class DiscussionSpaceResponseDto {
   @ApiProperty({ description: 'Unique identifier', example: 1 })
@@ -34,6 +35,24 @@ export class DiscussionSpaceResponseDto {
 
   @ApiProperty({ description: 'When the space was last updated' })
   updatedAt: Date;
+
+  static fromEntity(space: DiscussionSpace, isFollowing: boolean): DiscussionSpaceResponseDto {
+    const dto = new DiscussionSpaceResponseDto();
+
+    dto.id = space.id;
+    dto.name = space.name;
+    dto.description = space.description;
+    dto.slug = space.slug;
+    dto.creatorId = space.creatorId;
+    dto.iconUrl = space.iconUrl;
+    dto.bannerUrl = space.bannerUrl;
+    dto.followerCount = space.followerCount ?? 0;
+    dto.isFollowing = isFollowing;
+    dto.createdAt = space.createdAt;
+    dto.updatedAt = space.updatedAt;
+
+    return dto;
+  }
 }
 
 export class PageableDiscussionSpaceResponseDto {
@@ -41,8 +60,8 @@ export class PageableDiscussionSpaceResponseDto {
   items: DiscussionSpaceResponseDto[];
 
   @ApiProperty({
-      type: PaginationMetaDto,
-      description: 'Pagination metadata',
-    })
-    meta: PaginationMetaDto;
+    type: PaginationMetaDto,
+    description: 'Pagination metadata',
+  })
+  meta: PaginationMetaDto;
 }

@@ -1,31 +1,27 @@
-import * as path from 'path';
-import * as fs from 'fs';
-import {
-  Injectable,
-  BadRequestException,
-  NotFoundException,
-  InternalServerErrorException,
-  ForbiddenException,
-} from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import * as fs from 'fs';
+import * as path from 'path';
 import { Repository } from 'typeorm';
-import { Discussion } from './entities/discussion.entity';
-import { CreateDiscussionDto } from './dto/create-discussion.dto';
-import { User } from '../user/entities/user.entity';
+import { Pageable } from '../../common/interfaces/pageable.interface';
+import { WebsocketGateway } from '../../core/websocket/websocket.gateway';
 import { AttachmentService } from '../attachment/attachment.service';
 import { AttachmentType } from '../attachment/entities/attachment.entity';
-import { DiscussionResponseDto } from './dto/discussion-response.dto';
-import { Bookmark } from './entities/bookmark.entity';
-import { SearchDiscussionDto } from './dto/search-discussion.dto';
-import { Pageable } from '../../common/interfaces/pageable.interface';
-import { UpdateDiscussionDto } from './dto/update-discussion.dto';
-import { VoteService } from '../vote/vote.service';
+import { User } from '../user/entities/user.entity';
 import { VoteEntityType } from '../vote/entities/vote.entity';
-import { WebsocketGateway } from 'src/core/websocket/websocket.gateway';
+import { VoteService } from '../vote/vote.service';
+import { CreateDiscussionDto } from './dto/create-discussion.dto';
+import { DiscussionResponseDto, PopularTagsResponseDto } from './dto/discussion-response.dto';
+import { SearchDiscussionDto } from './dto/search-discussion.dto';
+import { UpdateDiscussionDto } from './dto/update-discussion.dto';
+import { Bookmark } from './entities/bookmark.entity';
 import { DiscussionSpace } from './entities/discussion-space.entity';
+import { Discussion } from './entities/discussion.entity';
 
 @Injectable()
 export class DiscussionService {
+  private readonly logger = new Logger(DiscussionService.name);
+
   constructor(
     @InjectRepository(Discussion)
     private readonly discussionRepository: Repository<Discussion>,
@@ -38,24 +34,21 @@ export class DiscussionService {
     private readonly websocketGateway: WebsocketGateway,
   ) {}
 
+  // ------ Discussion CRUD Operations ------
+
   async create(
     createDiscussionDto: CreateDiscussionDto,
     currentUser: User,
     files?: Express.Multer.File[],
-  ): Promise<Discussion> {
+  ): Promise<DiscussionResponseDto> {
+    if (!currentUser?.id) {
+      throw new BadRequestException('User information is required');
+    }
+
     const createdFilePaths: string[] = [];
 
     try {
-      // Validate input
-      if (!createDiscussionDto.content?.trim()) {
-        throw new BadRequestException('Discussion content is required');
-      }
-
-      if (!currentUser || !currentUser.id) {
-        throw new BadRequestException('User information is required');
-      }
-
-      // Check if the user is allowed to create a discussion in the specified space
+      // Validate space if provided
       if (createDiscussionDto.spaceId) {
         const space = await this.spaceRepository.findOne({
           where: { id: createDiscussionDto.spaceId },
@@ -79,158 +72,88 @@ export class DiscussionService {
           downvoteCount: 0,
         });
 
-        // Set tags if available
+        // Process tags if provided (lowercase, remove duplicates, remove empty strings)
         if (createDiscussionDto.tags && createDiscussionDto.tags.length > 0) {
-          // Process tags (lowercase, remove duplicates, remove empty strings)
-          discussion.tags = Array.from(new Set(createDiscussionDto.tags.map((tag) => tag.toLowerCase().trim()))).filter(
-            Boolean,
-          );
+          discussion.tags = this.processTags(createDiscussionDto.tags);
         }
 
         const savedDiscussion = await queryRunner.manager.save(Discussion, discussion);
 
-        // Process files if they exist
+        // Process attachments if any
         if (files && files.length > 0) {
           const attachments = await this.attachmentService.createMultipleAttachments(
             files,
             AttachmentType.DISCUSSION,
-            savedDiscussion.id,
+            discussion.id,
             queryRunner.manager,
           );
 
-          // Track created file paths for cleanup
-          for (const attachment of attachments) {
-            const fullPath = path.join(process.cwd(), attachment.url.replace(/^\//, ''));
-            createdFilePaths.push(fullPath);
-          }
+          // Track created files for cleanup
+          createdFilePaths.push(...this.extractFilePaths(attachments));
         }
 
-        // Commit the transaction
         await queryRunner.commitTransaction();
 
         const createdDiscussion = await this.getDiscussionById(savedDiscussion.id);
 
+        // Notify users about new discussion
         this.websocketGateway.notifyNewDiscussion(createdDiscussion.authorId);
         if (createdDiscussion.spaceId !== 1) {
           this.websocketGateway.notifyNewSpaceDiscussion(createdDiscussion.authorId, createdDiscussion.spaceId);
         }
 
-        return createdDiscussion;
+        return DiscussionResponseDto.fromEntity(createdDiscussion, currentUser);
       } catch (error) {
         await queryRunner.rollbackTransaction();
-
-        await this.cleanupFiles(createdFilePaths);
-
         throw error;
       } finally {
         await queryRunner.release();
       }
     } catch (error) {
       await this.cleanupFiles(createdFilePaths);
-
-      if (error instanceof BadRequestException) {
-        throw error;
-      }
-
-      console.error('Error creating discussion with attachments:', error);
-
       throw error;
     }
   }
 
   async findAll(searchDto: SearchDiscussionDto, currentUser?: User): Promise<Pageable<DiscussionResponseDto>> {
-    const { page = 1, limit = 10, sortBy = 'createdAt', sortOrder = 'DESC' } = searchDto;
-
+    const { page, limit } = searchDto;
     const offset = (page - 1) * limit;
 
-    const queryBuilder = this.discussionRepository
-      .createQueryBuilder('discussion')
-      .leftJoinAndSelect('discussion.author', 'author')
-      .leftJoinAndSelect('discussion.space', 'space')
-      .orderBy(`discussion.${sortBy}`, sortOrder)
-      .skip(offset)
-      .take(limit);
-
-    // Apply filters
-    if (searchDto.search) {
-      queryBuilder.andWhere('discussion.content ILIKE :search', { search: `%${searchDto.search}%` });
-    }
-
-    if (searchDto.authorId) {
-      queryBuilder.andWhere('discussion.authorId = :authorId', { authorId: searchDto.authorId });
-    }
-
-    if (searchDto.isAnonymous !== undefined) {
-      queryBuilder.andWhere('discussion.isAnonymous = :isAnonymous', { isAnonymous: searchDto.isAnonymous });
-    }
-
-    if (searchDto.tags && searchDto.tags.length > 0) {
-      queryBuilder.andWhere('discussion.tags && :tags', { tags: searchDto.tags });
-    }
-
-    if (searchDto.spaceId) {
-      queryBuilder.andWhere('discussion.spaceId = :spaceId', { spaceId: searchDto.spaceId });
-    }
-
+    const queryBuilder = this.buildDiscussionSearchQuery(searchDto, offset, limit);
     const [discussions, totalItems] = await queryBuilder.getManyAndCount();
 
-    // Get attachments for each discussion
-    for (const discussion of discussions) {
-      discussion.attachments = await this.attachmentService.getAttachmentsByEntity(
-        AttachmentType.DISCUSSION,
-        discussion.id,
-      );
-    }
+    await this.loadAttachmentsForDiscussions(discussions);
 
-    // Format discussions and add bookmark status
-    const responseItems: DiscussionResponseDto[] = [];
+    const responseItems = await Promise.all(
+      discussions.map(async (discussion) => {
+        let isBookmarked: boolean = false;
+        let voteStatus: number | null = null;
 
-    for (const discussion of discussions) {
-      const formatted = this.formatDiscussionResponse(discussion, currentUser);
+        if (currentUser) {
+          const [bookmarkStatus, userVote] = await Promise.all([
+            this.isDiscussionBookmarked(discussion.id, currentUser.id),
+            this.voteService.getUserVoteStatus(currentUser.id, VoteEntityType.DISCUSSION, discussion.id),
+          ]);
 
-      if (currentUser) {
-        formatted.isBookmarked = await this.isDiscussionBookmarked(discussion.id, currentUser.id);
-        formatted.voteStatus = await this.voteService.getUserVoteStatus(
-          currentUser.id,
-          VoteEntityType.DISCUSSION,
-          discussion.id,
-        );
-      }
+          isBookmarked = bookmarkStatus;
+          voteStatus = userVote;
+        }
 
-      responseItems.push(formatted);
-    }
+        return DiscussionResponseDto.fromEntity(discussion, currentUser, isBookmarked, voteStatus);
+      }),
+    );
 
-    // Calculate pagination metadata
-    const totalPages = Math.ceil(totalItems / limit);
-
-    return {
-      items: responseItems,
-      meta: {
-        totalItems,
-        itemsPerPage: limit,
-        currentPage: page,
-        totalPages,
-        hasNextPage: page < totalPages,
-        hasPreviousPage: page > 1,
-      },
-    };
+    return this.createPaginatedResponse(responseItems, totalItems, page, limit);
   }
 
   async findById(id: number, currentUser?: User): Promise<DiscussionResponseDto> {
     const discussion = await this.getDiscussionById(id);
+    const isBookmarked = currentUser ? await this.isDiscussionBookmarked(discussion.id, currentUser.id) : false;
+    const voteStatus = currentUser
+      ? await this.voteService.getUserVoteStatus(currentUser.id, VoteEntityType.DISCUSSION, discussion.id)
+      : null;
 
-    const response = this.formatDiscussionResponse(discussion, currentUser);
-
-    if (currentUser) {
-      response.isBookmarked = await this.isDiscussionBookmarked(discussion.id, currentUser.id);
-      response.voteStatus = await this.voteService.getUserVoteStatus(
-        currentUser.id,
-        VoteEntityType.DISCUSSION,
-        discussion.id,
-      );
-    }
-
-    return response;
+    return DiscussionResponseDto.fromEntity(discussion, currentUser, isBookmarked, voteStatus);
   }
 
   async update(
@@ -239,125 +162,98 @@ export class DiscussionService {
     currentUser: User,
     files?: Express.Multer.File[],
   ): Promise<DiscussionResponseDto> {
-    const discussion = await this.discussionRepository.findOne({
-      where: { id },
-      relations: ['author'],
-    });
-
-    if (!discussion) {
-      throw new NotFoundException(`Discussion with ID ${id} not found`);
-    }
-
-    // Check if the current user is the author
-    if (discussion.authorId !== currentUser.id) {
-      throw new ForbiddenException('You do not have permission to update this discussion');
-    }
-
-    // Get existing attachments
-    const existingAttachments = await this.attachmentService.getAttachmentsByEntity(AttachmentType.DISCUSSION, id);
-
-    // Validate attachment limits
-    const attachmentsToRemoveCount = updateDiscussionDto.attachmentsToRemove?.length || 0;
-    const newAttachmentsCount = files?.length || 0;
-    const remainingAttachmentsCount = existingAttachments.length - attachmentsToRemoveCount;
-
-    if (remainingAttachmentsCount + newAttachmentsCount > 4) {
-      throw new BadRequestException(
-        'A discussion can have a maximum of 4 attachments. Please remove some existing attachments or upload fewer new ones.',
-      );
-    }
-
-    // Validate that attachments being removed belong to this discussion
-    if (updateDiscussionDto.attachmentsToRemove?.length) {
-      for (const attachmentId of updateDiscussionDto.attachmentsToRemove) {
-        const attachment = await this.attachmentService.getAttachmentById(attachmentId);
-
-        if (
-          !attachment ||
-          attachment.entityId !== discussion.id ||
-          attachment.entityType !== AttachmentType.DISCUSSION
-        ) {
-          throw new BadRequestException(`Invalid attachment ID: ${attachmentId}`);
-        }
-      }
-    }
-
-    const createdFilePaths: string[] = [];
-
-    const queryRunner = this.discussionRepository.manager.connection.createQueryRunner();
-    await queryRunner.connect();
-    await queryRunner.startTransaction();
+    let createdFilePaths: string[] = [];
 
     try {
-      // Update fields if provided
-      if (updateDiscussionDto.content !== undefined) {
-        discussion.content = updateDiscussionDto.content;
-      }
+      const discussion = await this.validateDiscussionAccess(id, currentUser.id);
+      const existingAttachments = await this.attachmentService.getAttachmentsByEntity(AttachmentType.DISCUSSION, id);
 
-      if (updateDiscussionDto.isAnonymous !== undefined) {
-        discussion.isAnonymous = updateDiscussionDto.isAnonymous;
-      }
+      // Validate attachment limits
+      const attachmentsToRemoveCount = updateDiscussionDto.attachmentsToRemove?.length || 0;
+      const newAttachmentsCount = files?.length || 0;
+      const remainingAttachmentsCount = existingAttachments.length - attachmentsToRemoveCount;
 
-      if (updateDiscussionDto.tags) {
-        discussion.tags = Array.from(new Set(updateDiscussionDto.tags.map((tag) => tag.toLowerCase().trim()))).filter(
-          Boolean,
+      if (remainingAttachmentsCount + newAttachmentsCount > 4) {
+        throw new BadRequestException(
+          'A discussion can have a maximum of 4 attachments. Please remove some existing attachments or upload fewer new ones.',
         );
       }
 
-      // Save the updated discussion
-      await queryRunner.manager.save(discussion);
-
-      // Remove attachments if specified
+      // Validate that attachments being removed belong to this discussion
       if (updateDiscussionDto.attachmentsToRemove?.length) {
         for (const attachmentId of updateDiscussionDto.attachmentsToRemove) {
-          await this.attachmentService.deleteAttachment(attachmentId);
+          const attachment = await this.attachmentService.getAttachmentById(attachmentId);
+
+          if (
+            !attachment ||
+            attachment.entityId !== discussion.id ||
+            attachment.entityType !== AttachmentType.DISCUSSION
+          ) {
+            throw new BadRequestException(`Invalid attachment ID: ${attachmentId}`);
+          }
         }
       }
 
-      // Add new attachments if provided
-      if (files?.length) {
-        const newAttachments = await this.attachmentService.createMultipleAttachments(
-          files,
-          AttachmentType.DISCUSSION,
-          discussion.id,
-          queryRunner.manager,
-        );
+      const queryRunner = this.discussionRepository.manager.connection.createQueryRunner();
+      await queryRunner.connect();
+      await queryRunner.startTransaction();
 
-        for (const attachment of newAttachments) {
-          const fullPath = path.join(process.cwd(), attachment.url.replace(/^\//, ''));
-          createdFilePaths.push(fullPath);
+      try {
+        // Update discussion fields if provided
+        if (updateDiscussionDto.content !== undefined) {
+          discussion.content = updateDiscussionDto.content;
         }
+        if (updateDiscussionDto.isAnonymous !== undefined) {
+          discussion.isAnonymous = updateDiscussionDto.isAnonymous;
+        }
+        if (updateDiscussionDto.tags) {
+          discussion.tags = this.processTags(updateDiscussionDto.tags);
+        }
+
+        await queryRunner.manager.save(discussion);
+
+        // Remove attachments if specified
+        if (updateDiscussionDto.attachmentsToRemove?.length) {
+          for (const attachmentId of updateDiscussionDto.attachmentsToRemove) {
+            await this.attachmentService.deleteAttachment(attachmentId);
+          }
+        }
+
+        // Add new attachments if provided
+        if (files?.length) {
+          const newAttachments = await this.attachmentService.createMultipleAttachments(
+            files,
+            AttachmentType.DISCUSSION,
+            discussion.id,
+            queryRunner.manager,
+          );
+
+          createdFilePaths = this.extractFilePaths(newAttachments);
+        }
+
+        await queryRunner.commitTransaction();
+
+        const updatedDiscussion = await this.getDiscussionById(id);
+        return DiscussionResponseDto.fromEntity(updatedDiscussion, currentUser);
+      } catch (error) {
+        await queryRunner.rollbackTransaction();
+        throw error;
+      } finally {
+        await queryRunner.release();
       }
-
-      await queryRunner.commitTransaction();
-
-      const updatedDiscussion = await this.getDiscussionById(id);
-      return this.formatDiscussionResponse(updatedDiscussion, currentUser);
     } catch (error) {
-      await queryRunner.rollbackTransaction();
       await this.cleanupFiles(createdFilePaths);
       throw error;
-    } finally {
-      await queryRunner.release();
     }
   }
 
   async delete(id: number, currentUser: User): Promise<void> {
-    const discussion = await this.getDiscussionById(id);
-
-    if (discussion.authorId !== currentUser.id) {
-      throw new ForbiddenException('You do not have permission to delete this discussion');
-    }
-
+    await this.validateDiscussionAccess(id, currentUser.id);
     await this.discussionRepository.softDelete(id);
   }
 
   async hardDelete(id: number, currentUser: User): Promise<void> {
-    const discussion = await this.getDiscussionById(id);
-
-    if (discussion.authorId !== currentUser.id) {
-      throw new ForbiddenException('You do not have permission to delete this discussion');
-    }
+    const discussion = await this.validateDiscussionAccess(id, currentUser.id);
 
     const queryRunner = this.discussionRepository.manager.connection.createQueryRunner();
     await queryRunner.connect();
@@ -377,24 +273,11 @@ export class DiscussionService {
     }
   }
 
-  async getPopularTags(limit: number = 20): Promise<{ tag: string; count: number }[]> {
-    const result = await this.discussionRepository
-      .createQueryBuilder('discussion')
-      .select('unnest(tags) as tag, count(*) as count')
-      .groupBy('tag')
-      .orderBy('count', 'DESC')
-      .limit(limit)
-      .getRawMany();
-
-    return result;
-  }
+  // ------ Bookmark Operations ------
 
   async bookmarkDiscussion(discussionId: number, userId: number): Promise<void> {
-    const discussion = await this.getDiscussionById(discussionId);
-
-    if (!discussion) {
-      throw new NotFoundException(`Discussion with ID ${discussionId} not found`);
-    }
+    // Validate discussion exists
+    await this.getDiscussionById(discussionId);
 
     // Check if bookmark already exists
     const existingBookmark = await this.bookmarkRepository.findOne({
@@ -427,23 +310,121 @@ export class DiscussionService {
     userId: number,
     searchDto: SearchDiscussionDto,
   ): Promise<Pageable<DiscussionResponseDto>> {
-    const { page = 1, limit = 10, sortBy = 'createdAt', sortOrder = 'DESC' } = searchDto;
+    try {
+      const { page = 1, limit = 10, sortBy = 'createdAt', sortOrder = 'DESC' } = searchDto;
+      const offset = (page - 1) * limit;
 
-    // Calculate offset
-    const offset = (page - 1) * limit;
+      // Create bookmark-specific query
+      const queryBuilder = this.discussionRepository
+        .createQueryBuilder('discussion')
+        .innerJoin('bookmarks', 'bookmark', 'bookmark.discussion_id = discussion.id AND bookmark.user_id = :userId', {
+          userId,
+        })
+        .leftJoinAndSelect('discussion.author', 'author')
+        .leftJoinAndSelect('discussion.space', 'space')
+        .orderBy(`discussion.${sortBy}`, sortOrder)
+        .skip(offset)
+        .take(limit);
 
-    // Create query for bookmarked discussions
+      this.applyDiscussionFilters(queryBuilder, searchDto);
+
+      const [discussions, totalItems] = await queryBuilder.getManyAndCount();
+
+      // Load attachments
+      await this.loadAttachmentsForDiscussions(discussions);
+
+      // Format response - all items are bookmarked by definition
+      const currentUser = { id: userId } as User;
+      const responseItems = discussions.map((discussion) => {
+        const formatted = DiscussionResponseDto.fromEntity(discussion, currentUser, true);
+        formatted.isBookmarked = true;
+        return formatted;
+      });
+
+      return this.createPaginatedResponse(responseItems, totalItems, page, limit);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async isDiscussionBookmarked(discussionId: number, userId: number): Promise<boolean> {
+    const bookmark = await this.bookmarkRepository.findOne({
+      where: { discussionId, userId },
+    });
+    return !!bookmark;
+  }
+
+  // ------ Tag Operations ------
+
+  async getPopularTags(limit: number = 10): Promise<PopularTagsResponseDto[]> {
+    const result = await this.discussionRepository
+      .createQueryBuilder('discussion')
+      .select('unnest(tags) as tag, count(*) as count')
+      .groupBy('tag')
+      .orderBy('count', 'DESC')
+      .limit(limit)
+      .getRawMany();
+
+    return result;
+  }
+
+  // ------ Helper Methods ------
+
+  private async getDiscussionById(id: number): Promise<Discussion> {
+    const discussion = await this.discussionRepository.findOne({
+      where: { id },
+      relations: ['author', 'space'],
+    });
+
+    if (!discussion) {
+      throw new NotFoundException(`Discussion with ID ${id} not found`);
+    }
+
+    // Load attachments separately
+    const attachments = await this.attachmentService.getAttachmentsByEntity(AttachmentType.DISCUSSION, id);
+    discussion.attachments = attachments;
+
+    return discussion;
+  }
+
+  private processTags(tags: string[]): string[] {
+    return Array.from(new Set(tags.map((tag) => tag.toLowerCase().trim()))).filter(Boolean);
+  }
+
+  private async validateDiscussionAccess(discussionId: number, userId: number): Promise<Discussion> {
+    const discussion = await this.discussionRepository.findOne({
+      where: { id: discussionId },
+      relations: ['author'],
+    });
+
+    if (!discussion) {
+      throw new NotFoundException(`Discussion with ID ${discussionId} not found`);
+    }
+
+    if (discussion.authorId !== userId) {
+      throw new ForbiddenException('You do not have permission to modify this discussion');
+    }
+
+    return discussion;
+  }
+
+  private buildDiscussionSearchQuery(searchDto: SearchDiscussionDto, offset: number, limit: number) {
+    const { sortBy = 'createdAt', sortOrder = 'DESC' } = searchDto;
+
     const queryBuilder = this.discussionRepository
       .createQueryBuilder('discussion')
-      .innerJoin('bookmarks', 'bookmark', 'bookmark.discussion_id = discussion.id AND bookmark.user_id = :userId', {
-        userId,
-      })
       .leftJoinAndSelect('discussion.author', 'author')
+      .leftJoinAndSelect('discussion.space', 'space')
       .orderBy(`discussion.${sortBy}`, sortOrder)
       .skip(offset)
       .take(limit);
 
-    // Apply additional filters
+    this.applyDiscussionFilters(queryBuilder, searchDto);
+
+    return queryBuilder;
+  }
+
+  private applyDiscussionFilters(queryBuilder, searchDto: SearchDiscussionDto) {
     if (searchDto.search) {
       queryBuilder.andWhere('discussion.content ILIKE :search', { search: `%${searchDto.search}%` });
     }
@@ -460,34 +441,42 @@ export class DiscussionService {
       queryBuilder.andWhere('discussion.tags && :tags', { tags: searchDto.tags });
     }
 
-    if (searchDto.tags && searchDto.tags.length > 0) {
-      // Handle array of tags (find discussions that have any of the tags)
-      queryBuilder.andWhere('discussion.tags && :tags', { tags: searchDto.tags });
+    if (searchDto.spaceId) {
+      queryBuilder.andWhere('discussion.spaceId = :spaceId', { spaceId: searchDto.spaceId });
     }
+  }
 
-    const [discussions, totalItems] = await queryBuilder.getManyAndCount();
-
-    // Get attachments for each discussion
+  private async loadAttachmentsForDiscussions(discussions: Discussion[]): Promise<void> {
     for (const discussion of discussions) {
       discussion.attachments = await this.attachmentService.getAttachmentsByEntity(
         AttachmentType.DISCUSSION,
         discussion.id,
       );
     }
+  }
 
-    // Format response and add bookmarked status (all true in this case)
-    const currentUser = { id: userId } as User;
-    const responseItems = discussions.map((discussion) => {
-      const formatted = this.formatDiscussionResponse(discussion, currentUser);
-      formatted.isBookmarked = true; // These are all bookmarked
-      return formatted;
-    });
+  private extractFilePaths(attachments: any[]): string[] {
+    return attachments.map((attachment) => path.join(process.cwd(), attachment.url.replace(/^\//, '')));
+  }
 
-    // Calculate pagination metadata
+  private async cleanupFiles(filePaths: string[]): Promise<void> {
+    for (const filePath of filePaths) {
+      try {
+        if (fs.existsSync(filePath)) {
+          await fs.promises.unlink(filePath);
+          this.logger.debug(`Cleaned up file: ${filePath}`);
+        }
+      } catch (error) {
+        this.logger.warn(`Failed to clean up file ${filePath}:`, error);
+      }
+    }
+  }
+
+  private createPaginatedResponse<T>(items: T[], totalItems: number, page: number, limit: number): Pageable<T> {
     const totalPages = Math.ceil(totalItems / limit);
 
     return {
-      items: responseItems,
+      items,
       meta: {
         totalItems,
         itemsPerPage: limit,
@@ -497,95 +486,5 @@ export class DiscussionService {
         hasPreviousPage: page > 1,
       },
     };
-  }
-
-  async isDiscussionBookmarked(discussionId: number, userId: number): Promise<boolean> {
-    const bookmark = await this.bookmarkRepository.findOne({
-      where: { discussionId, userId },
-    });
-    return !!bookmark;
-  }
-
-  private async getDiscussionById(id: number): Promise<Discussion> {
-    const discussion = await this.discussionRepository.findOne({
-      where: { id },
-      relations: ['author', 'space'],
-    });
-
-    if (!discussion) {
-      throw new NotFoundException(`Discussion with ID ${id} not found`);
-    }
-
-    const attachments = await this.attachmentService.getAttachmentsByEntity(AttachmentType.DISCUSSION, id);
-    discussion.attachments = attachments;
-
-    return discussion;
-  }
-
-  private async cleanupFiles(filePaths: string[]): Promise<void> {
-    for (const filePath of filePaths) {
-      try {
-        if (fs.existsSync(filePath)) {
-          await fs.promises.unlink(filePath);
-          console.log(`Cleaned up file: ${filePath}`);
-        }
-      } catch (error) {
-        console.error(`Failed to clean up file ${filePath}:`, error);
-      }
-    }
-  }
-
-  formatDiscussionResponse(discussion: Discussion, currentUser?: User): DiscussionResponseDto {
-    const response = {
-      id: discussion.id,
-      content: discussion.content,
-      isAnonymous: discussion.isAnonymous,
-      tags: discussion.tags || [],
-      createdAt: discussion.createdAt,
-      updatedAt: discussion.updatedAt,
-      commentCount: discussion.commentCount,
-      upvoteCount: discussion.upvoteCount,
-      downvoteCount: discussion.downvoteCount,
-      attachments: discussion.attachments || [],
-      isBookmarked: false,
-      space: !discussion.space
-        ? null
-        : {
-            id: discussion.space.id,
-            name: discussion.space.name,
-            slug: discussion.space.slug,
-          },
-      author: !discussion.isAnonymous
-        ? {
-            id: discussion.author.id,
-            username: discussion.author.username,
-            fullName: discussion.author.fullName,
-            role: discussion.author.role,
-            avatarUrl: discussion.author.avatarUrl || null,
-            createdAt: discussion.author.createdAt,
-            updatedAt: discussion.author.updatedAt,
-          }
-        : null,
-    };
-
-    // Show author to the author themselves, even on anonymous posts
-    if (discussion.isAnonymous && currentUser && currentUser.id === discussion.authorId) {
-      response.author = {
-        id: discussion.author.id,
-        username: '(You - Anonymous)',
-        fullName: '(You - Anonymous)',
-        role: discussion.author.role,
-        avatarUrl: null,
-        createdAt: discussion.author.createdAt,
-        updatedAt: discussion.author.updatedAt,
-      };
-    }
-
-    // Sort attachments by display order
-    if (response.attachments && response.attachments.length > 0) {
-      response.attachments.sort((a, b) => a.displayOrder - b.displayOrder);
-    }
-
-    return response;
   }
 }
