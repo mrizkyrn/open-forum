@@ -9,7 +9,6 @@ import { useIntersectionObserver } from '@/hooks/useIntersectionObserver';
 import { useSocket } from '@/hooks/useSocket';
 import LoadingSpinner from '@/components/feedback/LoadingSpinner';
 import DiscussionPostSkeleton from './DiscussionPostSkeleton';
-import AvatarImage from '@/features/users/components/AvatarImage';
 import ErrorFetching from '@/components/feedback/ErrorFetching';
 
 interface DiscussionPostProps {
@@ -27,27 +26,39 @@ const DiscussionPost: React.FC<DiscussionPostProps> = ({ search, preselectedSpac
   const { user } = useAuth();
   const { socket, isConnected } = useSocket();
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status, refetch } =
-    useInfiniteDiscussions(search);
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status, refetch } = useInfiniteDiscussions(search);
 
   const { entry, observerRef } = useIntersectionObserver({
     threshold: 0.5,
     enabled: !!hasNextPage && !isFetchingNextPage,
   });
-
   useEffect(() => {
     if (!socket || !isConnected) return;
 
-    const handleNewDiscussion = () => {
-      setNewDiscussions((prev) => prev + 1);
+    // Handle global new discussions (only if we're on the home feed without a space filter)
+    const handleNewDiscussion = (data: any) => {
+      if (!preselectedSpaceId && data.authorId !== user?.id) {
+        setNewDiscussions((prev) => prev + 1);
+      }
     };
 
+    // Handle space-specific new discussions
+    const handleNewSpaceDiscussion = (data: any) => {
+      // Only update if we're viewing this space or the home feed
+      if (preselectedSpaceId && data.spaceId === preselectedSpaceId && data.authorId !== user?.id) {
+        setNewDiscussions((prev) => prev + 1);
+      }
+    };
+
+    // Register event listeners
     socket.on('newDiscussion', handleNewDiscussion);
+    socket.on('newSpaceDiscussion', handleNewSpaceDiscussion);
 
     return () => {
       socket.off('newDiscussion', handleNewDiscussion);
+      socket.off('newSpaceDiscussion', handleNewSpaceDiscussion);
     };
-  }, [socket, isConnected]);
+  }, [socket, isConnected, preselectedSpaceId, search?.spaceId]);
 
   const handleRefreshDiscussions = async () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -68,7 +79,7 @@ const DiscussionPost: React.FC<DiscussionPostProps> = ({ search, preselectedSpac
   }
 
   if (status === 'error') {
-    return <ErrorFetching text='Failed to load discussions' onRetry={refetch} />;
+    return <ErrorFetching text="Failed to load discussions" onRetry={refetch} />;
   }
 
   const discussions = data?.pages
@@ -106,17 +117,6 @@ const DiscussionPost: React.FC<DiscussionPostProps> = ({ search, preselectedSpac
       )}
 
       <div className="flex flex-col items-center gap-2">
-        {/* Create new discussion input */}
-        <div className="flex w-full items-center gap-2 rounded-xl bg-white p-4">
-          <AvatarImage fullName={user?.fullName} avatarUrl={user?.avatarUrl} size="sm" />
-          <button
-            onClick={() => setIsModalOpen(true)}
-            className="bg-light w-full rounded-full px-4 py-1 text-left text-gray-600 focus:outline-none"
-          >
-            What's on your mind?
-          </button>
-        </div>
-
         {/* Discussion cards */}
         {discussions.map((discussion) => (
           <DiscussionCard key={discussion.id} discussion={discussion} source={currentUrlPath} />

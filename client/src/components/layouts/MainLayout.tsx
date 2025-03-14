@@ -1,7 +1,10 @@
 import { useAuth } from '@/features/auth/hooks/useAuth';
 import { Navigate, Outlet, useNavigate, useLocation } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Home, Search, Layers, Bell, User, LogOut, ChevronLeft, ChevronRight, Menu } from 'lucide-react';
+import { useSocket } from '@/hooks/useSocket';
+import { notificationApi } from '@/features/notifications/services/notificationApi';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 const MainLayout = () => {
   const { isAuthenticated, isLoading, logout, user } = useAuth();
@@ -9,10 +12,55 @@ const MainLayout = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const { socket, isConnected } = useSocket();
+  const [newNotificationReceived, setNewNotificationReceived] = useState(false);
+
+  const { data: unreadCountData, refetch: refetchUnreadCount } = useQuery({
+    queryKey: ['notifications-count'],
+    queryFn: () => notificationApi.getUnreadCount(),
+    enabled: isAuthenticated,
+  });
+
+  const unreadCount = unreadCountData?.count || 0;
+
+  // Listen for new notifications
+  useEffect(() => {
+    if (!socket || !isConnected || !user?.id) return;
+
+    // Update the notification handler in MainLayout.tsx
+    const handleNewNotification = (notification: any) => {
+      console.log('New notification received:', notification);
+
+      // Update the unread count
+      refetchUnreadCount();
+
+      // Show visual indicator
+      setNewNotificationReceived(true);
+
+      // IMPORTANT: Invalidate the notifications query so it refetches when navigating to the page
+      queryClient.invalidateQueries({ queryKey: ['notifications'] });
+    };
+
+    // Listen for notification events
+    socket.on('notification', handleNewNotification);
+
+    // Cleanup
+    return () => {
+      socket.off('notification', handleNewNotification);
+    };
+  }, [socket, isConnected, user?.id, refetchUnreadCount, location.pathname]);
+
+  useEffect(() => {
+    if (location.pathname === '/notifications') {
+      setNewNotificationReceived(false);
+    }
+  }, [location.pathname]);
 
   if (!isAuthenticated && !isLoading) {
     return <Navigate to="/login" replace />;
   }
+
   const isNavItemActive = (itemPath: string) => {
     // Get the current URL search params
     const searchParams = new URLSearchParams(location.search);
@@ -56,7 +104,12 @@ const MainLayout = () => {
     { name: 'Home', path: '/', icon: <Home size={18} /> },
     { name: 'Spaces', path: '/spaces', icon: <Layers size={18} /> },
     { name: 'Search', path: '/search', icon: <Search size={18} /> },
-    { name: 'Notifications', path: '/notifications', icon: <Bell size={18} /> },
+    {
+      name: 'Notifications',
+      path: '/notifications',
+      icon: <Bell size={18} />,
+      badge: unreadCount > 0 || newNotificationReceived,
+    },
     { name: 'Profile', path: '/profile', icon: <User size={18} /> },
   ];
 
@@ -109,11 +162,20 @@ const MainLayout = () => {
                       isActive ? 'bg-primary/10 text-primary font-medium' : 'text-gray-600 hover:bg-gray-50'
                     } ${collapsed ? 'relative justify-center p-3' : 'px-4 py-2.5'}`}
                   >
-                    <span className={`${isActive ? 'text-primary' : 'text-gray-500 group-hover:text-gray-700'}`}>
+                    <span
+                      className={`${isActive ? 'text-primary' : 'text-gray-500 group-hover:text-gray-700'} relative`}
+                    >
                       {item.icon}
+                      {item.badge && (
+                        <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
+                          {unreadCount > 0 ? (unreadCount > 99 ? '99+' : unreadCount) : ''}
+                        </span>
+                      )}
                     </span>
                     {!collapsed && (
-                      <span className={`ml-3 text-sm tracking-tight ${isActive ? 'text-primary' : ''}`}>
+                      <span
+                        className={`ml-3 text-sm tracking-tight ${isActive ? 'text-primary' : ''} flex items-center`}
+                      >
                         {item.name}
                       </span>
                     )}
@@ -217,9 +279,16 @@ const MainLayout = () => {
               <button
                 key={item.name}
                 onClick={() => navigate(item.path)}
-                className="flex h-full flex-1 flex-col items-center justify-center"
+                className="relative flex h-full flex-1 flex-col items-center justify-center"
               >
-                <div className={`${isActive ? 'text-primary' : 'text-gray-500'}`}>{item.icon}</div>
+                <div className={`${isActive ? 'text-primary' : 'text-gray-500'} relative`}>
+                  {item.icon}
+                  {item.badge && (
+                    <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
+                      {unreadCount > 0 ? (unreadCount > 9 ? '9+' : unreadCount) : ''}
+                    </span>
+                  )}
+                </div>
                 <span className={`mt-1 text-xs ${isActive ? 'text-primary font-medium' : 'text-gray-500'}`}>
                   {item.name}
                 </span>

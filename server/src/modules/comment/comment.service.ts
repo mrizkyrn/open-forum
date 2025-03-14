@@ -521,38 +521,6 @@ export class CommentService {
             },
           });
         }
-        // Also notify the discussion author (if different from both commenter and parent comment author)
-        if (
-          discussion.authorId !== currentUser.id &&
-          (!parentComment || discussion.authorId !== parentComment.author.id)
-        ) {
-          const notification = await this.notificationService.createNotification(
-            discussion.authorId,
-            currentUser.id,
-            NotificationType.COMMENT_ON_DISCUSSION,
-            NotificationEntityType.COMMENT,
-            comment.id,
-            {
-              discussionId: comment.discussionId,
-              commentContent: comment.content.substring(0, 100),
-            },
-          );
-
-          this.websocketGateway.sendNotification(discussion.authorId, {
-            id: notification.id,
-            type: notification.type,
-            entityType: notification.entityType,
-            entityId: notification.entityId,
-            data: notification.data,
-            createdAt: notification.createdAt,
-            actor: {
-              id: currentUser.id,
-              username: currentUser.username,
-              fullName: currentUser.fullName,
-              avatarUrl: currentUser.avatarUrl,
-            },
-          });
-        }
       } else {
         // This is a top-level comment on a discussion
         // Notify the discussion author if they're not the commenter

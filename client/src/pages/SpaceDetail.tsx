@@ -6,14 +6,32 @@ import { getFileUrl } from '@/utils/helpers';
 import { DiscussionPost } from '@/features/discussions/components';
 import LoadingSpinner from '@/components/feedback/LoadingSpinner';
 import BackButton from '@/components/ui/buttons/BackButton';
+import { useEffect } from 'react';
+import { useSocket } from '@/hooks/useSocket';
+import NewDiscussionButton from '@/features/discussions/components/DiscussionPost/NewDiscussionButton';
 
 const SpaceDetailPage = () => {
   const { slug } = useParams<{ slug: string }>();
 
   const navigate = useNavigate();
 
+  const { socket, isConnected } = useSocket();
   const { data: space, isLoading: spaceLoading } = useSpace(slug as string);
   const { followSpace, unfollowSpace, isLoading: followLoading } = useSpaceFollow();
+
+  useEffect(() => {
+    if (!socket || !isConnected || !space?.id) return;
+
+    // Join the space room to receive space-specific updates
+    socket.emit('joinSpace', { spaceId: space.id });
+    console.log(`Joined space room: ${space.id}`);
+
+    // Cleanup function
+    return () => {
+      socket.emit('leaveSpace', { spaceId: space.id });
+      console.log(`Left space room: ${space.id}`);
+    };
+  }, [socket, isConnected, space?.id]);
 
   const toggleFollow = () => {
     if (!space) return;
@@ -109,7 +127,10 @@ const SpaceDetailPage = () => {
       </div>
 
       {/* Discussion post */}
-      <DiscussionPost preselectedSpaceId={space.id} search={{ spaceId: space.id }} />
+      <div className="flex w-full flex-col">
+        <NewDiscussionButton preselectedSpaceId={space.id} className="mb-4" />
+        <DiscussionPost preselectedSpaceId={space.id} search={{ spaceId: space.id }} />
+      </div>
     </div>
   );
 };

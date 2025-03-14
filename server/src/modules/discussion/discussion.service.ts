@@ -110,7 +110,10 @@ export class DiscussionService {
 
         const createdDiscussion = await this.getDiscussionById(savedDiscussion.id);
 
-        this.websocketGateway.notifyNewDiscussion();
+        this.websocketGateway.notifyNewDiscussion(createdDiscussion.authorId);
+        if (createdDiscussion.spaceId !== 1) {
+          this.websocketGateway.notifyNewSpaceDiscussion(createdDiscussion.authorId, createdDiscussion.spaceId);
+        }
 
         return createdDiscussion;
       } catch (error) {

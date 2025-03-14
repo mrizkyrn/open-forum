@@ -140,6 +140,31 @@ export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection, OnG
     return { success: true, room: roomName };
   }
 
+  // Space management
+  @UseGuards(WsJwtGuard)
+  @SubscribeMessage('joinSpace')
+  handleJoinSpace(client: Socket, payload: { spaceId: number }) {
+    const { spaceId } = payload;
+    const userId = client.data.user.id;
+    const roomName = `space:${spaceId}`;
+
+    client.join(roomName);
+    this.logger.log(`User ${userId} joined space ${spaceId}`);
+    return { success: true, spaceId };
+  }
+
+  @UseGuards(WsJwtGuard)
+  @SubscribeMessage('leaveSpace')
+  handleLeaveSpace(client: Socket, payload: { spaceId: number }) {
+    const { spaceId } = payload;
+    const userId = client.data.user.id;
+    const roomName = `space:${spaceId}`;
+
+    client.leave(roomName);
+    this.logger.log(`User ${userId} left space ${spaceId}`);
+    return { success: true, spaceId };
+  }
+
   // Discussion specific rooms
   @UseGuards(WsJwtGuard)
   @SubscribeMessage('joinDiscussion')
@@ -215,8 +240,16 @@ export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection, OnG
     return this.onlineUsers.has(userId);
   }
 
-  notifyNewDiscussion() {
-    this.server.emit('newDiscussion');
+  notifyNewDiscussion(authorId: number) {
+    this.server.emit('newDiscussion', { authorId });
+    return true;
+  }
+
+  notifyNewSpaceDiscussion(authorId: number, spaceId: number) {
+    this.server.to(`space:${spaceId}`).emit('newSpaceDiscussion', {
+      authorId,
+      spaceId,
+    });
     return true;
   }
 

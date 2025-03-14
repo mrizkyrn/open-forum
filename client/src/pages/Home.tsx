@@ -1,5 +1,6 @@
 import { DiscussionSortBy, SortOrder, SearchDiscussionDto } from '@/features/discussions/types/DiscussionRequestTypes';
 import DiscussionPost from '@/features/discussions/components/DiscussionPost/DiscussionPost';
+import NewDiscussionButton from '@/features/discussions/components/DiscussionPost/NewDiscussionButton';
 
 const Home = () => {
   const searchRequest: SearchDiscussionDto = {
@@ -11,7 +12,8 @@ const Home = () => {
 
   return (
     <div className="flex w-full flex-col">
-      <DiscussionPost preselectedSpaceId={1} search={searchRequest} />
+      <NewDiscussionButton className="mb-4" />
+      <DiscussionPost search={searchRequest} />
     </div>
   );
 };

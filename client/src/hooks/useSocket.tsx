@@ -55,10 +55,6 @@ export const SocketProvider: React.FC<React.PropsWithChildren<object>> = ({ chil
       setIsConnected(false);
     });
 
-    socketInstance.on('notification', (data) => {
-      console.log('New notification:', data);
-    });
-
     // Store socket instance
     setSocket(socketInstance);
 

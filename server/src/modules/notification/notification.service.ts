@@ -39,6 +39,7 @@ export class NotificationService {
     queryDto: NotificationQueryDto,
   ): Promise<Pageable<NotificationResponseDto>> {
     const { page = 1, limit = 20, isRead } = queryDto;
+    console.log(queryDto);
     const offset = (page - 1) * limit;
 
     const queryBuilder = this.notificationRepository

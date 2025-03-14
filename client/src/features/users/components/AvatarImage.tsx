@@ -22,6 +22,8 @@ const AvatarImage: React.FC<AvatarImageProps> = ({
   const [imgSrc, setImgSrc] = useState<string | null>(null);
   const [hasError, setHasError] = useState(false);
 
+  const isAnonymous = fullName.toLowerCase().includes('anonymous');
+
   const getSizeValue = (): { width: string; height: string; sizeClass: string } => {
     if (typeof size === 'number') {
       return {
@@ -50,6 +52,10 @@ const AvatarImage: React.FC<AvatarImageProps> = ({
   };
 
   const getAvatarUrl = (): string => {
+    if (isAnonymous) {
+      return `https://ui-avatars.com/api/?name=?&background=808080&color=ffffff&rounded=true&bold=true`;
+    }
+
     if (!avatarUrl || hasError) {
       const encodedName = encodeURIComponent(fullName);
       return `https://ui-avatars.com/api/?name=${encodedName}&background=random&color=ffffff&rounded=true&bold=true`;

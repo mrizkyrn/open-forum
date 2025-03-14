@@ -6,9 +6,17 @@ import { ReportService } from './report.service';
 import { ReportController } from './report.controller';
 import { DiscussionModule } from '../discussion/discussion.module';
 import { CommentModule } from '../comment/comment.module';
+import { NotificationModule } from '../notification/notification.module';
+import { WebsocketModule } from 'src/core/websocket/websocket.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Report, ReportReason]), DiscussionModule, CommentModule],
+  imports: [
+    TypeOrmModule.forFeature([Report, ReportReason]),
+    DiscussionModule,
+    CommentModule,
+    NotificationModule,
+    WebsocketModule,
+  ],
   providers: [ReportService],
   controllers: [ReportController],
   exports: [ReportService],

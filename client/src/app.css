@@ -33,6 +33,22 @@
   animation: pulse-green 2s infinite;
 }
 
+@keyframes pulse-highlight {
+  0% {
+    background-color: rgba(59, 130, 246, 0.2);
+  }
+  50% {
+    background-color: rgba(59, 130, 246, 0.5);
+  }
+  100% {
+    background-color: rgba(59, 130, 246, 0.2);
+  }
+}
+
+.animate-pulse-highlight {
+  animation: pulse-highlight 2s infinite ease-in-out;
+}
+
 a,
 button,
 input[type='submit'],

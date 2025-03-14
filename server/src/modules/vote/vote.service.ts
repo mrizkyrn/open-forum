@@ -29,17 +29,17 @@ export class VoteService {
     const queryRunner = this.discussionRepository.manager.connection.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
-  
+
     try {
-      const discussion = await queryRunner.manager.findOne(Discussion, { 
+      const discussion = await queryRunner.manager.findOne(Discussion, {
         where: { id: discussionId },
-        relations: ['author']  // Add author relation
+        relations: ['author'], // Add author relation
       });
-      
+
       if (!discussion) {
         throw new NotFoundException('Discussion not found');
       }
-  
+
       const existingVote = await queryRunner.manager.findOne(Vote, {
         where: {
           user: { id: userId },
@@ -48,10 +48,10 @@ export class VoteService {
         },
         relations: ['user'],
       });
-  
+
       let result: Vote | null = null;
       let shouldNotify = false;
-  
+
       if (existingVote) {
         // If same vote exists, remove it (toggle behavior)
         if (existingVote.value === value) {
@@ -65,7 +65,7 @@ export class VoteService {
           // Update existing vote
           existingVote.value = value;
           result = await queryRunner.manager.save(Vote, existingVote);
-  
+
           if (value === VoteValue.UPVOTE) {
             console.log('Upvote');
             discussion.upvoteCount += 1;
@@ -84,9 +84,9 @@ export class VoteService {
           entityId: discussionId,
           value,
         });
-  
+
         result = await queryRunner.manager.save(Vote, vote);
-  
+
         if (value === VoteValue.UPVOTE) {
           discussion.upvoteCount += 1;
           shouldNotify = true;
@@ -94,25 +94,19 @@ export class VoteService {
           discussion.downvoteCount += 1;
         }
       }
-  
+
       // Ensure counts are never negative
       discussion.upvoteCount = Math.max(0, discussion.upvoteCount);
       discussion.downvoteCount = Math.max(0, discussion.downvoteCount);
-  
+
       await queryRunner.manager.save(Discussion, discussion);
       await queryRunner.commitTransaction();
-  
+
       // Create notification after successful transaction
       if (shouldNotify && discussion.authorId !== userId) {
-        await this.createVoteNotification(
-          VoteEntityType.DISCUSSION,
-          discussionId,
-          userId,
-          discussion.authorId,
-          value
-        );
+        await this.createVoteNotification(VoteEntityType.DISCUSSION, discussionId, userId, discussion.authorId, value);
       }
-  
+
       return result ? this.formatVoteResponse(result) : null;
     } catch (error) {
       await queryRunner.rollbackTransaction();
@@ -129,8 +123,10 @@ export class VoteService {
     await queryRunner.startTransaction();
 
     try {
+      // Add author relation to get the comment author id
       const comment = await queryRunner.manager.findOne(Comment, {
         where: { id: commentId },
+        relations: ['author'], // Add this relation
       });
 
       if (!comment) {
@@ -148,6 +144,7 @@ export class VoteService {
       });
 
       let result: Vote | null = null;
+      let shouldNotify = false; // Add flag to track when notification should be sent
 
       if (existingVote) {
         // If same vote exists, remove it (toggle behavior)
@@ -167,6 +164,7 @@ export class VoteService {
           if (value === VoteValue.UPVOTE) {
             comment.upvoteCount += 1;
             comment.downvoteCount -= 1;
+            shouldNotify = true; // Set flag when downvote changed to upvote
           } else {
             comment.downvoteCount += 1;
             comment.upvoteCount -= 1;
@@ -185,6 +183,7 @@ export class VoteService {
 
         if (value === VoteValue.UPVOTE) {
           comment.upvoteCount += 1;
+          shouldNotify = true; // Set flag when new upvote created
         } else {
           comment.downvoteCount += 1;
         }
@@ -196,6 +195,11 @@ export class VoteService {
 
       await queryRunner.manager.save(Comment, comment);
       await queryRunner.commitTransaction();
+
+      // Create notification after successful transaction
+      if (shouldNotify && comment.author.id !== userId) {
+        await this.createVoteNotification(VoteEntityType.COMMENT, commentId, userId, comment.author.id, value);
+      }
 
       return result ? this.formatVoteResponse(result) : null;
     } catch (error) {
@@ -277,18 +281,14 @@ export class VoteService {
     if (value !== VoteValue.UPVOTE || voterId === recipientId) {
       return;
     }
-  
+
     try {
       const notificationType =
-        entityType === VoteEntityType.DISCUSSION 
-          ? NotificationType.DISCUSSION_UPVOTE 
-          : NotificationType.COMMENT_UPVOTE;
-  
+        entityType === VoteEntityType.DISCUSSION ? NotificationType.DISCUSSION_UPVOTE : NotificationType.COMMENT_UPVOTE;
+
       const notificationEntityType =
-        entityType === VoteEntityType.DISCUSSION 
-          ? NotificationEntityType.DISCUSSION 
-          : NotificationEntityType.COMMENT;
-  
+        entityType === VoteEntityType.DISCUSSION ? NotificationEntityType.DISCUSSION : NotificationEntityType.COMMENT;
+
       // Check if a notification already exists for this voter on this content
       const existingNotification = await this.notificationService.findExistingNotification(
         recipientId,
@@ -297,16 +297,26 @@ export class VoteService {
         notificationEntityType,
         entityId,
       );
-  
+
       // If a notification already exists, don't create another one
       if (existingNotification) {
         console.log('Notification already exists for this vote, skipping');
         return;
       }
-  
+
       // Get voter info
       const voter = await this.userService.findById(voterId);
-  
+
+      let notificationData = {};
+      if (entityType === VoteEntityType.COMMENT) {
+        const comment = await this.commentRepository.findOne({ where: { id: entityId } });
+        if (comment) {
+          notificationData = { discussionId: comment.discussionId };
+        }
+      } else {
+        notificationData = { discussionId: entityId };
+      }
+
       // Create notification
       const notification = await this.notificationService.createNotification(
         recipientId,
@@ -314,12 +324,9 @@ export class VoteService {
         notificationType,
         notificationEntityType,
         entityId,
-        {
-          entityType,
-          entityId,
-        },
+        notificationData,
       );
-  
+
       // Send real-time notification
       this.websocketGateway.sendNotification(recipientId, {
         id: notification.id,

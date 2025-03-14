@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -12,6 +12,10 @@ import {
   Loader2,
   RefreshCw,
   Filter,
+  ShieldCheck,
+  ShieldX,
+  Shield,
+  AlertTriangle,
 } from 'lucide-react';
 import { formatDistanceToNow, format, isToday, isYesterday, isThisWeek } from 'date-fns';
 import AvatarImage from '@/features/users/components/AvatarImage';
@@ -26,6 +30,8 @@ const NotificationsPage: React.FC = () => {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const [filter, setFilter] = useState<'all' | 'read' | 'unread'>('all');
+  const [initialLoadTime] = useState(new Date());
+  const [newlyArrivedNotifications, setNewlyArrivedNotifications] = useState<Record<number, boolean>>({});
 
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ['notifications', page, limit, filter],
@@ -35,7 +41,26 @@ const NotificationsPage: React.FC = () => {
         limit,
         ...(filter !== 'all' ? { isRead: filter === 'read' } : {}),
       }),
+    staleTime: 0,
+    refetchOnMount: true,
   });
+
+  // When data changes, identify which notifications are new since page was loaded
+  useEffect(() => {
+    if (data?.items) {
+      const newNotifications: Record<number, boolean> = {};
+
+      for (const notification of data.items) {
+        // Mark notification as new if it was created after page load
+        const notificationDate = new Date(notification.createdAt);
+        if (notificationDate > initialLoadTime && !notification.isRead) {
+          newNotifications[notification.id] = true;
+        }
+      }
+
+      setNewlyArrivedNotifications(newNotifications);
+    }
+  }, [data?.items, initialLoadTime]);
 
   const markAsReadMutation = useMutation({
     mutationFn: (ids: number[]) => notificationApi.markAsRead(ids),
@@ -50,7 +75,6 @@ const NotificationsPage: React.FC = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['notifications'] });
       queryClient.invalidateQueries({ queryKey: ['notifications-count'] });
-      toast.success('All notifications marked as read');
     },
     onError: () => toast.error('Failed to mark all notifications as read'),
   });
@@ -60,7 +84,6 @@ const NotificationsPage: React.FC = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['notifications'] });
       queryClient.invalidateQueries({ queryKey: ['notifications-count'] });
-      toast.success('Notification deleted');
     },
     onError: () => toast.error('Failed to delete notification'),
   });
@@ -70,20 +93,36 @@ const NotificationsPage: React.FC = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['notifications'] });
       queryClient.invalidateQueries({ queryKey: ['notifications-count'] });
-      toast.success('All notifications deleted');
     },
     onError: () => toast.error('Failed to delete all notifications'),
   });
 
   // Helper to generate the right link based on notification type
   const getNotificationLink = (notification: Notification) => {
-    const { entityType, entityId } = notification;
+    const { entityType, entityId, type, data } = notification;
 
+    // For report notifications, navigate to different locations based on the notification
+    if (type === NotificationType.REPORT_STATUS_UPDATE || type === NotificationType.CONTENT_MODERATION) {
+      // If we have a discussionId in the data, navigate to that discussion
+      if (data?.discussionId) {
+        return `/discussions/${data.discussionId}${data?.targetId && data?.targetType === 'comment' ? `?highlight=${data.targetId}` : ''}`;
+      }
+
+      // If we're a reporter, we might want to go to our reports page
+      if (type === NotificationType.REPORT_STATUS_UPDATE) {
+        return `/reports/${entityId}`;
+      }
+
+      // Fallback to reports list
+      return '/reports';
+    }
+
+    // For regular entity notifications
     if (entityType === NotificationEntityType.DISCUSSION) {
       return `/discussions/${entityId}`;
     } else if (entityType === NotificationEntityType.COMMENT) {
       // If it's a comment, we need the discussion ID from the data
-      return `/discussions/${notification.data.discussionId}?highlight=${entityId}`;
+      return `/discussions/${data.discussionId}?highlight=${entityId}`;
     }
 
     return '#';
@@ -91,8 +130,8 @@ const NotificationsPage: React.FC = () => {
 
   // Helper to generate notification message
   const getNotificationMessage = (notification: Notification) => {
-    const { type, actor } = notification;
-    const actorName = actor ? actor.fullName : 'Someone';
+    const { type, actor, data } = notification;
+    const actorName = actor ? actor.fullName : 'A moderator';
 
     switch (type) {
       case NotificationType.DISCUSSION_UPVOTE:
@@ -105,12 +144,21 @@ const NotificationsPage: React.FC = () => {
         return `${actorName} replied to your comment`;
       case NotificationType.MENTION:
         return `${actorName} mentioned you`;
-      case NotificationType.REPORT_STATUS_UPDATE:
-        return `There's an update on your report`;
+
+      case NotificationType.REPORT_STATUS_UPDATE: {
+        const contentType = data?.targetType === 'discussion' ? 'discussion' : 'comment';
+        const statusLabel = data?.statusLabel?.toLowerCase() || 'updated';
+
+        return `Your report for a ${contentType} has been ${statusLabel}`;
+      }
+
+      case NotificationType.CONTENT_MODERATION: {
+        const moderatedContentType = data?.targetType === 'discussion' ? 'discussion' : 'comment';
+        return `Your ${moderatedContentType} has been moderated by ${actorName}`;
+      }
+
       case NotificationType.SPACE_FOLLOW:
         return `${actorName} followed your space`;
-      case NotificationType.CONTENT_MODERATION:
-        return `Your content has been moderated`;
       default:
         return `You have a new notification`;
     }
@@ -118,7 +166,7 @@ const NotificationsPage: React.FC = () => {
 
   // Helper to get the notification icon
   const getNotificationIcon = (notification: Notification) => {
-    const { type } = notification;
+    const { type, data } = notification;
 
     switch (type) {
       case NotificationType.DISCUSSION_UPVOTE:
@@ -128,9 +176,20 @@ const NotificationsPage: React.FC = () => {
       case NotificationType.REPLY_TO_COMMENT:
       case NotificationType.MENTION:
         return <MessageSquare className="h-5 w-5 text-green-500" />;
+
       case NotificationType.REPORT_STATUS_UPDATE:
+        // Different icons based on report status
+        if (data?.status === 'resolved') {
+          return <ShieldCheck className="h-5 w-5 text-green-500" />;
+        } else if (data?.status === 'dismissed') {
+          return <ShieldX className="h-5 w-5 text-orange-500" />;
+        } else {
+          return <Shield className="h-5 w-5 text-blue-500" />;
+        }
+
       case NotificationType.CONTENT_MODERATION:
-        return <AlertCircle className="h-5 w-5 text-yellow-500" />;
+        return <AlertTriangle className="h-5 w-5 text-red-500" />;
+
       case NotificationType.SPACE_FOLLOW:
         return <Bell className="h-5 w-5 text-purple-500" />;
       default:
@@ -397,17 +456,40 @@ const NotificationsPage: React.FC = () => {
 
   // Helper function to render a notification item
   function renderNotificationItem(notification: Notification) {
+    const isNewNotification = newlyArrivedNotifications[notification.id] === true;
+    const isReportNotification =
+      notification.type === NotificationType.REPORT_STATUS_UPDATE ||
+      notification.type === NotificationType.CONTENT_MODERATION;
+
+    // Determine the highlight color based on notification type and status
+    let highlightClass = notification.isRead ? 'bg-white' : 'bg-blue-50';
+
+    if (isNewNotification) {
+      highlightClass = 'animate-pulse-highlight border-l-4 border-yellow-400';
+    } else if (isReportNotification && !notification.isRead) {
+      // Special styling for report notifications based on status
+      if (notification.data?.status === 'resolved') {
+        highlightClass = 'bg-green-50 border-l-4 border-green-400';
+      } else if (notification.data?.status === 'dismissed') {
+        highlightClass = 'bg-orange-50 border-l-4 border-orange-400';
+      } else {
+        highlightClass = 'bg-blue-50 border-l-4 border-blue-400';
+      }
+    }
+
     return (
-      <li key={notification.id} className={`relative ${notification.isRead ? 'bg-white' : 'bg-blue-50'}`}>
+      <li key={notification.id} className={`relative transition-all ${highlightClass}`}>
         <div className="flex items-start px-4 py-4 sm:px-6">
           {/* Left: Icon or avatar */}
           <div className="mr-4 flex-shrink-0">
-            {notification.actor ? (
-              <AvatarImage fullName={notification.actor.fullName} avatarUrl={notification.actor.avatarUrl} size="sm" />
-            ) : (
+            {!notification.actor ||
+              notification.type === NotificationType.CONTENT_MODERATION ||
+              notification.type === NotificationType.REPORT_STATUS_UPDATE ? (
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-100">
                 {getNotificationIcon(notification)}
               </div>
+            ) : (
+              <AvatarImage fullName={notification.actor.fullName} avatarUrl={notification.actor.avatarUrl} size="sm" />
             )}
           </div>
 
@@ -417,6 +499,22 @@ const NotificationsPage: React.FC = () => {
               <p className={`text-sm font-medium ${notification.isRead ? 'text-gray-700' : 'text-gray-900'}`}>
                 {getNotificationMessage(notification)}
               </p>
+
+              {/* For report notifications, show the reported content excerpt */}
+              {isReportNotification && notification.data?.content && (
+                <p className="mt-1 line-clamp-1 text-sm text-gray-500">
+                  <span className="font-medium">
+                    {notification.data.targetType === 'discussion' ? 'Discussion' : 'Comment'}:{' '}
+                  </span>
+                  "{notification.data.content}"
+                </p>
+              )}
+
+              {/* For regular comment notifications, show comment content */}
+              {!isReportNotification && notification.data?.commentContent && (
+                <p className="mt-1 line-clamp-1 text-sm text-gray-500">{notification.data.commentContent}</p>
+              )}
+
               <div className="mt-1 flex items-center gap-2">
                 <span className="text-xs text-gray-500">
                   {formatDistanceToNow(new Date(notification.createdAt), { addSuffix: true })}
@@ -425,11 +523,35 @@ const NotificationsPage: React.FC = () => {
                 <span className="text-xs text-gray-500">
                   {format(new Date(notification.createdAt), 'MMM d, h:mm a')}
                 </span>
+
+                {/* Report status badge */}
+                {isReportNotification && notification.data?.statusLabel && (
+                  <>
+                    <span className="text-gray-400">•</span>
+                    <span
+                      className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
+                        notification.data.status === 'resolved'
+                          ? 'bg-green-100 text-green-800'
+                          : notification.data.status === 'dismissed'
+                            ? 'bg-orange-100 text-orange-800'
+                            : 'bg-blue-100 text-blue-800'
+                      }`}
+                    >
+                      {notification.data.statusLabel}
+                    </span>
+                  </>
+                )}
+
+                {/* Unread indicator */}
                 {!notification.isRead && (
                   <>
                     <span className="text-gray-400">•</span>
-                    <span className="inline-flex items-center rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-800">
-                      New
+                    <span
+                      className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
+                        isNewNotification ? 'animate-pulse bg-yellow-100 text-yellow-800' : 'bg-blue-100 text-blue-800'
+                      }`}
+                    >
+                      {isNewNotification ? 'Just now' : 'New'}
                     </span>
                   </>
                 )}

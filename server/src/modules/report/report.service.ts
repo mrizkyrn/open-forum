@@ -11,6 +11,9 @@ import { SearchReportDto } from './dto/search-report.dto';
 import { DiscussionService } from '../discussion/discussion.service';
 import { CommentService } from '../comment/comment.service';
 import { PageableReportResponseDto, ReportReasonResponseDto, ReportResponseDto } from './dto/report-response.dto';
+import { NotificationService } from '../notification/notification.service';
+import { WebsocketGateway } from 'src/core/websocket/websocket.gateway';
+import { NotificationEntityType, NotificationType } from '../notification/entities/notification.entity';
 
 @Injectable()
 export class ReportService {
@@ -21,6 +24,8 @@ export class ReportService {
     private readonly reasonRepository: Repository<ReportReason>,
     private readonly discussionService: DiscussionService,
     private readonly commentService: CommentService,
+    private readonly notificationService: NotificationService,
+    private readonly websocketGateway: WebsocketGateway,
   ) {}
 
   async createReport(createReportDto: CreateReportDto, currentUser: User): Promise<ReportResponseDto> {
@@ -159,6 +164,9 @@ export class ReportService {
     // Populate target details
     await this.populateTargetDetails(updatedReport);
 
+    await this.createReportStatusNotification(report, currentUser);
+
+
     return this.formatResponse(updatedReport);
   }
 
@@ -294,5 +302,136 @@ export class ReportService {
       },
       reviewedAt: report.reviewedAt || undefined,
     };
+  }
+
+  private async createReportStatusNotification(report: Report, reviewer: User): Promise<void> {
+    try {
+      // Get content details for better notification context
+      let content = '';
+      let discussionId: number | null = null;
+      let targetAuthorId: number | null = null;
+      
+      // Get the author of the reported content
+      if (report.targetType === ReportTargetType.DISCUSSION) {
+        try {
+          const discussion = await this.discussionService.findById(report.targetId);
+          if (discussion) {
+            discussionId = discussion.id;
+            content =  discussion.content.substring(0, 50) + (discussion.content.length > 50 ? '...' : '');
+            targetAuthorId = discussion.author?.id || null;
+          }
+        } catch (error) {
+          console.log('Discussion may have been deleted');
+        }
+      } else if (report.targetType === ReportTargetType.COMMENT) {
+        try {
+          const comment = await this.commentService.findById(report.targetId);
+          if (comment) {
+            discussionId = comment.discussionId;
+            content = comment.content.substring(0, 50) + (comment.content.length > 50 ? '...' : '');
+            targetAuthorId = comment.author.id;
+          }
+        } catch (error) {
+          console.log('Comment may have been deleted');
+        }
+      }
+  
+      // Get a human-readable status
+      const statusLabel = this.getStatusLabel(report.status);
+  
+      // 1. Create notification for the REPORTER
+      const reporterNotification = await this.notificationService.createNotification(
+        report.reporterId,              // recipient
+        reviewer.id,                    // actor (the admin/moderator)
+        NotificationType.REPORT_STATUS_UPDATE,
+        NotificationEntityType.REPORT,
+        report.id,
+        {
+          status: report.status,
+          statusLabel,
+          targetType: report.targetType,
+          targetId: report.targetId,
+          reasonId: report.reasonId,
+          reasonText: report.reason?.name || '',
+          content,
+          discussionId,
+          recipientType: 'reporter' // Indicates this notification is for the reporter
+        }
+      );
+  
+      // Send real-time notification to reporter
+      this.websocketGateway.sendNotification(report.reporterId, {
+        id: reporterNotification.id,
+        type: reporterNotification.type,
+        entityType: reporterNotification.entityType,
+        entityId: reporterNotification.entityId,
+        data: reporterNotification.data,
+        createdAt: reporterNotification.createdAt,
+        isRead: false,
+        actor: {
+          id: reviewer.id,
+          username: reviewer.username,
+          fullName: reviewer.fullName,
+          avatarUrl: reviewer.avatarUrl,
+        },
+      });
+  
+      // 2. Create notification for the CONTENT AUTHOR if we found them 
+      // and only if the report was actioned (resolved or specific action taken)
+      if (targetAuthorId && report.status === ReportStatus.RESOLVED) {
+        const targetAuthorNotification = await this.notificationService.createNotification(
+          targetAuthorId,               // recipient
+          reviewer.id,                  // actor (the admin/moderator)
+          NotificationType.CONTENT_MODERATION,
+          NotificationEntityType.REPORT,
+          report.id,
+          {
+            status: report.status,
+            statusLabel,
+            targetType: report.targetType,
+            targetId: report.targetId,
+            content,
+            discussionId,
+            recipientType: 'content_author' // Indicates this notification is for the content author
+          }
+        );
+  
+        // Send real-time notification to content author
+        this.websocketGateway.sendNotification(targetAuthorId, {
+          id: targetAuthorNotification.id,
+          type: targetAuthorNotification.type,
+          entityType: targetAuthorNotification.entityType,
+          entityId: targetAuthorNotification.entityId,
+          data: targetAuthorNotification.data,
+          createdAt: targetAuthorNotification.createdAt,
+          isRead: false,
+          actor: {
+            id: reviewer.id,
+            username: reviewer.username,
+            fullName: reviewer.fullName,
+            avatarUrl: reviewer.avatarUrl,
+          },
+        });
+      }
+    } catch (error) {
+      console.error('Failed to create report status notification:', error);
+      // Non-critical failure - don't throw the error
+    }
+  }
+
+  /**
+   * Get human-readable status label
+   */
+  private getStatusLabel(status: ReportStatus): string {
+    switch (status) {
+      case ReportStatus.RESOLVED:
+        return 'Resolved';
+      case ReportStatus.DISMISSED:
+        return 'Dismissed';
+      case ReportStatus.PENDING:
+        return 'Pending';
+      default:
+        return 'Updated';
+    }
   }
 }

@@ -15,7 +15,6 @@ const SearchPage = () => {
     sortBy: (searchParams.get('sortBy') as DiscussionSortBy) || DiscussionSortBy.createdAt,
     sortOrder: (searchParams.get('sortOrder') as SortOrder) || SortOrder.DESC,
     tags: searchParams.has('tags') ? searchParams.get('tags')?.split(',') || [] : undefined,
-    authorId: searchParams.get('authorId') ? Number(searchParams.get('authorId')) : undefined,
     isAnonymous: searchParams.has('isAnonymous') ? searchParams.get('isAnonymous') === 'true' : undefined,
   });
 
@@ -124,9 +123,15 @@ const SearchPage = () => {
       </div>
 
       {/* Search results */}
-      <div className="mt-4">
-        <DiscussionPost search={searchFilters} />
-      </div>
+      {searchFilters.search || searchFilters.tags || searchFilters.isAnonymous ? (
+        <div className="mt-4">
+          <DiscussionPost search={searchFilters} />
+        </div>
+      ) : (
+        <div className="flex items-center justify-center h-96 text-gray-400 text-2xl font-bold">
+          Search for discussions above
+        </div>
+      )}
     </div>
   );
 };

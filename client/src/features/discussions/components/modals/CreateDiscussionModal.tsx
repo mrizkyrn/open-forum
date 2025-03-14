@@ -140,7 +140,7 @@ const CreateDiscussionModal: React.FC<CreateDiscussionModalProps> = ({ preselect
         </div>
 
         {/* Form */}
-        <div className="flex-grow overflow-y-auto pt-4">
+        <div className="flex-grow overflow-y-auto pt-4 px-1">
           {/* Content textarea */}
           <div className="mb-2">
             <label htmlFor="content" className="mb-1 block text-sm font-medium text-gray-700">
