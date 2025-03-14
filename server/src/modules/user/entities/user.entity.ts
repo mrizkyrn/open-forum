@@ -15,11 +15,11 @@ export class User extends BaseEntity {
   fullName: string;
 
   @Column({ name: 'avatar_url', type: 'varchar', length: 255, nullable: true })
-  avatarUrl: string;
+  avatarUrl: string | null;
 
   @Column({ type: 'enum', enum: UserRole, default: UserRole.STUDENT })
   role: UserRole;
 
   @Column({ name: 'last_active_at', type: 'timestamp', nullable: true })
-  lastActiveAt: Date;
+  lastActiveAt: Date | null;
 }

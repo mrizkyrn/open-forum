@@ -12,7 +12,7 @@ export class JwtRefreshGuard extends AuthGuard('jwt-refresh') {
 
     // Invalid token structure or signature
     if (info instanceof Error) {
-      throw new UnauthorizedException('Invalid refresh token');
+      throw new UnauthorizedException('Invalid token');
     }
 
     // No token provided

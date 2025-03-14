@@ -4,7 +4,7 @@ import { WsException } from '@nestjs/websockets';
 import { Socket } from 'socket.io';
 import { ConfigService } from '@nestjs/config';
 import { UserService } from '../../modules/user/user.service';
-import { TokenPayload } from '../../modules/auth/interfaces/token-payload.interface';
+import { JwtPayload } from '../../modules/auth/interfaces/jwt-payload.interface';
 import { JWTConfig } from 'src/config';
 
 @Injectable()
@@ -32,7 +32,7 @@ export class WsJwtGuard implements CanActivate {
       }
 
       // Verify the token
-      const payload = await this.jwtService.verifyAsync<TokenPayload>(token, {
+      const payload = await this.jwtService.verifyAsync<JwtPayload>(token, {
         secret: this.configService.get<JWTConfig>('jwt')!.accessTokenSecret,
       });
 

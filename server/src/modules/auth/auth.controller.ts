@@ -4,7 +4,6 @@ import { Response } from 'express';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
-import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { JwtRefreshGuard } from './guards/jwt-refresh.guard';
 import { ReqUser } from '../../common/decorators/user.decorator';
 import { COOKIE_OPTIONS } from './auth.constants';
@@ -36,7 +35,6 @@ export class AuthController {
     const result = await this.authService.login(loginDto);
 
     const { refreshToken, ...responseData } = result;
-
     response.cookie('refreshToken', refreshToken, COOKIE_OPTIONS);
 
     return responseData;

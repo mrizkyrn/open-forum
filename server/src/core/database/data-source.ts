@@ -1,4 +1,5 @@
 import 'dotenv/config';
+import { DataSource } from 'typeorm';
 import { Attachment } from '../../modules/attachment/entities/attachment.entity';
 import { Comment } from '../../modules/comment/entities/comment.entity';
 import { Bookmark } from '../../modules/discussion/entities/bookmark.entity';
@@ -8,8 +9,7 @@ import { User } from '../../modules/user/entities/user.entity';
 import { Vote } from '../../modules/vote/entities/vote.entity';
 import { ReportReason } from '../../modules/report/entities/report-reason.entity';
 import { Report } from '../../modules/report/entities/report.entity';
-import { DataSource } from 'typeorm';
-import { Notification } from 'src/modules/notification/entities/notification.entity';
+import { Notification } from '../../modules/notification/entities/notification.entity';
 
 export default new DataSource({
   type: 'postgres',

@@ -354,7 +354,7 @@ export class AdminService {
     user.role = role;
     await this.userRepository.save(user);
 
-    return this.userService.mapToUserResponseDto(user);
+    return UserResponseDto.fromEntity(user);
   }
 
   // Report management methods

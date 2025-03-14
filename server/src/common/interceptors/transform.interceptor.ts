@@ -37,8 +37,8 @@ export class TransformInterceptor<T> implements NestInterceptor<T, ApiResponse<T
     if (method === 'GET' && path === `/${apiPrefix}/users`) return 'Users retrieved successfully';
     if (method === 'GET' && path === `/${apiPrefix}/users/me`) return 'Profile retrieved successfully';
     if (method === 'GET' && path === `/${apiPrefix}/users/:id`) return 'User retrieved successfully';
-    if (method === 'PUT' && path === `/${apiPrefix}/users/:id`) return 'User updated successfully';
-    if (method === 'DELETE' && path === `/${apiPrefix}/users/:id`) return 'User deleted successfully';
+    if (method === 'POST' && path === `/${apiPrefix}/users/me/avatar`) return 'Avatar uploaded successfully';
+    if (method === 'DELETE' && path === `/${apiPrefix}/users/me/avatar`) return 'Avatar deleted successfully';
 
     // Discussion messages
     if (method === 'POST' && path === `/${apiPrefix}/discussions`) return 'Discussion created successfully';
@@ -71,6 +71,10 @@ export class TransformInterceptor<T> implements NestInterceptor<T, ApiResponse<T
       return 'Successfully unfollowed discussion space';
     if (method === 'GET' && path === `/${apiPrefix}/spaces/:id/is-following`)
       return 'Following status retrieved successfully';
+
+    // Admin messages
+    if (method === 'PUT' && path === `/${apiPrefix}/users/:id`) return 'User updated successfully';
+    if (method === 'DELETE' && path === `/${apiPrefix}/users/:id`) return 'User deleted successfully';
 
     return 'Operation successful';
   }

@@ -14,7 +14,7 @@ import { ConfigService } from '@nestjs/config';
 import { JWTConfig } from 'src/config';
 import { WsJwtGuard } from '../../common/guards/ws-jwt.guard';
 import { UserService } from 'src/modules/user/user.service';
-import { TokenPayload } from 'src/modules/auth/interfaces/token-payload.interface';
+import { JwtPayload } from 'src/modules/auth/interfaces/jwt-payload.interface';
 import { DiscussionResponseDto } from 'src/modules/discussion/dto/discussion-response.dto';
 
 @WebSocketGateway({
@@ -54,7 +54,7 @@ export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection, OnG
       }
 
       // Verify token
-      const payload = await this.jwtService.verifyAsync<TokenPayload>(token, {
+      const payload = await this.jwtService.verifyAsync<JwtPayload>(token, {
         secret: this.configService.get<JWTConfig>('jwt')!.accessTokenSecret,
       });
 

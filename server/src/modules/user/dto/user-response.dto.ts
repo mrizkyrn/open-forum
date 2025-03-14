@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { UserRole } from '../../../common/enums/user-role.enum';
 import { PaginationMetaDto } from '../../../common/dto/pagination-meta.dto';
+import { User } from '../entities/user.entity';
 
 export class UserResponseDto {
   @ApiProperty({ description: 'User ID', example: 1 })
@@ -23,13 +24,43 @@ export class UserResponseDto {
   avatarUrl?: string | null;
 
   @ApiProperty({ description: 'User last active date', example: '2021-09-01T00:00:00.000Z' })
-  lastActiveAt?: Date;
+  lastActiveAt?: Date | null;
 
   @ApiProperty({ description: 'Creation date of the user account', example: '2021-09-01T00:00:00.000Z' })
   createdAt: Date;
 
   @ApiProperty({ description: 'Last update date of the user account', example: '2021-09-01T00:00:00.000Z' })
   updatedAt: Date;
+
+  static fromEntity(user: User): UserResponseDto {
+    const dto = new UserResponseDto();
+    dto.id = user.id;
+    dto.username = user.username;
+    dto.fullName = user.fullName;
+    dto.role = user.role;
+    dto.avatarUrl = user.avatarUrl;
+    dto.lastActiveAt = user.lastActiveAt;
+    dto.createdAt = user.createdAt;
+    dto.updatedAt = user.updatedAt;
+    
+    return dto;
+  }
+
+  static createAnonymous(isOwnContent = false): UserResponseDto {
+    const dto = new UserResponseDto();
+    
+    if (isOwnContent) {
+      dto.username = '(You - Anonymous)';
+      dto.fullName = '(You - Anonymous)';
+    } else {
+      dto.username = 'Anonymous';
+      dto.fullName = 'Anonymous';
+    }
+    
+    dto.avatarUrl = null;
+    
+    return dto;
+  }
 }
 
 export class PageableUserResponseDto {

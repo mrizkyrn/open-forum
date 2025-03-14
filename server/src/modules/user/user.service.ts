@@ -1,32 +1,28 @@
 import * as bcrypt from 'bcrypt';
-import {
-  Injectable,
-  ConflictException,
-  NotFoundException,
-  Logger,
-  InternalServerErrorException,
-  BadRequestException,
-} from '@nestjs/common';
+import { Injectable, ConflictException, NotFoundException, BadRequestException, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, SelectQueryBuilder } from 'typeorm';
 import { User } from './entities/user.entity';
-import { Pageable } from '../../common/interfaces/pageable.interface';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserResponseDto } from './dto/user-response.dto';
 import { SearchUserDto } from './dto/search-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { FileService } from '../../core/file/file.service';
+import { Pageable } from '../../common/interfaces/pageable.interface';
 
 @Injectable()
 export class UserService {
-  private lastUpdateMap = new Map<number, number>();
+  private readonly logger = new Logger(UserService.name);
   private readonly UPDATE_INTERVAL = 5 * 60 * 1000; // 5 minutes
+  private lastUpdateMap = new Map<number, number>();
 
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     private readonly fileService: FileService,
   ) {}
+
+  // ----- Core CRUD Operations -----
 
   async create(createUserDto: CreateUserDto): Promise<UserResponseDto> {
     const existingUser = await this.userRepository.findOne({
@@ -37,8 +33,7 @@ export class UserService {
       throw new ConflictException('Username already exists');
     }
 
-    const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
-
+    const hashedPassword = await this.hashPassword(createUserDto.password);
     const newUser = this.userRepository.create({
       username: createUserDto.username,
       password: hashedPassword,
@@ -46,18 +41,149 @@ export class UserService {
       role: createUserDto.role,
     });
 
-    await this.userRepository.save(newUser);
-
-    return this.mapToUserResponseDto(newUser);
+    const savedUser = await this.userRepository.save(newUser);
+    return UserResponseDto.fromEntity(savedUser);
   }
 
   async findAll(searchDto: SearchUserDto): Promise<Pageable<UserResponseDto>> {
-    const { page, limit, search, role, sortOrder, sortBy } = searchDto;
+    const { page, limit } = searchDto;
     const offset = (page - 1) * limit;
+
+    const queryBuilder = this.createUserSearchQuery(searchDto, offset, limit);
+    const [users, totalItems] = await queryBuilder.getManyAndCount();
+
+    return this.createPaginatedResponse(users, totalItems, page, limit);
+  }
+
+  async findById(id: number): Promise<UserResponseDto> {
+    const user = await this.getUserEntityById(id);
+    return UserResponseDto.fromEntity(user);
+  }
+
+  async update(id: number, updateUserDto: UpdateUserDto): Promise<UserResponseDto> {
+    const user = await this.getUserEntityById(id);
+
+    if (updateUserDto.fullName) user.fullName = updateUserDto.fullName;
+    if (updateUserDto.role !== undefined) user.role = updateUserDto.role;
+
+    const updatedUser = await this.userRepository.save(user);
+    return UserResponseDto.fromEntity(updatedUser);
+  }
+
+  async delete(id: number, currenUserId?: number): Promise<void> {
+    if (id === currenUserId) {
+      throw new BadRequestException('Cannot delete own account');
+    }
+
+    const user = await this.getUserEntityById(id);
+    await this.cleanupUserResources(user);
+    await this.userRepository.delete(id);
+  }
+
+  // ----- Avatar Management -----
+
+  async updateAvatar(userId: number, file: Express.Multer.File): Promise<UserResponseDto> {
+    const user = await this.getUserEntityById(userId);
+
+    try {
+      await this.removeExistingAvatar(user);
+      const avatarUrl = await this.fileService.uploadUserAvatar(file);
+
+      user.avatarUrl = avatarUrl;
+      const savedUser = await this.userRepository.save(user);
+
+      return UserResponseDto.fromEntity(savedUser);
+    } catch (error) {
+      this.logger.error(`Failed to update avatar for user ${userId}`, error);
+      throw new BadRequestException('Failed to update avatar');
+    }
+  }
+
+  async removeAvatar(userId: number): Promise<UserResponseDto> {
+    const user = await this.getUserEntityById(userId);
+
+    try {
+      await this.removeExistingAvatar(user);
+
+      const savedUser = await this.userRepository.save(user);
+      return UserResponseDto.fromEntity(savedUser);
+    } catch (error) {
+      this.logger.error(`Failed to remove avatar for user ${userId}`, error);
+      throw new BadRequestException('Failed to remove avatar');
+    }
+  }
+
+  // ----- Authentication Related -----
+
+  async getUserWithCredentials(username: string): Promise<User | null> {
+    return this.userRepository
+      .createQueryBuilder('user')
+      .addSelect('user.password')
+      .where('user.username = :username', { username })
+      .getOne();
+  }
+
+  async verifyPassword(plainTextPassword: string, hashedPassword: string): Promise<boolean> {
+    return bcrypt.compare(plainTextPassword, hashedPassword);
+  }
+
+  // ----- User Activity Tracking -----
+
+  async updateLastActive(userId: number): Promise<void> {
+    const now = Date.now();
+    const lastUpdate = this.lastUpdateMap.get(userId) || 0;
+
+    if (now - lastUpdate > this.UPDATE_INTERVAL) {
+      this.lastUpdateMap.set(userId, now);
+      try {
+        await this.userRepository.update(userId, { lastActiveAt: new Date() });
+      } catch (error) {
+        this.logger.warn(`Failed to update activity timestamp for user ${userId}`, error);
+      }
+    }
+  }
+
+  // ----- Helper Methods -----
+
+  private async getUserEntityById(id: number): Promise<User> {
+    const user = await this.userRepository.findOne({ where: { id } });
+    if (!user) {
+      throw new NotFoundException(`User with ID ${id} not found`);
+    }
+    return user;
+  }
+
+  private async hashPassword(password: string): Promise<string> {
+    return bcrypt.hash(password, 10);
+  }
+
+  private async removeExistingAvatar(user: User): Promise<void> {
+    if (user.avatarUrl) {
+      try {
+        await this.fileService.deleteFile(user.avatarUrl);
+      } catch (error) {
+        this.logger.warn(`Failed to delete avatar file for user ${user.id}`, error);
+      }
+      user.avatarUrl = null;
+    }
+  }
+
+  private async cleanupUserResources(user: User): Promise<void> {
+    if (user.avatarUrl) {
+      try {
+        await this.fileService.deleteFile(user.avatarUrl);
+      } catch (error) {
+        this.logger.warn(`Failed to delete avatar during account deletion for user ${user.id}`, error);
+      }
+    }
+  }
+
+  private createUserSearchQuery(params: SearchUserDto, offset: number, limit: number): SelectQueryBuilder<User> {
+    const { search, role, sortBy, sortOrder } = params;
 
     let queryBuilder = this.userRepository
       .createQueryBuilder('user')
-      .orderBy(`user.${sortBy}`, sortOrder)
+      .orderBy(`user.${sortBy || 'createdAt'}`, sortOrder || 'DESC')
       .skip(offset)
       .take(limit);
 
@@ -71,10 +197,16 @@ export class UserService {
       queryBuilder = queryBuilder.andWhere('user.role = :role', { role });
     }
 
-    const [users, totalItems] = await queryBuilder.getManyAndCount();
+    return queryBuilder;
+  }
 
-    const userDtos = users.map((user) => this.mapToUserResponseDto(user));
-
+  private createPaginatedResponse(
+    users: User[],
+    totalItems: number,
+    page: number,
+    limit: number,
+  ): Pageable<UserResponseDto> {
+    const userDtos = users.map((user) => UserResponseDto.fromEntity(user));
     const totalPages = Math.ceil(totalItems / limit);
 
     return {
@@ -87,120 +219,6 @@ export class UserService {
         hasNextPage: page < totalPages,
         hasPreviousPage: page > 1,
       },
-    };
-  }
-
-  async findById(id: number): Promise<UserResponseDto> {
-    const user = await this.getUserById(id);
-    return this.mapToUserResponseDto(user);
-  }
-
-  async update(id: number, updateUserDto: UpdateUserDto): Promise<UserResponseDto> {
-    const user = await this.getUserById(id);
-
-    if (updateUserDto.fullName) {
-      user.fullName = updateUserDto.fullName;
-    }
-    if (updateUserDto.role !== undefined) {
-      user.role = updateUserDto.role;
-    }
-
-    const updatedUser = await this.userRepository.save(user);
-    return this.mapToUserResponseDto(updatedUser);
-  }
-
-  async updateAvatar(userId: number, file: Express.Multer.File): Promise<UserResponseDto> {
-    const user = await this.getUserById(userId);
-
-    try {
-      if (user.avatarUrl) {
-        await this.fileService.deleteFile(user.avatarUrl);
-      }
-
-      const avatarUrl = await this.fileService.uploadUserAvatar(file);
-
-      user.avatarUrl = avatarUrl;
-      await this.userRepository.save(user);
-
-      return this.mapToUserResponseDto(user);
-    } catch (error) {
-      console.error('Error updating avatar:', error);
-      throw error;
-    }
-  }
-
-  async removeAvatar(userId: number): Promise<UserResponseDto> {
-    const user = await this.getUserById(userId);
-
-    if (user.avatarUrl) {
-      await this.fileService.deleteFile(user.avatarUrl);
-      await this.userRepository.save(user);
-    }
-
-    return this.mapToUserResponseDto(user);
-  }
-
-  async delete(id: number, currenUserId?: number): Promise<void> {
-    if (id === currenUserId) {
-      throw new BadRequestException('Cannot delete own account');
-    }
-
-    const user = await this.getUserById(id);
-
-    if (user.avatarUrl) {
-      await this.fileService.deleteFile(user.avatarUrl);
-    }
-
-    await this.userRepository.delete(id);
-  }
-
-  async getUserWithPassword(username: string): Promise<User | null> {
-    return this.userRepository
-      .createQueryBuilder('user')
-      .addSelect('user.password')
-      .where('user.username = :username', { username })
-      .getOne();
-  }
-
-  async verifyPassword(plainTextPassword: string, hashedPassword: string): Promise<boolean> {
-    return bcrypt.compare(plainTextPassword, hashedPassword);
-  }
-
-  async updateLastActive(userId: number): Promise<void> {
-    const now = Date.now();
-    const lastUpdate = this.lastUpdateMap.get(userId) || 0;
-
-    if (now - lastUpdate > this.UPDATE_INTERVAL) {
-      this.lastUpdateMap.set(userId, now);
-      try {
-        await this.userRepository.update(userId, {
-          lastActiveAt: new Date(),
-        });
-      } catch (error) {
-        console.error(`Failed to update lastActiveAt for user ${userId}:`, error);
-      }
-    }
-  }
-
-  private async getUserById(id: number): Promise<User> {
-    const user = await this.userRepository.findOne({ where: { id } });
-    if (!user) {
-      throw new NotFoundException(`User with ID ${id} not found`);
-    }
-
-    return user;
-  }
-
-  mapToUserResponseDto(user: User): UserResponseDto {
-    return {
-      id: user.id,
-      username: user.username,
-      fullName: user.fullName,
-      role: user.role,
-      avatarUrl: user.avatarUrl,
-      lastActiveAt: user.lastActiveAt,
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt,
     };
   }
 }
