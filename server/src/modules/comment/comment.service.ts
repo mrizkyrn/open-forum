@@ -1,42 +1,50 @@
-import * as path from 'path';
-import * as fs from 'fs';
 import {
-  Injectable,
   BadRequestException,
-  NotFoundException,
-  InternalServerErrorException,
   ForbiddenException,
+  forwardRef,
+  Inject,
+  Injectable,
+  Logger,
+  NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Comment } from './entities/comment.entity';
-import { Discussion } from '../discussion/entities/discussion.entity';
-import { User } from '../user/entities/user.entity';
+import * as fs from 'fs';
+import * as path from 'path';
+import { EntityManager, Repository } from 'typeorm';
+import { Pageable } from '../../common/interfaces/pageable.interface';
+import { WebsocketGateway } from '../../core/websocket/websocket.gateway';
 import { AttachmentService } from '../attachment/attachment.service';
 import { AttachmentType } from '../attachment/entities/attachment.entity';
-import { CreateCommentDto } from './dto/create-comment.dto';
-import { CommentResponseDto } from './dto/comment-response.dto';
-import { Pageable } from '../../common/interfaces/pageable.interface';
-import { SearchCommentDto } from './dto/search-comment.dto';
-import { UpdateCommentDto } from './dto/update-comment.dto';
-import { VoteService } from '../vote/vote.service';
-import { VoteEntityType } from '../vote/entities/vote.entity';
-import { WebsocketGateway } from 'src/core/websocket/websocket.gateway';
+import { DiscussionService } from '../discussion/discussion.service';
+import { Discussion } from '../discussion/entities/discussion.entity';
 import { NotificationEntityType, NotificationType } from '../notification/entities/notification.entity';
 import { NotificationService } from '../notification/notification.service';
+import { User } from '../user/entities/user.entity';
+import { VoteEntityType } from '../vote/entities/vote.entity';
+import { VoteService } from '../vote/vote.service';
+import { CommentResponseDto } from './dto/comment-response.dto';
+import { CreateCommentDto } from './dto/create-comment.dto';
+import { SearchCommentDto } from './dto/search-comment.dto';
+import { UpdateCommentDto } from './dto/update-comment.dto';
+import { Comment } from './entities/comment.entity';
 
 @Injectable()
 export class CommentService {
+  private readonly logger = new Logger(CommentService.name);
+
   constructor(
     @InjectRepository(Comment)
     private readonly commentRepository: Repository<Comment>,
-    @InjectRepository(Discussion)
-    private readonly discussionRepository: Repository<Discussion>,
+    @Inject(forwardRef(() => DiscussionService))
+    private readonly discussionService: DiscussionService,
     private readonly attachmentService: AttachmentService,
+    @Inject(forwardRef(() => VoteService))
     private readonly voteService: VoteService,
     private readonly websocketGateway: WebsocketGateway,
     private readonly notificationService: NotificationService,
   ) {}
+
+  // ----- Core CRUD Operations -----
 
   async create(
     discussionId: number,
@@ -44,23 +52,15 @@ export class CommentService {
     currentUser: User,
     files?: Express.Multer.File[],
   ): Promise<CommentResponseDto> {
+    if (!currentUser || !currentUser.id) {
+      throw new BadRequestException('User information is required');
+    }
+
     const createdFilePaths: string[] = [];
 
     try {
-      // Validate input
-      if (!createCommentDto.content?.trim()) {
-        throw new BadRequestException('Comment content is required');
-      }
-
-      if (!currentUser || !currentUser.id) {
-        throw new BadRequestException('User information is required');
-      }
-
       // Check if discussion exists
-      const discussion = await this.discussionRepository.findOne({ where: { id: discussionId } });
-      if (!discussion) {
-        throw new NotFoundException(`Discussion with ID ${discussionId} not found`);
-      }
+      const discussion = await this.discussionService.getDiscussionEntity(discussionId);
 
       // Check parent comment if this is a reply
       if (createCommentDto.parentId) {
@@ -92,7 +92,6 @@ export class CommentService {
       await queryRunner.startTransaction();
 
       try {
-        // Create comment
         const comment = this.commentRepository.create({
           content: createCommentDto.content,
           authorId: currentUser.id,
@@ -114,71 +113,61 @@ export class CommentService {
             queryRunner.manager,
           );
 
-          // Track created file paths for cleanup in case of error
-          for (const attachment of attachments) {
-            const fullPath = path.join(process.cwd(), attachment.url.replace(/^\//, ''));
-            createdFilePaths.push(fullPath);
-          }
-        }
-
-        // Update parent comment reply count if this is a reply
-        if (createCommentDto.parentId) {
-          await queryRunner.manager.increment(Comment, { id: createCommentDto.parentId }, 'replyCount', 1);
+          createdFilePaths.push(...this.extractFilePaths(attachments));
         }
 
         // Update discussion comment count
-        await queryRunner.manager.increment(Discussion, { id: discussionId }, 'commentCount', 1);
+        if (createCommentDto.parentId) {
+          await this.incrementReplyCount(createCommentDto.parentId, queryRunner.manager);
+        }
+        await this.discussionService.incrementCommentCount(discussionId, queryRunner.manager);
 
         // Commit the transaction
         await queryRunner.commitTransaction();
 
         // Fetch the complete comment with all relations
-        const createdComment = await this.getCommentById(savedComment.id);
+        const createdComment = await this.getCommentWithAttachmentById(savedComment.id);
 
-        // Notify users of the new comment via websocket
+        // Send real-time update and notifications
         this.websocketGateway.notifyNewComment(createdComment);
-
-        // Create database notifications
         await this.createCommentNotifications(createdComment, discussion, currentUser);
 
-        return this.formatCommentResponse(createdComment);
+        return CommentResponseDto.fromEntity(createdComment, null);
       } catch (error) {
         await queryRunner.rollbackTransaction();
-        await this.cleanupFiles(createdFilePaths);
         throw error;
       } finally {
         await queryRunner.release();
       }
     } catch (error) {
       await this.cleanupFiles(createdFilePaths);
-
-      if (
-        error instanceof BadRequestException ||
-        error instanceof NotFoundException ||
-        error instanceof ForbiddenException
-      ) {
-        throw error;
-      }
-
-      console.error('Error creating comment with attachments:', error);
-      throw new InternalServerErrorException('An error occurred while creating the comment. Please try again later.');
+      this.logger.error(`Error creating comment: ${error.message}`, error.stack);
+      throw error;
     }
   }
 
   async findById(id: number, currentUser?: User): Promise<CommentResponseDto> {
-    const comment = await this.getCommentById(id);
+    try {
+      const comment = await this.getCommentWithAttachmentById(id);
 
-    // Get replies if this is a parent comment
-    if (comment.replyCount > 0) {
-      comment.replies = await this.commentRepository.find({ where: { parentId: comment.id }, relations: ['author'] });
+      // Get replies if this is a parent comment
+      if (comment.replyCount > 0) {
+        comment.replies = await this.commentRepository.find({ where: { parentId: comment.id }, relations: ['author'] });
 
-      // Get attachments for each reply
-      for (const reply of comment.replies) {
-        reply.attachments = await this.attachmentService.getAttachmentsByEntity(AttachmentType.COMMENT, reply.id);
+        for (const reply of comment.replies) {
+          reply.attachments = await this.attachmentService.getAttachmentsByEntity(AttachmentType.COMMENT, reply.id);
+        }
       }
-    }
 
-    return this.formatCommentResponse(comment, currentUser);
+      const voteStatus = currentUser
+        ? await this.voteService.getUserVoteStatus(currentUser.id, VoteEntityType.COMMENT, id)
+        : null;
+
+      return CommentResponseDto.fromEntity(comment, voteStatus);
+    } catch (error) {
+      this.logger.error(`Error fetching comment: ${error.message}`, error.stack);
+      throw error;
+    }
   }
 
   async findByDiscussionId(
@@ -186,19 +175,10 @@ export class CommentService {
     searchDto: SearchCommentDto,
     currentUser?: User,
   ): Promise<Pageable<CommentResponseDto>> {
-    const { page = 1, limit = 10, sortBy = 'createdAt', sortOrder = 'DESC' } = searchDto;
+    const { page, limit } = searchDto;
     const offset = (page - 1) * limit;
 
-    // Get top-level comments only (where parentId is null)
-    const queryBuilder = this.commentRepository
-      .createQueryBuilder('comment')
-      .leftJoinAndSelect('comment.author', 'author')
-      .where('comment.discussionId = :discussionId', { discussionId })
-      .andWhere('comment.parentId IS NULL')
-      .orderBy(`comment.${sortBy}`, sortOrder)
-      .skip(offset)
-      .take(limit);
-
+    const queryBuilder = this.buildCommentSearchQuery(searchDto, discussionId, offset, limit);
     const [comments, totalItems] = await queryBuilder.getManyAndCount();
 
     // Get attachments for each comment
@@ -206,25 +186,18 @@ export class CommentService {
       comment.attachments = await this.attachmentService.getAttachmentsByEntity(AttachmentType.COMMENT, comment.id);
     }
 
-    // Format comments
-    const responseItems: CommentResponseDto[] = await Promise.all(
-      comments.map((comment) => this.formatCommentResponse(comment, currentUser)),
+    const responseItems = await Promise.all(
+      comments.map(async (comment) => {
+        let voteStatus: number | null = null;
+        if (currentUser) {
+          voteStatus = await this.voteService.getUserVoteStatus(currentUser.id, VoteEntityType.COMMENT, comment.id);
+        }
+
+        return CommentResponseDto.fromEntity(comment, voteStatus);
+      }),
     );
 
-    // Calculate pagination metadata
-    const totalPages = Math.ceil(totalItems / limit);
-
-    return {
-      items: responseItems,
-      meta: {
-        totalItems,
-        itemsPerPage: limit,
-        currentPage: page,
-        totalPages,
-        hasNextPage: page < totalPages,
-        hasPreviousPage: page > 1,
-      },
-    };
+    return this.createPaginatedResponse(responseItems, totalItems, page, limit);
   }
 
   async findRepliesByParentId(
@@ -232,49 +205,48 @@ export class CommentService {
     searchDto: SearchCommentDto,
     currentUser?: User,
   ): Promise<Pageable<CommentResponseDto>> {
-    const { page = 1, limit = 10, sortBy = 'createdAt', sortOrder = 'DESC' } = searchDto;
-    const offset = (page - 1) * limit;
+    try {
+      const { page, limit, sortBy = 'createdAt', sortOrder = 'ASC' } = searchDto;
+      const offset = (page - 1) * limit;
 
-    const parentComment = await this.commentRepository.findOne({ where: { id: parentId } });
-    if (!parentComment) {
-      throw new NotFoundException(`Comment with ID ${parentId} not found`);
+      // Validate parent comment
+      const parentComment = await this.commentRepository.findOne({ where: { id: parentId } });
+      if (!parentComment) {
+        throw new NotFoundException(`Comment with ID ${parentId} not found`);
+      }
+
+      // Get replies with pagination
+      const queryBuilder = this.commentRepository
+        .createQueryBuilder('comment')
+        .leftJoinAndSelect('comment.author', 'author')
+        .where('comment.parentId = :parentId', { parentId })
+        .orderBy(`comment.${sortBy}`, sortOrder)
+        .skip(offset)
+        .take(limit);
+
+      const [replies, totalItems] = await queryBuilder.getManyAndCount();
+
+      // Get attachments for each reply
+      for (const reply of replies) {
+        reply.attachments = await this.attachmentService.getAttachmentsByEntity(AttachmentType.COMMENT, reply.id);
+      }
+
+      const formattedReplies = await Promise.all(
+        replies.map(async (reply) => {
+          let voteStatus: number | null = null;
+          if (currentUser) {
+            voteStatus = await this.voteService.getUserVoteStatus(currentUser.id, VoteEntityType.COMMENT, reply.id);
+          }
+
+          return CommentResponseDto.fromEntity(reply, voteStatus);
+        }),
+      );
+
+      return this.createPaginatedResponse(formattedReplies, totalItems, page, limit);
+    } catch (error) {
+      this.logger.error(`Error fetching replies: ${error.message}`, error.stack);
+      throw error;
     }
-
-    // Get replies with pagination
-    const queryBuilder = this.commentRepository
-      .createQueryBuilder('comment')
-      .leftJoinAndSelect('comment.author', 'author')
-      .where('comment.parentId = :parentId', { parentId })
-      .orderBy(`comment.${sortBy}`, sortOrder)
-      .skip(offset)
-      .take(limit);
-
-    const [replies, totalItems] = await queryBuilder.getManyAndCount();
-
-    // Get attachments for each reply
-    for (const reply of replies) {
-      reply.attachments = await this.attachmentService.getAttachmentsByEntity(AttachmentType.COMMENT, reply.id);
-    }
-
-    // Format replies
-    const responseItems: CommentResponseDto[] = await Promise.all(
-      replies.map((reply) => this.formatCommentResponse(reply, currentUser)),
-    );
-
-    // Calculate pagination metadata
-    const totalPages = Math.ceil(totalItems / limit);
-
-    return {
-      items: responseItems,
-      meta: {
-        totalItems,
-        itemsPerPage: limit,
-        currentPage: page,
-        totalPages,
-        hasNextPage: page < totalPages,
-        hasPreviousPage: page > 1,
-      },
-    };
   }
 
   async update(
@@ -283,133 +255,170 @@ export class CommentService {
     currentUser: User,
     files?: Express.Multer.File[],
   ): Promise<CommentResponseDto> {
-    const comment = await this.commentRepository.findOne({ where: { id } });
-    if (!comment) {
-      throw new NotFoundException(`Comment with ID ${id} not found`);
-    }
-
-    // Check if the current user is the author
-    if (comment.authorId !== currentUser.id) {
-      throw new ForbiddenException('You do not have permission to update this comment');
-    }
-
-    // Get existing attachments
-    const existingAttachments = await this.attachmentService.getAttachmentsByEntity(AttachmentType.COMMENT, id);
-
-    // Validate attachment limits
-    const attachmentsToRemoveCount = updateCommentDto.attachmentsToRemove?.length || 0;
-    const newAttachmentsCount = files?.length || 0;
-    const remainingAttachmentsCount = existingAttachments.length - attachmentsToRemoveCount;
-
-    if (remainingAttachmentsCount + newAttachmentsCount > 2) {
-      throw new BadRequestException(
-        'A comment can have a maximum of 2 attachments. Please remove some existing attachments or upload fewer new ones.',
-      );
-    }
-
-    // Validate that attachments being removed belong to this comment
-    if (updateCommentDto.attachmentsToRemove?.length) {
-      for (const attachmentId of updateCommentDto.attachmentsToRemove) {
-        const attachment = await this.attachmentService.getAttachmentById(attachmentId);
-
-        if (!attachment || attachment.entityId !== comment.id || attachment.entityType !== AttachmentType.COMMENT) {
-          throw new BadRequestException(`Invalid attachment ID: ${attachmentId}`);
-        }
-      }
-    }
-
-    const createdFilePaths: string[] = [];
-
-    const queryRunner = this.commentRepository.manager.connection.createQueryRunner();
-    await queryRunner.connect();
-    await queryRunner.startTransaction();
+    let createdFilePaths: string[] = [];
 
     try {
-      // Update fields if provided
-      if (updateCommentDto.content !== undefined) {
-        comment.content = updateCommentDto.content;
+      const comment = await this.commentRepository.findOne({ where: { id } });
+      if (!comment) {
+        throw new NotFoundException(`Comment with ID ${id} not found`);
       }
 
-      // Save the updated comment
-      await queryRunner.manager.save(comment);
+      this.verifyCommentAuthor(comment, currentUser.id);
 
-      // Remove attachments if specified
+      // Get existing attachments
+      const existingAttachments = await this.attachmentService.getAttachmentsByEntity(AttachmentType.COMMENT, id);
+      const attachmentsToRemoveCount = updateCommentDto.attachmentsToRemove?.length || 0;
+      const newAttachmentsCount = files?.length || 0;
+      const remainingAttachmentsCount = existingAttachments.length - attachmentsToRemoveCount;
+
+      if (remainingAttachmentsCount + newAttachmentsCount > 2) {
+        throw new BadRequestException(
+          'A comment can have a maximum of 2 attachments. Please remove some existing attachments or upload fewer new ones.',
+        );
+      }
+
+      // Validate that attachments being removed belong to this comment
       if (updateCommentDto.attachmentsToRemove?.length) {
         for (const attachmentId of updateCommentDto.attachmentsToRemove) {
-          await this.attachmentService.deleteAttachment(attachmentId);
+          const attachment = await this.attachmentService.getAttachmentById(attachmentId);
+
+          if (!attachment || attachment.entityId !== comment.id || attachment.entityType !== AttachmentType.COMMENT) {
+            throw new BadRequestException(`Invalid attachment ID: ${attachmentId}`);
+          }
         }
       }
 
-      // Add new attachments if provided
-      if (files?.length) {
-        const newAttachments = await this.attachmentService.createMultipleAttachments(
-          files,
-          AttachmentType.COMMENT,
-          comment.id,
-          queryRunner.manager,
-        );
+      const queryRunner = this.commentRepository.manager.connection.createQueryRunner();
+      await queryRunner.connect();
+      await queryRunner.startTransaction();
 
-        for (const attachment of newAttachments) {
-          const fullPath = path.join(process.cwd(), attachment.url.replace(/^\//, ''));
-          createdFilePaths.push(fullPath);
+      try {
+        // Update fields if provided
+        if (updateCommentDto.content !== undefined) {
+          comment.content = updateCommentDto.content;
         }
+
+        await queryRunner.manager.save(comment);
+
+        // Remove attachments if specified
+        if (updateCommentDto.attachmentsToRemove?.length) {
+          for (const attachmentId of updateCommentDto.attachmentsToRemove) {
+            await this.attachmentService.deleteAttachment(attachmentId);
+          }
+        }
+
+        // Add new attachments if provided
+        if (files?.length) {
+          const newAttachments = await this.attachmentService.createMultipleAttachments(
+            files,
+            AttachmentType.COMMENT,
+            comment.id,
+            queryRunner.manager,
+          );
+
+          createdFilePaths = this.extractFilePaths(newAttachments);
+        }
+
+        await queryRunner.commitTransaction();
+
+        // Fetch the updated comment with attachments
+        const updatedComment = await this.getCommentWithAttachmentById(id);
+        const voteStatus = await this.voteService.getUserVoteStatus(currentUser.id, VoteEntityType.COMMENT, comment.id);
+
+        return CommentResponseDto.fromEntity(updatedComment, voteStatus);
+      } catch (error) {
+        await queryRunner.rollbackTransaction();
+        throw error;
+      } finally {
+        await queryRunner.release();
       }
-
-      await queryRunner.commitTransaction();
-
-      const updatedComment = await this.getCommentById(id);
-      return this.formatCommentResponse(updatedComment);
     } catch (error) {
-      await queryRunner.rollbackTransaction();
       await this.cleanupFiles(createdFilePaths);
+      this.logger.error(`Error updating comment: ${error.message}`, error.stack);
       throw error;
-    } finally {
-      await queryRunner.release();
     }
   }
 
   async delete(id: number, currentUser: User): Promise<void> {
-    const comment = await this.getCommentById(id);
-
-    if (comment.authorId !== currentUser.id) {
-      throw new ForbiddenException('You do not have permission to delete this comment');
-    }
-
-    const queryRunner = this.commentRepository.manager.connection.createQueryRunner();
-    await queryRunner.connect();
-    await queryRunner.startTransaction();
-
     try {
-      // Delete all replies
-      if (comment.replyCount > 0) {
-        await queryRunner.manager.delete(Comment, { parentId: comment.id });
+      const comment = await this.getCommentWithAttachmentById(id);
+      this.verifyCommentAuthor(comment, currentUser.id);
+
+      const queryRunner = this.commentRepository.manager.connection.createQueryRunner();
+      await queryRunner.connect();
+      await queryRunner.startTransaction();
+
+      try {
+        // Delete attachments and soft-delete comment
+        if (comment.attachments?.length > 0) {
+          await this.attachmentService.deleteAttachmentsByEntity(AttachmentType.COMMENT, id);
+        }
+        await queryRunner.manager.softDelete(Comment, { id });
+
+        // Update discussion comment count
+        if (comment.parentId) {
+          await queryRunner.manager.decrement(Comment, { id: comment.parentId }, 'replyCount', 1);
+        }
+        await this.discussionService.decrementCommentCount(comment.discussionId, queryRunner.manager);
+
+        await queryRunner.commitTransaction();
+      } catch (error) {
+        await queryRunner.rollbackTransaction();
+        throw error;
+      } finally {
+        await queryRunner.release();
       }
-
-      // Delete attachments
-      await this.attachmentService.deleteAttachmentsByEntity(AttachmentType.COMMENT, id);
-
-      // Delete the comment
-      await queryRunner.manager.softDelete(Comment, { id });
-
-      // If this is a reply, update the parent's reply count
-      if (comment.parentId) {
-        await queryRunner.manager.decrement(Comment, { id: comment.parentId }, 'replyCount', 1);
-      }
-
-      // Update the discussion's comment count
-      const decrementCount = comment.replyCount + 1;
-      await queryRunner.manager.decrement(Discussion, { id: comment.discussionId }, 'commentCount', decrementCount);
-
-      await queryRunner.commitTransaction();
     } catch (error) {
-      await queryRunner.rollbackTransaction();
-      throw new InternalServerErrorException('Failed to delete comment');
-    } finally {
-      await queryRunner.release();
+      this.logger.error(`Error deleting comment: ${error.message}`, error.stack);
+      throw error;
     }
   }
 
-  async getCommentById(id: number): Promise<Comment> {
+  // ------ Other Operations ------
+
+  async getCommentEntity(id: number): Promise<Comment> {
+    const comment = await this.commentRepository.findOne({ where: { id } });
+
+    if (!comment) {
+      throw new NotFoundException(`Comment with ID ${id} not found`);
+    }
+
+    return comment;
+  }
+
+  async incrementReplyCount(id: number, entityManager?: EntityManager): Promise<void> {
+    const manager = entityManager || this.commentRepository.manager;
+    await manager.increment(Comment, { id }, 'replyCount', 1);
+  }
+
+  async decrementReplyCount(id: number, entityManager?: EntityManager): Promise<void> {
+    const manager = entityManager || this.commentRepository.manager;
+    await manager.decrement(Comment, { id }, 'replyCount', 1);
+  }
+
+  async incrementUpvoteCount(id: number, entityManager?: EntityManager): Promise<void> {
+    const manager = entityManager || this.commentRepository.manager;
+    await manager.increment(Comment, { id }, 'upvoteCount', 1);
+  }
+
+  async decrementUpvoteCount(id: number, entityManager?: EntityManager): Promise<void> {
+    const manager = entityManager || this.commentRepository.manager;
+    await manager.decrement(Comment, { id }, 'upvoteCount', 1);
+  }
+
+  async incrementDownvoteCount(id: number, entityManager?: EntityManager): Promise<void> {
+    const manager = entityManager || this.commentRepository.manager;
+    await manager.increment(Comment, { id }, 'downvoteCount', 1);
+  }
+
+  async decrementDownvoteCount(id: number, entityManager?: EntityManager): Promise<void> {
+    const manager = entityManager || this.commentRepository.manager;
+    await manager.decrement(Comment, { id }, 'downvoteCount', 1);
+  }
+
+  // ----- Helper Methods -----
+
+  private async getCommentWithAttachmentById(id: number): Promise<Comment> {
     const comment = await this.commentRepository.findOne({
       where: { id },
       relations: ['author'],
@@ -425,44 +434,41 @@ export class CommentService {
     return comment;
   }
 
-  async formatCommentResponse(comment: Comment, currentUser?: User): Promise<CommentResponseDto> {
-    const response: CommentResponseDto = {
-      id: comment.id,
-      content: comment.content,
-      createdAt: comment.createdAt,
-      updatedAt: comment.updatedAt,
-      discussionId: comment.discussionId,
-      parentId: comment.parentId,
-      upvoteCount: comment.upvoteCount,
-      downvoteCount: comment.downvoteCount,
-      replyCount: comment.replyCount,
-      attachments: comment.attachments || [],
-      author: {
-        id: comment.author.id,
-        username: comment.author.username,
-        fullName: comment.author.fullName,
-        role: comment.author.role,
-        avatarUrl: comment.author.avatarUrl || null,
-        createdAt: comment.author.createdAt,
-        updatedAt: comment.author.updatedAt,
+  private createPaginatedResponse<T>(items: T[], totalItems: number, page: number, limit: number): Pageable<T> {
+    const totalPages = Math.ceil(totalItems / limit);
+
+    return {
+      items,
+      meta: {
+        totalItems,
+        itemsPerPage: limit,
+        currentPage: page,
+        totalPages,
+        hasNextPage: page < totalPages,
+        hasPreviousPage: page > 1,
       },
     };
+  }
 
-    // Sort attachments by display order
-    if (response.attachments && response.attachments.length > 0) {
-      response.attachments.sort((a, b) => a.displayOrder - b.displayOrder);
+  private buildCommentSearchQuery(searchDto: SearchCommentDto, discussionId: number, offset: number, limit: number) {
+    const { sortBy = 'createdAt', sortOrder = 'DESC' } = searchDto;
+
+    const queryBuilder = this.commentRepository
+      .createQueryBuilder('comment')
+      .leftJoinAndSelect('comment.author', 'author')
+      .where('comment.discussionId = :discussionId', { discussionId })
+      .andWhere('comment.parentId IS NULL')
+      .orderBy(`comment.${sortBy}`, sortOrder)
+      .skip(offset)
+      .take(limit);
+
+    return queryBuilder;
+  }
+
+  private verifyCommentAuthor(comment: Comment, userId: number): void {
+    if (comment.authorId !== userId) {
+      throw new ForbiddenException('You do not have permission to modify this comment');
     }
-
-    // Add vote status for the current user if available
-    if (currentUser) {
-      response.voteStatus = await this.voteService.getUserVoteStatus(
-        currentUser.id,
-        VoteEntityType.COMMENT,
-        comment.id,
-      );
-    }
-
-    return response;
   }
 
   private async cleanupFiles(filePaths: string[]): Promise<void> {
@@ -470,21 +476,23 @@ export class CommentService {
       try {
         if (fs.existsSync(filePath)) {
           await fs.promises.unlink(filePath);
-          console.log(`Cleaned up file: ${filePath}`);
+          this.logger.log(`Cleaned up file: ${filePath}`);
         }
       } catch (error) {
-        console.error(`Failed to clean up file ${filePath}:`, error);
+        this.logger.warn(`Failed to clean up file ${filePath}`, error);
       }
     }
   }
 
-  // Add this new method to handle notification creation
+  private extractFilePaths(attachments: any[]): string[] {
+    return attachments.map((attachment) => path.join(process.cwd(), attachment.url.replace(/^\//, '')));
+  }
+
   private async createCommentNotifications(comment: Comment, discussion: Discussion, currentUser: User): Promise<void> {
     try {
       // Don't notify yourself
       if (comment.parentId) {
-        // This is a reply to another comment
-        // Get the parent comment to find its author
+        // This is a reply to another comment - notify parent comment author
         const parentComment = await this.commentRepository.findOne({
           where: { id: comment.parentId },
           relations: ['author'],
@@ -522,8 +530,7 @@ export class CommentService {
           });
         }
       } else {
-        // This is a top-level comment on a discussion
-        // Notify the discussion author if they're not the commenter
+        // This is a top-level comment - notify discussion author
         if (discussion.authorId !== currentUser.id) {
           const notification = await this.notificationService.createNotification(
             discussion.authorId,
@@ -555,7 +562,7 @@ export class CommentService {
         }
       }
     } catch (error) {
-      console.error('Failed to create comment notifications:', error);
+      this.logger.error('Failed to create comment notifications:', error);
     }
   }
 }

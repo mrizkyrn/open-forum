@@ -1,8 +1,8 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, Index } from 'typeorm';
+import { Column, Entity, Index, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { BaseEntity } from '../../../core/database/entities/base.entity';
-import { User } from '../../user/entities/user.entity';
-import { Discussion } from '../../discussion/entities/discussion.entity';
 import { Attachment } from '../../attachment/entities/attachment.entity';
+import { Discussion } from '../../discussion/entities/discussion.entity';
+import { User } from '../../user/entities/user.entity';
 
 @Entity('comments')
 export class Comment extends BaseEntity {

@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { VoteValue } from '../entities/vote.entity';
+import { Vote, VoteValue } from '../entities/vote.entity';
 
 export class VoteResponseDto {
   @ApiProperty({
@@ -38,6 +38,17 @@ export class VoteResponseDto {
     example: '2023-01-01T00:00:00Z',
   })
   updatedAt: Date;
+
+  static fromEntity(vote: Vote): VoteResponseDto {
+    const dto = new VoteResponseDto();
+    dto.value = vote.value;
+    dto.entityType = vote.entityType;
+    dto.entityId = vote.entityId;
+    dto.userId = vote.user?.id;
+    dto.createdAt = vote.createdAt;
+    dto.updatedAt = vote.updatedAt;
+    return dto;
+  }
 }
 
 export class VoteCountsDto {

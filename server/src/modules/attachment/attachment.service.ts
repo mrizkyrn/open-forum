@@ -101,7 +101,7 @@ export class AttachmentService {
       if (manager) {
         await manager.remove(Attachment, attachment);
       } else {
-        await this.attachmentRepository.remove(attachment);
+        await this.attachmentRepository.softDelete(attachment.id);
       }
     } catch (error) {
       console.error('Error deleting attachment:', error);

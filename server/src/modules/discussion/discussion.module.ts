@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { FileModule } from '../../core/file/file.module';
 import { WebsocketModule } from '../../core/websocket/websocket.module';
@@ -16,7 +16,7 @@ import { Discussion } from './entities/discussion.entity';
   imports: [
     TypeOrmModule.forFeature([Discussion, Bookmark, DiscussionSpace]),
     AttachmentModule,
-    VoteModule,
+    forwardRef(() => VoteModule),
     WebsocketModule,
     FileModule,
   ],

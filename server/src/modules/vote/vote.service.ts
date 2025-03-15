@@ -1,50 +1,117 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { forwardRef, Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Vote, VoteEntityType, VoteValue } from './entities/vote.entity';
-import { Discussion } from '../discussion/entities/discussion.entity';
+import { WebsocketGateway } from '../../core/websocket/websocket.gateway';
+import { CommentService } from '../comment/comment.service';
 import { Comment } from '../comment/entities/comment.entity';
-import { User } from '../user/entities/user.entity';
-import { VoteCountsDto, VoteResponseDto } from './dto/vote-response.dto';
+import { DiscussionService } from '../discussion/discussion.service';
+import { Discussion } from '../discussion/entities/discussion.entity';
 import { NotificationEntityType, NotificationType } from '../notification/entities/notification.entity';
-import { UserService } from '../user/user.service';
 import { NotificationService } from '../notification/notification.service';
-import { WebsocketGateway } from 'src/core/websocket/websocket.gateway';
+import { User } from '../user/entities/user.entity';
+import { UserService } from '../user/user.service';
+import { VoteCountsDto, VoteResponseDto } from './dto/vote-response.dto';
+import { Vote, VoteEntityType, VoteValue } from './entities/vote.entity';
 
 @Injectable()
 export class VoteService {
+  private readonly logger = new Logger(VoteService.name);
+
   constructor(
     @InjectRepository(Vote)
     private readonly voteRepository: Repository<Vote>,
-    @InjectRepository(Discussion)
-    private readonly discussionRepository: Repository<Discussion>,
-    @InjectRepository(Comment)
-    private readonly commentRepository: Repository<Comment>,
     private readonly userService: UserService,
+    @Inject(forwardRef(() => DiscussionService))
+    private readonly discussionService: DiscussionService,
+    @Inject(forwardRef(() => CommentService))
+    private readonly commentService: CommentService,
     private readonly notificationService: NotificationService,
     private readonly websocketGateway: WebsocketGateway,
   ) {}
 
+  // ----- Core Vote Operations -----
+
   async voteDiscussion(userId: number, discussionId: number, value: VoteValue): Promise<VoteResponseDto | null> {
-    const queryRunner = this.discussionRepository.manager.connection.createQueryRunner();
-    await queryRunner.connect();
-    await queryRunner.startTransaction();
+    return this.voteEntity(userId, VoteEntityType.DISCUSSION, discussionId, value);
+  }
 
+  async voteComment(userId: number, commentId: number, value: VoteValue): Promise<VoteResponseDto | null> {
+    return this.voteEntity(userId, VoteEntityType.COMMENT, commentId, value);
+  }
+
+  async getUserVoteStatus(userId: number, entityType: VoteEntityType, entityId: number): Promise<number | null> {
     try {
-      const discussion = await queryRunner.manager.findOne(Discussion, {
-        where: { id: discussionId },
-        relations: ['author'], // Add author relation
+      const vote = await this.voteRepository.findOne({
+        where: {
+          user: { id: userId },
+          entityType,
+          entityId,
+        },
+        relations: ['user'],
       });
+      return vote ? vote.value : null;
+    } catch (error) {
+      this.logger.error(`Error getting user vote status: ${error.message}`, error.stack);
+      throw error;
+    }
+  }
 
-      if (!discussion) {
-        throw new NotFoundException('Discussion not found');
+  async getVoteCounts(entityType: VoteEntityType, entityId: number): Promise<VoteCountsDto> {
+    try {
+      let entity: Discussion | Comment | null = null;
+
+      if (entityType === VoteEntityType.DISCUSSION) {
+        entity = await this.discussionService.getDiscussionEntity(entityId);
+      } else {
+        entity = await this.commentService.getCommentEntity(entityId);
       }
 
+      if (!entity) {
+        throw new NotFoundException('Entity not found');
+      }
+
+      return {
+        upvotes: entity.upvoteCount || 0,
+        downvotes: entity.downvoteCount || 0,
+      };
+    } catch (error) {
+      this.logger.error(`Error getting vote counts: ${error.message}`, error.stack);
+      throw error;
+    }
+  }
+
+  // ----- Helper Methods -----
+
+  private async voteEntity(
+    userId: number,
+    entityType: VoteEntityType,
+    entityId: number,
+    value: VoteValue,
+  ): Promise<VoteResponseDto | null> {
+    const queryRunner = this.voteRepository.manager.connection.createQueryRunner();
+
+    try {
+      await queryRunner.connect();
+      await queryRunner.startTransaction();
+
+      // Get entity and determine which service to use
+      const service = entityType === VoteEntityType.DISCUSSION ? this.discussionService : this.commentService;
+
+      // Get the entity (this validates it exists)
+      const entity =
+        entityType === VoteEntityType.DISCUSSION
+          ? await this.discussionService.getDiscussionEntity(entityId)
+          : await this.commentService.getCommentEntity(entityId);
+
+      // Get the recipient ID for notification
+      const recipientId = entityType === VoteEntityType.DISCUSSION ? entity.authorId : (entity as Comment).authorId;
+
+      // Find existing vote within transaction
       const existingVote = await queryRunner.manager.findOne(Vote, {
         where: {
           user: { id: userId },
-          entityType: VoteEntityType.DISCUSSION,
-          entityId: discussionId,
+          entityType,
+          entityId,
         },
         relations: ['user'],
       });
@@ -52,222 +119,68 @@ export class VoteService {
       let result: Vote | null = null;
       let shouldNotify = false;
 
+      // Handle vote based on existing state
       if (existingVote) {
         // If same vote exists, remove it (toggle behavior)
         if (existingVote.value === value) {
           await queryRunner.manager.remove(existingVote);
+
+          // Update counts
           if (value === VoteValue.UPVOTE) {
-            discussion.upvoteCount = Math.max(0, discussion.upvoteCount - 1);
+            await service.decrementUpvoteCount(entityId, queryRunner.manager);
           } else {
-            discussion.downvoteCount = Math.max(0, discussion.downvoteCount - 1);
+            await service.decrementDownvoteCount(entityId, queryRunner.manager);
           }
-        } else {
-          // Update existing vote
-          existingVote.value = value;
-          result = await queryRunner.manager.save(Vote, existingVote);
-
-          if (value === VoteValue.UPVOTE) {
-            console.log('Upvote');
-            discussion.upvoteCount += 1;
-            discussion.downvoteCount -= 1;
-            shouldNotify = true;
-          } else {
-            discussion.downvoteCount += 1;
-            discussion.upvoteCount -= 1;
-          }
-        }
-      } else {
-        // Create new vote
-        const vote = queryRunner.manager.create(Vote, {
-          user: { id: userId },
-          entityType: VoteEntityType.DISCUSSION,
-          entityId: discussionId,
-          value,
-        });
-
-        result = await queryRunner.manager.save(Vote, vote);
-
-        if (value === VoteValue.UPVOTE) {
-          discussion.upvoteCount += 1;
-          shouldNotify = true;
-        } else {
-          discussion.downvoteCount += 1;
-        }
-      }
-
-      // Ensure counts are never negative
-      discussion.upvoteCount = Math.max(0, discussion.upvoteCount);
-      discussion.downvoteCount = Math.max(0, discussion.downvoteCount);
-
-      await queryRunner.manager.save(Discussion, discussion);
-      await queryRunner.commitTransaction();
-
-      // Create notification after successful transaction
-      if (shouldNotify && discussion.authorId !== userId) {
-        await this.createVoteNotification(VoteEntityType.DISCUSSION, discussionId, userId, discussion.authorId, value);
-      }
-
-      return result ? this.formatVoteResponse(result) : null;
-    } catch (error) {
-      await queryRunner.rollbackTransaction();
-      throw error;
-    } finally {
-      await queryRunner.release();
-    }
-  }
-
-  async voteComment(userId: number, commentId: number, value: VoteValue): Promise<VoteResponseDto | null> {
-    // Use a transaction for data consistency
-    const queryRunner = this.commentRepository.manager.connection.createQueryRunner();
-    await queryRunner.connect();
-    await queryRunner.startTransaction();
-
-    try {
-      // Add author relation to get the comment author id
-      const comment = await queryRunner.manager.findOne(Comment, {
-        where: { id: commentId },
-        relations: ['author'], // Add this relation
-      });
-
-      if (!comment) {
-        throw new NotFoundException('Comment not found');
-      }
-
-      // Check for existing vote within transaction
-      const existingVote = await queryRunner.manager.findOne(Vote, {
-        where: {
-          user: { id: userId },
-          entityType: VoteEntityType.COMMENT,
-          entityId: commentId,
-        },
-        relations: ['user'],
-      });
-
-      let result: Vote | null = null;
-      let shouldNotify = false; // Add flag to track when notification should be sent
-
-      if (existingVote) {
-        // If same vote exists, remove it (toggle behavior)
-        if (existingVote.value === value) {
-          await queryRunner.manager.remove(existingVote);
-          if (value === VoteValue.UPVOTE) {
-            comment.upvoteCount = Math.max(0, comment.upvoteCount - 1);
-          } else {
-            comment.downvoteCount = Math.max(0, comment.downvoteCount - 1);
-          }
-          // result remains null (vote removed)
         } else {
           // Change vote direction
           existingVote.value = value;
           result = await queryRunner.manager.save(Vote, existingVote);
 
+          // Update counts
           if (value === VoteValue.UPVOTE) {
-            comment.upvoteCount += 1;
-            comment.downvoteCount -= 1;
-            shouldNotify = true; // Set flag when downvote changed to upvote
+            await service.incrementUpvoteCount(entityId, queryRunner.manager);
+            await service.decrementDownvoteCount(entityId, queryRunner.manager);
+            shouldNotify = true;
           } else {
-            comment.downvoteCount += 1;
-            comment.upvoteCount -= 1;
+            await service.incrementDownvoteCount(entityId, queryRunner.manager);
+            await service.decrementUpvoteCount(entityId, queryRunner.manager);
           }
         }
       } else {
         // Create new vote
         const vote = queryRunner.manager.create(Vote, {
           user: { id: userId },
-          entityType: VoteEntityType.COMMENT,
-          entityId: commentId,
+          entityType,
+          entityId,
           value,
         });
 
         result = await queryRunner.manager.save(Vote, vote);
 
+        // Update counts
         if (value === VoteValue.UPVOTE) {
-          comment.upvoteCount += 1;
-          shouldNotify = true; // Set flag when new upvote created
+          await service.incrementUpvoteCount(entityId, queryRunner.manager);
+          shouldNotify = true;
         } else {
-          comment.downvoteCount += 1;
+          await service.incrementDownvoteCount(entityId, queryRunner.manager);
         }
       }
 
-      // Ensure counts are never negative
-      comment.upvoteCount = Math.max(0, comment.upvoteCount);
-      comment.downvoteCount = Math.max(0, comment.downvoteCount);
-
-      await queryRunner.manager.save(Comment, comment);
       await queryRunner.commitTransaction();
 
       // Create notification after successful transaction
-      if (shouldNotify && comment.author.id !== userId) {
-        await this.createVoteNotification(VoteEntityType.COMMENT, commentId, userId, comment.author.id, value);
+      if (shouldNotify && recipientId !== userId) {
+        await this.createVoteNotification(entityType, entityId, userId, recipientId, value);
       }
 
-      return result ? this.formatVoteResponse(result) : null;
+      return result ? VoteResponseDto.fromEntity(result) : null;
     } catch (error) {
+      this.logger.error(`Error voting on ${entityType} ${entityId}: ${error.message}`, error.stack);
       await queryRunner.rollbackTransaction();
       throw error;
     } finally {
       await queryRunner.release();
     }
-  }
-
-  async getUserVoteStatus(userId: number, entityType: VoteEntityType, entityId: number): Promise<number | null> {
-    const vote = await this.voteRepository.findOne({
-      where: {
-        user: { id: userId },
-        entityType,
-        entityId,
-      },
-      relations: ['user'],
-    });
-    return vote ? vote.value : null;
-  }
-
-  async getVoteCounts(entityType: VoteEntityType, entityId: number): Promise<VoteCountsDto> {
-    let entity: Discussion | Comment | null = null;
-    if (entityType === VoteEntityType.DISCUSSION) {
-      entity = await this.discussionRepository.findOne({ where: { id: entityId } });
-    } else {
-      entity = await this.commentRepository.findOne({ where: { id: entityId } });
-    }
-
-    if (!entity) {
-      throw new NotFoundException('Entity not found');
-    }
-
-    return {
-      upvotes: entity.upvoteCount || 0,
-      downvotes: entity.downvoteCount || 0,
-    };
-  }
-
-  async getVotersByEntity(entityType: VoteEntityType, entityId: number, value?: VoteValue): Promise<User[]> {
-    const query = this.voteRepository
-      .createQueryBuilder('vote')
-      .innerJoinAndSelect('vote.user', 'user')
-      .where('vote.entityType = :entityType', { entityType })
-      .andWhere('vote.entityId = :entityId', { entityId });
-
-    if (value !== undefined) {
-      query.andWhere('vote.value = :value', { value });
-    }
-
-    const votes = await query.getMany();
-    return votes.map((vote) => vote.user);
-  }
-
-  async getEntitiesVotedByUser(userId: number, entityType: VoteEntityType, value?: VoteValue): Promise<number[]> {
-    const query = this.voteRepository
-      .createQueryBuilder('vote')
-      .select('vote.entityId')
-      .where('vote.entityType = :entityType', { entityType })
-      .andWhere('vote.user = :userId', { userId });
-
-    if (value !== undefined) {
-      query.andWhere('vote.value = :value', { value });
-    }
-
-    const votes = await query.getRawMany();
-    return votes.map((v) => v.entityId);
   }
 
   private async createVoteNotification(
@@ -277,7 +190,7 @@ export class VoteService {
     recipientId: number,
     value: VoteValue,
   ): Promise<void> {
-    // Only send notifications for upvotes, not downvotes
+    // Only send notifications for upvotes
     if (value !== VoteValue.UPVOTE || voterId === recipientId) {
       return;
     }
@@ -298,18 +211,18 @@ export class VoteService {
         entityId,
       );
 
-      // If a notification already exists, don't create another one
       if (existingNotification) {
-        console.log('Notification already exists for this vote, skipping');
+        this.logger.debug('Notification already exists for this vote, skipping');
         return;
       }
 
       // Get voter info
       const voter = await this.userService.findById(voterId);
 
+      // Prepare notification data
       let notificationData = {};
       if (entityType === VoteEntityType.COMMENT) {
-        const comment = await this.commentRepository.findOne({ where: { id: entityId } });
+        const comment = await this.commentService.getCommentEntity(entityId);
         if (comment) {
           notificationData = { discussionId: comment.discussionId };
         }
@@ -343,19 +256,8 @@ export class VoteService {
         },
       });
     } catch (error) {
-      console.error('Error creating vote notification:', error);
+      this.logger.error(`Error creating vote notification: ${error.message}`, error.stack);
       // Don't throw - notifications are non-critical
     }
-  }
-
-  formatVoteResponse(vote: Vote): VoteResponseDto {
-    return {
-      value: vote.value,
-      entityType: vote.entityType,
-      entityId: vote.entityId,
-      userId: vote.user.id,
-      createdAt: vote.createdAt,
-      updatedAt: vote.updatedAt,
-    };
   }
 }

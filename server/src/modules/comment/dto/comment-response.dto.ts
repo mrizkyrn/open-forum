@@ -1,7 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { PaginationMetaDto } from '../../../common/dto/pagination-meta.dto';
 import { AttachmentResponseDto } from '../../attachment/dto/attachment-response.dto';
 import { UserResponseDto } from '../../user/dto/user-response.dto';
-import { PaginationMetaDto } from '../../../common/dto/pagination-meta.dto';
+import { Comment } from '../entities/comment.entity';
 
 export class CommentResponseDto {
   @ApiProperty({
@@ -84,6 +85,44 @@ export class CommentResponseDto {
     nullable: true,
   })
   voteStatus?: number | null;
+
+  static fromEntity(comment: Comment, voteStatus?: number | null): CommentResponseDto {
+    const dto = new CommentResponseDto();
+
+    dto.id = comment.id;
+    dto.content = comment.content;
+    dto.createdAt = comment.createdAt;
+    dto.updatedAt = comment.updatedAt;
+    dto.discussionId = comment.discussionId;
+    dto.parentId = comment.parentId;
+    dto.upvoteCount = comment.upvoteCount;
+    dto.downvoteCount = comment.downvoteCount;
+    dto.replyCount = comment.replyCount;
+
+    // Handle author info
+    if (comment.author) {
+      dto.author = UserResponseDto.fromEntity(comment.author);
+    }
+
+    // Handle attachments
+    if (comment.attachments && comment.attachments.length > 0) {
+      dto.attachments = [...comment.attachments].sort((a, b) => a.displayOrder - b.displayOrder);
+    } else {
+      dto.attachments = [];
+    }
+
+    // Handle replies if present
+    if (comment.replies && comment.replies.length > 0) {
+      dto.replies = comment.replies.map((reply) => CommentResponseDto.fromEntity(reply));
+    }
+
+    // Add vote status if provided
+    if (voteStatus !== undefined) {
+      dto.voteStatus = voteStatus;
+    }
+
+    return dto;
+  }
 }
 
 export class PageableCommentResponseDto {

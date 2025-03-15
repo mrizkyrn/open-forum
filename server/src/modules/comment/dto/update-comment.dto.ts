@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsArray, IsOptional, IsString, MaxLength } from 'class-validator';
 import { Transform } from 'class-transformer';
+import { IsArray, IsOptional, IsString, MaxLength } from 'class-validator';
 
 export class UpdateCommentDto {
   @ApiProperty({

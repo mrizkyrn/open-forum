@@ -1,29 +1,29 @@
 import {
   Body,
   Controller,
-  Post,
-  Param,
-  UseInterceptors,
-  UploadedFiles,
-  ParseIntPipe,
-  UseGuards,
-  Get,
-  Query,
-  Put,
   Delete,
+  Get,
   HttpCode,
   HttpStatus,
+  Param,
+  ParseIntPipe,
+  Post,
+  Put,
+  Query,
+  UploadedFiles,
+  UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
-import { ApiTags, ApiBearerAuth, ApiOperation, ApiResponse, ApiParam, ApiConsumes, ApiBody } from '@nestjs/swagger';
-import { CommentService } from './comment.service';
-import { CreateCommentDto } from './dto/create-comment.dto';
-import { CommentResponseDto, PageableCommentResponseDto } from './dto/comment-response.dto';
-import { User } from '../user/entities/user.entity';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { ApiBearerAuth, ApiConsumes, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ReqUser } from '../../common/decorators/user.decorator';
+import { Pageable } from '../../common/interfaces/pageable.interface';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { User } from '../user/entities/user.entity';
+import { CommentService } from './comment.service';
+import { CommentResponseDto, PageableCommentResponseDto } from './dto/comment-response.dto';
+import { CreateCommentDto } from './dto/create-comment.dto';
 import { SearchCommentDto } from './dto/search-comment.dto';
-import { Pageable } from 'src/common/interfaces/pageable.interface';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 
 @ApiTags('Comments')

@@ -1,8 +1,16 @@
-import { BadRequestException, ForbiddenException, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  forwardRef,
+  Inject,
+  Injectable,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as fs from 'fs';
 import * as path from 'path';
-import { Repository } from 'typeorm';
+import { EntityManager, Repository } from 'typeorm';
 import { Pageable } from '../../common/interfaces/pageable.interface';
 import { WebsocketGateway } from '../../core/websocket/websocket.gateway';
 import { AttachmentService } from '../attachment/attachment.service';
@@ -30,6 +38,7 @@ export class DiscussionService {
     @InjectRepository(DiscussionSpace)
     private readonly spaceRepository: Repository<DiscussionSpace>,
     private readonly attachmentService: AttachmentService,
+    @Inject(forwardRef(() => VoteService))
     private readonly voteService: VoteService,
     private readonly websocketGateway: WebsocketGateway,
   ) {}
@@ -366,6 +375,63 @@ export class DiscussionService {
       .getRawMany();
 
     return result;
+  }
+
+  // ------ Other Operations ------
+
+  async getDiscussionEntity(id: number): Promise<Discussion> {
+    return this.getDiscussionById(id);
+  }
+
+  async incrementCommentCount(id: number, entityManager?: EntityManager): Promise<void> {
+    const manager = entityManager || this.discussionRepository.manager;
+    await manager.increment(Discussion, { id }, 'commentCount', 1);
+  }
+
+  async decrementCommentCount(id: number, entityManager?: EntityManager): Promise<void> {
+    const manager = entityManager || this.discussionRepository.manager;
+    const discussion = await manager.findOne(Discussion, { where: { id } });
+
+    if (!discussion) {
+      throw new NotFoundException(`Discussion with ID ${id} not found`);
+    }
+
+    const newCount = Math.max(0, discussion.commentCount - 1);
+    await manager.update(Discussion, { id }, { commentCount: newCount });
+  }
+
+  async incrementUpvoteCount(id: number, entityManager?: EntityManager): Promise<void> {
+    const manager = entityManager || this.discussionRepository.manager;
+    await manager.increment(Discussion, { id }, 'upvoteCount', 1);
+  }
+
+  async decrementUpvoteCount(id: number, entityManager?: EntityManager): Promise<void> {
+    const manager = entityManager || this.discussionRepository.manager;
+    const discussion = await manager.findOne(Discussion, { where: { id } });
+
+    if (!discussion) {
+      throw new NotFoundException(`Discussion with ID ${id} not found`);
+    }
+
+    const newCount = Math.max(0, discussion.upvoteCount - 1);
+    await manager.update(Discussion, { id }, { upvoteCount: newCount });
+  }
+
+  async incrementDownvoteCount(id: number, entityManager?: EntityManager): Promise<void> {
+    const manager = entityManager || this.discussionRepository.manager;
+    await manager.increment(Discussion, { id }, 'downvoteCount', 1);
+  }
+
+  async decrementDownvoteCount(id: number, entityManager?: EntityManager): Promise<void> {
+    const manager = entityManager || this.discussionRepository.manager;
+    const discussion = await manager.findOne(Discussion, { where: { id } });
+
+    if (!discussion) {
+      throw new NotFoundException(`Discussion with ID ${id} not found`);
+    }
+
+    const newCount = Math.max(0, discussion.downvoteCount - 1);
+    await manager.update(Discussion, { id }, { downvoteCount: newCount });
   }
 
   // ------ Helper Methods ------
