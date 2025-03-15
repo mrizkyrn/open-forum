@@ -7,8 +7,8 @@ export enum NotificationType {
   REPLY_TO_COMMENT = 'reply_to_comment',
   MENTION = 'mention',
   REPORT_STATUS_UPDATE = 'report_status_update',
-  SPACE_FOLLOW = 'space_follow',
   CONTENT_MODERATION = 'content_moderation',
+  REPORT_RESOLUTION = 'report_resolution',
   DISCUSSION_UPVOTE = 'discussion_upvote',
   COMMENT_UPVOTE = 'comment_upvote',
 }

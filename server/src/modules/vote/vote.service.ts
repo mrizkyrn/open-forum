@@ -1,6 +1,6 @@
 import { forwardRef, Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Between, Repository } from 'typeorm';
 import { WebsocketGateway } from '../../core/websocket/websocket.gateway';
 import { CommentService } from '../comment/comment.service';
 import { Comment } from '../comment/entities/comment.entity';
@@ -8,7 +8,6 @@ import { DiscussionService } from '../discussion/discussion.service';
 import { Discussion } from '../discussion/entities/discussion.entity';
 import { NotificationEntityType, NotificationType } from '../notification/entities/notification.entity';
 import { NotificationService } from '../notification/notification.service';
-import { User } from '../user/entities/user.entity';
 import { UserService } from '../user/user.service';
 import { VoteCountsDto, VoteResponseDto } from './dto/vote-response.dto';
 import { Vote, VoteEntityType, VoteValue } from './entities/vote.entity';
@@ -78,6 +77,28 @@ export class VoteService {
       this.logger.error(`Error getting vote counts: ${error.message}`, error.stack);
       throw error;
     }
+  }
+
+  // ----- Other Operations -----
+
+  async countByDateRange(start: Date, end: Date): Promise<number> {
+    return this.voteRepository.count({
+      where: { createdAt: Between(start, end) },
+    });
+  }
+
+  async getTimeSeries(start: Date, end: Date): Promise<{ date: string; count: string }[]> {
+    return this.voteRepository
+      .createQueryBuilder('vote')
+      .select(`DATE(vote.created_at)`, 'date')
+      .addSelect(`COUNT(vote.id)`, 'count')
+      .where('vote.created_at BETWEEN :start AND :end', {
+        start,
+        end,
+      })
+      .groupBy(`DATE(vote.created_at)`)
+      .orderBy(`DATE(vote.created_at)`, 'ASC')
+      .getRawMany();
   }
 
   // ----- Helper Methods -----

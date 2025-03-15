@@ -10,7 +10,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import * as fs from 'fs';
 import * as path from 'path';
-import { EntityManager, Repository } from 'typeorm';
+import { Between, EntityManager, Repository } from 'typeorm';
 import { Pageable } from '../../common/interfaces/pageable.interface';
 import { WebsocketGateway } from '../../core/websocket/websocket.gateway';
 import { AttachmentService } from '../attachment/attachment.service';
@@ -339,10 +339,12 @@ export class CommentService {
     }
   }
 
-  async delete(id: number, currentUser: User): Promise<void> {
+  async delete(id: number, currentUser?: User): Promise<void> {
     try {
       const comment = await this.getCommentWithAttachmentById(id);
-      this.verifyCommentAuthor(comment, currentUser.id);
+      if (currentUser) {
+        this.verifyCommentAuthor(comment, currentUser.id);
+      }
 
       const queryRunner = this.commentRepository.manager.connection.createQueryRunner();
       await queryRunner.connect();
@@ -414,6 +416,28 @@ export class CommentService {
   async decrementDownvoteCount(id: number, entityManager?: EntityManager): Promise<void> {
     const manager = entityManager || this.commentRepository.manager;
     await manager.decrement(Comment, { id }, 'downvoteCount', 1);
+  }
+
+  async countByDateRange(start: Date, end: Date): Promise<number> {
+    return this.commentRepository.count({
+      where: { createdAt: Between(start, end) },
+    });
+  }
+
+  async getTimeSeries(start: Date, end: Date): Promise<{ date: string; count: string }[]> {
+    const results = await this.commentRepository
+      .createQueryBuilder('comment')
+      .select(`DATE(comment.createdAt)`, 'date')
+      .addSelect(`COUNT(comment.id)`, 'count')
+      .where('comment.createdAt BETWEEN :start AND :end', {
+        start,
+        end,
+      })
+      .groupBy(`DATE(comment.createdAt)`)
+      .orderBy(`DATE(comment.createdAt)`, 'ASC')
+      .getRawMany();
+
+    return results;
   }
 
   // ----- Helper Methods -----

@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToOne, Index } from 'typeorm';
+import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
 import { BaseEntity } from '../../../core/database/entities/base.entity';
 import { User } from '../../user/entities/user.entity';
 import { ReportReason } from './report-reason.entity';
@@ -6,12 +6,12 @@ import { ReportReason } from './report-reason.entity';
 export enum ReportStatus {
   PENDING = 'pending',
   RESOLVED = 'resolved',
-  DISMISSED = 'dismissed'
+  DISMISSED = 'dismissed',
 }
 
 export enum ReportTargetType {
   DISCUSSION = 'discussion',
-  COMMENT = 'comment'
+  COMMENT = 'comment',
 }
 
 @Entity('reports')

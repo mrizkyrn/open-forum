@@ -1,14 +1,14 @@
-import * as bcrypt from 'bcrypt';
-import { Injectable, ConflictException, NotFoundException, BadRequestException, Logger } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, SelectQueryBuilder } from 'typeorm';
-import { User } from './entities/user.entity';
+import * as bcrypt from 'bcrypt';
+import { Between, Repository, SelectQueryBuilder } from 'typeorm';
+import { Pageable } from '../../common/interfaces/pageable.interface';
+import { FileService } from '../../core/file/file.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UserResponseDto } from './dto/user-response.dto';
 import { SearchUserDto } from './dto/search-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { FileService } from '../../core/file/file.service';
-import { Pageable } from '../../common/interfaces/pageable.interface';
+import { UserResponseDto } from './dto/user-response.dto';
+import { User } from './entities/user.entity';
 
 @Injectable()
 export class UserService {
@@ -141,6 +141,36 @@ export class UserService {
         this.logger.warn(`Failed to update activity timestamp for user ${userId}`, error);
       }
     }
+  }
+
+  // ----- Other Operations -----
+
+  async countTotal(): Promise<number> {
+    return this.userRepository.count();
+  }
+
+  async countByDateRange(start: Date, end: Date): Promise<number> {
+    return this.userRepository.count({
+      where: { createdAt: Between(start, end) },
+    });
+  }
+
+  async countActiveSince(date: Date): Promise<number> {
+    return this.userRepository.createQueryBuilder('user').where('user.last_active_at >= :date', { date }).getCount();
+  }
+
+  async getTimeSeries(start: Date, end: Date): Promise<{ date: string; count: string }[]> {
+    return this.userRepository
+      .createQueryBuilder('user')
+      .select(`DATE(user.created_at)`, 'date')
+      .addSelect(`COUNT(user.id)`, 'count')
+      .where('user.created_at BETWEEN :start AND :end', {
+        start,
+        end,
+      })
+      .groupBy(`DATE(user.created_at)`)
+      .orderBy(`DATE(user.created_at)`, 'ASC')
+      .getRawMany();
   }
 
   // ----- Helper Methods -----

@@ -1,5 +1,5 @@
-import { IsEnum, IsNotEmpty } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { IsEnum, IsNotEmpty } from 'class-validator';
 import { ReportStatus } from '../entities/report.entity';
 
 export class UpdateReportStatusDto {

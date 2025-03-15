@@ -10,7 +10,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import * as fs from 'fs';
 import * as path from 'path';
-import { EntityManager, Repository } from 'typeorm';
+import { Between, EntityManager, Repository } from 'typeorm';
 import { Pageable } from '../../common/interfaces/pageable.interface';
 import { WebsocketGateway } from '../../core/websocket/websocket.gateway';
 import { AttachmentService } from '../attachment/attachment.service';
@@ -256,8 +256,10 @@ export class DiscussionService {
     }
   }
 
-  async delete(id: number, currentUser: User): Promise<void> {
-    await this.validateDiscussionAccess(id, currentUser.id);
+  async delete(id: number, currentUser?: User): Promise<void> {
+    if (currentUser) {
+      await this.validateDiscussionAccess(id, currentUser.id);
+    }
     await this.discussionRepository.softDelete(id);
   }
 
@@ -432,6 +434,30 @@ export class DiscussionService {
 
     const newCount = Math.max(0, discussion.downvoteCount - 1);
     await manager.update(Discussion, { id }, { downvoteCount: newCount });
+  }
+
+  async countTotal(): Promise<number> {
+    return this.discussionRepository.count();
+  }
+
+  async countByDateRange(start: Date, end: Date): Promise<number> {
+    return this.discussionRepository.count({
+      where: { createdAt: Between(start, end) },
+    });
+  }
+
+  async getTimeSeries(start: Date, end: Date): Promise<{ date: string; count: string }[]> {
+    return this.discussionRepository
+      .createQueryBuilder('discussion')
+      .select(`DATE(discussion.created_at)`, 'date')
+      .addSelect(`COUNT(discussion.id)`, 'count')
+      .where('discussion.created_at BETWEEN :start AND :end', {
+        start,
+        end,
+      })
+      .groupBy(`DATE(discussion.created_at)`)
+      .orderBy(`DATE(discussion.created_at)`, 'ASC')
+      .getRawMany();
   }
 
   // ------ Helper Methods ------

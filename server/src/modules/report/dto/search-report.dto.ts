@@ -1,7 +1,7 @@
-import { IsEnum, IsInt, IsOptional } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
+import { IsEnum, IsOptional } from 'class-validator';
+import { SearchDto } from '../../../common/dto/search.dto';
 import { ReportStatus, ReportTargetType } from '../entities/report.entity';
-import { SearchDto } from 'src/common/dto/search.dto';
 
 export enum ReportSortBy {
   createdAt = 'createdAt',

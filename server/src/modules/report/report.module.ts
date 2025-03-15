@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Report } from './entities/report.entity';
-import { ReportReason } from './entities/report-reason.entity';
-import { ReportService } from './report.service';
-import { ReportController } from './report.controller';
-import { DiscussionModule } from '../discussion/discussion.module';
+import { WebsocketModule } from '../../core/websocket/websocket.module';
 import { CommentModule } from '../comment/comment.module';
+import { DiscussionModule } from '../discussion/discussion.module';
 import { NotificationModule } from '../notification/notification.module';
-import { WebsocketModule } from 'src/core/websocket/websocket.module';
+import { ReportReason } from './entities/report-reason.entity';
+import { Report } from './entities/report.entity';
+import { ReportController } from './report.controller';
+import { ReportService } from './report.service';
 
 @Module({
   imports: [

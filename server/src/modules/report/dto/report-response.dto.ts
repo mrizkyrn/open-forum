@@ -1,15 +1,19 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { ReportStatus, ReportTargetType } from '../entities/report.entity';
-import { Pageable } from '../../../common/interfaces/pageable.interface';
-import { UserResponseDto } from 'src/modules/user/dto/user-response.dto';
-import { PaginationMetaDto } from 'src/common/dto/pagination-meta.dto';
+import { PaginationMetaDto } from '../../../common/dto/pagination-meta.dto';
+import { UserResponseDto } from '../../user/dto/user-response.dto';
+import { Report, ReportStatus, ReportTargetType } from '../entities/report.entity';
 
 export class ReportTargetDetailsDto {
   @ApiProperty({ description: 'The content of the reported item', example: 'This is the content' })
   content?: string;
 
   @ApiProperty({ description: 'Author of the reported content' })
-  author?: UserResponseDto;
+  author: {
+    id: number;
+    username: string;
+    fullName: string;
+    avatarUrl: string;
+  };
 
   @ApiProperty({ description: 'Creation date of the reported content' })
   createdAt?: Date;
@@ -58,6 +62,29 @@ export class ReportResponseDto {
 
   @ApiProperty({ description: 'Date when the report was reviewed', required: false })
   reviewedAt?: Date;
+
+  static fromEntity(report: Report): ReportResponseDto {
+    const dto = new ReportResponseDto();
+
+    dto.id = report.id;
+    dto.createdAt = report.createdAt;
+    dto.updatedAt = report.updatedAt;
+    dto.reporter = report.reporter && UserResponseDto.fromEntity(report.reporter);
+    dto.targetType = report.targetType;
+    dto.targetId = report.targetId;
+    dto.targetDetails = report['targetDetails'] || { deleted: true };
+    dto.reason = report.reason && {
+      id: report.reason.id,
+      name: report.reason.name,
+      description: report.reason.description,
+    };
+    dto.description = report.description;
+    dto.status = report.status;
+    dto.reviewer = report.reviewer && UserResponseDto.fromEntity(report.reviewer);
+    dto.reviewedAt = report.reviewedAt || undefined;
+
+    return dto;
+  }
 }
 
 export class PageableReportResponseDto {
@@ -93,4 +120,31 @@ export class ReportReasonResponseDto {
 
   @ApiProperty({ description: 'Date when the reason was last updated' })
   updatedAt: Date;
+
+  static fromEntity(reason: ReportReasonResponseDto): ReportReasonResponseDto {
+    const dto = new ReportReasonResponseDto();
+
+    dto.id = reason.id;
+    dto.name = reason.name;
+    dto.description = reason.description;
+    dto.isActive = reason.isActive;
+    dto.createdAt = reason.createdAt;
+    dto.updatedAt = reason.updatedAt;
+
+    return dto;
+  }
+}
+
+export class ReportStatsResponseDto {
+  @ApiProperty({ description: 'Total number of reports', example: 10 })
+  total: number;
+
+  @ApiProperty({ description: 'Number of pending reports', example: 5 })
+  pending: number;
+
+  @ApiProperty({ description: 'Number of resolved reports', example: 3 })
+  resolved: number;
+
+  @ApiProperty({ description: 'Number of dismissed reports', example: 2 })
+  dismissed: number;
 }
