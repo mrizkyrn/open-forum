@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { WebsocketModule } from '../../core/websocket/websocket.module';
 import { CommentModule } from '../comment/comment.module';
 import { DiscussionModule } from '../discussion/discussion.module';
 import { NotificationModule } from '../notification/notification.module';
@@ -10,13 +9,7 @@ import { ReportController } from './report.controller';
 import { ReportService } from './report.service';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([Report, ReportReason]),
-    DiscussionModule,
-    CommentModule,
-    NotificationModule,
-    WebsocketModule,
-  ],
+  imports: [TypeOrmModule.forFeature([Report, ReportReason]), DiscussionModule, CommentModule, NotificationModule],
   providers: [ReportService],
   controllers: [ReportController],
   exports: [ReportService],

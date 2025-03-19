@@ -1,7 +1,7 @@
-import { IsArray, IsBoolean, IsEnum, IsInt, IsNumber, IsOptional, IsPositive, Min } from 'class-validator';
-import { Transform, Type } from 'class-transformer';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { NotificationType, NotificationEntityType } from '../entities/notification.entity';
+import { Transform, Type } from 'class-transformer';
+import { IsArray, IsBoolean, IsInt, IsNumber, IsOptional, IsPositive, Min } from 'class-validator';
+import { NotificationEntityType, NotificationType } from '../entities/notification.entity';
 
 export class NotificationResponseDto {
   @ApiProperty({ description: 'Notification ID' })
@@ -13,7 +13,7 @@ export class NotificationResponseDto {
   @ApiProperty({
     description: 'Type of notification',
     enum: NotificationType,
-    example: NotificationType.COMMENT_ON_DISCUSSION,
+    example: NotificationType.NEW_COMMENT,
   })
   type: NotificationType;
 

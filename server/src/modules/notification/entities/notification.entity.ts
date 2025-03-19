@@ -1,11 +1,11 @@
-import { Column, Entity, JoinColumn, ManyToOne, Index } from 'typeorm';
+import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
 import { BaseEntity } from '../../../core/database/entities/base.entity';
 import { User } from '../../user/entities/user.entity';
 
 export enum NotificationType {
-  COMMENT_ON_DISCUSSION = 'comment_on_discussion',
-  REPLY_TO_COMMENT = 'reply_to_comment',
-  MENTION = 'mention',
+  NEW_COMMENT = 'new_comment',
+  NEW_DISCUSSION = 'new_discussion',
+  NEW_REPLY = 'new_reply',
   REPORT_STATUS_UPDATE = 'report_status_update',
   CONTENT_MODERATION = 'content_moderation',
   REPORT_RESOLUTION = 'report_resolution',
@@ -46,7 +46,7 @@ export class Notification extends BaseEntity {
 
   @Column({ name: 'entity_id' })
   entityId: number;
-  
+
   @Column({ type: 'jsonb', default: '{}' })
   data: Record<string, any>;
 

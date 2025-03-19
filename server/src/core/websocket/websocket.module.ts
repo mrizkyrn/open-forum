@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { WebsocketGateway } from './websocket.gateway';
-import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { JWTConfig } from 'src/config';
-import { UserModule } from 'src/modules/user/user.module';
+import { JwtModule } from '@nestjs/jwt';
+import { JWTConfig } from '../../config';
+import { UserModule } from '../../modules/user/user.module';
+import { WebsocketGateway } from './websocket.gateway';
 
 @Module({
   imports: [

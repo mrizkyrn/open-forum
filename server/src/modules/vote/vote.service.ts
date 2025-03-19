@@ -1,14 +1,12 @@
 import { forwardRef, Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Between, Repository } from 'typeorm';
-import { WebsocketGateway } from '../../core/websocket/websocket.gateway';
 import { CommentService } from '../comment/comment.service';
 import { Comment } from '../comment/entities/comment.entity';
 import { DiscussionService } from '../discussion/discussion.service';
 import { Discussion } from '../discussion/entities/discussion.entity';
 import { NotificationEntityType, NotificationType } from '../notification/entities/notification.entity';
 import { NotificationService } from '../notification/notification.service';
-import { UserService } from '../user/user.service';
 import { VoteCountsDto, VoteResponseDto } from './dto/vote-response.dto';
 import { Vote, VoteEntityType, VoteValue } from './entities/vote.entity';
 
@@ -19,13 +17,11 @@ export class VoteService {
   constructor(
     @InjectRepository(Vote)
     private readonly voteRepository: Repository<Vote>,
-    private readonly userService: UserService,
     @Inject(forwardRef(() => DiscussionService))
     private readonly discussionService: DiscussionService,
     @Inject(forwardRef(() => CommentService))
     private readonly commentService: CommentService,
     private readonly notificationService: NotificationService,
-    private readonly websocketGateway: WebsocketGateway,
   ) {}
 
   // ----- Core Vote Operations -----
@@ -211,71 +207,50 @@ export class VoteService {
     recipientId: number,
     value: VoteValue,
   ): Promise<void> {
-    // Only send notifications for upvotes
+    // Only notify for upvotes and when recipient isn't the voter
     if (value !== VoteValue.UPVOTE || voterId === recipientId) {
       return;
     }
 
     try {
+      // Define notification types based on entity
       const notificationType =
         entityType === VoteEntityType.DISCUSSION ? NotificationType.DISCUSSION_UPVOTE : NotificationType.COMMENT_UPVOTE;
 
       const notificationEntityType =
         entityType === VoteEntityType.DISCUSSION ? NotificationEntityType.DISCUSSION : NotificationEntityType.COMMENT;
 
-      // Check if a notification already exists for this voter on this content
-      const existingNotification = await this.notificationService.findExistingNotification(
-        recipientId,
-        voterId,
-        notificationType,
-        notificationEntityType,
-        entityId,
-      );
+      // Prepare notification data with enhanced context
+      const notificationData: Record<string, any> = {};
 
-      if (existingNotification) {
-        this.logger.debug('Notification already exists for this vote, skipping');
-        return;
-      }
-
-      // Get voter info
-      const voter = await this.userService.findById(voterId);
-
-      // Prepare notification data
-      let notificationData = {};
-      if (entityType === VoteEntityType.COMMENT) {
-        const comment = await this.commentService.getCommentEntity(entityId);
-        if (comment) {
-          notificationData = { discussionId: comment.discussionId };
-        }
+      // Add entity-specific data
+      if (entityType === VoteEntityType.DISCUSSION) {
+        // For discussions, just include the discussion ID
+        notificationData.discussionId = entityId;
       } else {
-        notificationData = { discussionId: entityId };
+        // For comments, include both comment and parent discussion IDs
+        const comment = await this.commentService.getCommentEntity(entityId);
+        notificationData.commentId = entityId;
+        notificationData.discussionId = comment.discussionId;
+
+        // Add the comment content preview
+        if (comment.content) {
+          notificationData.contentPreview =
+            comment.content.length > 100 ? `${comment.content.substring(0, 100)}...` : comment.content;
+        }
       }
 
-      // Create notification
-      const notification = await this.notificationService.createNotification(
-        recipientId,
-        voterId,
-        notificationType,
-        notificationEntityType,
-        entityId,
-        notificationData,
-      );
-
-      // Send real-time notification
-      this.websocketGateway.sendNotification(recipientId, {
-        id: notification.id,
-        type: notification.type,
-        entityType: notification.entityType,
-        entityId: notification.entityId,
-        data: notification.data,
-        createdAt: notification.createdAt,
-        actor: {
-          id: voter.id,
-          username: voter.username,
-          fullName: voter.fullName,
-          avatarUrl: voter.avatarUrl,
+      await this.notificationService.createNotificationIfNotExists(
+        {
+          recipientId: recipientId,
+          actorId: voterId,
+          type: notificationType,
+          entityType: notificationEntityType,
+          entityId: entityId,
+          data: notificationData,
         },
-      });
+        60,
+      ); // Deduplicate within 1 hour window
     } catch (error) {
       this.logger.error(`Error creating vote notification: ${error.message}`, error.stack);
       // Don't throw - notifications are non-critical

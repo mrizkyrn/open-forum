@@ -1,21 +1,19 @@
+import { Injectable, Logger, UseGuards } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
 import {
-  WebSocketGateway,
-  WebSocketServer,
-  SubscribeMessage,
   OnGatewayConnection,
   OnGatewayDisconnect,
   OnGatewayInit,
-  WsException,
+  SubscribeMessage,
+  WebSocketGateway,
+  WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { Logger, Injectable, UseGuards } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { ConfigService } from '@nestjs/config';
-import { JWTConfig } from 'src/config';
 import { WsJwtGuard } from '../../common/guards/ws-jwt.guard';
-import { UserService } from 'src/modules/user/user.service';
-import { JwtPayload } from 'src/modules/auth/interfaces/jwt-payload.interface';
-import { DiscussionResponseDto } from 'src/modules/discussion/dto/discussion-response.dto';
+import { JWTConfig } from '../../config';
+import { JwtPayload } from '../../modules/auth/interfaces/jwt-payload.interface';
+import { UserService } from '../../modules/user/user.service';
 
 @WebSocketGateway({
   cors: {
@@ -115,31 +113,6 @@ export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection, OnG
     this.logger.log(`Client disconnected: ${client.id}`);
   }
 
-  // Room management
-  @UseGuards(WsJwtGuard)
-  @SubscribeMessage('joinRoom')
-  handleJoinRoom(client: Socket, payload: { roomName: string }) {
-    const { roomName } = payload;
-    const userId = client.data.user.id;
-
-    client.join(roomName);
-
-    this.logger.log(`User ${userId} joined room ${roomName}`);
-    return { success: true, room: roomName };
-  }
-
-  @UseGuards(WsJwtGuard)
-  @SubscribeMessage('leaveRoom')
-  handleLeaveRoom(client: Socket, payload: { roomName: string }) {
-    const { roomName } = payload;
-    const userId = client.data.user.id;
-
-    client.leave(roomName);
-
-    this.logger.log(`User ${userId} left room ${roomName}`);
-    return { success: true, room: roomName };
-  }
-
   // Space management
   @UseGuards(WsJwtGuard)
   @SubscribeMessage('joinSpace')
@@ -192,50 +165,31 @@ export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection, OnG
     return { success: true, discussionId };
   }
 
-  @UseGuards(WsJwtGuard)
-  @SubscribeMessage('checkUserStatus')
-  handleCheckUserStatus(client: Socket, userId: number) {
-    const isOnline = this.onlineUsers.has(userId);
-    return { success: true, userId, online: isOnline };
-  }
-
-  @UseGuards(WsJwtGuard)
-  @SubscribeMessage('getOnlineUsers')
-  handleGetOnlineUsers() {
-    const onlineUserIds = Array.from(this.onlineUsers.keys());
-    return { success: true, users: onlineUserIds };
-  }
-
   // Utility methods for other services to use
 
-  // Send notification to specific user
   sendNotification(userId: number, notification: any) {
-    this.server.to(`user:${userId}`).emit('notification', {
+    this.server.to(`user:${userId}`).emit('newNotification', {
       ...notification,
       timestamp: new Date(),
     });
     return true;
   }
 
-  // Send update to all users in a discussion
   sendDiscussionUpdate(discussionId: number, data: any) {
     this.server.to(`discussion:${discussionId}`).emit('discussionUpdate', data);
     return true;
   }
 
-  // Send a new comment notification
   sendNewComment(discussionId: number, comment: any) {
     this.server.to(`discussion:${discussionId}`).emit('newComment', comment);
     return true;
   }
 
-  // Broadcast message to all connected clients
   broadcastMessage(event: string, data: any) {
     this.server.emit(event, data);
     return true;
   }
 
-  // Check if a user is online
   isUserOnline(userId: number): boolean {
     return this.onlineUsers.has(userId);
   }

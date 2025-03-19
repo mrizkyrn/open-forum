@@ -2,7 +2,6 @@ import { BadRequestException, ForbiddenException, Injectable, Logger, NotFoundEx
 import { InjectRepository } from '@nestjs/typeorm';
 import { Between, FindOptionsWhere, Repository } from 'typeorm';
 import { Pageable } from '../../common/interfaces/pageable.interface';
-import { WebsocketGateway } from '../../core/websocket/websocket.gateway';
 import { CommentService } from '../comment/comment.service';
 import { DiscussionService } from '../discussion/discussion.service';
 import { NotificationEntityType, NotificationType } from '../notification/entities/notification.entity';
@@ -27,7 +26,6 @@ export class ReportService {
     private readonly discussionService: DiscussionService,
     private readonly commentService: CommentService,
     private readonly notificationService: NotificationService,
-    private readonly websocketGateway: WebsocketGateway,
   ) {}
 
   // ----- Report CRUD Operations -----
@@ -132,7 +130,7 @@ export class ReportService {
       const updatedReport = await this.reportRepository.save(report);
 
       // Send appropriate notifications using the unified method
-      await this.sendReportNotifications({
+      await this.createReportNotification({
         report: updatedReport,
         admin,
         targetAuthorId,
@@ -438,7 +436,7 @@ export class ReportService {
     }
   }
 
-  private async sendReportNotifications(params: {
+  private async createReportNotification(params: {
     report: Report;
     admin: User;
     targetAuthorId: number | null;
@@ -457,76 +455,71 @@ export class ReportService {
     try {
       const contentType = report.targetType === ReportTargetType.DISCUSSION ? 'post' : 'comment';
       const statusLabel = this.getStatusLabel(report.status);
-      const promises: Promise<any>[] = [];
+      const notifications: Promise<any>[] = [];
+
+      // Common notification data
+      const baseNotificationData = {
+        reportId: report.id,
+        status: report.status,
+        statusLabel,
+        targetType: report.targetType,
+        targetId: report.targetId,
+        contentType,
+        action,
+        contentPreview,
+        discussionId,
+        reasonText: report.reason?.name || '',
+      };
 
       // 1. Notify content author if requested and if we have their ID
       if (targetAuthorId && notifyAuthor) {
-        const authorMessage =
-          message ||
-          (action === 'deleted'
-            ? `Your ${contentType} has been removed for violating our community guidelines.`
-            : `Your ${contentType} was reported and has been reviewed by our moderators.`);
+        const authorMessage = message || this.getAuthorMessage(action, contentType);
 
-        const notificationType =
-          action === 'deleted' ? NotificationType.CONTENT_MODERATION : NotificationType.CONTENT_MODERATION;
-
-        const authorNotificationPromise = this.createAndSendNotification({
-          recipientId: targetAuthorId,
-          actorId: admin.id,
-          notificationType,
-          entityType: NotificationEntityType.REPORT,
-          entityId: report.id,
-          actor: admin,
-          data: {
-            status: report.status,
-            statusLabel,
-            targetType: report.targetType,
-            targetId: report.targetId,
-            action,
-            content: contentPreview,
-            message: authorMessage,
-            discussionId,
-            recipientType: 'content_author',
-          },
-        });
-
-        promises.push(authorNotificationPromise);
+        notifications.push(
+          this.notificationService.createNotificationIfNotExists(
+            {
+              recipientId: targetAuthorId,
+              actorId: admin.id,
+              type: NotificationType.CONTENT_MODERATION,
+              entityType: NotificationEntityType.REPORT,
+              entityId: report.id,
+              data: {
+                ...baseNotificationData,
+                message: authorMessage,
+                recipientType: 'content_author',
+              },
+            },
+            10,
+          ), // 10-minute deduplication window
+        );
       }
 
       // 2. Notify reporter if requested and not the same as author
       if (notifyReporter && report.reporterId !== targetAuthorId) {
-        const reporterMessage =
-          action === 'deleted'
-            ? 'Thank you for your report. The content has been removed.'
-            : `Your report has been reviewed and marked as ${statusLabel.toLowerCase()}.`;
+        const reporterMessage = this.getReporterMessage(action, statusLabel);
 
-        const reporterNotificationPromise = this.createAndSendNotification({
-          recipientId: report.reporterId,
-          actorId: admin.id,
-          notificationType: NotificationType.REPORT_RESOLUTION,
-          entityType: NotificationEntityType.REPORT,
-          entityId: report.id,
-          actor: admin,
-          data: {
-            status: report.status,
-            statusLabel,
-            targetType: report.targetType,
-            targetId: report.targetId,
-            action,
-            content: contentPreview,
-            message: reporterMessage,
-            discussionId,
-            reasonText: report.reason?.name || '',
-            recipientType: 'reporter',
-          },
-        });
-
-        promises.push(reporterNotificationPromise);
+        notifications.push(
+          this.notificationService.createNotificationIfNotExists(
+            {
+              recipientId: report.reporterId,
+              actorId: admin.id,
+              type: NotificationType.REPORT_RESOLUTION,
+              entityType: NotificationEntityType.REPORT,
+              entityId: report.id,
+              data: {
+                ...baseNotificationData,
+                message: reporterMessage,
+                recipientType: 'reporter',
+              },
+            },
+            10,
+          ), // 10-minute deduplication window
+        );
       }
 
       // Execute all notification promises in parallel
-      if (promises.length > 0) {
-        await Promise.all(promises);
+      if (notifications.length > 0) {
+        await Promise.all(notifications);
       }
     } catch (error) {
       this.logger.error(`Error sending report notifications: ${error.message}`, error.stack);
@@ -534,45 +527,15 @@ export class ReportService {
     }
   }
 
-  /**
-   * Helper method to create and send a notification
-   */
-  private async createAndSendNotification(params: {
-    recipientId: number;
-    actorId: number;
-    notificationType: NotificationType;
-    entityType: NotificationEntityType;
-    entityId: number;
-    actor: User;
-    data: any;
-  }): Promise<void> {
-    const { recipientId, actorId, notificationType, entityType, entityId, actor, data } = params;
+  private getAuthorMessage(action: string, contentType: string): string {
+    return action === 'deleted'
+      ? `Your ${contentType} has been removed for violating our community guidelines.`
+      : `Your ${contentType} was reported and has been reviewed by our moderators.`;
+  }
 
-    // Create notification in database
-    const notification = await this.notificationService.createNotification(
-      recipientId,
-      actorId,
-      notificationType,
-      entityType,
-      entityId,
-      data,
-    );
-
-    // Send real-time notification
-    this.websocketGateway.sendNotification(recipientId, {
-      id: notification.id,
-      type: notification.type,
-      entityType: notification.entityType,
-      entityId: notification.entityId,
-      data: notification.data,
-      createdAt: notification.createdAt,
-      isRead: false,
-      actor: {
-        id: actor.id,
-        username: actor.username,
-        fullName: actor.fullName,
-        avatarUrl: actor.avatarUrl,
-      },
-    });
+  private getReporterMessage(action: string, statusLabel: string): string {
+    return action === 'deleted'
+      ? 'Thank you for your report. The content has been removed.'
+      : `Your report has been reviewed and marked as ${statusLabel.toLowerCase()}.`;
   }
 }

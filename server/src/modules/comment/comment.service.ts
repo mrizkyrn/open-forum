@@ -514,79 +514,67 @@ export class CommentService {
 
   private async createCommentNotifications(comment: Comment, discussion: Discussion, currentUser: User): Promise<void> {
     try {
-      // Don't notify yourself
+      // Don't process if we don't have required data
+      if (!comment || !discussion || !currentUser) return;
+
+      // Prepare common notification data
+      const baseNotificationData = {
+        discussionId: discussion.id,
+        discussionContent: this.truncateContent(discussion.content, 100),
+        commentId: comment.id,
+        commentContent: this.truncateContent(comment.content, 100),
+        spaceId: discussion.spaceId,
+      };
+
       if (comment.parentId) {
-        // This is a reply to another comment - notify parent comment author
+        // This is a reply to another comment
         const parentComment = await this.commentRepository.findOne({
           where: { id: comment.parentId },
-          relations: ['author'],
+          select: ['id', 'authorId', 'content'],
         });
 
-        if (parentComment && parentComment.author.id !== currentUser.id) {
-          // Create notification for the parent comment author
-          const notification = await this.notificationService.createNotification(
-            parentComment.author.id,
-            currentUser.id,
-            NotificationType.REPLY_TO_COMMENT,
-            NotificationEntityType.COMMENT,
-            comment.id,
+        if (parentComment && parentComment.authorId !== currentUser.id) {
+          // Only notify if the parent author is different from current user
+          await this.notificationService.createNotificationIfNotExists(
             {
-              discussionId: comment.discussionId,
-              parentCommentContent: parentComment.content.substring(0, 100),
-              commentContent: comment.content.substring(0, 100),
+              recipientId: parentComment.authorId,
+              actorId: currentUser.id,
+              type: NotificationType.NEW_REPLY,
+              entityType: NotificationEntityType.COMMENT,
+              entityId: comment.id,
+              data: {
+                ...baseNotificationData,
+                parentCommentId: parentComment.id,
+                parentCommentContent: this.truncateContent(parentComment.content, 100),
+              },
             },
-          );
-
-          // Send real-time notification
-          this.websocketGateway.sendNotification(parentComment.author.id, {
-            id: notification.id,
-            type: notification.type,
-            entityType: notification.entityType,
-            entityId: notification.entityId,
-            data: notification.data,
-            createdAt: notification.createdAt,
-            actor: {
-              id: currentUser.id,
-              username: currentUser.username,
-              fullName: currentUser.fullName,
-              avatarUrl: currentUser.avatarUrl,
-            },
-          });
+            5,
+          ); // 5-minute deduplication window
         }
       } else {
-        // This is a top-level comment - notify discussion author
+        // This is a comment on a discussion
         if (discussion.authorId !== currentUser.id) {
-          const notification = await this.notificationService.createNotification(
-            discussion.authorId,
-            currentUser.id,
-            NotificationType.COMMENT_ON_DISCUSSION,
-            NotificationEntityType.COMMENT,
-            comment.id,
+          await this.notificationService.createNotificationIfNotExists(
             {
-              discussionId: discussion.id,
-              commentContent: comment.content.substring(0, 100),
+              recipientId: discussion.authorId,
+              actorId: currentUser.id,
+              type: NotificationType.NEW_COMMENT,
+              entityType: NotificationEntityType.COMMENT,
+              entityId: comment.id,
+              data: baseNotificationData,
             },
-          );
-
-          // Send real-time notification
-          this.websocketGateway.sendNotification(discussion.authorId, {
-            id: notification.id,
-            type: notification.type,
-            entityType: notification.entityType,
-            entityId: notification.entityId,
-            data: notification.data,
-            createdAt: notification.createdAt,
-            actor: {
-              id: currentUser.id,
-              username: currentUser.username,
-              fullName: currentUser.fullName,
-              avatarUrl: currentUser.avatarUrl,
-            },
-          });
+            5,
+          ); // 5-minute deduplication window
         }
       }
     } catch (error) {
-      this.logger.error('Failed to create comment notifications:', error);
+      this.logger.error(`Failed to create comment notifications: ${error.message}`, error.stack);
+      // Non-critical error, don't throw - comment creation can still succeed
     }
+  }
+
+  private truncateContent(content: string, maxLength: number): string {
+    if (!content) return '';
+    return content.length > maxLength ? `${content.substring(0, maxLength)}...` : content;
   }
 }

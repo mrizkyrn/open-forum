@@ -1,16 +1,28 @@
-import { Controller, Get, Patch, Body, UseGuards, Query, HttpCode, HttpStatus, Delete, Param, ParseIntPipe } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { NotificationService } from './notification.service';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { ReqUser } from '../../common/decorators/user.decorator';
-import { User } from '../user/entities/user.entity';
-import { Pageable } from '../../common/interfaces/pageable.interface';
 import {
-  NotificationResponseDto,
-  NotificationQueryDto,
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ReqUser } from '../../common/decorators/user.decorator';
+import { Pageable } from '../../common/interfaces/pageable.interface';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { User } from '../user/entities/user.entity';
+import {
   MarkNotificationReadDto,
+  NotificationQueryDto,
+  NotificationResponseDto,
   UnreadCountResponseDto,
 } from './dto/notification.dto';
+import { NotificationService } from './notification.service';
 
 @ApiBearerAuth()
 @ApiTags('Notifications')
@@ -31,7 +43,7 @@ export class NotificationController {
     @ReqUser() currentUser: User,
     @Query() queryDto: NotificationQueryDto,
   ): Promise<Pageable<NotificationResponseDto>> {
-    console.log("From controller: ", queryDto);
+    console.log('From controller: ', queryDto);
     return this.notificationService.findUserNotifications(currentUser.id, queryDto);
   }
 
