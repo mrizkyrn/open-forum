@@ -378,8 +378,11 @@ export class CommentService {
 
   // ------ Other Operations ------
 
-  async getCommentEntity(id: number): Promise<Comment> {
-    const comment = await this.commentRepository.findOne({ where: { id } });
+  async getCommentEntity(id: number, relations: string[] = []): Promise<Comment> {
+    const comment = await this.commentRepository.findOne({
+      where: { id },
+      relations,
+    });
 
     if (!comment) {
       throw new NotFoundException(`Comment with ID ${id} not found`);

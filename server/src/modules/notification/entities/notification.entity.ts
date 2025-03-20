@@ -6,11 +6,9 @@ export enum NotificationType {
   NEW_COMMENT = 'new_comment',
   NEW_DISCUSSION = 'new_discussion',
   NEW_REPLY = 'new_reply',
-  REPORT_STATUS_UPDATE = 'report_status_update',
-  CONTENT_MODERATION = 'content_moderation',
-  REPORT_RESOLUTION = 'report_resolution',
   DISCUSSION_UPVOTE = 'discussion_upvote',
   COMMENT_UPVOTE = 'comment_upvote',
+  REPORT_REVIEWED = 'report_reviewed',
 }
 
 export enum NotificationEntityType {

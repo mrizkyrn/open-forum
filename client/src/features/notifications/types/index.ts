@@ -2,14 +2,12 @@
  * Types of notifications supported by the system
  */
 export enum NotificationType {
-  COMMENT_ON_DISCUSSION = 'comment_on_discussion',
-  REPLY_TO_COMMENT = 'reply_to_comment',
-  MENTION = 'mention',
-  REPORT_STATUS_UPDATE = 'report_status_update',
-  SPACE_FOLLOW = 'space_follow',
-  CONTENT_MODERATION = 'content_moderation',
+  NEW_COMMENT = 'new_comment',
+  NEW_DISCUSSION = 'new_discussion',
+  NEW_REPLY = 'new_reply',
   DISCUSSION_UPVOTE = 'discussion_upvote',
   COMMENT_UPVOTE = 'comment_upvote',
+  REPORT_REVIEWED = 'report_reviewed',
 }
 
 /**

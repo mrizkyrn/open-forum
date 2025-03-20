@@ -204,7 +204,7 @@ const ReportsPage = () => {
       </FilterBar>
 
       {/* Reports Table */}
-      <div className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm">
+      <div className="overflow-hidden rounded-lg border border-gray-100 bg-white">
         <DataTable
           data={reportsData?.items}
           columns={columns}

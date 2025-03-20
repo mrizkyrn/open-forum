@@ -381,8 +381,17 @@ export class DiscussionService {
 
   // ------ Other Operations ------
 
-  async getDiscussionEntity(id: number): Promise<Discussion> {
-    return this.getDiscussionById(id);
+  async getDiscussionEntity(id: number, relations: string[] = []): Promise<Discussion> {
+    const discussion = await this.discussionRepository.findOne({
+      where: { id },
+      relations,
+    });
+
+    if (!discussion) {
+      throw new NotFoundException(`Discussion with ID ${id} not found`);
+    }
+
+    return discussion;
   }
 
   async incrementCommentCount(id: number, entityManager?: EntityManager): Promise<void> {

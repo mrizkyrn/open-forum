@@ -96,24 +96,17 @@ const NotificationsPage: React.FC = () => {
     },
     onError: () => toast.error('Failed to delete all notifications'),
   });
+  console.log(data);
 
   // Helper to generate the right link based on notification type
   const getNotificationLink = (notification: Notification) => {
     const { entityType, entityId, type, data } = notification;
 
     // For report notifications, navigate to different locations based on the notification
-    if (type === NotificationType.REPORT_STATUS_UPDATE || type === NotificationType.CONTENT_MODERATION) {
-      // If we have a discussionId in the data, navigate to that discussion
+    if (type === NotificationType.REPORT_REVIEWED) {
       if (data?.discussionId) {
         return `/discussions/${data.discussionId}${data?.targetId && data?.targetType === 'comment' ? `?highlight=${data.targetId}` : ''}`;
       }
-
-      // If we're a reporter, we might want to go to our reports page
-      if (type === NotificationType.REPORT_STATUS_UPDATE) {
-        return `/reports/${entityId}`;
-      }
-
-      // Fallback to reports list
       return '/reports';
     }
 
@@ -121,7 +114,6 @@ const NotificationsPage: React.FC = () => {
     if (entityType === NotificationEntityType.DISCUSSION) {
       return `/discussions/${entityId}`;
     } else if (entityType === NotificationEntityType.COMMENT) {
-      // If it's a comment, we need the discussion ID from the data
       return `/discussions/${data.discussionId}?highlight=${entityId}`;
     }
 
@@ -138,27 +130,31 @@ const NotificationsPage: React.FC = () => {
         return `${actorName} upvoted your discussion`;
       case NotificationType.COMMENT_UPVOTE:
         return `${actorName} upvoted your comment`;
-      case NotificationType.COMMENT_ON_DISCUSSION:
+      case NotificationType.NEW_COMMENT:
         return `${actorName} commented on your discussion`;
-      case NotificationType.REPLY_TO_COMMENT:
+      case NotificationType.NEW_REPLY:
         return `${actorName} replied to your comment`;
-      case NotificationType.MENTION:
-        return `${actorName} mentioned you`;
 
-      case NotificationType.REPORT_STATUS_UPDATE: {
+      case NotificationType.REPORT_REVIEWED: {
+        // If there's a specific message sent from the server, use it
+        if (data?.message) {
+          return data.message;
+        }
+
+        // Otherwise, build an appropriate message based on recipient type
         const contentType = data?.targetType === 'discussion' ? 'discussion' : 'comment';
-        const statusLabel = data?.statusLabel?.toLowerCase() || 'updated';
+        const contentDeleted = data?.contentDeleted || false;
 
-        return `Your report for a ${contentType} has been ${statusLabel}`;
+        // Different messages based on the recipient type
+        if (data?.recipientType === 'content_author') {
+          return contentDeleted
+            ? `Your ${contentType} has been removed for violating community guidelines`
+            : `Your reported ${contentType} has been reviewed by ${actorName}`;
+        } else {
+          return contentDeleted ? `Content you reported has been removed` : 'Your report has been reviewed';
+        }
       }
 
-      case NotificationType.CONTENT_MODERATION: {
-        const moderatedContentType = data?.targetType === 'discussion' ? 'discussion' : 'comment';
-        return `Your ${moderatedContentType} has been moderated by ${actorName}`;
-      }
-
-      case NotificationType.SPACE_FOLLOW:
-        return `${actorName} followed your space`;
       default:
         return `You have a new notification`;
     }
@@ -172,13 +168,15 @@ const NotificationsPage: React.FC = () => {
       case NotificationType.DISCUSSION_UPVOTE:
       case NotificationType.COMMENT_UPVOTE:
         return <ThumbsUp className="h-5 w-5 text-blue-500" />;
-      case NotificationType.COMMENT_ON_DISCUSSION:
-      case NotificationType.REPLY_TO_COMMENT:
-      case NotificationType.MENTION:
+      case NotificationType.NEW_COMMENT:
+      case NotificationType.NEW_REPLY:
         return <MessageSquare className="h-5 w-5 text-green-500" />;
 
-      case NotificationType.REPORT_STATUS_UPDATE:
-        // Different icons based on report status
+      case NotificationType.REPORT_REVIEWED: {
+        if (data?.recipientType === 'content_author' && data.contentDeleted) {
+          return <AlertTriangle className="h-5 w-5 text-red-500" />;
+        }
+
         if (data?.status === 'resolved') {
           return <ShieldCheck className="h-5 w-5 text-green-500" />;
         } else if (data?.status === 'dismissed') {
@@ -186,12 +184,8 @@ const NotificationsPage: React.FC = () => {
         } else {
           return <Shield className="h-5 w-5 text-blue-500" />;
         }
+      }
 
-      case NotificationType.CONTENT_MODERATION:
-        return <AlertTriangle className="h-5 w-5 text-red-500" />;
-
-      case NotificationType.SPACE_FOLLOW:
-        return <Bell className="h-5 w-5 text-purple-500" />;
       default:
         return <Bell className="h-5 w-5 text-gray-500" />;
     }
@@ -457,9 +451,7 @@ const NotificationsPage: React.FC = () => {
   // Helper function to render a notification item
   function renderNotificationItem(notification: Notification) {
     const isNewNotification = newlyArrivedNotifications[notification.id] === true;
-    const isReportNotification =
-      notification.type === NotificationType.REPORT_STATUS_UPDATE ||
-      notification.type === NotificationType.CONTENT_MODERATION;
+    const isReportNotification = notification.type === NotificationType.REPORT_REVIEWED;
 
     // Determine the highlight color based on notification type and status
     let highlightClass = notification.isRead ? 'bg-white' : 'bg-blue-50';
@@ -482,9 +474,7 @@ const NotificationsPage: React.FC = () => {
         <div className="flex items-start px-4 py-4 sm:px-6">
           {/* Left: Icon or avatar */}
           <div className="mr-4 flex-shrink-0">
-            {!notification.actor ||
-              notification.type === NotificationType.CONTENT_MODERATION ||
-              notification.type === NotificationType.REPORT_STATUS_UPDATE ? (
+            {!notification.actor || notification.type === NotificationType.REPORT_REVIEWED ? (
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-100">
                 {getNotificationIcon(notification)}
               </div>
@@ -501,12 +491,12 @@ const NotificationsPage: React.FC = () => {
               </p>
 
               {/* For report notifications, show the reported content excerpt */}
-              {isReportNotification && notification.data?.content && (
+              {isReportNotification && notification.data?.contentPreview && (
                 <p className="mt-1 line-clamp-1 text-sm text-gray-500">
                   <span className="font-medium">
                     {notification.data.targetType === 'discussion' ? 'Discussion' : 'Comment'}:{' '}
                   </span>
-                  "{notification.data.content}"
+                  {notification.data.contentPreview}
                 </p>
               )}
 
@@ -525,7 +515,7 @@ const NotificationsPage: React.FC = () => {
                 </span>
 
                 {/* Report status badge */}
-                {isReportNotification && notification.data?.statusLabel && (
+                {isReportNotification && notification.data?.status && (
                   <>
                     <span className="text-gray-400">•</span>
                     <span
@@ -537,7 +527,17 @@ const NotificationsPage: React.FC = () => {
                             : 'bg-blue-100 text-blue-800'
                       }`}
                     >
-                      {notification.data.statusLabel}
+                      {notification.data.status === 'resolved' ? 'Resolved' : 'Dismissed'}
+                    </span>
+                  </>
+                )}
+
+                {/* Content deleted indicator */}
+                {isReportNotification && (notification.data?.contentDeleted || notification.data?.isContentDeleted) && (
+                  <>
+                    <span className="text-gray-400">•</span>
+                    <span className="inline-flex items-center rounded-full bg-red-100 px-2 py-0.5 text-xs font-medium text-red-800">
+                      Content removed
                     </span>
                   </>
                 )}

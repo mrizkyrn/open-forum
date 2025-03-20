@@ -5,28 +5,6 @@ import { ActivityData, ActivityDataParams, DashboardStats, StatsParams } from '.
 import { User, UserRole } from '@/features/users/types';
 import { ReportStatus } from '@/features/reports/types';
 
-// export type VoteValue = -1 | 1;
-
-// export const voteApi = {
-//   async voteDiscussion(discussionId: number, value: VoteValue): Promise<Discussion> {
-//     try {
-//       const response = await apiClient.post<ApiResponse<Discussion>>(`/discussions/${discussionId}/votes`, { value });
-//       return response.data.data;
-//     } catch (error: any) {
-//       throw handleApiError(error, 'Failed to vote on discussion');
-//     }
-//   },
-
-//   async voteComment(commentId: number, value: VoteValue): Promise<Discussion> {
-//     try {
-//       const response = await apiClient.post<ApiResponse<Discussion>>(`/comments/${commentId}/votes`, { value });
-//       return response.data.data;
-//     } catch (error: any) {
-//       throw handleApiError(error, 'Failed to vote on comment');
-//     }
-//   },
-// };
-
 export interface CreateUserDto {
   username: string;
   password: string;
@@ -43,7 +21,7 @@ export interface UpdateUserDto {
 export const adminApi = {
   async getDashboardStats(params: StatsParams): Promise<DashboardStats> {
     try {
-      const response = await apiClient.get<ApiResponse<DashboardStats>>('/admin/stats', { params });
+      const response = await apiClient.get<ApiResponse<DashboardStats>>('/admin/dashboard', { params });
       return response.data.data;
     } catch (error: any) {
       throw handleApiError(error, 'Failed to fetch dashboard stats');
@@ -52,7 +30,7 @@ export const adminApi = {
 
   async getActivityData(params: ActivityDataParams): Promise<ActivityData> {
     try {
-      const response = await apiClient.get<ApiResponse<ActivityData>>('/admin/activity', { params });
+      const response = await apiClient.get<ApiResponse<ActivityData>>('/admin/dashboard/activity', { params });
       return response.data.data;
     } catch (error: any) {
       throw handleApiError(error, 'Failed to fetch activity data');
@@ -120,9 +98,18 @@ export const adminApi = {
     }
   },
 
-  async updateReportStatus(id: number, status: ReportStatus): Promise<void> {
+  async handleReport(
+    id: number,
+    data: {
+      status: ReportStatus;
+      deleteContent: boolean;
+      note?: string;
+      notifyReporter?: boolean;
+      notifyAuthor?: boolean;
+    },
+  ): Promise<void> {
     try {
-      await apiClient.put<ApiResponse<void>>(`/admin/reports/${id}/status`, { status });
+      await apiClient.post<ApiResponse<void>>(`/admin/reports/${id}/handle`, data);
     } catch (error: any) {
       throw handleApiError(error, 'Failed to update report status');
     }

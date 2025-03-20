@@ -43,13 +43,13 @@ const MainLayout = () => {
     };
 
     // Listen for notification events
-    socket.on('notification', handleNewNotification);
+    socket.on('newNotification', handleNewNotification);
 
     // Cleanup
     return () => {
       socket.off('notification', handleNewNotification);
     };
-  }, [socket, isConnected, user?.id, refetchUnreadCount, location.pathname]);
+  }, [socket, isConnected, user?.id, refetchUnreadCount, location.pathname, queryClient]);
 
   useEffect(() => {
     if (location.pathname === '/notifications') {

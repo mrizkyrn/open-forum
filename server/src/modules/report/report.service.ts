@@ -132,13 +132,12 @@ export class ReportService {
       // Send appropriate notifications using the unified method
       await this.createReportNotification({
         report: updatedReport,
-        admin,
         targetAuthorId,
         contentPreview: content,
         discussionId,
-        action: handleDto.deleteContent ? 'deleted' : 'status_updated',
+        isContentDeleted: handleDto.deleteContent,
         options: {
-          message: handleDto.message,
+          note: handleDto.note,
           notifyReporter: handleDto.notifyReporter,
           notifyAuthor: handleDto.notifyAuthor,
         },
@@ -315,18 +314,7 @@ export class ReportService {
     return { content, discussionId, targetAuthorId };
   }
 
-  private getStatusLabel(status: ReportStatus): string {
-    switch (status) {
-      case ReportStatus.RESOLVED:
-        return 'Resolved';
-      case ReportStatus.DISMISSED:
-        return 'Dismissed';
-      case ReportStatus.PENDING:
-        return 'Pending';
-      default:
-        return 'Updated';
-    }
-  }
+
 
   private async getActiveReasonById(id: number): Promise<ReportReason> {
     const reason = await this.reasonRepository.findOne({
@@ -386,7 +374,7 @@ export class ReportService {
   private async populateTargetDetails(report: Report): Promise<void> {
     try {
       if (report.targetType === ReportTargetType.DISCUSSION) {
-        const discussion = await this.discussionService.getDiscussionEntity(report.targetId);
+        const discussion = await this.discussionService.getDiscussionEntity(report.targetId, ['author']);
         report['targetDetails'] = {
           content: discussion.content,
           author: {
@@ -398,7 +386,7 @@ export class ReportService {
           createdAt: discussion.createdAt,
         };
       } else if (report.targetType === ReportTargetType.COMMENT) {
-        const comment = await this.commentService.getCommentEntity(report.targetId);
+        const comment = await this.commentService.getCommentEntity(report.targetId, ['author']);
         report['targetDetails'] = {
           content: comment.content,
           author: {
@@ -438,49 +426,44 @@ export class ReportService {
 
   private async createReportNotification(params: {
     report: Report;
-    admin: User;
     targetAuthorId: number | null;
     contentPreview: string;
     discussionId: number | null;
-    action: 'deleted' | 'status_updated';
+    isContentDeleted: boolean;
     options: {
-      message?: string;
+      note?: string;
       notifyReporter?: boolean;
       notifyAuthor?: boolean;
     };
   }): Promise<void> {
-    const { report, admin, targetAuthorId, contentPreview, discussionId, action, options } = params;
-    const { message, notifyReporter = true, notifyAuthor = true } = options;
+    const { report, targetAuthorId, contentPreview, discussionId, isContentDeleted, options } = params;
+    const { note, notifyReporter = true, notifyAuthor = true } = options;
 
     try {
-      const contentType = report.targetType === ReportTargetType.DISCUSSION ? 'post' : 'comment';
-      const statusLabel = this.getStatusLabel(report.status);
       const notifications: Promise<any>[] = [];
 
       // Common notification data
       const baseNotificationData = {
         reportId: report.id,
+        discussionId,
         status: report.status,
-        statusLabel,
         targetType: report.targetType,
         targetId: report.targetId,
-        contentType,
-        action,
         contentPreview,
-        discussionId,
+        note: note || '',
         reasonText: report.reason?.name || '',
       };
 
       // 1. Notify content author if requested and if we have their ID
       if (targetAuthorId && notifyAuthor) {
-        const authorMessage = message || this.getAuthorMessage(action, contentType);
+        const authorMessage = this.getAuthorMessage(isContentDeleted, report.targetType);
 
         notifications.push(
           this.notificationService.createNotificationIfNotExists(
             {
               recipientId: targetAuthorId,
-              actorId: admin.id,
-              type: NotificationType.CONTENT_MODERATION,
+              actorId: report.reviewerId,
+              type: NotificationType.REPORT_REVIEWED,
               entityType: NotificationEntityType.REPORT,
               entityId: report.id,
               data: {
@@ -496,14 +479,14 @@ export class ReportService {
 
       // 2. Notify reporter if requested and not the same as author
       if (notifyReporter && report.reporterId !== targetAuthorId) {
-        const reporterMessage = this.getReporterMessage(action, statusLabel);
+        const reporterMessage = this.getReporterMessage(isContentDeleted);
 
         notifications.push(
           this.notificationService.createNotificationIfNotExists(
             {
               recipientId: report.reporterId,
-              actorId: admin.id,
-              type: NotificationType.REPORT_RESOLUTION,
+              actorId: report.reviewerId,
+              type: NotificationType.REPORT_REVIEWED,
               entityType: NotificationEntityType.REPORT,
               entityId: report.id,
               data: {
@@ -527,15 +510,15 @@ export class ReportService {
     }
   }
 
-  private getAuthorMessage(action: string, contentType: string): string {
-    return action === 'deleted'
+  private getAuthorMessage(isContentDeleted: boolean, contentType: string): string {
+    return isContentDeleted
       ? `Your ${contentType} has been removed for violating our community guidelines.`
       : `Your ${contentType} was reported and has been reviewed by our moderators.`;
   }
 
-  private getReporterMessage(action: string, statusLabel: string): string {
-    return action === 'deleted'
+  private getReporterMessage(isContentDeleted: boolean): string {
+    return isContentDeleted
       ? 'Thank you for your report. The content has been removed.'
-      : `Your report has been reviewed and marked as ${statusLabel.toLowerCase()}.`;
+      : 'Your report has been reviewed.';
   }
 }

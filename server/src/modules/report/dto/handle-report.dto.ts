@@ -19,16 +19,16 @@ export class HandleReportDto {
   })
   @IsBoolean()
   @IsOptional()
-  deleteContent?: boolean = false;
+  deleteContent: boolean = false;
 
   @ApiProperty({
-    description: 'Message to include in notifications',
+    description: 'Optional message to include with the action',
     example: 'Your content violated our community guidelines',
     required: false,
   })
   @IsString()
   @IsOptional()
-  message?: string;
+  note?: string;
 
   @ApiProperty({
     description: 'Whether to notify the reporter about the action',
