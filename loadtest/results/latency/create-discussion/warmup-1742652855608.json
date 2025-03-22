@@ -1,0 +1,5245 @@
+[
+  {
+    "discussionId": 13049,
+    "serverTimestamp": 1742652866903,
+    "clientReceiveTime": 1742652866964,
+    "realtimeLatency": 61,
+    "originalTimestamp": 1742652866903
+  },
+  {
+    "discussionId": 13050,
+    "serverTimestamp": 1742652866976,
+    "clientReceiveTime": 1742652866992,
+    "realtimeLatency": 16,
+    "originalTimestamp": 1742652866976
+  },
+  {
+    "discussionId": 13051,
+    "serverTimestamp": 1742652866998,
+    "clientReceiveTime": 1742652867014,
+    "realtimeLatency": 16,
+    "originalTimestamp": 1742652866998
+  },
+  {
+    "discussionId": 13052,
+    "serverTimestamp": 1742652867747,
+    "clientReceiveTime": 1742652867783,
+    "realtimeLatency": 36,
+    "originalTimestamp": 1742652867747
+  },
+  {
+    "discussionId": 13053,
+    "serverTimestamp": 1742652868666,
+    "clientReceiveTime": 1742652868681,
+    "realtimeLatency": 15,
+    "originalTimestamp": 1742652868666
+  },
+  {
+    "discussionId": 13054,
+    "serverTimestamp": 1742652868686,
+    "clientReceiveTime": 1742652868703,
+    "realtimeLatency": 17,
+    "originalTimestamp": 1742652868686
+  },
+  {
+    "discussionId": 13055,
+    "serverTimestamp": 1742652868708,
+    "clientReceiveTime": 1742652868725,
+    "realtimeLatency": 17,
+    "originalTimestamp": 1742652868708
+  },
+  {
+    "discussionId": 13056,
+    "serverTimestamp": 1742652869744,
+    "clientReceiveTime": 1742652869763,
+    "realtimeLatency": 19,
+    "originalTimestamp": 1742652869744
+  },
+  {
+    "discussionId": 13057,
+    "serverTimestamp": 1742652869795,
+    "clientReceiveTime": 1742652869813,
+    "realtimeLatency": 18,
+    "originalTimestamp": 1742652869795
+  },
+  {
+    "discussionId": 13058,
+    "serverTimestamp": 1742652870746,
+    "clientReceiveTime": 1742652870766,
+    "realtimeLatency": 20,
+    "originalTimestamp": 1742652870746
+  },
+  {
+    "discussionId": 13059,
+    "serverTimestamp": 1742652870772,
+    "clientReceiveTime": 1742652870787,
+    "realtimeLatency": 15,
+    "originalTimestamp": 1742652870772
+  },
+  {
+    "discussionId": 13060,
+    "serverTimestamp": 1742652870794,
+    "clientReceiveTime": 1742652870810,
+    "realtimeLatency": 16,
+    "originalTimestamp": 1742652870794
+  },
+  {
+    "discussionId": 13061,
+    "serverTimestamp": 1742652871762,
+    "clientReceiveTime": 1742652871830,
+    "realtimeLatency": 68,
+    "originalTimestamp": 1742652871762
+  },
+  {
+    "discussionId": 13062,
+    "serverTimestamp": 1742652871771,
+    "clientReceiveTime": 1742652871836,
+    "realtimeLatency": 65,
+    "originalTimestamp": 1742652871771
+  },
+  {
+    "discussionId": 13063,
+    "serverTimestamp": 1742652871899,
+    "clientReceiveTime": 1742652871913,
+    "realtimeLatency": 14,
+    "originalTimestamp": 1742652871899
+  },
+  {
+    "discussionId": 13064,
+    "serverTimestamp": 1742652871927,
+    "clientReceiveTime": 1742652871944,
+    "realtimeLatency": 17,
+    "originalTimestamp": 1742652871927
+  },
+  {
+    "discussionId": 13065,
+    "serverTimestamp": 1742652871951,
+    "clientReceiveTime": 1742652871966,
+    "realtimeLatency": 15,
+    "originalTimestamp": 1742652871951
+  },
+  {
+    "discussionId": 13066,
+    "serverTimestamp": 1742652872762,
+    "clientReceiveTime": 1742652872797,
+    "realtimeLatency": 35,
+    "originalTimestamp": 1742652872762
+  },
+  {
+    "discussionId": 13067,
+    "serverTimestamp": 1742652872835,
+    "clientReceiveTime": 1742652872862,
+    "realtimeLatency": 27,
+    "originalTimestamp": 1742652872835
+  },
+  {
+    "discussionId": 13068,
+    "serverTimestamp": 1742652873782,
+    "clientReceiveTime": 1742652873809,
+    "realtimeLatency": 27,
+    "originalTimestamp": 1742652873782
+  },
+  {
+    "discussionId": 13069,
+    "serverTimestamp": 1742652873831,
+    "clientReceiveTime": 1742652873865,
+    "realtimeLatency": 34,
+    "originalTimestamp": 1742652873831
+  },
+  {
+    "discussionId": 13070,
+    "serverTimestamp": 1742652873848,
+    "clientReceiveTime": 1742652873880,
+    "realtimeLatency": 32,
+    "originalTimestamp": 1742652873848
+  },
+  {
+    "discussionId": 13071,
+    "serverTimestamp": 1742652874780,
+    "clientReceiveTime": 1742652874801,
+    "realtimeLatency": 21,
+    "originalTimestamp": 1742652874780
+  },
+  {
+    "discussionId": 13072,
+    "serverTimestamp": 1742652874810,
+    "clientReceiveTime": 1742652874840,
+    "realtimeLatency": 30,
+    "originalTimestamp": 1742652874810
+  },
+  {
+    "discussionId": 13074,
+    "serverTimestamp": 1742652874834,
+    "clientReceiveTime": 1742652874863,
+    "realtimeLatency": 29,
+    "originalTimestamp": 1742652874834
+  },
+  {
+    "discussionId": 13075,
+    "serverTimestamp": 1742652874847,
+    "clientReceiveTime": 1742652874891,
+    "realtimeLatency": 44,
+    "originalTimestamp": 1742652874847
+  },
+  {
+    "discussionId": 13073,
+    "serverTimestamp": 1742652874813,
+    "clientReceiveTime": 1742652874914,
+    "realtimeLatency": 101,
+    "originalTimestamp": 1742652874813
+  },
+  {
+    "discussionId": 13076,
+    "serverTimestamp": 1742652874878,
+    "clientReceiveTime": 1742652874920,
+    "realtimeLatency": 42,
+    "originalTimestamp": 1742652874878
+  },
+  {
+    "discussionId": 13078,
+    "serverTimestamp": 1742652874927,
+    "clientReceiveTime": 1742652874952,
+    "realtimeLatency": 25,
+    "originalTimestamp": 1742652874927
+  },
+  {
+    "discussionId": 13077,
+    "serverTimestamp": 1742652874887,
+    "clientReceiveTime": 1742652874959,
+    "realtimeLatency": 72,
+    "originalTimestamp": 1742652874887
+  },
+  {
+    "discussionId": 13079,
+    "serverTimestamp": 1742652875794,
+    "clientReceiveTime": 1742652875818,
+    "realtimeLatency": 24,
+    "originalTimestamp": 1742652875794
+  },
+  {
+    "discussionId": 13081,
+    "serverTimestamp": 1742652875824,
+    "clientReceiveTime": 1742652875851,
+    "realtimeLatency": 27,
+    "originalTimestamp": 1742652875824
+  },
+  {
+    "discussionId": 13083,
+    "serverTimestamp": 1742652875860,
+    "clientReceiveTime": 1742652875896,
+    "realtimeLatency": 36,
+    "originalTimestamp": 1742652875860
+  },
+  {
+    "discussionId": 13080,
+    "serverTimestamp": 1742652875819,
+    "clientReceiveTime": 1742652875898,
+    "realtimeLatency": 79,
+    "originalTimestamp": 1742652875819
+  },
+  {
+    "discussionId": 13082,
+    "serverTimestamp": 1742652875853,
+    "clientReceiveTime": 1742652875917,
+    "realtimeLatency": 64,
+    "originalTimestamp": 1742652875853
+  },
+  {
+    "discussionId": 13084,
+    "serverTimestamp": 1742652876031,
+    "clientReceiveTime": 1742652876068,
+    "realtimeLatency": 37,
+    "originalTimestamp": 1742652876031
+  },
+  {
+    "discussionId": 13085,
+    "serverTimestamp": 1742652876805,
+    "clientReceiveTime": 1742652876831,
+    "realtimeLatency": 26,
+    "originalTimestamp": 1742652876805
+  },
+  {
+    "discussionId": 13086,
+    "serverTimestamp": 1742652876837,
+    "clientReceiveTime": 1742652876861,
+    "realtimeLatency": 24,
+    "originalTimestamp": 1742652876837
+  },
+  {
+    "discussionId": 13087,
+    "serverTimestamp": 1742652876858,
+    "clientReceiveTime": 1742652876881,
+    "realtimeLatency": 23,
+    "originalTimestamp": 1742652876858
+  },
+  {
+    "discussionId": 13088,
+    "serverTimestamp": 1742652876866,
+    "clientReceiveTime": 1742652876897,
+    "realtimeLatency": 31,
+    "originalTimestamp": 1742652876866
+  },
+  {
+    "discussionId": 13089,
+    "serverTimestamp": 1742652876891,
+    "clientReceiveTime": 1742652876914,
+    "realtimeLatency": 23,
+    "originalTimestamp": 1742652876891
+  },
+  {
+    "discussionId": 13090,
+    "serverTimestamp": 1742652876922,
+    "clientReceiveTime": 1742652876938,
+    "realtimeLatency": 16,
+    "originalTimestamp": 1742652876922
+  },
+  {
+    "discussionId": 13091,
+    "serverTimestamp": 1742652877731,
+    "clientReceiveTime": 1742652877752,
+    "realtimeLatency": 21,
+    "originalTimestamp": 1742652877731
+  },
+  {
+    "discussionId": 13092,
+    "serverTimestamp": 1742652877758,
+    "clientReceiveTime": 1742652877773,
+    "realtimeLatency": 15,
+    "originalTimestamp": 1742652877758
+  },
+  {
+    "discussionId": 13093,
+    "serverTimestamp": 1742652877778,
+    "clientReceiveTime": 1742652877795,
+    "realtimeLatency": 17,
+    "originalTimestamp": 1742652877778
+  },
+  {
+    "discussionId": 13094,
+    "serverTimestamp": 1742652877864,
+    "clientReceiveTime": 1742652877879,
+    "realtimeLatency": 15,
+    "originalTimestamp": 1742652877864
+  },
+  {
+    "discussionId": 13095,
+    "serverTimestamp": 1742652877883,
+    "clientReceiveTime": 1742652877899,
+    "realtimeLatency": 16,
+    "originalTimestamp": 1742652877883
+  },
+  {
+    "discussionId": 13096,
+    "serverTimestamp": 1742652877904,
+    "clientReceiveTime": 1742652877921,
+    "realtimeLatency": 17,
+    "originalTimestamp": 1742652877904
+  },
+  {
+    "discussionId": 13097,
+    "serverTimestamp": 1742652877931,
+    "clientReceiveTime": 1742652877957,
+    "realtimeLatency": 26,
+    "originalTimestamp": 1742652877931
+  },
+  {
+    "discussionId": 13098,
+    "serverTimestamp": 1742652878778,
+    "clientReceiveTime": 1742652878798,
+    "realtimeLatency": 20,
+    "originalTimestamp": 1742652878778
+  },
+  {
+    "discussionId": 13099,
+    "serverTimestamp": 1742652878802,
+    "clientReceiveTime": 1742652878824,
+    "realtimeLatency": 22,
+    "originalTimestamp": 1742652878802
+  },
+  {
+    "discussionId": 13100,
+    "serverTimestamp": 1742652878818,
+    "clientReceiveTime": 1742652878844,
+    "realtimeLatency": 26,
+    "originalTimestamp": 1742652878818
+  },
+  {
+    "discussionId": 13101,
+    "serverTimestamp": 1742652878829,
+    "clientReceiveTime": 1742652878858,
+    "realtimeLatency": 29,
+    "originalTimestamp": 1742652878829
+  },
+  {
+    "discussionId": 13102,
+    "serverTimestamp": 1742652878852,
+    "clientReceiveTime": 1742652878872,
+    "realtimeLatency": 20,
+    "originalTimestamp": 1742652878852
+  },
+  {
+    "discussionId": 13103,
+    "serverTimestamp": 1742652878878,
+    "clientReceiveTime": 1742652878897,
+    "realtimeLatency": 19,
+    "originalTimestamp": 1742652878878
+  },
+  {
+    "discussionId": 13104,
+    "serverTimestamp": 1742652879828,
+    "clientReceiveTime": 1742652879854,
+    "realtimeLatency": 26,
+    "originalTimestamp": 1742652879828
+  },
+  {
+    "discussionId": 13105,
+    "serverTimestamp": 1742652879846,
+    "clientReceiveTime": 1742652879869,
+    "realtimeLatency": 23,
+    "originalTimestamp": 1742652879846
+  },
+  {
+    "discussionId": 13106,
+    "serverTimestamp": 1742652879863,
+    "clientReceiveTime": 1742652879888,
+    "realtimeLatency": 25,
+    "originalTimestamp": 1742652879863
+  },
+  {
+    "discussionId": 13107,
+    "serverTimestamp": 1742652879877,
+    "clientReceiveTime": 1742652879903,
+    "realtimeLatency": 26,
+    "originalTimestamp": 1742652879877
+  },
+  {
+    "discussionId": 13108,
+    "serverTimestamp": 1742652879898,
+    "clientReceiveTime": 1742652879924,
+    "realtimeLatency": 26,
+    "originalTimestamp": 1742652879898
+  },
+  {
+    "discussionId": 13109,
+    "serverTimestamp": 1742652879913,
+    "clientReceiveTime": 1742652879936,
+    "realtimeLatency": 23,
+    "originalTimestamp": 1742652879913
+  },
+  {
+    "discussionId": 13110,
+    "serverTimestamp": 1742652880012,
+    "clientReceiveTime": 1742652880034,
+    "realtimeLatency": 22,
+    "originalTimestamp": 1742652880012
+  },
+  {
+    "discussionId": 13111,
+    "serverTimestamp": 1742652880829,
+    "clientReceiveTime": 1742652880851,
+    "realtimeLatency": 22,
+    "originalTimestamp": 1742652880829
+  },
+  {
+    "discussionId": 13112,
+    "serverTimestamp": 1742652880859,
+    "clientReceiveTime": 1742652880883,
+    "realtimeLatency": 24,
+    "originalTimestamp": 1742652880859
+  },
+  {
+    "discussionId": 13113,
+    "serverTimestamp": 1742652880862,
+    "clientReceiveTime": 1742652880884,
+    "realtimeLatency": 22,
+    "originalTimestamp": 1742652880862
+  },
+  {
+    "discussionId": 13114,
+    "serverTimestamp": 1742652880891,
+    "clientReceiveTime": 1742652880922,
+    "realtimeLatency": 31,
+    "originalTimestamp": 1742652880891
+  },
+  {
+    "discussionId": 13115,
+    "serverTimestamp": 1742652880894,
+    "clientReceiveTime": 1742652880924,
+    "realtimeLatency": 30,
+    "originalTimestamp": 1742652880894
+  },
+  {
+    "discussionId": 13116,
+    "serverTimestamp": 1742652880930,
+    "clientReceiveTime": 1742652880947,
+    "realtimeLatency": 17,
+    "originalTimestamp": 1742652880930
+  },
+  {
+    "discussionId": 13117,
+    "serverTimestamp": 1742652880977,
+    "clientReceiveTime": 1742652880998,
+    "realtimeLatency": 21,
+    "originalTimestamp": 1742652880977
+  },
+  {
+    "discussionId": 13118,
+    "serverTimestamp": 1742652881847,
+    "clientReceiveTime": 1742652881869,
+    "realtimeLatency": 22,
+    "originalTimestamp": 1742652881847
+  },
+  {
+    "discussionId": 13119,
+    "serverTimestamp": 1742652881862,
+    "clientReceiveTime": 1742652881884,
+    "realtimeLatency": 22,
+    "originalTimestamp": 1742652881862
+  },
+  {
+    "discussionId": 13120,
+    "serverTimestamp": 1742652881879,
+    "clientReceiveTime": 1742652881901,
+    "realtimeLatency": 22,
+    "originalTimestamp": 1742652881879
+  },
+  {
+    "discussionId": 13121,
+    "serverTimestamp": 1742652881892,
+    "clientReceiveTime": 1742652881917,
+    "realtimeLatency": 25,
+    "originalTimestamp": 1742652881892
+  },
+  {
+    "discussionId": 13122,
+    "serverTimestamp": 1742652881912,
+    "clientReceiveTime": 1742652881937,
+    "realtimeLatency": 25,
+    "originalTimestamp": 1742652881912
+  },
+  {
+    "discussionId": 13123,
+    "serverTimestamp": 1742652881925,
+    "clientReceiveTime": 1742652881949,
+    "realtimeLatency": 24,
+    "originalTimestamp": 1742652881925
+  },
+  {
+    "discussionId": 13124,
+    "serverTimestamp": 1742652882014,
+    "clientReceiveTime": 1742652882030,
+    "realtimeLatency": 16,
+    "originalTimestamp": 1742652882014
+  },
+  {
+    "discussionId": 13125,
+    "serverTimestamp": 1742652882047,
+    "clientReceiveTime": 1742652882073,
+    "realtimeLatency": 26,
+    "originalTimestamp": 1742652882047
+  },
+  {
+    "discussionId": 13126,
+    "serverTimestamp": 1742652882053,
+    "clientReceiveTime": 1742652882092,
+    "realtimeLatency": 39,
+    "originalTimestamp": 1742652882053
+  },
+  {
+    "discussionId": 13127,
+    "serverTimestamp": 1742652882086,
+    "clientReceiveTime": 1742652882106,
+    "realtimeLatency": 20,
+    "originalTimestamp": 1742652882086
+  },
+  {
+    "discussionId": 13128,
+    "serverTimestamp": 1742652882815,
+    "clientReceiveTime": 1742652882836,
+    "realtimeLatency": 21,
+    "originalTimestamp": 1742652882815
+  },
+  {
+    "discussionId": 13129,
+    "serverTimestamp": 1742652882840,
+    "clientReceiveTime": 1742652882861,
+    "realtimeLatency": 21,
+    "originalTimestamp": 1742652882840
+  },
+  {
+    "discussionId": 13130,
+    "serverTimestamp": 1742652882855,
+    "clientReceiveTime": 1742652882882,
+    "realtimeLatency": 27,
+    "originalTimestamp": 1742652882855
+  },
+  {
+    "discussionId": 13131,
+    "serverTimestamp": 1742652882871,
+    "clientReceiveTime": 1742652882897,
+    "realtimeLatency": 26,
+    "originalTimestamp": 1742652882871
+  },
+  {
+    "discussionId": 13132,
+    "serverTimestamp": 1742652882891,
+    "clientReceiveTime": 1742652882911,
+    "realtimeLatency": 20,
+    "originalTimestamp": 1742652882891
+  },
+  {
+    "discussionId": 13133,
+    "serverTimestamp": 1742652882917,
+    "clientReceiveTime": 1742652882947,
+    "realtimeLatency": 30,
+    "originalTimestamp": 1742652882917
+  },
+  {
+    "discussionId": 13134,
+    "serverTimestamp": 1742652883000,
+    "clientReceiveTime": 1742652883019,
+    "realtimeLatency": 19,
+    "originalTimestamp": 1742652883000
+  },
+  {
+    "discussionId": 13136,
+    "serverTimestamp": 1742652883026,
+    "clientReceiveTime": 1742652883046,
+    "realtimeLatency": 20,
+    "originalTimestamp": 1742652883026
+  },
+  {
+    "discussionId": 13137,
+    "serverTimestamp": 1742652883054,
+    "clientReceiveTime": 1742652883080,
+    "realtimeLatency": 26,
+    "originalTimestamp": 1742652883054
+  },
+  {
+    "discussionId": 13135,
+    "serverTimestamp": 1742652883021,
+    "clientReceiveTime": 1742652883081,
+    "realtimeLatency": 60,
+    "originalTimestamp": 1742652883021
+  },
+  {
+    "discussionId": 13138,
+    "serverTimestamp": 1742652883855,
+    "clientReceiveTime": 1742652883894,
+    "realtimeLatency": 39,
+    "originalTimestamp": 1742652883855
+  },
+  {
+    "discussionId": 13139,
+    "serverTimestamp": 1742652883881,
+    "clientReceiveTime": 1742652883901,
+    "realtimeLatency": 20,
+    "originalTimestamp": 1742652883881
+  },
+  {
+    "discussionId": 13140,
+    "serverTimestamp": 1742652883905,
+    "clientReceiveTime": 1742652883920,
+    "realtimeLatency": 15,
+    "originalTimestamp": 1742652883905
+  },
+  {
+    "discussionId": 13141,
+    "serverTimestamp": 1742652883926,
+    "clientReceiveTime": 1742652883943,
+    "realtimeLatency": 17,
+    "originalTimestamp": 1742652883926
+  },
+  {
+    "discussionId": 13142,
+    "serverTimestamp": 1742652884013,
+    "clientReceiveTime": 1742652884028,
+    "realtimeLatency": 15,
+    "originalTimestamp": 1742652884013
+  },
+  {
+    "discussionId": 13143,
+    "serverTimestamp": 1742652884035,
+    "clientReceiveTime": 1742652884052,
+    "realtimeLatency": 17,
+    "originalTimestamp": 1742652884035
+  },
+  {
+    "discussionId": 13144,
+    "serverTimestamp": 1742652884060,
+    "clientReceiveTime": 1742652884077,
+    "realtimeLatency": 17,
+    "originalTimestamp": 1742652884060
+  },
+  {
+    "discussionId": 13145,
+    "serverTimestamp": 1742652884794,
+    "clientReceiveTime": 1742652884812,
+    "realtimeLatency": 18,
+    "originalTimestamp": 1742652884794
+  },
+  {
+    "discussionId": 13146,
+    "serverTimestamp": 1742652884818,
+    "clientReceiveTime": 1742652884834,
+    "realtimeLatency": 16,
+    "originalTimestamp": 1742652884818
+  },
+  {
+    "discussionId": 13147,
+    "serverTimestamp": 1742652884839,
+    "clientReceiveTime": 1742652884854,
+    "realtimeLatency": 15,
+    "originalTimestamp": 1742652884839
+  },
+  {
+    "discussionId": 13148,
+    "serverTimestamp": 1742652884880,
+    "clientReceiveTime": 1742652884896,
+    "realtimeLatency": 16,
+    "originalTimestamp": 1742652884880
+  },
+  {
+    "discussionId": 13149,
+    "serverTimestamp": 1742652884903,
+    "clientReceiveTime": 1742652884921,
+    "realtimeLatency": 18,
+    "originalTimestamp": 1742652884903
+  },
+  {
+    "discussionId": 13150,
+    "serverTimestamp": 1742652884931,
+    "clientReceiveTime": 1742652884956,
+    "realtimeLatency": 25,
+    "originalTimestamp": 1742652884931
+  },
+  {
+    "discussionId": 13151,
+    "serverTimestamp": 1742652885038,
+    "clientReceiveTime": 1742652885054,
+    "realtimeLatency": 16,
+    "originalTimestamp": 1742652885038
+  },
+  {
+    "discussionId": 13152,
+    "serverTimestamp": 1742652885061,
+    "clientReceiveTime": 1742652885076,
+    "realtimeLatency": 15,
+    "originalTimestamp": 1742652885061
+  },
+  {
+    "discussionId": 13153,
+    "serverTimestamp": 1742652885081,
+    "clientReceiveTime": 1742652885098,
+    "realtimeLatency": 17,
+    "originalTimestamp": 1742652885081
+  },
+  {
+    "discussionId": 13154,
+    "serverTimestamp": 1742652885811,
+    "clientReceiveTime": 1742652885831,
+    "realtimeLatency": 20,
+    "originalTimestamp": 1742652885811
+  },
+  {
+    "discussionId": 13155,
+    "serverTimestamp": 1742652885836,
+    "clientReceiveTime": 1742652885851,
+    "realtimeLatency": 15,
+    "originalTimestamp": 1742652885836
+  },
+  {
+    "discussionId": 13156,
+    "serverTimestamp": 1742652885856,
+    "clientReceiveTime": 1742652885881,
+    "realtimeLatency": 25,
+    "originalTimestamp": 1742652885856
+  },
+  {
+    "discussionId": 13157,
+    "serverTimestamp": 1742652885871,
+    "clientReceiveTime": 1742652885912,
+    "realtimeLatency": 41,
+    "originalTimestamp": 1742652885871
+  },
+  {
+    "discussionId": 13158,
+    "serverTimestamp": 1742652885908,
+    "clientReceiveTime": 1742652885930,
+    "realtimeLatency": 22,
+    "originalTimestamp": 1742652885908
+  },
+  {
+    "discussionId": 13159,
+    "serverTimestamp": 1742652886012,
+    "clientReceiveTime": 1742652886027,
+    "realtimeLatency": 15,
+    "originalTimestamp": 1742652886012
+  },
+  {
+    "discussionId": 13160,
+    "serverTimestamp": 1742652886033,
+    "clientReceiveTime": 1742652886049,
+    "realtimeLatency": 16,
+    "originalTimestamp": 1742652886033
+  },
+  {
+    "discussionId": 13161,
+    "serverTimestamp": 1742652886054,
+    "clientReceiveTime": 1742652886072,
+    "realtimeLatency": 18,
+    "originalTimestamp": 1742652886054
+  },
+  {
+    "discussionId": 13162,
+    "serverTimestamp": 1742652886877,
+    "clientReceiveTime": 1742652886888,
+    "realtimeLatency": 11,
+    "originalTimestamp": 1742652886877
+  },
+  {
+    "discussionId": 13163,
+    "serverTimestamp": 1742652886893,
+    "clientReceiveTime": 1742652886915,
+    "realtimeLatency": 22,
+    "originalTimestamp": 1742652886893
+  },
+  {
+    "discussionId": 13165,
+    "serverTimestamp": 1742652886920,
+    "clientReceiveTime": 1742652886943,
+    "realtimeLatency": 23,
+    "originalTimestamp": 1742652886920
+  },
+  {
+    "discussionId": 13164,
+    "serverTimestamp": 1742652886911,
+    "clientReceiveTime": 1742652886951,
+    "realtimeLatency": 40,
+    "originalTimestamp": 1742652886911
+  },
+  {
+    "discussionId": 13166,
+    "serverTimestamp": 1742652887032,
+    "clientReceiveTime": 1742652887047,
+    "realtimeLatency": 15,
+    "originalTimestamp": 1742652887032
+  },
+  {
+    "discussionId": 13167,
+    "serverTimestamp": 1742652887052,
+    "clientReceiveTime": 1742652887067,
+    "realtimeLatency": 15,
+    "originalTimestamp": 1742652887052
+  },
+  {
+    "discussionId": 13168,
+    "serverTimestamp": 1742652887073,
+    "clientReceiveTime": 1742652887088,
+    "realtimeLatency": 15,
+    "originalTimestamp": 1742652887073
+  },
+  {
+    "discussionId": 13169,
+    "serverTimestamp": 1742652887886,
+    "clientReceiveTime": 1742652887916,
+    "realtimeLatency": 30,
+    "originalTimestamp": 1742652887886
+  },
+  {
+    "discussionId": 13170,
+    "serverTimestamp": 1742652887922,
+    "clientReceiveTime": 1742652887942,
+    "realtimeLatency": 20,
+    "originalTimestamp": 1742652887922
+  },
+  {
+    "discussionId": 13171,
+    "serverTimestamp": 1742652887924,
+    "clientReceiveTime": 1742652887958,
+    "realtimeLatency": 34,
+    "originalTimestamp": 1742652887924
+  },
+  {
+    "discussionId": 13172,
+    "serverTimestamp": 1742652887951,
+    "clientReceiveTime": 1742652887970,
+    "realtimeLatency": 19,
+    "originalTimestamp": 1742652887951
+  },
+  {
+    "discussionId": 13173,
+    "serverTimestamp": 1742652887978,
+    "clientReceiveTime": 1742652887993,
+    "realtimeLatency": 15,
+    "originalTimestamp": 1742652887978
+  },
+  {
+    "discussionId": 13174,
+    "serverTimestamp": 1742652888048,
+    "clientReceiveTime": 1742652888061,
+    "realtimeLatency": 13,
+    "originalTimestamp": 1742652888048
+  },
+  {
+    "discussionId": 13175,
+    "serverTimestamp": 1742652888066,
+    "clientReceiveTime": 1742652888084,
+    "realtimeLatency": 18,
+    "originalTimestamp": 1742652888066
+  },
+  {
+    "discussionId": 13176,
+    "serverTimestamp": 1742652888090,
+    "clientReceiveTime": 1742652888105,
+    "realtimeLatency": 15,
+    "originalTimestamp": 1742652888090
+  },
+  {
+    "discussionId": 13177,
+    "serverTimestamp": 1742652888811,
+    "clientReceiveTime": 1742652888824,
+    "realtimeLatency": 13,
+    "originalTimestamp": 1742652888811
+  },
+  {
+    "discussionId": 13178,
+    "serverTimestamp": 1742652888829,
+    "clientReceiveTime": 1742652888845,
+    "realtimeLatency": 16,
+    "originalTimestamp": 1742652888829
+  },
+  {
+    "discussionId": 13179,
+    "serverTimestamp": 1742652888850,
+    "clientReceiveTime": 1742652888866,
+    "realtimeLatency": 16,
+    "originalTimestamp": 1742652888850
+  },
+  {
+    "discussionId": 13180,
+    "serverTimestamp": 1742652888918,
+    "clientReceiveTime": 1742652888944,
+    "realtimeLatency": 26,
+    "originalTimestamp": 1742652888918
+  },
+  {
+    "discussionId": 13181,
+    "serverTimestamp": 1742652888961,
+    "clientReceiveTime": 1742652888981,
+    "realtimeLatency": 20,
+    "originalTimestamp": 1742652888961
+  },
+  {
+    "discussionId": 13182,
+    "serverTimestamp": 1742652889052,
+    "clientReceiveTime": 1742652889066,
+    "realtimeLatency": 14,
+    "originalTimestamp": 1742652889052
+  },
+  {
+    "discussionId": 13183,
+    "serverTimestamp": 1742652889072,
+    "clientReceiveTime": 1742652889089,
+    "realtimeLatency": 17,
+    "originalTimestamp": 1742652889072
+  },
+  {
+    "discussionId": 13184,
+    "serverTimestamp": 1742652889094,
+    "clientReceiveTime": 1742652889114,
+    "realtimeLatency": 20,
+    "originalTimestamp": 1742652889094
+  },
+  {
+    "discussionId": 13185,
+    "serverTimestamp": 1742652889109,
+    "clientReceiveTime": 1742652889128,
+    "realtimeLatency": 19,
+    "originalTimestamp": 1742652889109
+  },
+  {
+    "discussionId": 13186,
+    "serverTimestamp": 1742652889144,
+    "clientReceiveTime": 1742652889159,
+    "realtimeLatency": 15,
+    "originalTimestamp": 1742652889144
+  },
+  {
+    "discussionId": 13187,
+    "serverTimestamp": 1742652889166,
+    "clientReceiveTime": 1742652889180,
+    "realtimeLatency": 14,
+    "originalTimestamp": 1742652889166
+  },
+  {
+    "discussionId": 13188,
+    "serverTimestamp": 1742652889829,
+    "clientReceiveTime": 1742652889853,
+    "realtimeLatency": 24,
+    "originalTimestamp": 1742652889829
+  },
+  {
+    "discussionId": 13190,
+    "serverTimestamp": 1742652889930,
+    "clientReceiveTime": 1742652889948,
+    "realtimeLatency": 18,
+    "originalTimestamp": 1742652889930
+  },
+  {
+    "discussionId": 13191,
+    "serverTimestamp": 1742652889954,
+    "clientReceiveTime": 1742652889981,
+    "realtimeLatency": 27,
+    "originalTimestamp": 1742652889954
+  },
+  {
+    "discussionId": 13189,
+    "serverTimestamp": 1742652889928,
+    "clientReceiveTime": 1742652889988,
+    "realtimeLatency": 60,
+    "originalTimestamp": 1742652889928
+  },
+  {
+    "discussionId": 13192,
+    "serverTimestamp": 1742652889993,
+    "clientReceiveTime": 1742652890024,
+    "realtimeLatency": 31,
+    "originalTimestamp": 1742652889993
+  },
+  {
+    "discussionId": 13193,
+    "serverTimestamp": 1742652890079,
+    "clientReceiveTime": 1742652890107,
+    "realtimeLatency": 28,
+    "originalTimestamp": 1742652890079
+  },
+  {
+    "discussionId": 13194,
+    "serverTimestamp": 1742652890082,
+    "clientReceiveTime": 1742652890108,
+    "realtimeLatency": 26,
+    "originalTimestamp": 1742652890082
+  },
+  {
+    "discussionId": 13195,
+    "serverTimestamp": 1742652890117,
+    "clientReceiveTime": 1742652890148,
+    "realtimeLatency": 31,
+    "originalTimestamp": 1742652890117
+  },
+  {
+    "discussionId": 13196,
+    "serverTimestamp": 1742652890119,
+    "clientReceiveTime": 1742652890150,
+    "realtimeLatency": 31,
+    "originalTimestamp": 1742652890119
+  },
+  {
+    "discussionId": 13197,
+    "serverTimestamp": 1742652890161,
+    "clientReceiveTime": 1742652890200,
+    "realtimeLatency": 39,
+    "originalTimestamp": 1742652890161
+  },
+  {
+    "discussionId": 13198,
+    "serverTimestamp": 1742652890163,
+    "clientReceiveTime": 1742652890201,
+    "realtimeLatency": 38,
+    "originalTimestamp": 1742652890163
+  },
+  {
+    "discussionId": 13199,
+    "serverTimestamp": 1742652890912,
+    "clientReceiveTime": 1742652890932,
+    "realtimeLatency": 20,
+    "originalTimestamp": 1742652890912
+  },
+  {
+    "discussionId": 13200,
+    "serverTimestamp": 1742652890941,
+    "clientReceiveTime": 1742652890969,
+    "realtimeLatency": 28,
+    "originalTimestamp": 1742652890941
+  },
+  {
+    "discussionId": 13201,
+    "serverTimestamp": 1742652890942,
+    "clientReceiveTime": 1742652890970,
+    "realtimeLatency": 28,
+    "originalTimestamp": 1742652890942
+  },
+  {
+    "discussionId": 13202,
+    "serverTimestamp": 1742652890978,
+    "clientReceiveTime": 1742652891003,
+    "realtimeLatency": 25,
+    "originalTimestamp": 1742652890978
+  },
+  {
+    "discussionId": 13204,
+    "serverTimestamp": 1742652891017,
+    "clientReceiveTime": 1742652891055,
+    "realtimeLatency": 38,
+    "originalTimestamp": 1742652891017
+  },
+  {
+    "discussionId": 13203,
+    "serverTimestamp": 1742652890980,
+    "clientReceiveTime": 1742652891066,
+    "realtimeLatency": 86,
+    "originalTimestamp": 1742652890980
+  },
+  {
+    "discussionId": 13205,
+    "serverTimestamp": 1742652891074,
+    "clientReceiveTime": 1742652891100,
+    "realtimeLatency": 26,
+    "originalTimestamp": 1742652891074
+  },
+  {
+    "discussionId": 13206,
+    "serverTimestamp": 1742652891076,
+    "clientReceiveTime": 1742652891101,
+    "realtimeLatency": 25,
+    "originalTimestamp": 1742652891076
+  },
+  {
+    "discussionId": 13207,
+    "serverTimestamp": 1742652891107,
+    "clientReceiveTime": 1742652891126,
+    "realtimeLatency": 19,
+    "originalTimestamp": 1742652891107
+  },
+  {
+    "discussionId": 13208,
+    "serverTimestamp": 1742652891133,
+    "clientReceiveTime": 1742652891158,
+    "realtimeLatency": 25,
+    "originalTimestamp": 1742652891133
+  },
+  {
+    "discussionId": 13209,
+    "serverTimestamp": 1742652891135,
+    "clientReceiveTime": 1742652891160,
+    "realtimeLatency": 25,
+    "originalTimestamp": 1742652891135
+  },
+  {
+    "discussionId": 13210,
+    "serverTimestamp": 1742652891166,
+    "clientReceiveTime": 1742652891183,
+    "realtimeLatency": 17,
+    "originalTimestamp": 1742652891166
+  },
+  {
+    "discussionId": 13211,
+    "serverTimestamp": 1742652891191,
+    "clientReceiveTime": 1742652891204,
+    "realtimeLatency": 13,
+    "originalTimestamp": 1742652891191
+  },
+  {
+    "discussionId": 13212,
+    "serverTimestamp": 1742652891862,
+    "clientReceiveTime": 1742652891888,
+    "realtimeLatency": 26,
+    "originalTimestamp": 1742652891862
+  },
+  {
+    "discussionId": 13213,
+    "serverTimestamp": 1742652891898,
+    "clientReceiveTime": 1742652891921,
+    "realtimeLatency": 23,
+    "originalTimestamp": 1742652891898
+  },
+  {
+    "discussionId": 13214,
+    "serverTimestamp": 1742652891942,
+    "clientReceiveTime": 1742652891956,
+    "realtimeLatency": 14,
+    "originalTimestamp": 1742652891942
+  },
+  {
+    "discussionId": 13215,
+    "serverTimestamp": 1742652891962,
+    "clientReceiveTime": 1742652891976,
+    "realtimeLatency": 14,
+    "originalTimestamp": 1742652891962
+  },
+  {
+    "discussionId": 13216,
+    "serverTimestamp": 1742652891981,
+    "clientReceiveTime": 1742652891999,
+    "realtimeLatency": 18,
+    "originalTimestamp": 1742652891981
+  },
+  {
+    "discussionId": 13217,
+    "serverTimestamp": 1742652892068,
+    "clientReceiveTime": 1742652892088,
+    "realtimeLatency": 20,
+    "originalTimestamp": 1742652892068
+  },
+  {
+    "discussionId": 13218,
+    "serverTimestamp": 1742652892088,
+    "clientReceiveTime": 1742652892116,
+    "realtimeLatency": 28,
+    "originalTimestamp": 1742652892088
+  },
+  {
+    "discussionId": 13219,
+    "serverTimestamp": 1742652892093,
+    "clientReceiveTime": 1742652892118,
+    "realtimeLatency": 25,
+    "originalTimestamp": 1742652892093
+  },
+  {
+    "discussionId": 13220,
+    "serverTimestamp": 1742652892124,
+    "clientReceiveTime": 1742652892151,
+    "realtimeLatency": 27,
+    "originalTimestamp": 1742652892124
+  },
+  {
+    "discussionId": 13221,
+    "serverTimestamp": 1742652892126,
+    "clientReceiveTime": 1742652892153,
+    "realtimeLatency": 27,
+    "originalTimestamp": 1742652892126
+  },
+  {
+    "discussionId": 13222,
+    "serverTimestamp": 1742652892158,
+    "clientReceiveTime": 1742652892174,
+    "realtimeLatency": 16,
+    "originalTimestamp": 1742652892158
+  },
+  {
+    "discussionId": 13223,
+    "serverTimestamp": 1742652892909,
+    "clientReceiveTime": 1742652892922,
+    "realtimeLatency": 13,
+    "originalTimestamp": 1742652892909
+  },
+  {
+    "discussionId": 13224,
+    "serverTimestamp": 1742652892927,
+    "clientReceiveTime": 1742652892941,
+    "realtimeLatency": 14,
+    "originalTimestamp": 1742652892927
+  },
+  {
+    "discussionId": 13225,
+    "serverTimestamp": 1742652892946,
+    "clientReceiveTime": 1742652892968,
+    "realtimeLatency": 22,
+    "originalTimestamp": 1742652892946
+  },
+  {
+    "discussionId": 13226,
+    "serverTimestamp": 1742652892963,
+    "clientReceiveTime": 1742652892980,
+    "realtimeLatency": 17,
+    "originalTimestamp": 1742652892963
+  },
+  {
+    "discussionId": 13227,
+    "serverTimestamp": 1742652892985,
+    "clientReceiveTime": 1742652893000,
+    "realtimeLatency": 15,
+    "originalTimestamp": 1742652892985
+  },
+  {
+    "discussionId": 13228,
+    "serverTimestamp": 1742652893010,
+    "clientReceiveTime": 1742652893026,
+    "realtimeLatency": 16,
+    "originalTimestamp": 1742652893010
+  },
+  {
+    "discussionId": 13229,
+    "serverTimestamp": 1742652893085,
+    "clientReceiveTime": 1742652893108,
+    "realtimeLatency": 23,
+    "originalTimestamp": 1742652893085
+  },
+  {
+    "discussionId": 13230,
+    "serverTimestamp": 1742652893087,
+    "clientReceiveTime": 1742652893110,
+    "realtimeLatency": 23,
+    "originalTimestamp": 1742652893087
+  },
+  {
+    "discussionId": 13231,
+    "serverTimestamp": 1742652893116,
+    "clientReceiveTime": 1742652893143,
+    "realtimeLatency": 27,
+    "originalTimestamp": 1742652893116
+  },
+  {
+    "discussionId": 13232,
+    "serverTimestamp": 1742652893119,
+    "clientReceiveTime": 1742652893145,
+    "realtimeLatency": 26,
+    "originalTimestamp": 1742652893119
+  },
+  {
+    "discussionId": 13233,
+    "serverTimestamp": 1742652893150,
+    "clientReceiveTime": 1742652893175,
+    "realtimeLatency": 25,
+    "originalTimestamp": 1742652893150
+  },
+  {
+    "discussionId": 13234,
+    "serverTimestamp": 1742652893152,
+    "clientReceiveTime": 1742652893177,
+    "realtimeLatency": 25,
+    "originalTimestamp": 1742652893152
+  },
+  {
+    "discussionId": 13235,
+    "serverTimestamp": 1742652893844,
+    "clientReceiveTime": 1742652893867,
+    "realtimeLatency": 23,
+    "originalTimestamp": 1742652893844
+  },
+  {
+    "discussionId": 13236,
+    "serverTimestamp": 1742652893871,
+    "clientReceiveTime": 1742652893890,
+    "realtimeLatency": 19,
+    "originalTimestamp": 1742652893871
+  },
+  {
+    "discussionId": 13237,
+    "serverTimestamp": 1742652893895,
+    "clientReceiveTime": 1742652893911,
+    "realtimeLatency": 16,
+    "originalTimestamp": 1742652893895
+  },
+  {
+    "discussionId": 13238,
+    "serverTimestamp": 1742652893928,
+    "clientReceiveTime": 1742652893950,
+    "realtimeLatency": 22,
+    "originalTimestamp": 1742652893928
+  },
+  {
+    "discussionId": 13239,
+    "serverTimestamp": 1742652893960,
+    "clientReceiveTime": 1742652893978,
+    "realtimeLatency": 18,
+    "originalTimestamp": 1742652893960
+  },
+  {
+    "discussionId": 13241,
+    "serverTimestamp": 1742652894088,
+    "clientReceiveTime": 1742652894107,
+    "realtimeLatency": 19,
+    "originalTimestamp": 1742652894088
+  },
+  {
+    "discussionId": 13240,
+    "serverTimestamp": 1742652894086,
+    "clientReceiveTime": 1742652894121,
+    "realtimeLatency": 35,
+    "originalTimestamp": 1742652894086
+  },
+  {
+    "discussionId": 13242,
+    "serverTimestamp": 1742652894115,
+    "clientReceiveTime": 1742652894134,
+    "realtimeLatency": 19,
+    "originalTimestamp": 1742652894115
+  },
+  {
+    "discussionId": 13243,
+    "serverTimestamp": 1742652894138,
+    "clientReceiveTime": 1742652894155,
+    "realtimeLatency": 17,
+    "originalTimestamp": 1742652894138
+  },
+  {
+    "discussionId": 13244,
+    "serverTimestamp": 1742652894853,
+    "clientReceiveTime": 1742652894873,
+    "realtimeLatency": 20,
+    "originalTimestamp": 1742652894853
+  },
+  {
+    "discussionId": 13245,
+    "serverTimestamp": 1742652894877,
+    "clientReceiveTime": 1742652894893,
+    "realtimeLatency": 16,
+    "originalTimestamp": 1742652894877
+  },
+  {
+    "discussionId": 13246,
+    "serverTimestamp": 1742652894900,
+    "clientReceiveTime": 1742652894915,
+    "realtimeLatency": 15,
+    "originalTimestamp": 1742652894900
+  },
+  {
+    "discussionId": 13247,
+    "serverTimestamp": 1742652895002,
+    "clientReceiveTime": 1742652895034,
+    "realtimeLatency": 32,
+    "originalTimestamp": 1742652895002
+  },
+  {
+    "discussionId": 13248,
+    "serverTimestamp": 1742652895116,
+    "clientReceiveTime": 1742652895139,
+    "realtimeLatency": 23,
+    "originalTimestamp": 1742652895116
+  },
+  {
+    "discussionId": 13249,
+    "serverTimestamp": 1742652895114,
+    "clientReceiveTime": 1742652895141,
+    "realtimeLatency": 27,
+    "originalTimestamp": 1742652895114
+  },
+  {
+    "discussionId": 13250,
+    "serverTimestamp": 1742652895147,
+    "clientReceiveTime": 1742652895171,
+    "realtimeLatency": 24,
+    "originalTimestamp": 1742652895147
+  },
+  {
+    "discussionId": 13251,
+    "serverTimestamp": 1742652895149,
+    "clientReceiveTime": 1742652895173,
+    "realtimeLatency": 24,
+    "originalTimestamp": 1742652895149
+  },
+  {
+    "discussionId": 13252,
+    "serverTimestamp": 1742652895180,
+    "clientReceiveTime": 1742652895204,
+    "realtimeLatency": 24,
+    "originalTimestamp": 1742652895180
+  },
+  {
+    "discussionId": 13253,
+    "serverTimestamp": 1742652895182,
+    "clientReceiveTime": 1742652895206,
+    "realtimeLatency": 24,
+    "originalTimestamp": 1742652895182
+  },
+  {
+    "discussionId": 13254,
+    "serverTimestamp": 1742652895929,
+    "clientReceiveTime": 1742652895950,
+    "realtimeLatency": 21,
+    "originalTimestamp": 1742652895929
+  },
+  {
+    "discussionId": 13255,
+    "serverTimestamp": 1742652895954,
+    "clientReceiveTime": 1742652895969,
+    "realtimeLatency": 15,
+    "originalTimestamp": 1742652895954
+  },
+  {
+    "discussionId": 13256,
+    "serverTimestamp": 1742652895977,
+    "clientReceiveTime": 1742652896012,
+    "realtimeLatency": 35,
+    "originalTimestamp": 1742652895977
+  },
+  {
+    "discussionId": 13257,
+    "serverTimestamp": 1742652895979,
+    "clientReceiveTime": 1742652896013,
+    "realtimeLatency": 34,
+    "originalTimestamp": 1742652895979
+  },
+  {
+    "discussionId": 13259,
+    "serverTimestamp": 1742652896018,
+    "clientReceiveTime": 1742652896043,
+    "realtimeLatency": 25,
+    "originalTimestamp": 1742652896018
+  },
+  {
+    "discussionId": 13258,
+    "serverTimestamp": 1742652896002,
+    "clientReceiveTime": 1742652896072,
+    "realtimeLatency": 70,
+    "originalTimestamp": 1742652896002
+  },
+  {
+    "discussionId": 13261,
+    "serverTimestamp": 1742652896051,
+    "clientReceiveTime": 1742652896085,
+    "realtimeLatency": 34,
+    "originalTimestamp": 1742652896051
+  },
+  {
+    "discussionId": 13260,
+    "serverTimestamp": 1742652896044,
+    "clientReceiveTime": 1742652896090,
+    "realtimeLatency": 46,
+    "originalTimestamp": 1742652896044
+  },
+  {
+    "discussionId": 13262,
+    "serverTimestamp": 1742652896118,
+    "clientReceiveTime": 1742652896138,
+    "realtimeLatency": 20,
+    "originalTimestamp": 1742652896118
+  },
+  {
+    "discussionId": 13264,
+    "serverTimestamp": 1742652896144,
+    "clientReceiveTime": 1742652896181,
+    "realtimeLatency": 37,
+    "originalTimestamp": 1742652896144
+  },
+  {
+    "discussionId": 13263,
+    "serverTimestamp": 1742652896135,
+    "clientReceiveTime": 1742652896187,
+    "realtimeLatency": 52,
+    "originalTimestamp": 1742652896135
+  },
+  {
+    "discussionId": 13265,
+    "serverTimestamp": 1742652896187,
+    "clientReceiveTime": 1742652896203,
+    "realtimeLatency": 16,
+    "originalTimestamp": 1742652896187
+  },
+  {
+    "discussionId": 13266,
+    "serverTimestamp": 1742652896880,
+    "clientReceiveTime": 1742652896903,
+    "realtimeLatency": 23,
+    "originalTimestamp": 1742652896880
+  },
+  {
+    "discussionId": 13267,
+    "serverTimestamp": 1742652896908,
+    "clientReceiveTime": 1742652896922,
+    "realtimeLatency": 14,
+    "originalTimestamp": 1742652896908
+  },
+  {
+    "discussionId": 13268,
+    "serverTimestamp": 1742652896926,
+    "clientReceiveTime": 1742652896943,
+    "realtimeLatency": 17,
+    "originalTimestamp": 1742652896926
+  },
+  {
+    "discussionId": 13269,
+    "serverTimestamp": 1742652896969,
+    "clientReceiveTime": 1742652896983,
+    "realtimeLatency": 14,
+    "originalTimestamp": 1742652896969
+  },
+  {
+    "discussionId": 13270,
+    "serverTimestamp": 1742652896989,
+    "clientReceiveTime": 1742652897004,
+    "realtimeLatency": 15,
+    "originalTimestamp": 1742652896989
+  },
+  {
+    "discussionId": 13271,
+    "serverTimestamp": 1742652897009,
+    "clientReceiveTime": 1742652897025,
+    "realtimeLatency": 16,
+    "originalTimestamp": 1742652897009
+  },
+  {
+    "discussionId": 13273,
+    "serverTimestamp": 1742652897060,
+    "clientReceiveTime": 1742652897078,
+    "realtimeLatency": 18,
+    "originalTimestamp": 1742652897060
+  },
+  {
+    "discussionId": 13272,
+    "serverTimestamp": 1742652897058,
+    "clientReceiveTime": 1742652897097,
+    "realtimeLatency": 39,
+    "originalTimestamp": 1742652897058
+  },
+  {
+    "discussionId": 13274,
+    "serverTimestamp": 1742652897086,
+    "clientReceiveTime": 1742652897109,
+    "realtimeLatency": 23,
+    "originalTimestamp": 1742652897086
+  },
+  {
+    "discussionId": 13275,
+    "serverTimestamp": 1742652897114,
+    "clientReceiveTime": 1742652897133,
+    "realtimeLatency": 19,
+    "originalTimestamp": 1742652897114
+  },
+  {
+    "discussionId": 13276,
+    "serverTimestamp": 1742652897138,
+    "clientReceiveTime": 1742652897156,
+    "realtimeLatency": 18,
+    "originalTimestamp": 1742652897138
+  },
+  {
+    "discussionId": 13277,
+    "serverTimestamp": 1742652897162,
+    "clientReceiveTime": 1742652897176,
+    "realtimeLatency": 14,
+    "originalTimestamp": 1742652897162
+  },
+  {
+    "discussionId": 13278,
+    "serverTimestamp": 1742652897181,
+    "clientReceiveTime": 1742652897195,
+    "realtimeLatency": 14,
+    "originalTimestamp": 1742652897181
+  },
+  {
+    "discussionId": 13279,
+    "serverTimestamp": 1742652897236,
+    "clientReceiveTime": 1742652897259,
+    "realtimeLatency": 23,
+    "originalTimestamp": 1742652897236
+  },
+  {
+    "discussionId": 13280,
+    "serverTimestamp": 1742652897920,
+    "clientReceiveTime": 1742652897940,
+    "realtimeLatency": 20,
+    "originalTimestamp": 1742652897920
+  },
+  {
+    "discussionId": 13281,
+    "serverTimestamp": 1742652897945,
+    "clientReceiveTime": 1742652897967,
+    "realtimeLatency": 22,
+    "originalTimestamp": 1742652897945
+  },
+  {
+    "discussionId": 13282,
+    "serverTimestamp": 1742652897957,
+    "clientReceiveTime": 1742652897982,
+    "realtimeLatency": 25,
+    "originalTimestamp": 1742652897957
+  },
+  {
+    "discussionId": 13283,
+    "serverTimestamp": 1742652897977,
+    "clientReceiveTime": 1742652898000,
+    "realtimeLatency": 23,
+    "originalTimestamp": 1742652897977
+  },
+  {
+    "discussionId": 13284,
+    "serverTimestamp": 1742652897990,
+    "clientReceiveTime": 1742652898010,
+    "realtimeLatency": 20,
+    "originalTimestamp": 1742652897990
+  },
+  {
+    "discussionId": 13285,
+    "serverTimestamp": 1742652898015,
+    "clientReceiveTime": 1742652898031,
+    "realtimeLatency": 16,
+    "originalTimestamp": 1742652898015
+  },
+  {
+    "discussionId": 13286,
+    "serverTimestamp": 1742652898065,
+    "clientReceiveTime": 1742652898085,
+    "realtimeLatency": 20,
+    "originalTimestamp": 1742652898065
+  },
+  {
+    "discussionId": 13288,
+    "serverTimestamp": 1742652898091,
+    "clientReceiveTime": 1742652898113,
+    "realtimeLatency": 22,
+    "originalTimestamp": 1742652898091
+  },
+  {
+    "discussionId": 13287,
+    "serverTimestamp": 1742652898068,
+    "clientReceiveTime": 1742652898132,
+    "realtimeLatency": 64,
+    "originalTimestamp": 1742652898068
+  },
+  {
+    "discussionId": 13290,
+    "serverTimestamp": 1742652898126,
+    "clientReceiveTime": 1742652898153,
+    "realtimeLatency": 27,
+    "originalTimestamp": 1742652898126
+  },
+  {
+    "discussionId": 13289,
+    "serverTimestamp": 1742652898117,
+    "clientReceiveTime": 1742652898164,
+    "realtimeLatency": 47,
+    "originalTimestamp": 1742652898117
+  },
+  {
+    "discussionId": 13291,
+    "serverTimestamp": 1742652898231,
+    "clientReceiveTime": 1742652898245,
+    "realtimeLatency": 14,
+    "originalTimestamp": 1742652898231
+  },
+  {
+    "discussionId": 13292,
+    "serverTimestamp": 1742652898258,
+    "clientReceiveTime": 1742652898271,
+    "realtimeLatency": 13,
+    "originalTimestamp": 1742652898258
+  },
+  {
+    "discussionId": 13293,
+    "serverTimestamp": 1742652898278,
+    "clientReceiveTime": 1742652898295,
+    "realtimeLatency": 17,
+    "originalTimestamp": 1742652898278
+  },
+  {
+    "discussionId": 13294,
+    "serverTimestamp": 1742652898962,
+    "clientReceiveTime": 1742652898982,
+    "realtimeLatency": 20,
+    "originalTimestamp": 1742652898962
+  },
+  {
+    "discussionId": 13295,
+    "serverTimestamp": 1742652898987,
+    "clientReceiveTime": 1742652899010,
+    "realtimeLatency": 23,
+    "originalTimestamp": 1742652898987
+  },
+  {
+    "discussionId": 13296,
+    "serverTimestamp": 1742652899000,
+    "clientReceiveTime": 1742652899031,
+    "realtimeLatency": 31,
+    "originalTimestamp": 1742652899000
+  },
+  {
+    "discussionId": 13297,
+    "serverTimestamp": 1742652899016,
+    "clientReceiveTime": 1742652899042,
+    "realtimeLatency": 26,
+    "originalTimestamp": 1742652899016
+  },
+  {
+    "discussionId": 13298,
+    "serverTimestamp": 1742652899125,
+    "clientReceiveTime": 1742652899146,
+    "realtimeLatency": 21,
+    "originalTimestamp": 1742652899125
+  },
+  {
+    "discussionId": 13300,
+    "serverTimestamp": 1742652899155,
+    "clientReceiveTime": 1742652899176,
+    "realtimeLatency": 21,
+    "originalTimestamp": 1742652899155
+  },
+  {
+    "discussionId": 13301,
+    "serverTimestamp": 1742652899182,
+    "clientReceiveTime": 1742652899214,
+    "realtimeLatency": 32,
+    "originalTimestamp": 1742652899182
+  },
+  {
+    "discussionId": 13299,
+    "serverTimestamp": 1742652899148,
+    "clientReceiveTime": 1742652899221,
+    "realtimeLatency": 73,
+    "originalTimestamp": 1742652899148
+  },
+  {
+    "discussionId": 13302,
+    "serverTimestamp": 1742652899255,
+    "clientReceiveTime": 1742652899279,
+    "realtimeLatency": 24,
+    "originalTimestamp": 1742652899255
+  },
+  {
+    "discussionId": 13304,
+    "serverTimestamp": 1742652899287,
+    "clientReceiveTime": 1742652899308,
+    "realtimeLatency": 21,
+    "originalTimestamp": 1742652899287
+  },
+  {
+    "discussionId": 13303,
+    "serverTimestamp": 1742652899279,
+    "clientReceiveTime": 1742652899330,
+    "realtimeLatency": 51,
+    "originalTimestamp": 1742652899279
+  },
+  {
+    "discussionId": 13305,
+    "serverTimestamp": 1742652899320,
+    "clientReceiveTime": 1742652899342,
+    "realtimeLatency": 22,
+    "originalTimestamp": 1742652899320
+  },
+  {
+    "discussionId": 13306,
+    "serverTimestamp": 1742652899911,
+    "clientReceiveTime": 1742652899930,
+    "realtimeLatency": 19,
+    "originalTimestamp": 1742652899911
+  },
+  {
+    "discussionId": 13307,
+    "serverTimestamp": 1742652899934,
+    "clientReceiveTime": 1742652899954,
+    "realtimeLatency": 20,
+    "originalTimestamp": 1742652899934
+  },
+  {
+    "discussionId": 13308,
+    "serverTimestamp": 1742652899949,
+    "clientReceiveTime": 1742652899972,
+    "realtimeLatency": 23,
+    "originalTimestamp": 1742652899949
+  },
+  {
+    "discussionId": 13309,
+    "serverTimestamp": 1742652899959,
+    "clientReceiveTime": 1742652899987,
+    "realtimeLatency": 28,
+    "originalTimestamp": 1742652899959
+  },
+  {
+    "discussionId": 13310,
+    "serverTimestamp": 1742652899982,
+    "clientReceiveTime": 1742652900000,
+    "realtimeLatency": 18,
+    "originalTimestamp": 1742652899982
+  },
+  {
+    "discussionId": 13311,
+    "serverTimestamp": 1742652900005,
+    "clientReceiveTime": 1742652900022,
+    "realtimeLatency": 17,
+    "originalTimestamp": 1742652900005
+  },
+  {
+    "discussionId": 13312,
+    "serverTimestamp": 1742652900146,
+    "clientReceiveTime": 1742652900183,
+    "realtimeLatency": 37,
+    "originalTimestamp": 1742652900146
+  },
+  {
+    "discussionId": 13314,
+    "serverTimestamp": 1742652900150,
+    "clientReceiveTime": 1742652900184,
+    "realtimeLatency": 34,
+    "originalTimestamp": 1742652900150
+  },
+  {
+    "discussionId": 13315,
+    "serverTimestamp": 1742652900174,
+    "clientReceiveTime": 1742652900218,
+    "realtimeLatency": 44,
+    "originalTimestamp": 1742652900174
+  },
+  {
+    "discussionId": 13313,
+    "serverTimestamp": 1742652900148,
+    "clientReceiveTime": 1742652900229,
+    "realtimeLatency": 81,
+    "originalTimestamp": 1742652900148
+  },
+  {
+    "discussionId": 13316,
+    "serverTimestamp": 1742652900194,
+    "clientReceiveTime": 1742652900243,
+    "realtimeLatency": 49,
+    "originalTimestamp": 1742652900194
+  },
+  {
+    "discussionId": 13317,
+    "serverTimestamp": 1742652900198,
+    "clientReceiveTime": 1742652900245,
+    "realtimeLatency": 47,
+    "originalTimestamp": 1742652900198
+  },
+  {
+    "discussionId": 13318,
+    "serverTimestamp": 1742652900236,
+    "clientReceiveTime": 1742652900269,
+    "realtimeLatency": 33,
+    "originalTimestamp": 1742652900236
+  },
+  {
+    "discussionId": 13319,
+    "serverTimestamp": 1742652900252,
+    "clientReceiveTime": 1742652900291,
+    "realtimeLatency": 39,
+    "originalTimestamp": 1742652900252
+  },
+  {
+    "discussionId": 13320,
+    "serverTimestamp": 1742652900257,
+    "clientReceiveTime": 1742652900293,
+    "realtimeLatency": 36,
+    "originalTimestamp": 1742652900257
+  },
+  {
+    "discussionId": 13321,
+    "serverTimestamp": 1742652900284,
+    "clientReceiveTime": 1742652900306,
+    "realtimeLatency": 22,
+    "originalTimestamp": 1742652900284
+  },
+  {
+    "discussionId": 13322,
+    "serverTimestamp": 1742652900910,
+    "clientReceiveTime": 1742652900941,
+    "realtimeLatency": 31,
+    "originalTimestamp": 1742652900910
+  },
+  {
+    "discussionId": 13323,
+    "serverTimestamp": 1742652901015,
+    "clientReceiveTime": 1742652901039,
+    "realtimeLatency": 24,
+    "originalTimestamp": 1742652901015
+  },
+  {
+    "discussionId": 13324,
+    "serverTimestamp": 1742652901046,
+    "clientReceiveTime": 1742652901068,
+    "realtimeLatency": 22,
+    "originalTimestamp": 1742652901046
+  },
+  {
+    "discussionId": 13325,
+    "serverTimestamp": 1742652901095,
+    "clientReceiveTime": 1742652901109,
+    "realtimeLatency": 14,
+    "originalTimestamp": 1742652901095
+  },
+  {
+    "discussionId": 13326,
+    "serverTimestamp": 1742652901115,
+    "clientReceiveTime": 1742652901132,
+    "realtimeLatency": 17,
+    "originalTimestamp": 1742652901115
+  },
+  {
+    "discussionId": 13327,
+    "serverTimestamp": 1742652901136,
+    "clientReceiveTime": 1742652901158,
+    "realtimeLatency": 22,
+    "originalTimestamp": 1742652901136
+  },
+  {
+    "discussionId": 13328,
+    "serverTimestamp": 1742652901159,
+    "clientReceiveTime": 1742652901186,
+    "realtimeLatency": 27,
+    "originalTimestamp": 1742652901159
+  },
+  {
+    "discussionId": 13330,
+    "serverTimestamp": 1742652901244,
+    "clientReceiveTime": 1742652901266,
+    "realtimeLatency": 22,
+    "originalTimestamp": 1742652901244
+  },
+  {
+    "discussionId": 13329,
+    "serverTimestamp": 1742652901236,
+    "clientReceiveTime": 1742652901268,
+    "realtimeLatency": 32,
+    "originalTimestamp": 1742652901236
+  },
+  {
+    "discussionId": 13331,
+    "serverTimestamp": 1742652901273,
+    "clientReceiveTime": 1742652901288,
+    "realtimeLatency": 15,
+    "originalTimestamp": 1742652901273
+  },
+  {
+    "discussionId": 13332,
+    "serverTimestamp": 1742652901294,
+    "clientReceiveTime": 1742652901307,
+    "realtimeLatency": 13,
+    "originalTimestamp": 1742652901294
+  },
+  {
+    "discussionId": 13333,
+    "serverTimestamp": 1742652901961,
+    "clientReceiveTime": 1742652901981,
+    "realtimeLatency": 20,
+    "originalTimestamp": 1742652901961
+  },
+  {
+    "discussionId": 13334,
+    "serverTimestamp": 1742652901985,
+    "clientReceiveTime": 1742652902006,
+    "realtimeLatency": 21,
+    "originalTimestamp": 1742652901985
+  },
+  {
+    "discussionId": 13335,
+    "serverTimestamp": 1742652902003,
+    "clientReceiveTime": 1742652902024,
+    "realtimeLatency": 21,
+    "originalTimestamp": 1742652902003
+  },
+  {
+    "discussionId": 13336,
+    "serverTimestamp": 1742652902011,
+    "clientReceiveTime": 1742652902038,
+    "realtimeLatency": 27,
+    "originalTimestamp": 1742652902011
+  },
+  {
+    "discussionId": 13337,
+    "serverTimestamp": 1742652902032,
+    "clientReceiveTime": 1742652902050,
+    "realtimeLatency": 18,
+    "originalTimestamp": 1742652902032
+  },
+  {
+    "discussionId": 13338,
+    "serverTimestamp": 1742652902055,
+    "clientReceiveTime": 1742652902070,
+    "realtimeLatency": 15,
+    "originalTimestamp": 1742652902055
+  },
+  {
+    "discussionId": 13339,
+    "serverTimestamp": 1742652902097,
+    "clientReceiveTime": 1742652902122,
+    "realtimeLatency": 25,
+    "originalTimestamp": 1742652902097
+  },
+  {
+    "discussionId": 13340,
+    "serverTimestamp": 1742652902099,
+    "clientReceiveTime": 1742652902124,
+    "realtimeLatency": 25,
+    "originalTimestamp": 1742652902099
+  },
+  {
+    "discussionId": 13341,
+    "serverTimestamp": 1742652902129,
+    "clientReceiveTime": 1742652902155,
+    "realtimeLatency": 26,
+    "originalTimestamp": 1742652902129
+  },
+  {
+    "discussionId": 13342,
+    "serverTimestamp": 1742652902132,
+    "clientReceiveTime": 1742652902157,
+    "realtimeLatency": 25,
+    "originalTimestamp": 1742652902132
+  },
+  {
+    "discussionId": 13343,
+    "serverTimestamp": 1742652902165,
+    "clientReceiveTime": 1742652902190,
+    "realtimeLatency": 25,
+    "originalTimestamp": 1742652902165
+  },
+  {
+    "discussionId": 13344,
+    "serverTimestamp": 1742652902166,
+    "clientReceiveTime": 1742652902192,
+    "realtimeLatency": 26,
+    "originalTimestamp": 1742652902166
+  },
+  {
+    "discussionId": 13345,
+    "serverTimestamp": 1742652902239,
+    "clientReceiveTime": 1742652902254,
+    "realtimeLatency": 15,
+    "originalTimestamp": 1742652902239
+  },
+  {
+    "discussionId": 13346,
+    "serverTimestamp": 1742652902259,
+    "clientReceiveTime": 1742652902274,
+    "realtimeLatency": 15,
+    "originalTimestamp": 1742652902259
+  },
+  {
+    "discussionId": 13347,
+    "serverTimestamp": 1742652902279,
+    "clientReceiveTime": 1742652902294,
+    "realtimeLatency": 15,
+    "originalTimestamp": 1742652902279
+  },
+  {
+    "discussionId": 13348,
+    "serverTimestamp": 1742652902928,
+    "clientReceiveTime": 1742652902973,
+    "realtimeLatency": 45,
+    "originalTimestamp": 1742652902928
+  },
+  {
+    "discussionId": 13350,
+    "serverTimestamp": 1742652902956,
+    "clientReceiveTime": 1742652902979,
+    "realtimeLatency": 23,
+    "originalTimestamp": 1742652902956
+  },
+  {
+    "discussionId": 13351,
+    "serverTimestamp": 1742652902985,
+    "clientReceiveTime": 1742652903006,
+    "realtimeLatency": 21,
+    "originalTimestamp": 1742652902985
+  },
+  {
+    "discussionId": 13349,
+    "serverTimestamp": 1742652902951,
+    "clientReceiveTime": 1742652903017,
+    "realtimeLatency": 66,
+    "originalTimestamp": 1742652902951
+  },
+  {
+    "discussionId": 13352,
+    "serverTimestamp": 1742652903015,
+    "clientReceiveTime": 1742652903030,
+    "realtimeLatency": 15,
+    "originalTimestamp": 1742652903015
+  },
+  {
+    "discussionId": 13353,
+    "serverTimestamp": 1742652903051,
+    "clientReceiveTime": 1742652903073,
+    "realtimeLatency": 22,
+    "originalTimestamp": 1742652903051
+  },
+  {
+    "discussionId": 13354,
+    "serverTimestamp": 1742652903112,
+    "clientReceiveTime": 1742652903128,
+    "realtimeLatency": 16,
+    "originalTimestamp": 1742652903112
+  },
+  {
+    "discussionId": 13355,
+    "serverTimestamp": 1742652903134,
+    "clientReceiveTime": 1742652903152,
+    "realtimeLatency": 18,
+    "originalTimestamp": 1742652903134
+  },
+  {
+    "discussionId": 13356,
+    "serverTimestamp": 1742652903157,
+    "clientReceiveTime": 1742652903174,
+    "realtimeLatency": 17,
+    "originalTimestamp": 1742652903157
+  },
+  {
+    "discussionId": 13357,
+    "serverTimestamp": 1742652903189,
+    "clientReceiveTime": 1742652903211,
+    "realtimeLatency": 22,
+    "originalTimestamp": 1742652903189
+  },
+  {
+    "discussionId": 13359,
+    "serverTimestamp": 1742652903217,
+    "clientReceiveTime": 1742652903250,
+    "realtimeLatency": 33,
+    "originalTimestamp": 1742652903217
+  },
+  {
+    "discussionId": 13358,
+    "serverTimestamp": 1742652903197,
+    "clientReceiveTime": 1742652903296,
+    "realtimeLatency": 99,
+    "originalTimestamp": 1742652903197
+  },
+  {
+    "discussionId": 13360,
+    "serverTimestamp": 1742652903263,
+    "clientReceiveTime": 1742652903312,
+    "realtimeLatency": 49,
+    "originalTimestamp": 1742652903263
+  },
+  {
+    "discussionId": 13361,
+    "serverTimestamp": 1742652903303,
+    "clientReceiveTime": 1742652903344,
+    "realtimeLatency": 41,
+    "originalTimestamp": 1742652903303
+  },
+  {
+    "discussionId": 13362,
+    "serverTimestamp": 1742652903928,
+    "clientReceiveTime": 1742652903943,
+    "realtimeLatency": 15,
+    "originalTimestamp": 1742652903928
+  },
+  {
+    "discussionId": 13363,
+    "serverTimestamp": 1742652903947,
+    "clientReceiveTime": 1742652903962,
+    "realtimeLatency": 15,
+    "originalTimestamp": 1742652903947
+  },
+  {
+    "discussionId": 13364,
+    "serverTimestamp": 1742652903968,
+    "clientReceiveTime": 1742652903982,
+    "realtimeLatency": 14,
+    "originalTimestamp": 1742652903968
+  },
+  {
+    "discussionId": 13365,
+    "serverTimestamp": 1742652904023,
+    "clientReceiveTime": 1742652904038,
+    "realtimeLatency": 15,
+    "originalTimestamp": 1742652904023
+  },
+  {
+    "discussionId": 13366,
+    "serverTimestamp": 1742652904043,
+    "clientReceiveTime": 1742652904058,
+    "realtimeLatency": 15,
+    "originalTimestamp": 1742652904043
+  },
+  {
+    "discussionId": 13367,
+    "serverTimestamp": 1742652904063,
+    "clientReceiveTime": 1742652904077,
+    "realtimeLatency": 14,
+    "originalTimestamp": 1742652904063
+  },
+  {
+    "discussionId": 13368,
+    "serverTimestamp": 1742652904113,
+    "clientReceiveTime": 1742652904137,
+    "realtimeLatency": 24,
+    "originalTimestamp": 1742652904113
+  },
+  {
+    "discussionId": 13369,
+    "serverTimestamp": 1742652904115,
+    "clientReceiveTime": 1742652904140,
+    "realtimeLatency": 25,
+    "originalTimestamp": 1742652904115
+  },
+  {
+    "discussionId": 13370,
+    "serverTimestamp": 1742652904146,
+    "clientReceiveTime": 1742652904172,
+    "realtimeLatency": 26,
+    "originalTimestamp": 1742652904146
+  },
+  {
+    "discussionId": 13371,
+    "serverTimestamp": 1742652904147,
+    "clientReceiveTime": 1742652904174,
+    "realtimeLatency": 27,
+    "originalTimestamp": 1742652904147
+  },
+  {
+    "discussionId": 13372,
+    "serverTimestamp": 1742652904182,
+    "clientReceiveTime": 1742652904206,
+    "realtimeLatency": 24,
+    "originalTimestamp": 1742652904182
+  },
+  {
+    "discussionId": 13373,
+    "serverTimestamp": 1742652904183,
+    "clientReceiveTime": 1742652904208,
+    "realtimeLatency": 25,
+    "originalTimestamp": 1742652904183
+  },
+  {
+    "discussionId": 13374,
+    "serverTimestamp": 1742652904258,
+    "clientReceiveTime": 1742652904272,
+    "realtimeLatency": 14,
+    "originalTimestamp": 1742652904258
+  },
+  {
+    "discussionId": 13375,
+    "serverTimestamp": 1742652904277,
+    "clientReceiveTime": 1742652904290,
+    "realtimeLatency": 13,
+    "originalTimestamp": 1742652904277
+  },
+  {
+    "discussionId": 13376,
+    "serverTimestamp": 1742652904295,
+    "clientReceiveTime": 1742652904309,
+    "realtimeLatency": 14,
+    "originalTimestamp": 1742652904295
+  },
+  {
+    "discussionId": 13377,
+    "serverTimestamp": 1742652904943,
+    "clientReceiveTime": 1742652904971,
+    "realtimeLatency": 28,
+    "originalTimestamp": 1742652904943
+  },
+  {
+    "discussionId": 13378,
+    "serverTimestamp": 1742652904994,
+    "clientReceiveTime": 1742652905019,
+    "realtimeLatency": 25,
+    "originalTimestamp": 1742652904994
+  },
+  {
+    "discussionId": 13379,
+    "serverTimestamp": 1742652905035,
+    "clientReceiveTime": 1742652905059,
+    "realtimeLatency": 24,
+    "originalTimestamp": 1742652905035
+  },
+  {
+    "discussionId": 13380,
+    "serverTimestamp": 1742652905112,
+    "clientReceiveTime": 1742652905126,
+    "realtimeLatency": 14,
+    "originalTimestamp": 1742652905112
+  },
+  {
+    "discussionId": 13381,
+    "serverTimestamp": 1742652905131,
+    "clientReceiveTime": 1742652905147,
+    "realtimeLatency": 16,
+    "originalTimestamp": 1742652905131
+  },
+  {
+    "discussionId": 13382,
+    "serverTimestamp": 1742652905152,
+    "clientReceiveTime": 1742652905167,
+    "realtimeLatency": 15,
+    "originalTimestamp": 1742652905152
+  },
+  {
+    "discussionId": 13383,
+    "serverTimestamp": 1742652905188,
+    "clientReceiveTime": 1742652905216,
+    "realtimeLatency": 28,
+    "originalTimestamp": 1742652905188
+  },
+  {
+    "discussionId": 13384,
+    "serverTimestamp": 1742652905190,
+    "clientReceiveTime": 1742652905218,
+    "realtimeLatency": 28,
+    "originalTimestamp": 1742652905190
+  },
+  {
+    "discussionId": 13385,
+    "serverTimestamp": 1742652905225,
+    "clientReceiveTime": 1742652905255,
+    "realtimeLatency": 30,
+    "originalTimestamp": 1742652905225
+  },
+  {
+    "discussionId": 13386,
+    "serverTimestamp": 1742652905228,
+    "clientReceiveTime": 1742652905257,
+    "realtimeLatency": 29,
+    "originalTimestamp": 1742652905228
+  },
+  {
+    "discussionId": 13387,
+    "serverTimestamp": 1742652905263,
+    "clientReceiveTime": 1742652905290,
+    "realtimeLatency": 27,
+    "originalTimestamp": 1742652905263
+  },
+  {
+    "discussionId": 13388,
+    "serverTimestamp": 1742652905265,
+    "clientReceiveTime": 1742652905292,
+    "realtimeLatency": 27,
+    "originalTimestamp": 1742652905265
+  },
+  {
+    "discussionId": 13389,
+    "serverTimestamp": 1742652905331,
+    "clientReceiveTime": 1742652905346,
+    "realtimeLatency": 15,
+    "originalTimestamp": 1742652905331
+  },
+  {
+    "discussionId": 13390,
+    "serverTimestamp": 1742652905352,
+    "clientReceiveTime": 1742652905379,
+    "realtimeLatency": 27,
+    "originalTimestamp": 1742652905352
+  },
+  {
+    "discussionId": 13391,
+    "serverTimestamp": 1742652905365,
+    "clientReceiveTime": 1742652905388,
+    "realtimeLatency": 23,
+    "originalTimestamp": 1742652905365
+  },
+  {
+    "discussionId": 13392,
+    "serverTimestamp": 1742652905396,
+    "clientReceiveTime": 1742652905411,
+    "realtimeLatency": 15,
+    "originalTimestamp": 1742652905396
+  },
+  {
+    "discussionId": 13393,
+    "serverTimestamp": 1742652905945,
+    "clientReceiveTime": 1742652905970,
+    "realtimeLatency": 25,
+    "originalTimestamp": 1742652905945
+  },
+  {
+    "discussionId": 13394,
+    "serverTimestamp": 1742652905974,
+    "clientReceiveTime": 1742652905988,
+    "realtimeLatency": 14,
+    "originalTimestamp": 1742652905974
+  },
+  {
+    "discussionId": 13395,
+    "serverTimestamp": 1742652905993,
+    "clientReceiveTime": 1742652906008,
+    "realtimeLatency": 15,
+    "originalTimestamp": 1742652905993
+  },
+  {
+    "discussionId": 13396,
+    "serverTimestamp": 1742652906024,
+    "clientReceiveTime": 1742652906038,
+    "realtimeLatency": 14,
+    "originalTimestamp": 1742652906024
+  },
+  {
+    "discussionId": 13397,
+    "serverTimestamp": 1742652906044,
+    "clientReceiveTime": 1742652906059,
+    "realtimeLatency": 15,
+    "originalTimestamp": 1742652906044
+  },
+  {
+    "discussionId": 13398,
+    "serverTimestamp": 1742652906064,
+    "clientReceiveTime": 1742652906079,
+    "realtimeLatency": 15,
+    "originalTimestamp": 1742652906064
+  },
+  {
+    "discussionId": 13399,
+    "serverTimestamp": 1742652906116,
+    "clientReceiveTime": 1742652906131,
+    "realtimeLatency": 15,
+    "originalTimestamp": 1742652906116
+  },
+  {
+    "discussionId": 13400,
+    "serverTimestamp": 1742652906135,
+    "clientReceiveTime": 1742652906151,
+    "realtimeLatency": 16,
+    "originalTimestamp": 1742652906135
+  },
+  {
+    "discussionId": 13401,
+    "serverTimestamp": 1742652906156,
+    "clientReceiveTime": 1742652906172,
+    "realtimeLatency": 16,
+    "originalTimestamp": 1742652906156
+  },
+  {
+    "discussionId": 13402,
+    "serverTimestamp": 1742652906190,
+    "clientReceiveTime": 1742652906209,
+    "realtimeLatency": 19,
+    "originalTimestamp": 1742652906190
+  },
+  {
+    "discussionId": 13403,
+    "serverTimestamp": 1742652906214,
+    "clientReceiveTime": 1742652906228,
+    "realtimeLatency": 14,
+    "originalTimestamp": 1742652906214
+  },
+  {
+    "discussionId": 13404,
+    "serverTimestamp": 1742652906232,
+    "clientReceiveTime": 1742652906248,
+    "realtimeLatency": 16,
+    "originalTimestamp": 1742652906232
+  },
+  {
+    "discussionId": 13405,
+    "serverTimestamp": 1742652906273,
+    "clientReceiveTime": 1742652906294,
+    "realtimeLatency": 21,
+    "originalTimestamp": 1742652906273
+  },
+  {
+    "discussionId": 13406,
+    "serverTimestamp": 1742652906281,
+    "clientReceiveTime": 1742652906309,
+    "realtimeLatency": 28,
+    "originalTimestamp": 1742652906281
+  },
+  {
+    "discussionId": 13407,
+    "serverTimestamp": 1742652906303,
+    "clientReceiveTime": 1742652906327,
+    "realtimeLatency": 24,
+    "originalTimestamp": 1742652906303
+  },
+  {
+    "discussionId": 13408,
+    "serverTimestamp": 1742652906321,
+    "clientReceiveTime": 1742652906344,
+    "realtimeLatency": 23,
+    "originalTimestamp": 1742652906321
+  },
+  {
+    "discussionId": 13409,
+    "serverTimestamp": 1742652906334,
+    "clientReceiveTime": 1742652906359,
+    "realtimeLatency": 25,
+    "originalTimestamp": 1742652906334
+  },
+  {
+    "discussionId": 13410,
+    "serverTimestamp": 1742652906353,
+    "clientReceiveTime": 1742652906371,
+    "realtimeLatency": 18,
+    "originalTimestamp": 1742652906353
+  },
+  {
+    "discussionId": 13411,
+    "serverTimestamp": 1742652906961,
+    "clientReceiveTime": 1742652906986,
+    "realtimeLatency": 25,
+    "originalTimestamp": 1742652906961
+  },
+  {
+    "discussionId": 13413,
+    "serverTimestamp": 1742652906991,
+    "clientReceiveTime": 1742652907009,
+    "realtimeLatency": 18,
+    "originalTimestamp": 1742652906991
+  },
+  {
+    "discussionId": 13414,
+    "serverTimestamp": 1742652907015,
+    "clientReceiveTime": 1742652907051,
+    "realtimeLatency": 36,
+    "originalTimestamp": 1742652907015
+  },
+  {
+    "discussionId": 13412,
+    "serverTimestamp": 1742652906984,
+    "clientReceiveTime": 1742652907054,
+    "realtimeLatency": 70,
+    "originalTimestamp": 1742652906984
+  },
+  {
+    "discussionId": 13415,
+    "serverTimestamp": 1742652907052,
+    "clientReceiveTime": 1742652907080,
+    "realtimeLatency": 28,
+    "originalTimestamp": 1742652907052
+  },
+  {
+    "discussionId": 13417,
+    "serverTimestamp": 1742652907087,
+    "clientReceiveTime": 1742652907111,
+    "realtimeLatency": 24,
+    "originalTimestamp": 1742652907087
+  },
+  {
+    "discussionId": 13416,
+    "serverTimestamp": 1742652907076,
+    "clientReceiveTime": 1742652907126,
+    "realtimeLatency": 50,
+    "originalTimestamp": 1742652907076
+  },
+  {
+    "discussionId": 13418,
+    "serverTimestamp": 1742652907121,
+    "clientReceiveTime": 1742652907147,
+    "realtimeLatency": 26,
+    "originalTimestamp": 1742652907121
+  },
+  {
+    "discussionId": 13419,
+    "serverTimestamp": 1742652907217,
+    "clientReceiveTime": 1742652907242,
+    "realtimeLatency": 25,
+    "originalTimestamp": 1742652907217
+  },
+  {
+    "discussionId": 13420,
+    "serverTimestamp": 1742652907219,
+    "clientReceiveTime": 1742652907244,
+    "realtimeLatency": 25,
+    "originalTimestamp": 1742652907219
+  },
+  {
+    "discussionId": 13421,
+    "serverTimestamp": 1742652907249,
+    "clientReceiveTime": 1742652907274,
+    "realtimeLatency": 25,
+    "originalTimestamp": 1742652907249
+  },
+  {
+    "discussionId": 13422,
+    "serverTimestamp": 1742652907251,
+    "clientReceiveTime": 1742652907276,
+    "realtimeLatency": 25,
+    "originalTimestamp": 1742652907251
+  },
+  {
+    "discussionId": 13423,
+    "serverTimestamp": 1742652907282,
+    "clientReceiveTime": 1742652907326,
+    "realtimeLatency": 44,
+    "originalTimestamp": 1742652907282
+  },
+  {
+    "discussionId": 13424,
+    "serverTimestamp": 1742652907288,
+    "clientReceiveTime": 1742652907328,
+    "realtimeLatency": 40,
+    "originalTimestamp": 1742652907288
+  },
+  {
+    "discussionId": 13426,
+    "serverTimestamp": 1742652907302,
+    "clientReceiveTime": 1742652907337,
+    "realtimeLatency": 35,
+    "originalTimestamp": 1742652907302
+  },
+  {
+    "discussionId": 13427,
+    "serverTimestamp": 1742652907345,
+    "clientReceiveTime": 1742652907361,
+    "realtimeLatency": 16,
+    "originalTimestamp": 1742652907345
+  },
+  {
+    "discussionId": 13428,
+    "serverTimestamp": 1742652907367,
+    "clientReceiveTime": 1742652907390,
+    "realtimeLatency": 23,
+    "originalTimestamp": 1742652907367
+  },
+  {
+    "discussionId": 13425,
+    "serverTimestamp": 1742652907299,
+    "clientReceiveTime": 1742652907392,
+    "realtimeLatency": 93,
+    "originalTimestamp": 1742652907299
+  },
+  {
+    "discussionId": 13429,
+    "serverTimestamp": 1742652907396,
+    "clientReceiveTime": 1742652907411,
+    "realtimeLatency": 15,
+    "originalTimestamp": 1742652907396
+  },
+  {
+    "discussionId": 13430,
+    "serverTimestamp": 1742652907417,
+    "clientReceiveTime": 1742652907433,
+    "realtimeLatency": 16,
+    "originalTimestamp": 1742652907417
+  },
+  {
+    "discussionId": 13431,
+    "serverTimestamp": 1742652908029,
+    "clientReceiveTime": 1742652908045,
+    "realtimeLatency": 16,
+    "originalTimestamp": 1742652908029
+  },
+  {
+    "discussionId": 13433,
+    "serverTimestamp": 1742652908051,
+    "clientReceiveTime": 1742652908070,
+    "realtimeLatency": 19,
+    "originalTimestamp": 1742652908051
+  },
+  {
+    "discussionId": 13432,
+    "serverTimestamp": 1742652908043,
+    "clientReceiveTime": 1742652908087,
+    "realtimeLatency": 44,
+    "originalTimestamp": 1742652908043
+  },
+  {
+    "discussionId": 13434,
+    "serverTimestamp": 1742652908078,
+    "clientReceiveTime": 1742652908097,
+    "realtimeLatency": 19,
+    "originalTimestamp": 1742652908078
+  },
+  {
+    "discussionId": 13435,
+    "serverTimestamp": 1742652908215,
+    "clientReceiveTime": 1742652908241,
+    "realtimeLatency": 26,
+    "originalTimestamp": 1742652908215
+  },
+  {
+    "discussionId": 13436,
+    "serverTimestamp": 1742652908217,
+    "clientReceiveTime": 1742652908248,
+    "realtimeLatency": 31,
+    "originalTimestamp": 1742652908217
+  },
+  {
+    "discussionId": 13437,
+    "serverTimestamp": 1742652908247,
+    "clientReceiveTime": 1742652908275,
+    "realtimeLatency": 28,
+    "originalTimestamp": 1742652908247
+  },
+  {
+    "discussionId": 13438,
+    "serverTimestamp": 1742652908253,
+    "clientReceiveTime": 1742652908280,
+    "realtimeLatency": 27,
+    "originalTimestamp": 1742652908253
+  },
+  {
+    "discussionId": 13439,
+    "serverTimestamp": 1742652908280,
+    "clientReceiveTime": 1742652908326,
+    "realtimeLatency": 46,
+    "originalTimestamp": 1742652908280
+  },
+  {
+    "discussionId": 13440,
+    "serverTimestamp": 1742652908288,
+    "clientReceiveTime": 1742652908333,
+    "realtimeLatency": 45,
+    "originalTimestamp": 1742652908288
+  },
+  {
+    "discussionId": 13441,
+    "serverTimestamp": 1742652908300,
+    "clientReceiveTime": 1742652908343,
+    "realtimeLatency": 43,
+    "originalTimestamp": 1742652908300
+  },
+  {
+    "discussionId": 13442,
+    "serverTimestamp": 1742652908319,
+    "clientReceiveTime": 1742652908355,
+    "realtimeLatency": 36,
+    "originalTimestamp": 1742652908319
+  },
+  {
+    "discussionId": 13443,
+    "serverTimestamp": 1742652908352,
+    "clientReceiveTime": 1742652908375,
+    "realtimeLatency": 23,
+    "originalTimestamp": 1742652908352
+  },
+  {
+    "discussionId": 13444,
+    "serverTimestamp": 1742652908365,
+    "clientReceiveTime": 1742652908389,
+    "realtimeLatency": 24,
+    "originalTimestamp": 1742652908365
+  },
+  {
+    "discussionId": 13445,
+    "serverTimestamp": 1742652908383,
+    "clientReceiveTime": 1742652908407,
+    "realtimeLatency": 24,
+    "originalTimestamp": 1742652908383
+  },
+  {
+    "discussionId": 13446,
+    "serverTimestamp": 1742652908397,
+    "clientReceiveTime": 1742652908419,
+    "realtimeLatency": 22,
+    "originalTimestamp": 1742652908397
+  },
+  {
+    "discussionId": 13447,
+    "serverTimestamp": 1742652908961,
+    "clientReceiveTime": 1742652908982,
+    "realtimeLatency": 21,
+    "originalTimestamp": 1742652908961
+  },
+  {
+    "discussionId": 13448,
+    "serverTimestamp": 1742652908987,
+    "clientReceiveTime": 1742652909001,
+    "realtimeLatency": 14,
+    "originalTimestamp": 1742652908987
+  },
+  {
+    "discussionId": 13449,
+    "serverTimestamp": 1742652909006,
+    "clientReceiveTime": 1742652909022,
+    "realtimeLatency": 16,
+    "originalTimestamp": 1742652909006
+  },
+  {
+    "discussionId": 13450,
+    "serverTimestamp": 1742652909049,
+    "clientReceiveTime": 1742652909069,
+    "realtimeLatency": 20,
+    "originalTimestamp": 1742652909049
+  },
+  {
+    "discussionId": 13451,
+    "serverTimestamp": 1742652909159,
+    "clientReceiveTime": 1742652909173,
+    "realtimeLatency": 14,
+    "originalTimestamp": 1742652909159
+  },
+  {
+    "discussionId": 13452,
+    "serverTimestamp": 1742652909179,
+    "clientReceiveTime": 1742652909194,
+    "realtimeLatency": 15,
+    "originalTimestamp": 1742652909179
+  },
+  {
+    "discussionId": 13453,
+    "serverTimestamp": 1742652909200,
+    "clientReceiveTime": 1742652909219,
+    "realtimeLatency": 19,
+    "originalTimestamp": 1742652909200
+  },
+  {
+    "discussionId": 13454,
+    "serverTimestamp": 1742652909235,
+    "clientReceiveTime": 1742652909253,
+    "realtimeLatency": 18,
+    "originalTimestamp": 1742652909235
+  },
+  {
+    "discussionId": 13455,
+    "serverTimestamp": 1742652909258,
+    "clientReceiveTime": 1742652909274,
+    "realtimeLatency": 16,
+    "originalTimestamp": 1742652909258
+  },
+  {
+    "discussionId": 13456,
+    "serverTimestamp": 1742652909280,
+    "clientReceiveTime": 1742652909310,
+    "realtimeLatency": 30,
+    "originalTimestamp": 1742652909280
+  },
+  {
+    "discussionId": 13458,
+    "serverTimestamp": 1742652909303,
+    "clientReceiveTime": 1742652909331,
+    "realtimeLatency": 28,
+    "originalTimestamp": 1742652909303
+  },
+  {
+    "discussionId": 13457,
+    "serverTimestamp": 1742652909285,
+    "clientReceiveTime": 1742652909337,
+    "realtimeLatency": 52,
+    "originalTimestamp": 1742652909285
+  },
+  {
+    "discussionId": 13459,
+    "serverTimestamp": 1742652909337,
+    "clientReceiveTime": 1742652909352,
+    "realtimeLatency": 15,
+    "originalTimestamp": 1742652909337
+  },
+  {
+    "discussionId": 13460,
+    "serverTimestamp": 1742652909356,
+    "clientReceiveTime": 1742652909371,
+    "realtimeLatency": 15,
+    "originalTimestamp": 1742652909356
+  },
+  {
+    "discussionId": 13461,
+    "serverTimestamp": 1742652909979,
+    "clientReceiveTime": 1742652910009,
+    "realtimeLatency": 30,
+    "originalTimestamp": 1742652909979
+  },
+  {
+    "discussionId": 13463,
+    "serverTimestamp": 1742652910015,
+    "clientReceiveTime": 1742652910033,
+    "realtimeLatency": 18,
+    "originalTimestamp": 1742652910015
+  },
+  {
+    "discussionId": 13462,
+    "serverTimestamp": 1742652910005,
+    "clientReceiveTime": 1742652910052,
+    "realtimeLatency": 47,
+    "originalTimestamp": 1742652910005
+  },
+  {
+    "discussionId": 13464,
+    "serverTimestamp": 1742652910038,
+    "clientReceiveTime": 1742652910062,
+    "realtimeLatency": 24,
+    "originalTimestamp": 1742652910038
+  },
+  {
+    "discussionId": 13465,
+    "serverTimestamp": 1742652910097,
+    "clientReceiveTime": 1742652910116,
+    "realtimeLatency": 19,
+    "originalTimestamp": 1742652910097
+  },
+  {
+    "discussionId": 13466,
+    "serverTimestamp": 1742652910162,
+    "clientReceiveTime": 1742652910179,
+    "realtimeLatency": 17,
+    "originalTimestamp": 1742652910162
+  },
+  {
+    "discussionId": 13468,
+    "serverTimestamp": 1742652910183,
+    "clientReceiveTime": 1742652910204,
+    "realtimeLatency": 21,
+    "originalTimestamp": 1742652910183
+  },
+  {
+    "discussionId": 13467,
+    "serverTimestamp": 1742652910164,
+    "clientReceiveTime": 1742652910216,
+    "realtimeLatency": 52,
+    "originalTimestamp": 1742652910164
+  },
+  {
+    "discussionId": 13469,
+    "serverTimestamp": 1742652910213,
+    "clientReceiveTime": 1742652910235,
+    "realtimeLatency": 22,
+    "originalTimestamp": 1742652910213
+  },
+  {
+    "discussionId": 13470,
+    "serverTimestamp": 1742652910230,
+    "clientReceiveTime": 1742652910248,
+    "realtimeLatency": 18,
+    "originalTimestamp": 1742652910230
+  },
+  {
+    "discussionId": 13471,
+    "serverTimestamp": 1742652910253,
+    "clientReceiveTime": 1742652910271,
+    "realtimeLatency": 18,
+    "originalTimestamp": 1742652910253
+  },
+  {
+    "discussionId": 13472,
+    "serverTimestamp": 1742652910277,
+    "clientReceiveTime": 1742652910295,
+    "realtimeLatency": 18,
+    "originalTimestamp": 1742652910277
+  },
+  {
+    "discussionId": 13473,
+    "serverTimestamp": 1742652910309,
+    "clientReceiveTime": 1742652910323,
+    "realtimeLatency": 14,
+    "originalTimestamp": 1742652910309
+  },
+  {
+    "discussionId": 13474,
+    "serverTimestamp": 1742652910328,
+    "clientReceiveTime": 1742652910343,
+    "realtimeLatency": 15,
+    "originalTimestamp": 1742652910328
+  },
+  {
+    "discussionId": 13475,
+    "serverTimestamp": 1742652910348,
+    "clientReceiveTime": 1742652910364,
+    "realtimeLatency": 16,
+    "originalTimestamp": 1742652910348
+  },
+  {
+    "discussionId": 13476,
+    "serverTimestamp": 1742652910968,
+    "clientReceiveTime": 1742652910987,
+    "realtimeLatency": 19,
+    "originalTimestamp": 1742652910968
+  },
+  {
+    "discussionId": 13477,
+    "serverTimestamp": 1742652910992,
+    "clientReceiveTime": 1742652911010,
+    "realtimeLatency": 18,
+    "originalTimestamp": 1742652910992
+  },
+  {
+    "discussionId": 13478,
+    "serverTimestamp": 1742652910998,
+    "clientReceiveTime": 1742652911024,
+    "realtimeLatency": 26,
+    "originalTimestamp": 1742652910998
+  },
+  {
+    "discussionId": 13479,
+    "serverTimestamp": 1742652911019,
+    "clientReceiveTime": 1742652911043,
+    "realtimeLatency": 24,
+    "originalTimestamp": 1742652911019
+  },
+  {
+    "discussionId": 13480,
+    "serverTimestamp": 1742652911029,
+    "clientReceiveTime": 1742652911054,
+    "realtimeLatency": 25,
+    "originalTimestamp": 1742652911029
+  },
+  {
+    "discussionId": 13481,
+    "serverTimestamp": 1742652911059,
+    "clientReceiveTime": 1742652911074,
+    "realtimeLatency": 15,
+    "originalTimestamp": 1742652911059
+  },
+  {
+    "discussionId": 13482,
+    "serverTimestamp": 1742652911078,
+    "clientReceiveTime": 1742652911106,
+    "realtimeLatency": 28,
+    "originalTimestamp": 1742652911078
+  },
+  {
+    "discussionId": 13483,
+    "serverTimestamp": 1742652911241,
+    "clientReceiveTime": 1742652911268,
+    "realtimeLatency": 27,
+    "originalTimestamp": 1742652911241
+  },
+  {
+    "discussionId": 13484,
+    "serverTimestamp": 1742652911243,
+    "clientReceiveTime": 1742652911270,
+    "realtimeLatency": 27,
+    "originalTimestamp": 1742652911243
+  },
+  {
+    "discussionId": 13485,
+    "serverTimestamp": 1742652911275,
+    "clientReceiveTime": 1742652911302,
+    "realtimeLatency": 27,
+    "originalTimestamp": 1742652911275
+  },
+  {
+    "discussionId": 13486,
+    "serverTimestamp": 1742652911277,
+    "clientReceiveTime": 1742652911304,
+    "realtimeLatency": 27,
+    "originalTimestamp": 1742652911277
+  },
+  {
+    "discussionId": 13487,
+    "serverTimestamp": 1742652911313,
+    "clientReceiveTime": 1742652911359,
+    "realtimeLatency": 46,
+    "originalTimestamp": 1742652911313
+  },
+  {
+    "discussionId": 13488,
+    "serverTimestamp": 1742652911315,
+    "clientReceiveTime": 1742652911361,
+    "realtimeLatency": 46,
+    "originalTimestamp": 1742652911315
+  },
+  {
+    "discussionId": 13489,
+    "serverTimestamp": 1742652911316,
+    "clientReceiveTime": 1742652911364,
+    "realtimeLatency": 48,
+    "originalTimestamp": 1742652911316
+  },
+  {
+    "discussionId": 13490,
+    "serverTimestamp": 1742652911333,
+    "clientReceiveTime": 1742652911379,
+    "realtimeLatency": 46,
+    "originalTimestamp": 1742652911333
+  },
+  {
+    "discussionId": 13491,
+    "serverTimestamp": 1742652911373,
+    "clientReceiveTime": 1742652911396,
+    "realtimeLatency": 23,
+    "originalTimestamp": 1742652911373
+  },
+  {
+    "discussionId": 13492,
+    "serverTimestamp": 1742652911386,
+    "clientReceiveTime": 1742652911411,
+    "realtimeLatency": 25,
+    "originalTimestamp": 1742652911386
+  },
+  {
+    "discussionId": 13493,
+    "serverTimestamp": 1742652911405,
+    "clientReceiveTime": 1742652911428,
+    "realtimeLatency": 23,
+    "originalTimestamp": 1742652911405
+  },
+  {
+    "discussionId": 13494,
+    "serverTimestamp": 1742652911419,
+    "clientReceiveTime": 1742652911438,
+    "realtimeLatency": 19,
+    "originalTimestamp": 1742652911419
+  },
+  {
+    "discussionId": 13495,
+    "serverTimestamp": 1742652911503,
+    "clientReceiveTime": 1742652911535,
+    "realtimeLatency": 32,
+    "originalTimestamp": 1742652911503
+  },
+  {
+    "discussionId": 13496,
+    "serverTimestamp": 1742652912059,
+    "clientReceiveTime": 1742652912091,
+    "realtimeLatency": 32,
+    "originalTimestamp": 1742652912059
+  },
+  {
+    "discussionId": 13498,
+    "serverTimestamp": 1742652912076,
+    "clientReceiveTime": 1742652912100,
+    "realtimeLatency": 24,
+    "originalTimestamp": 1742652912076
+  },
+  {
+    "discussionId": 13497,
+    "serverTimestamp": 1742652912070,
+    "clientReceiveTime": 1742652912115,
+    "realtimeLatency": 45,
+    "originalTimestamp": 1742652912070
+  },
+  {
+    "discussionId": 13499,
+    "serverTimestamp": 1742652912109,
+    "clientReceiveTime": 1742652912128,
+    "realtimeLatency": 19,
+    "originalTimestamp": 1742652912109
+  },
+  {
+    "discussionId": 13500,
+    "serverTimestamp": 1742652912132,
+    "clientReceiveTime": 1742652912146,
+    "realtimeLatency": 14,
+    "originalTimestamp": 1742652912132
+  },
+  {
+    "discussionId": 13501,
+    "serverTimestamp": 1742652912183,
+    "clientReceiveTime": 1742652912209,
+    "realtimeLatency": 26,
+    "originalTimestamp": 1742652912183
+  },
+  {
+    "discussionId": 13502,
+    "serverTimestamp": 1742652912185,
+    "clientReceiveTime": 1742652912212,
+    "realtimeLatency": 27,
+    "originalTimestamp": 1742652912185
+  },
+  {
+    "discussionId": 13503,
+    "serverTimestamp": 1742652912217,
+    "clientReceiveTime": 1742652912248,
+    "realtimeLatency": 31,
+    "originalTimestamp": 1742652912217
+  },
+  {
+    "discussionId": 13504,
+    "serverTimestamp": 1742652912219,
+    "clientReceiveTime": 1742652912250,
+    "realtimeLatency": 31,
+    "originalTimestamp": 1742652912219
+  },
+  {
+    "discussionId": 13506,
+    "serverTimestamp": 1742652912258,
+    "clientReceiveTime": 1742652912290,
+    "realtimeLatency": 32,
+    "originalTimestamp": 1742652912258
+  },
+  {
+    "discussionId": 13507,
+    "serverTimestamp": 1742652912262,
+    "clientReceiveTime": 1742652912293,
+    "realtimeLatency": 31,
+    "originalTimestamp": 1742652912262
+  },
+  {
+    "discussionId": 13505,
+    "serverTimestamp": 1742652912239,
+    "clientReceiveTime": 1742652912305,
+    "realtimeLatency": 66,
+    "originalTimestamp": 1742652912239
+  },
+  {
+    "discussionId": 13508,
+    "serverTimestamp": 1742652912327,
+    "clientReceiveTime": 1742652912345,
+    "realtimeLatency": 18,
+    "originalTimestamp": 1742652912327
+  },
+  {
+    "discussionId": 13509,
+    "serverTimestamp": 1742652912351,
+    "clientReceiveTime": 1742652912371,
+    "realtimeLatency": 20,
+    "originalTimestamp": 1742652912351
+  },
+  {
+    "discussionId": 13510,
+    "serverTimestamp": 1742652912353,
+    "clientReceiveTime": 1742652912401,
+    "realtimeLatency": 48,
+    "originalTimestamp": 1742652912353
+  },
+  {
+    "discussionId": 13511,
+    "serverTimestamp": 1742652912378,
+    "clientReceiveTime": 1742652912403,
+    "realtimeLatency": 25,
+    "originalTimestamp": 1742652912378
+  },
+  {
+    "discussionId": 13512,
+    "serverTimestamp": 1742652913010,
+    "clientReceiveTime": 1742652913022,
+    "realtimeLatency": 12,
+    "originalTimestamp": 1742652913010
+  },
+  {
+    "discussionId": 13513,
+    "serverTimestamp": 1742652913027,
+    "clientReceiveTime": 1742652913040,
+    "realtimeLatency": 13,
+    "originalTimestamp": 1742652913027
+  },
+  {
+    "discussionId": 13514,
+    "serverTimestamp": 1742652913044,
+    "clientReceiveTime": 1742652913059,
+    "realtimeLatency": 15,
+    "originalTimestamp": 1742652913044
+  },
+  {
+    "discussionId": 13515,
+    "serverTimestamp": 1742652913066,
+    "clientReceiveTime": 1742652913081,
+    "realtimeLatency": 15,
+    "originalTimestamp": 1742652913066
+  },
+  {
+    "discussionId": 13516,
+    "serverTimestamp": 1742652913085,
+    "clientReceiveTime": 1742652913099,
+    "realtimeLatency": 14,
+    "originalTimestamp": 1742652913085
+  },
+  {
+    "discussionId": 13517,
+    "serverTimestamp": 1742652913104,
+    "clientReceiveTime": 1742652913119,
+    "realtimeLatency": 15,
+    "originalTimestamp": 1742652913104
+  },
+  {
+    "discussionId": 13518,
+    "serverTimestamp": 1742652913185,
+    "clientReceiveTime": 1742652913209,
+    "realtimeLatency": 24,
+    "originalTimestamp": 1742652913185
+  },
+  {
+    "discussionId": 13519,
+    "serverTimestamp": 1742652913187,
+    "clientReceiveTime": 1742652913211,
+    "realtimeLatency": 24,
+    "originalTimestamp": 1742652913187
+  },
+  {
+    "discussionId": 13520,
+    "serverTimestamp": 1742652913217,
+    "clientReceiveTime": 1742652913242,
+    "realtimeLatency": 25,
+    "originalTimestamp": 1742652913217
+  },
+  {
+    "discussionId": 13521,
+    "serverTimestamp": 1742652913219,
+    "clientReceiveTime": 1742652913244,
+    "realtimeLatency": 25,
+    "originalTimestamp": 1742652913219
+  },
+  {
+    "discussionId": 13522,
+    "serverTimestamp": 1742652913250,
+    "clientReceiveTime": 1742652913279,
+    "realtimeLatency": 29,
+    "originalTimestamp": 1742652913250
+  },
+  {
+    "discussionId": 13523,
+    "serverTimestamp": 1742652913252,
+    "clientReceiveTime": 1742652913281,
+    "realtimeLatency": 29,
+    "originalTimestamp": 1742652913252
+  },
+  {
+    "discussionId": 13524,
+    "serverTimestamp": 1742652913325,
+    "clientReceiveTime": 1742652913350,
+    "realtimeLatency": 25,
+    "originalTimestamp": 1742652913325
+  },
+  {
+    "discussionId": 13525,
+    "serverTimestamp": 1742652913347,
+    "clientReceiveTime": 1742652913363,
+    "realtimeLatency": 16,
+    "originalTimestamp": 1742652913347
+  },
+  {
+    "discussionId": 13526,
+    "serverTimestamp": 1742652913367,
+    "clientReceiveTime": 1742652913385,
+    "realtimeLatency": 18,
+    "originalTimestamp": 1742652913367
+  },
+  {
+    "discussionId": 13527,
+    "serverTimestamp": 1742652913394,
+    "clientReceiveTime": 1742652913409,
+    "realtimeLatency": 15,
+    "originalTimestamp": 1742652913394
+  },
+  {
+    "discussionId": 13528,
+    "serverTimestamp": 1742652913996,
+    "clientReceiveTime": 1742652914017,
+    "realtimeLatency": 21,
+    "originalTimestamp": 1742652913996
+  },
+  {
+    "discussionId": 13529,
+    "serverTimestamp": 1742652914022,
+    "clientReceiveTime": 1742652914038,
+    "realtimeLatency": 16,
+    "originalTimestamp": 1742652914022
+  },
+  {
+    "discussionId": 13530,
+    "serverTimestamp": 1742652914043,
+    "clientReceiveTime": 1742652914058,
+    "realtimeLatency": 15,
+    "originalTimestamp": 1742652914043
+  },
+  {
+    "discussionId": 13532,
+    "serverTimestamp": 1742652914107,
+    "clientReceiveTime": 1742652914124,
+    "realtimeLatency": 17,
+    "originalTimestamp": 1742652914107
+  },
+  {
+    "discussionId": 13531,
+    "serverTimestamp": 1742652914105,
+    "clientReceiveTime": 1742652914153,
+    "realtimeLatency": 48,
+    "originalTimestamp": 1742652914105
+  },
+  {
+    "discussionId": 13533,
+    "serverTimestamp": 1742652914130,
+    "clientReceiveTime": 1742652914156,
+    "realtimeLatency": 26,
+    "originalTimestamp": 1742652914130
+  },
+  {
+    "discussionId": 13534,
+    "serverTimestamp": 1742652914162,
+    "clientReceiveTime": 1742652914183,
+    "realtimeLatency": 21,
+    "originalTimestamp": 1742652914162
+  },
+  {
+    "discussionId": 13535,
+    "serverTimestamp": 1742652914252,
+    "clientReceiveTime": 1742652914279,
+    "realtimeLatency": 27,
+    "originalTimestamp": 1742652914252
+  },
+  {
+    "discussionId": 13536,
+    "serverTimestamp": 1742652914254,
+    "clientReceiveTime": 1742652914281,
+    "realtimeLatency": 27,
+    "originalTimestamp": 1742652914254
+  },
+  {
+    "discussionId": 13537,
+    "serverTimestamp": 1742652914279,
+    "clientReceiveTime": 1742652914320,
+    "realtimeLatency": 41,
+    "originalTimestamp": 1742652914279
+  },
+  {
+    "discussionId": 13538,
+    "serverTimestamp": 1742652914287,
+    "clientReceiveTime": 1742652914341,
+    "realtimeLatency": 54,
+    "originalTimestamp": 1742652914287
+  },
+  {
+    "discussionId": 13539,
+    "serverTimestamp": 1742652914290,
+    "clientReceiveTime": 1742652914344,
+    "realtimeLatency": 54,
+    "originalTimestamp": 1742652914290
+  },
+  {
+    "discussionId": 13540,
+    "serverTimestamp": 1742652914345,
+    "clientReceiveTime": 1742652914407,
+    "realtimeLatency": 62,
+    "originalTimestamp": 1742652914345
+  },
+  {
+    "discussionId": 13541,
+    "serverTimestamp": 1742652914364,
+    "clientReceiveTime": 1742652914438,
+    "realtimeLatency": 74,
+    "originalTimestamp": 1742652914364
+  },
+  {
+    "discussionId": 13542,
+    "serverTimestamp": 1742652914368,
+    "clientReceiveTime": 1742652914445,
+    "realtimeLatency": 77,
+    "originalTimestamp": 1742652914368
+  },
+  {
+    "discussionId": 13543,
+    "serverTimestamp": 1742652914371,
+    "clientReceiveTime": 1742652914447,
+    "realtimeLatency": 76,
+    "originalTimestamp": 1742652914371
+  },
+  {
+    "discussionId": 13544,
+    "serverTimestamp": 1742652914438,
+    "clientReceiveTime": 1742652914479,
+    "realtimeLatency": 41,
+    "originalTimestamp": 1742652914438
+  },
+  {
+    "discussionId": 13546,
+    "serverTimestamp": 1742652914449,
+    "clientReceiveTime": 1742652914482,
+    "realtimeLatency": 33,
+    "originalTimestamp": 1742652914449
+  },
+  {
+    "discussionId": 13545,
+    "serverTimestamp": 1742652914442,
+    "clientReceiveTime": 1742652914512,
+    "realtimeLatency": 70,
+    "originalTimestamp": 1742652914442
+  },
+  {
+    "discussionId": 13547,
+    "serverTimestamp": 1742652914488,
+    "clientReceiveTime": 1742652914515,
+    "realtimeLatency": 27,
+    "originalTimestamp": 1742652914488
+  },
+  {
+    "discussionId": 13548,
+    "serverTimestamp": 1742652914572,
+    "clientReceiveTime": 1742652914588,
+    "realtimeLatency": 16,
+    "originalTimestamp": 1742652914572
+  },
+  {
+    "discussionId": 13549,
+    "serverTimestamp": 1742652914607,
+    "clientReceiveTime": 1742652914625,
+    "realtimeLatency": 18,
+    "originalTimestamp": 1742652914607
+  },
+  {
+    "discussionId": 13550,
+    "serverTimestamp": 1742652914634,
+    "clientReceiveTime": 1742652914652,
+    "realtimeLatency": 18,
+    "originalTimestamp": 1742652914634
+  },
+  {
+    "discussionId": 13551,
+    "serverTimestamp": 1742652914999,
+    "clientReceiveTime": 1742652915013,
+    "realtimeLatency": 14,
+    "originalTimestamp": 1742652914999
+  },
+  {
+    "discussionId": 13552,
+    "serverTimestamp": 1742652915020,
+    "clientReceiveTime": 1742652915035,
+    "realtimeLatency": 15,
+    "originalTimestamp": 1742652915020
+  },
+  {
+    "discussionId": 13553,
+    "serverTimestamp": 1742652915040,
+    "clientReceiveTime": 1742652915056,
+    "realtimeLatency": 16,
+    "originalTimestamp": 1742652915040
+  },
+  {
+    "discussionId": 13554,
+    "serverTimestamp": 1742652915099,
+    "clientReceiveTime": 1742652915115,
+    "realtimeLatency": 16,
+    "originalTimestamp": 1742652915099
+  },
+  {
+    "discussionId": 13555,
+    "serverTimestamp": 1742652915120,
+    "clientReceiveTime": 1742652915136,
+    "realtimeLatency": 16,
+    "originalTimestamp": 1742652915120
+  },
+  {
+    "discussionId": 13556,
+    "serverTimestamp": 1742652915141,
+    "clientReceiveTime": 1742652915157,
+    "realtimeLatency": 16,
+    "originalTimestamp": 1742652915141
+  },
+  {
+    "discussionId": 13558,
+    "serverTimestamp": 1742652915279,
+    "clientReceiveTime": 1742652915300,
+    "realtimeLatency": 21,
+    "originalTimestamp": 1742652915279
+  },
+  {
+    "discussionId": 13557,
+    "serverTimestamp": 1742652915277,
+    "clientReceiveTime": 1742652915332,
+    "realtimeLatency": 55,
+    "originalTimestamp": 1742652915277
+  },
+  {
+    "discussionId": 13559,
+    "serverTimestamp": 1742652915306,
+    "clientReceiveTime": 1742652915341,
+    "realtimeLatency": 35,
+    "originalTimestamp": 1742652915306
+  },
+  {
+    "discussionId": 13560,
+    "serverTimestamp": 1742652915351,
+    "clientReceiveTime": 1742652915399,
+    "realtimeLatency": 48,
+    "originalTimestamp": 1742652915351
+  },
+  {
+    "discussionId": 13561,
+    "serverTimestamp": 1742652915353,
+    "clientReceiveTime": 1742652915401,
+    "realtimeLatency": 48,
+    "originalTimestamp": 1742652915353
+  },
+  {
+    "discussionId": 13563,
+    "serverTimestamp": 1742652915389,
+    "clientReceiveTime": 1742652915427,
+    "realtimeLatency": 38,
+    "originalTimestamp": 1742652915389
+  },
+  {
+    "discussionId": 13564,
+    "serverTimestamp": 1742652915407,
+    "clientReceiveTime": 1742652915451,
+    "realtimeLatency": 44,
+    "originalTimestamp": 1742652915407
+  },
+  {
+    "discussionId": 13562,
+    "serverTimestamp": 1742652915368,
+    "clientReceiveTime": 1742652915460,
+    "realtimeLatency": 92,
+    "originalTimestamp": 1742652915368
+  },
+  {
+    "discussionId": 13565,
+    "serverTimestamp": 1742652915443,
+    "clientReceiveTime": 1742652915475,
+    "realtimeLatency": 32,
+    "originalTimestamp": 1742652915443
+  },
+  {
+    "discussionId": 13566,
+    "serverTimestamp": 1742652915460,
+    "clientReceiveTime": 1742652915492,
+    "realtimeLatency": 32,
+    "originalTimestamp": 1742652915460
+  },
+  {
+    "discussionId": 13567,
+    "serverTimestamp": 1742652915484,
+    "clientReceiveTime": 1742652915512,
+    "realtimeLatency": 28,
+    "originalTimestamp": 1742652915484
+  },
+  {
+    "discussionId": 13568,
+    "serverTimestamp": 1742652915512,
+    "clientReceiveTime": 1742652915529,
+    "realtimeLatency": 17,
+    "originalTimestamp": 1742652915512
+  },
+  {
+    "discussionId": 13569,
+    "serverTimestamp": 1742652915536,
+    "clientReceiveTime": 1742652915552,
+    "realtimeLatency": 16,
+    "originalTimestamp": 1742652915536
+  },
+  {
+    "discussionId": 13570,
+    "serverTimestamp": 1742652915559,
+    "clientReceiveTime": 1742652915575,
+    "realtimeLatency": 16,
+    "originalTimestamp": 1742652915559
+  },
+  {
+    "discussionId": 13571,
+    "serverTimestamp": 1742652916097,
+    "clientReceiveTime": 1742652916127,
+    "realtimeLatency": 30,
+    "originalTimestamp": 1742652916097
+  },
+  {
+    "discussionId": 13572,
+    "serverTimestamp": 1742652916111,
+    "clientReceiveTime": 1742652916130,
+    "realtimeLatency": 19,
+    "originalTimestamp": 1742652916111
+  },
+  {
+    "discussionId": 13573,
+    "serverTimestamp": 1742652916133,
+    "clientReceiveTime": 1742652916147,
+    "realtimeLatency": 14,
+    "originalTimestamp": 1742652916133
+  },
+  {
+    "discussionId": 13574,
+    "serverTimestamp": 1742652916152,
+    "clientReceiveTime": 1742652916168,
+    "realtimeLatency": 16,
+    "originalTimestamp": 1742652916152
+  },
+  {
+    "discussionId": 13575,
+    "serverTimestamp": 1742652916203,
+    "clientReceiveTime": 1742652916229,
+    "realtimeLatency": 26,
+    "originalTimestamp": 1742652916203
+  },
+  {
+    "discussionId": 13576,
+    "serverTimestamp": 1742652916263,
+    "clientReceiveTime": 1742652916285,
+    "realtimeLatency": 22,
+    "originalTimestamp": 1742652916263
+  },
+  {
+    "discussionId": 13578,
+    "serverTimestamp": 1742652916295,
+    "clientReceiveTime": 1742652916316,
+    "realtimeLatency": 21,
+    "originalTimestamp": 1742652916295
+  },
+  {
+    "discussionId": 13579,
+    "serverTimestamp": 1742652916322,
+    "clientReceiveTime": 1742652916347,
+    "realtimeLatency": 25,
+    "originalTimestamp": 1742652916322
+  },
+  {
+    "discussionId": 13577,
+    "serverTimestamp": 1742652916291,
+    "clientReceiveTime": 1742652916351,
+    "realtimeLatency": 60,
+    "originalTimestamp": 1742652916291
+  },
+  {
+    "discussionId": 13580,
+    "serverTimestamp": 1742652916376,
+    "clientReceiveTime": 1742652916389,
+    "realtimeLatency": 13,
+    "originalTimestamp": 1742652916376
+  },
+  {
+    "discussionId": 13581,
+    "serverTimestamp": 1742652916395,
+    "clientReceiveTime": 1742652916409,
+    "realtimeLatency": 14,
+    "originalTimestamp": 1742652916395
+  },
+  {
+    "discussionId": 13582,
+    "serverTimestamp": 1742652916415,
+    "clientReceiveTime": 1742652916430,
+    "realtimeLatency": 15,
+    "originalTimestamp": 1742652916415
+  },
+  {
+    "discussionId": 13583,
+    "serverTimestamp": 1742652916506,
+    "clientReceiveTime": 1742652916519,
+    "realtimeLatency": 13,
+    "originalTimestamp": 1742652916506
+  },
+  {
+    "discussionId": 13584,
+    "serverTimestamp": 1742652916526,
+    "clientReceiveTime": 1742652916542,
+    "realtimeLatency": 16,
+    "originalTimestamp": 1742652916526
+  },
+  {
+    "discussionId": 13585,
+    "serverTimestamp": 1742652916550,
+    "clientReceiveTime": 1742652916565,
+    "realtimeLatency": 15,
+    "originalTimestamp": 1742652916550
+  },
+  {
+    "discussionId": 13586,
+    "serverTimestamp": 1742652917028,
+    "clientReceiveTime": 1742652917045,
+    "realtimeLatency": 17,
+    "originalTimestamp": 1742652917028
+  },
+  {
+    "discussionId": 13588,
+    "serverTimestamp": 1742652917054,
+    "clientReceiveTime": 1742652917086,
+    "realtimeLatency": 32,
+    "originalTimestamp": 1742652917054
+  },
+  {
+    "discussionId": 13589,
+    "serverTimestamp": 1742652917094,
+    "clientReceiveTime": 1742652917119,
+    "realtimeLatency": 25,
+    "originalTimestamp": 1742652917094
+  },
+  {
+    "discussionId": 13587,
+    "serverTimestamp": 1742652917047,
+    "clientReceiveTime": 1742652917121,
+    "realtimeLatency": 74,
+    "originalTimestamp": 1742652917047
+  },
+  {
+    "discussionId": 13590,
+    "serverTimestamp": 1742652917278,
+    "clientReceiveTime": 1742652917311,
+    "realtimeLatency": 33,
+    "originalTimestamp": 1742652917278
+  },
+  {
+    "discussionId": 13591,
+    "serverTimestamp": 1742652917293,
+    "clientReceiveTime": 1742652917334,
+    "realtimeLatency": 41,
+    "originalTimestamp": 1742652917293
+  },
+  {
+    "discussionId": 13592,
+    "serverTimestamp": 1742652917297,
+    "clientReceiveTime": 1742652917337,
+    "realtimeLatency": 40,
+    "originalTimestamp": 1742652917297
+  },
+  {
+    "discussionId": 13593,
+    "serverTimestamp": 1742652917328,
+    "clientReceiveTime": 1742652917367,
+    "realtimeLatency": 39,
+    "originalTimestamp": 1742652917328
+  },
+  {
+    "discussionId": 13594,
+    "serverTimestamp": 1742652917350,
+    "clientReceiveTime": 1742652917402,
+    "realtimeLatency": 52,
+    "originalTimestamp": 1742652917350
+  },
+  {
+    "discussionId": 13595,
+    "serverTimestamp": 1742652917352,
+    "clientReceiveTime": 1742652917403,
+    "realtimeLatency": 51,
+    "originalTimestamp": 1742652917352
+  },
+  {
+    "discussionId": 13597,
+    "serverTimestamp": 1742652917380,
+    "clientReceiveTime": 1742652917454,
+    "realtimeLatency": 74,
+    "originalTimestamp": 1742652917380
+  },
+  {
+    "discussionId": 13598,
+    "serverTimestamp": 1742652917403,
+    "clientReceiveTime": 1742652917497,
+    "realtimeLatency": 94,
+    "originalTimestamp": 1742652917403
+  },
+  {
+    "discussionId": 13599,
+    "serverTimestamp": 1742652917419,
+    "clientReceiveTime": 1742652917510,
+    "realtimeLatency": 91,
+    "originalTimestamp": 1742652917419
+  },
+  {
+    "discussionId": 13600,
+    "serverTimestamp": 1742652917422,
+    "clientReceiveTime": 1742652917513,
+    "realtimeLatency": 91,
+    "originalTimestamp": 1742652917422
+  },
+  {
+    "discussionId": 13596,
+    "serverTimestamp": 1742652917359,
+    "clientReceiveTime": 1742652917530,
+    "realtimeLatency": 171,
+    "originalTimestamp": 1742652917359
+  },
+  {
+    "discussionId": 13601,
+    "serverTimestamp": 1742652917515,
+    "clientReceiveTime": 1742652917544,
+    "realtimeLatency": 29,
+    "originalTimestamp": 1742652917515
+  },
+  {
+    "discussionId": 13602,
+    "serverTimestamp": 1742652917551,
+    "clientReceiveTime": 1742652917569,
+    "realtimeLatency": 18,
+    "originalTimestamp": 1742652917551
+  },
+  {
+    "discussionId": 13603,
+    "serverTimestamp": 1742652917575,
+    "clientReceiveTime": 1742652917593,
+    "realtimeLatency": 18,
+    "originalTimestamp": 1742652917575
+  },
+  {
+    "discussionId": 13604,
+    "serverTimestamp": 1742652918041,
+    "clientReceiveTime": 1742652918053,
+    "realtimeLatency": 12,
+    "originalTimestamp": 1742652918041
+  },
+  {
+    "discussionId": 13606,
+    "serverTimestamp": 1742652918060,
+    "clientReceiveTime": 1742652918077,
+    "realtimeLatency": 17,
+    "originalTimestamp": 1742652918060
+  },
+  {
+    "discussionId": 13605,
+    "serverTimestamp": 1742652918054,
+    "clientReceiveTime": 1742652918091,
+    "realtimeLatency": 37,
+    "originalTimestamp": 1742652918054
+  },
+  {
+    "discussionId": 13607,
+    "serverTimestamp": 1742652918085,
+    "clientReceiveTime": 1742652918103,
+    "realtimeLatency": 18,
+    "originalTimestamp": 1742652918085
+  },
+  {
+    "discussionId": 13608,
+    "serverTimestamp": 1742652918145,
+    "clientReceiveTime": 1742652918170,
+    "realtimeLatency": 25,
+    "originalTimestamp": 1742652918145
+  },
+  {
+    "discussionId": 13609,
+    "serverTimestamp": 1742652918212,
+    "clientReceiveTime": 1742652918223,
+    "realtimeLatency": 11,
+    "originalTimestamp": 1742652918212
+  },
+  {
+    "discussionId": 13610,
+    "serverTimestamp": 1742652918228,
+    "clientReceiveTime": 1742652918244,
+    "realtimeLatency": 16,
+    "originalTimestamp": 1742652918228
+  },
+  {
+    "discussionId": 13612,
+    "serverTimestamp": 1742652918251,
+    "clientReceiveTime": 1742652918270,
+    "realtimeLatency": 19,
+    "originalTimestamp": 1742652918251
+  },
+  {
+    "discussionId": 13611,
+    "serverTimestamp": 1742652918246,
+    "clientReceiveTime": 1742652918290,
+    "realtimeLatency": 44,
+    "originalTimestamp": 1742652918246
+  },
+  {
+    "discussionId": 13613,
+    "serverTimestamp": 1742652918285,
+    "clientReceiveTime": 1742652918316,
+    "realtimeLatency": 31,
+    "originalTimestamp": 1742652918285
+  },
+  {
+    "discussionId": 13614,
+    "serverTimestamp": 1742652918291,
+    "clientReceiveTime": 1742652918323,
+    "realtimeLatency": 32,
+    "originalTimestamp": 1742652918291
+  },
+  {
+    "discussionId": 13615,
+    "serverTimestamp": 1742652918324,
+    "clientReceiveTime": 1742652918348,
+    "realtimeLatency": 24,
+    "originalTimestamp": 1742652918324
+  },
+  {
+    "discussionId": 13616,
+    "serverTimestamp": 1742652918329,
+    "clientReceiveTime": 1742652918354,
+    "realtimeLatency": 25,
+    "originalTimestamp": 1742652918329
+  },
+  {
+    "discussionId": 13617,
+    "serverTimestamp": 1742652918354,
+    "clientReceiveTime": 1742652918389,
+    "realtimeLatency": 35,
+    "originalTimestamp": 1742652918354
+  },
+  {
+    "discussionId": 13618,
+    "serverTimestamp": 1742652918363,
+    "clientReceiveTime": 1742652918400,
+    "realtimeLatency": 37,
+    "originalTimestamp": 1742652918363
+  },
+  {
+    "discussionId": 13620,
+    "serverTimestamp": 1742652918398,
+    "clientReceiveTime": 1742652918417,
+    "realtimeLatency": 19,
+    "originalTimestamp": 1742652918398
+  },
+  {
+    "discussionId": 13621,
+    "serverTimestamp": 1742652918424,
+    "clientReceiveTime": 1742652918449,
+    "realtimeLatency": 25,
+    "originalTimestamp": 1742652918424
+  },
+  {
+    "discussionId": 13619,
+    "serverTimestamp": 1742652918376,
+    "clientReceiveTime": 1742652918451,
+    "realtimeLatency": 75,
+    "originalTimestamp": 1742652918376
+  },
+  {
+    "discussionId": 13622,
+    "serverTimestamp": 1742652918456,
+    "clientReceiveTime": 1742652918472,
+    "realtimeLatency": 16,
+    "originalTimestamp": 1742652918456
+  },
+  {
+    "discussionId": 13623,
+    "serverTimestamp": 1742652918528,
+    "clientReceiveTime": 1742652918540,
+    "realtimeLatency": 12,
+    "originalTimestamp": 1742652918528
+  },
+  {
+    "discussionId": 13624,
+    "serverTimestamp": 1742652918547,
+    "clientReceiveTime": 1742652918561,
+    "realtimeLatency": 14,
+    "originalTimestamp": 1742652918547
+  },
+  {
+    "discussionId": 13625,
+    "serverTimestamp": 1742652918567,
+    "clientReceiveTime": 1742652918583,
+    "realtimeLatency": 16,
+    "originalTimestamp": 1742652918567
+  },
+  {
+    "discussionId": 13626,
+    "serverTimestamp": 1742652919027,
+    "clientReceiveTime": 1742652919040,
+    "realtimeLatency": 13,
+    "originalTimestamp": 1742652919027
+  },
+  {
+    "discussionId": 13627,
+    "serverTimestamp": 1742652919045,
+    "clientReceiveTime": 1742652919062,
+    "realtimeLatency": 17,
+    "originalTimestamp": 1742652919045
+  },
+  {
+    "discussionId": 13628,
+    "serverTimestamp": 1742652919060,
+    "clientReceiveTime": 1742652919083,
+    "realtimeLatency": 23,
+    "originalTimestamp": 1742652919060
+  },
+  {
+    "discussionId": 13629,
+    "serverTimestamp": 1742652919069,
+    "clientReceiveTime": 1742652919098,
+    "realtimeLatency": 29,
+    "originalTimestamp": 1742652919069
+  },
+  {
+    "discussionId": 13630,
+    "serverTimestamp": 1742652919094,
+    "clientReceiveTime": 1742652919111,
+    "realtimeLatency": 17,
+    "originalTimestamp": 1742652919094
+  },
+  {
+    "discussionId": 13631,
+    "serverTimestamp": 1742652919117,
+    "clientReceiveTime": 1742652919136,
+    "realtimeLatency": 19,
+    "originalTimestamp": 1742652919117
+  },
+  {
+    "discussionId": 13632,
+    "serverTimestamp": 1742652919132,
+    "clientReceiveTime": 1742652919161,
+    "realtimeLatency": 29,
+    "originalTimestamp": 1742652919132
+  },
+  {
+    "discussionId": 13633,
+    "serverTimestamp": 1742652919227,
+    "clientReceiveTime": 1742652919239,
+    "realtimeLatency": 12,
+    "originalTimestamp": 1742652919227
+  },
+  {
+    "discussionId": 13634,
+    "serverTimestamp": 1742652919244,
+    "clientReceiveTime": 1742652919259,
+    "realtimeLatency": 15,
+    "originalTimestamp": 1742652919244
+  },
+  {
+    "discussionId": 13635,
+    "serverTimestamp": 1742652919265,
+    "clientReceiveTime": 1742652919284,
+    "realtimeLatency": 19,
+    "originalTimestamp": 1742652919265
+  },
+  {
+    "discussionId": 13636,
+    "serverTimestamp": 1742652919282,
+    "clientReceiveTime": 1742652919306,
+    "realtimeLatency": 24,
+    "originalTimestamp": 1742652919282
+  },
+  {
+    "discussionId": 13637,
+    "serverTimestamp": 1742652919314,
+    "clientReceiveTime": 1742652919340,
+    "realtimeLatency": 26,
+    "originalTimestamp": 1742652919314
+  },
+  {
+    "discussionId": 13638,
+    "serverTimestamp": 1742652919316,
+    "clientReceiveTime": 1742652919343,
+    "realtimeLatency": 27,
+    "originalTimestamp": 1742652919316
+  },
+  {
+    "discussionId": 13639,
+    "serverTimestamp": 1742652919350,
+    "clientReceiveTime": 1742652919378,
+    "realtimeLatency": 28,
+    "originalTimestamp": 1742652919350
+  },
+  {
+    "discussionId": 13640,
+    "serverTimestamp": 1742652919351,
+    "clientReceiveTime": 1742652919380,
+    "realtimeLatency": 29,
+    "originalTimestamp": 1742652919351
+  },
+  {
+    "discussionId": 13641,
+    "serverTimestamp": 1742652919387,
+    "clientReceiveTime": 1742652919413,
+    "realtimeLatency": 26,
+    "originalTimestamp": 1742652919387
+  },
+  {
+    "discussionId": 13642,
+    "serverTimestamp": 1742652919394,
+    "clientReceiveTime": 1742652919433,
+    "realtimeLatency": 39,
+    "originalTimestamp": 1742652919394
+  },
+  {
+    "discussionId": 13643,
+    "serverTimestamp": 1742652919448,
+    "clientReceiveTime": 1742652919473,
+    "realtimeLatency": 25,
+    "originalTimestamp": 1742652919448
+  },
+  {
+    "discussionId": 13644,
+    "serverTimestamp": 1742652919611,
+    "clientReceiveTime": 1742652919627,
+    "realtimeLatency": 16,
+    "originalTimestamp": 1742652919611
+  },
+  {
+    "discussionId": 13645,
+    "serverTimestamp": 1742652920047,
+    "clientReceiveTime": 1742652920060,
+    "realtimeLatency": 13,
+    "originalTimestamp": 1742652920047
+  },
+  {
+    "discussionId": 13646,
+    "serverTimestamp": 1742652920066,
+    "clientReceiveTime": 1742652920081,
+    "realtimeLatency": 15,
+    "originalTimestamp": 1742652920066
+  },
+  {
+    "discussionId": 13647,
+    "serverTimestamp": 1742652920087,
+    "clientReceiveTime": 1742652920106,
+    "realtimeLatency": 19,
+    "originalTimestamp": 1742652920087
+  },
+  {
+    "discussionId": 13648,
+    "serverTimestamp": 1742652920108,
+    "clientReceiveTime": 1742652920148,
+    "realtimeLatency": 40,
+    "originalTimestamp": 1742652920108
+  },
+  {
+    "discussionId": 13649,
+    "serverTimestamp": 1742652920126,
+    "clientReceiveTime": 1742652920151,
+    "realtimeLatency": 25,
+    "originalTimestamp": 1742652920126
+  },
+  {
+    "discussionId": 13650,
+    "serverTimestamp": 1742652920155,
+    "clientReceiveTime": 1742652920170,
+    "realtimeLatency": 15,
+    "originalTimestamp": 1742652920155
+  },
+  {
+    "discussionId": 13651,
+    "serverTimestamp": 1742652920177,
+    "clientReceiveTime": 1742652920192,
+    "realtimeLatency": 15,
+    "originalTimestamp": 1742652920177
+  },
+  {
+    "discussionId": 13652,
+    "serverTimestamp": 1742652920214,
+    "clientReceiveTime": 1742652920232,
+    "realtimeLatency": 18,
+    "originalTimestamp": 1742652920214
+  },
+  {
+    "discussionId": 13653,
+    "serverTimestamp": 1742652920233,
+    "clientReceiveTime": 1742652920260,
+    "realtimeLatency": 27,
+    "originalTimestamp": 1742652920233
+  },
+  {
+    "discussionId": 13654,
+    "serverTimestamp": 1742652920238,
+    "clientReceiveTime": 1742652920268,
+    "realtimeLatency": 30,
+    "originalTimestamp": 1742652920238
+  },
+  {
+    "discussionId": 13655,
+    "serverTimestamp": 1742652920268,
+    "clientReceiveTime": 1742652920314,
+    "realtimeLatency": 46,
+    "originalTimestamp": 1742652920268
+  },
+  {
+    "discussionId": 13656,
+    "serverTimestamp": 1742652920276,
+    "clientReceiveTime": 1742652920316,
+    "realtimeLatency": 40,
+    "originalTimestamp": 1742652920276
+  },
+  {
+    "discussionId": 13657,
+    "serverTimestamp": 1742652920321,
+    "clientReceiveTime": 1742652920341,
+    "realtimeLatency": 20,
+    "originalTimestamp": 1742652920321
+  },
+  {
+    "discussionId": 13658,
+    "serverTimestamp": 1742652920339,
+    "clientReceiveTime": 1742652920354,
+    "realtimeLatency": 15,
+    "originalTimestamp": 1742652920339
+  },
+  {
+    "discussionId": 13659,
+    "serverTimestamp": 1742652920361,
+    "clientReceiveTime": 1742652920377,
+    "realtimeLatency": 16,
+    "originalTimestamp": 1742652920361
+  },
+  {
+    "discussionId": 13660,
+    "serverTimestamp": 1742652920383,
+    "clientReceiveTime": 1742652920406,
+    "realtimeLatency": 23,
+    "originalTimestamp": 1742652920383
+  },
+  {
+    "discussionId": 13661,
+    "serverTimestamp": 1742652920402,
+    "clientReceiveTime": 1742652920420,
+    "realtimeLatency": 18,
+    "originalTimestamp": 1742652920402
+  },
+  {
+    "discussionId": 13662,
+    "serverTimestamp": 1742652920427,
+    "clientReceiveTime": 1742652920443,
+    "realtimeLatency": 16,
+    "originalTimestamp": 1742652920427
+  },
+  {
+    "discussionId": 13663,
+    "serverTimestamp": 1742652920451,
+    "clientReceiveTime": 1742652920477,
+    "realtimeLatency": 26,
+    "originalTimestamp": 1742652920451
+  },
+  {
+    "discussionId": 13664,
+    "serverTimestamp": 1742652920453,
+    "clientReceiveTime": 1742652920480,
+    "realtimeLatency": 27,
+    "originalTimestamp": 1742652920453
+  },
+  {
+    "discussionId": 13665,
+    "serverTimestamp": 1742652920485,
+    "clientReceiveTime": 1742652920498,
+    "realtimeLatency": 13,
+    "originalTimestamp": 1742652920485
+  },
+  {
+    "discussionId": 13666,
+    "serverTimestamp": 1742652920503,
+    "clientReceiveTime": 1742652920519,
+    "realtimeLatency": 16,
+    "originalTimestamp": 1742652920503
+  },
+  {
+    "discussionId": 13667,
+    "serverTimestamp": 1742652921072,
+    "clientReceiveTime": 1742652921097,
+    "realtimeLatency": 25,
+    "originalTimestamp": 1742652921072
+  },
+  {
+    "discussionId": 13668,
+    "serverTimestamp": 1742652921074,
+    "clientReceiveTime": 1742652921100,
+    "realtimeLatency": 26,
+    "originalTimestamp": 1742652921074
+  },
+  {
+    "discussionId": 13669,
+    "serverTimestamp": 1742652921105,
+    "clientReceiveTime": 1742652921127,
+    "realtimeLatency": 22,
+    "originalTimestamp": 1742652921105
+  },
+  {
+    "discussionId": 13670,
+    "serverTimestamp": 1742652921107,
+    "clientReceiveTime": 1742652921129,
+    "realtimeLatency": 22,
+    "originalTimestamp": 1742652921107
+  },
+  {
+    "discussionId": 13671,
+    "serverTimestamp": 1742652921136,
+    "clientReceiveTime": 1742652921158,
+    "realtimeLatency": 22,
+    "originalTimestamp": 1742652921136
+  },
+  {
+    "discussionId": 13672,
+    "serverTimestamp": 1742652921138,
+    "clientReceiveTime": 1742652921161,
+    "realtimeLatency": 23,
+    "originalTimestamp": 1742652921138
+  },
+  {
+    "discussionId": 13673,
+    "serverTimestamp": 1742652921243,
+    "clientReceiveTime": 1742652921255,
+    "realtimeLatency": 12,
+    "originalTimestamp": 1742652921243
+  },
+  {
+    "discussionId": 13674,
+    "serverTimestamp": 1742652921260,
+    "clientReceiveTime": 1742652921273,
+    "realtimeLatency": 13,
+    "originalTimestamp": 1742652921260
+  },
+  {
+    "discussionId": 13675,
+    "serverTimestamp": 1742652921280,
+    "clientReceiveTime": 1742652921294,
+    "realtimeLatency": 14,
+    "originalTimestamp": 1742652921280
+  },
+  {
+    "discussionId": 13676,
+    "serverTimestamp": 1742652921318,
+    "clientReceiveTime": 1742652921347,
+    "realtimeLatency": 29,
+    "originalTimestamp": 1742652921318
+  },
+  {
+    "discussionId": 13677,
+    "serverTimestamp": 1742652921382,
+    "clientReceiveTime": 1742652921398,
+    "realtimeLatency": 16,
+    "originalTimestamp": 1742652921382
+  },
+  {
+    "discussionId": 13679,
+    "serverTimestamp": 1742652921408,
+    "clientReceiveTime": 1742652921428,
+    "realtimeLatency": 20,
+    "originalTimestamp": 1742652921408
+  },
+  {
+    "discussionId": 13678,
+    "serverTimestamp": 1742652921405,
+    "clientReceiveTime": 1742652921439,
+    "realtimeLatency": 34,
+    "originalTimestamp": 1742652921405
+  },
+  {
+    "discussionId": 13680,
+    "serverTimestamp": 1742652921436,
+    "clientReceiveTime": 1742652921460,
+    "realtimeLatency": 24,
+    "originalTimestamp": 1742652921436
+  },
+  {
+    "discussionId": 13681,
+    "serverTimestamp": 1742652921450,
+    "clientReceiveTime": 1742652921480,
+    "realtimeLatency": 30,
+    "originalTimestamp": 1742652921450
+  },
+  {
+    "discussionId": 13682,
+    "serverTimestamp": 1742652921497,
+    "clientReceiveTime": 1742652921525,
+    "realtimeLatency": 28,
+    "originalTimestamp": 1742652921497
+  },
+  {
+    "discussionId": 13683,
+    "serverTimestamp": 1742652921546,
+    "clientReceiveTime": 1742652921560,
+    "realtimeLatency": 14,
+    "originalTimestamp": 1742652921546
+  },
+  {
+    "discussionId": 13684,
+    "serverTimestamp": 1742652921566,
+    "clientReceiveTime": 1742652921581,
+    "realtimeLatency": 15,
+    "originalTimestamp": 1742652921566
+  },
+  {
+    "discussionId": 13685,
+    "serverTimestamp": 1742652921587,
+    "clientReceiveTime": 1742652921601,
+    "realtimeLatency": 14,
+    "originalTimestamp": 1742652921587
+  },
+  {
+    "discussionId": 13686,
+    "serverTimestamp": 1742652922094,
+    "clientReceiveTime": 1742652922114,
+    "realtimeLatency": 20,
+    "originalTimestamp": 1742652922094
+  },
+  {
+    "discussionId": 13687,
+    "serverTimestamp": 1742652922119,
+    "clientReceiveTime": 1742652922134,
+    "realtimeLatency": 15,
+    "originalTimestamp": 1742652922119
+  },
+  {
+    "discussionId": 13688,
+    "serverTimestamp": 1742652922140,
+    "clientReceiveTime": 1742652922154,
+    "realtimeLatency": 14,
+    "originalTimestamp": 1742652922140
+  },
+  {
+    "discussionId": 13689,
+    "serverTimestamp": 1742652922168,
+    "clientReceiveTime": 1742652922184,
+    "realtimeLatency": 16,
+    "originalTimestamp": 1742652922168
+  },
+  {
+    "discussionId": 13690,
+    "serverTimestamp": 1742652922191,
+    "clientReceiveTime": 1742652922211,
+    "realtimeLatency": 20,
+    "originalTimestamp": 1742652922191
+  },
+  {
+    "discussionId": 13691,
+    "serverTimestamp": 1742652922218,
+    "clientReceiveTime": 1742652922243,
+    "realtimeLatency": 25,
+    "originalTimestamp": 1742652922218
+  },
+  {
+    "discussionId": 13692,
+    "serverTimestamp": 1742652922275,
+    "clientReceiveTime": 1742652922323,
+    "realtimeLatency": 48,
+    "originalTimestamp": 1742652922275
+  },
+  {
+    "discussionId": 13693,
+    "serverTimestamp": 1742652922301,
+    "clientReceiveTime": 1742652922328,
+    "realtimeLatency": 27,
+    "originalTimestamp": 1742652922301
+  },
+  {
+    "discussionId": 13694,
+    "serverTimestamp": 1742652922338,
+    "clientReceiveTime": 1742652922368,
+    "realtimeLatency": 30,
+    "originalTimestamp": 1742652922338
+  },
+  {
+    "discussionId": 13695,
+    "serverTimestamp": 1742652922340,
+    "clientReceiveTime": 1742652922371,
+    "realtimeLatency": 31,
+    "originalTimestamp": 1742652922340
+  },
+  {
+    "discussionId": 13696,
+    "serverTimestamp": 1742652922379,
+    "clientReceiveTime": 1742652922406,
+    "realtimeLatency": 27,
+    "originalTimestamp": 1742652922379
+  },
+  {
+    "discussionId": 13697,
+    "serverTimestamp": 1742652922381,
+    "clientReceiveTime": 1742652922409,
+    "realtimeLatency": 28,
+    "originalTimestamp": 1742652922381
+  },
+  {
+    "discussionId": 13698,
+    "serverTimestamp": 1742652922413,
+    "clientReceiveTime": 1742652922432,
+    "realtimeLatency": 19,
+    "originalTimestamp": 1742652922413
+  },
+  {
+    "discussionId": 13699,
+    "serverTimestamp": 1742652922439,
+    "clientReceiveTime": 1742652922473,
+    "realtimeLatency": 34,
+    "originalTimestamp": 1742652922439
+  },
+  {
+    "discussionId": 13700,
+    "serverTimestamp": 1742652922461,
+    "clientReceiveTime": 1742652922485,
+    "realtimeLatency": 24,
+    "originalTimestamp": 1742652922461
+  },
+  {
+    "discussionId": 13701,
+    "serverTimestamp": 1742652922491,
+    "clientReceiveTime": 1742652922505,
+    "realtimeLatency": 14,
+    "originalTimestamp": 1742652922491
+  },
+  {
+    "discussionId": 13702,
+    "serverTimestamp": 1742652922512,
+    "clientReceiveTime": 1742652922527,
+    "realtimeLatency": 15,
+    "originalTimestamp": 1742652922512
+  },
+  {
+    "discussionId": 13703,
+    "serverTimestamp": 1742652922607,
+    "clientReceiveTime": 1742652922620,
+    "realtimeLatency": 13,
+    "originalTimestamp": 1742652922607
+  },
+  {
+    "discussionId": 13704,
+    "serverTimestamp": 1742652922635,
+    "clientReceiveTime": 1742652922650,
+    "realtimeLatency": 15,
+    "originalTimestamp": 1742652922635
+  },
+  {
+    "discussionId": 13705,
+    "serverTimestamp": 1742652922659,
+    "clientReceiveTime": 1742652922673,
+    "realtimeLatency": 14,
+    "originalTimestamp": 1742652922659
+  },
+  {
+    "discussionId": 13706,
+    "serverTimestamp": 1742652923084,
+    "clientReceiveTime": 1742652923103,
+    "realtimeLatency": 19,
+    "originalTimestamp": 1742652923084
+  },
+  {
+    "discussionId": 13707,
+    "serverTimestamp": 1742652923109,
+    "clientReceiveTime": 1742652923124,
+    "realtimeLatency": 15,
+    "originalTimestamp": 1742652923109
+  },
+  {
+    "discussionId": 13708,
+    "serverTimestamp": 1742652923130,
+    "clientReceiveTime": 1742652923147,
+    "realtimeLatency": 17,
+    "originalTimestamp": 1742652923130
+  },
+  {
+    "discussionId": 13709,
+    "serverTimestamp": 1742652923164,
+    "clientReceiveTime": 1742652923179,
+    "realtimeLatency": 15,
+    "originalTimestamp": 1742652923164
+  },
+  {
+    "discussionId": 13710,
+    "serverTimestamp": 1742652923185,
+    "clientReceiveTime": 1742652923201,
+    "realtimeLatency": 16,
+    "originalTimestamp": 1742652923185
+  },
+  {
+    "discussionId": 13711,
+    "serverTimestamp": 1742652923207,
+    "clientReceiveTime": 1742652923223,
+    "realtimeLatency": 16,
+    "originalTimestamp": 1742652923207
+  },
+  {
+    "discussionId": 13712,
+    "serverTimestamp": 1742652923262,
+    "clientReceiveTime": 1742652923276,
+    "realtimeLatency": 14,
+    "originalTimestamp": 1742652923262
+  },
+  {
+    "discussionId": 13713,
+    "serverTimestamp": 1742652923282,
+    "clientReceiveTime": 1742652923297,
+    "realtimeLatency": 15,
+    "originalTimestamp": 1742652923282
+  },
+  {
+    "discussionId": 13714,
+    "serverTimestamp": 1742652923302,
+    "clientReceiveTime": 1742652923318,
+    "realtimeLatency": 16,
+    "originalTimestamp": 1742652923302
+  },
+  {
+    "discussionId": 13715,
+    "serverTimestamp": 1742652923343,
+    "clientReceiveTime": 1742652923389,
+    "realtimeLatency": 46,
+    "originalTimestamp": 1742652923343
+  },
+  {
+    "discussionId": 13716,
+    "serverTimestamp": 1742652923361,
+    "clientReceiveTime": 1742652923410,
+    "realtimeLatency": 49,
+    "originalTimestamp": 1742652923361
+  },
+  {
+    "discussionId": 13717,
+    "serverTimestamp": 1742652923395,
+    "clientReceiveTime": 1742652923421,
+    "realtimeLatency": 26,
+    "originalTimestamp": 1742652923395
+  },
+  {
+    "discussionId": 13718,
+    "serverTimestamp": 1742652923427,
+    "clientReceiveTime": 1742652923468,
+    "realtimeLatency": 41,
+    "originalTimestamp": 1742652923427
+  },
+  {
+    "discussionId": 13721,
+    "serverTimestamp": 1742652923482,
+    "clientReceiveTime": 1742652923511,
+    "realtimeLatency": 29,
+    "originalTimestamp": 1742652923482
+  },
+  {
+    "discussionId": 13719,
+    "serverTimestamp": 1742652923439,
+    "clientReceiveTime": 1742652923515,
+    "realtimeLatency": 76,
+    "originalTimestamp": 1742652923439
+  },
+  {
+    "discussionId": 13720,
+    "serverTimestamp": 1742652923469,
+    "clientReceiveTime": 1742652923534,
+    "realtimeLatency": 65,
+    "originalTimestamp": 1742652923469
+  },
+  {
+    "discussionId": 13722,
+    "serverTimestamp": 1742652923567,
+    "clientReceiveTime": 1742652923601,
+    "realtimeLatency": 34,
+    "originalTimestamp": 1742652923567
+  },
+  {
+    "discussionId": 13723,
+    "serverTimestamp": 1742652923577,
+    "clientReceiveTime": 1742652923614,
+    "realtimeLatency": 37,
+    "originalTimestamp": 1742652923577
+  },
+  {
+    "discussionId": 13725,
+    "serverTimestamp": 1742652924110,
+    "clientReceiveTime": 1742652924129,
+    "realtimeLatency": 19,
+    "originalTimestamp": 1742652924110
+  },
+  {
+    "discussionId": 13724,
+    "serverTimestamp": 1742652924109,
+    "clientReceiveTime": 1742652924145,
+    "realtimeLatency": 36,
+    "originalTimestamp": 1742652924109
+  },
+  {
+    "discussionId": 13726,
+    "serverTimestamp": 1742652924139,
+    "clientReceiveTime": 1742652924158,
+    "realtimeLatency": 19,
+    "originalTimestamp": 1742652924139
+  },
+  {
+    "discussionId": 13727,
+    "serverTimestamp": 1742652924163,
+    "clientReceiveTime": 1742652924177,
+    "realtimeLatency": 14,
+    "originalTimestamp": 1742652924163
+  },
+  {
+    "discussionId": 13730,
+    "serverTimestamp": 1742652924344,
+    "clientReceiveTime": 1742652924374,
+    "realtimeLatency": 30,
+    "originalTimestamp": 1742652924344
+  },
+  {
+    "discussionId": 13729,
+    "serverTimestamp": 1742652924342,
+    "clientReceiveTime": 1742652924386,
+    "realtimeLatency": 44,
+    "originalTimestamp": 1742652924342
+  },
+  {
+    "discussionId": 13728,
+    "serverTimestamp": 1742652924339,
+    "clientReceiveTime": 1742652924392,
+    "realtimeLatency": 53,
+    "originalTimestamp": 1742652924339
+  },
+  {
+    "discussionId": 13731,
+    "serverTimestamp": 1742652924388,
+    "clientReceiveTime": 1742652924410,
+    "realtimeLatency": 22,
+    "originalTimestamp": 1742652924388
+  },
+  {
+    "discussionId": 13732,
+    "serverTimestamp": 1742652924409,
+    "clientReceiveTime": 1742652924430,
+    "realtimeLatency": 21,
+    "originalTimestamp": 1742652924409
+  },
+  {
+    "discussionId": 13733,
+    "serverTimestamp": 1742652924421,
+    "clientReceiveTime": 1742652924451,
+    "realtimeLatency": 30,
+    "originalTimestamp": 1742652924421
+  },
+  {
+    "discussionId": 13734,
+    "serverTimestamp": 1742652924443,
+    "clientReceiveTime": 1742652924476,
+    "realtimeLatency": 33,
+    "originalTimestamp": 1742652924443
+  },
+  {
+    "discussionId": 13735,
+    "serverTimestamp": 1742652924452,
+    "clientReceiveTime": 1742652924483,
+    "realtimeLatency": 31,
+    "originalTimestamp": 1742652924452
+  },
+  {
+    "discussionId": 13736,
+    "serverTimestamp": 1742652924474,
+    "clientReceiveTime": 1742652924518,
+    "realtimeLatency": 44,
+    "originalTimestamp": 1742652924474
+  },
+  {
+    "discussionId": 13737,
+    "serverTimestamp": 1742652924489,
+    "clientReceiveTime": 1742652924537,
+    "realtimeLatency": 48,
+    "originalTimestamp": 1742652924489
+  },
+  {
+    "discussionId": 13739,
+    "serverTimestamp": 1742652924499,
+    "clientReceiveTime": 1742652924541,
+    "realtimeLatency": 42,
+    "originalTimestamp": 1742652924499
+  },
+  {
+    "discussionId": 13738,
+    "serverTimestamp": 1742652924497,
+    "clientReceiveTime": 1742652924557,
+    "realtimeLatency": 60,
+    "originalTimestamp": 1742652924497
+  },
+  {
+    "discussionId": 13740,
+    "serverTimestamp": 1742652924533,
+    "clientReceiveTime": 1742652924567,
+    "realtimeLatency": 34,
+    "originalTimestamp": 1742652924533
+  },
+  {
+    "discussionId": 13741,
+    "serverTimestamp": 1742652924554,
+    "clientReceiveTime": 1742652924587,
+    "realtimeLatency": 33,
+    "originalTimestamp": 1742652924554
+  },
+  {
+    "discussionId": 13742,
+    "serverTimestamp": 1742652924581,
+    "clientReceiveTime": 1742652924610,
+    "realtimeLatency": 29,
+    "originalTimestamp": 1742652924581
+  },
+  {
+    "discussionId": 13743,
+    "serverTimestamp": 1742652924585,
+    "clientReceiveTime": 1742652924613,
+    "realtimeLatency": 28,
+    "originalTimestamp": 1742652924585
+  },
+  {
+    "discussionId": 13744,
+    "serverTimestamp": 1742652924619,
+    "clientReceiveTime": 1742652924635,
+    "realtimeLatency": 16,
+    "originalTimestamp": 1742652924619
+  },
+  {
+    "discussionId": 13745,
+    "serverTimestamp": 1742652924643,
+    "clientReceiveTime": 1742652924657,
+    "realtimeLatency": 14,
+    "originalTimestamp": 1742652924643
+  },
+  {
+    "discussionId": 13746,
+    "serverTimestamp": 1742652925110,
+    "clientReceiveTime": 1742652925135,
+    "realtimeLatency": 25,
+    "originalTimestamp": 1742652925110
+  },
+  {
+    "discussionId": 13747,
+    "serverTimestamp": 1742652925111,
+    "clientReceiveTime": 1742652925137,
+    "realtimeLatency": 26,
+    "originalTimestamp": 1742652925111
+  },
+  {
+    "discussionId": 13748,
+    "serverTimestamp": 1742652925143,
+    "clientReceiveTime": 1742652925169,
+    "realtimeLatency": 26,
+    "originalTimestamp": 1742652925143
+  },
+  {
+    "discussionId": 13749,
+    "serverTimestamp": 1742652925145,
+    "clientReceiveTime": 1742652925175,
+    "realtimeLatency": 30,
+    "originalTimestamp": 1742652925145
+  },
+  {
+    "discussionId": 13750,
+    "serverTimestamp": 1742652925180,
+    "clientReceiveTime": 1742652925222,
+    "realtimeLatency": 42,
+    "originalTimestamp": 1742652925180
+  },
+  {
+    "discussionId": 13751,
+    "serverTimestamp": 1742652925182,
+    "clientReceiveTime": 1742652925225,
+    "realtimeLatency": 43,
+    "originalTimestamp": 1742652925182
+  },
+  {
+    "discussionId": 13752,
+    "serverTimestamp": 1742652925271,
+    "clientReceiveTime": 1742652925289,
+    "realtimeLatency": 18,
+    "originalTimestamp": 1742652925271
+  },
+  {
+    "discussionId": 13753,
+    "serverTimestamp": 1742652925295,
+    "clientReceiveTime": 1742652925311,
+    "realtimeLatency": 16,
+    "originalTimestamp": 1742652925295
+  },
+  {
+    "discussionId": 13754,
+    "serverTimestamp": 1742652925317,
+    "clientReceiveTime": 1742652925334,
+    "realtimeLatency": 17,
+    "originalTimestamp": 1742652925317
+  },
+  {
+    "discussionId": 13755,
+    "serverTimestamp": 1742652925350,
+    "clientReceiveTime": 1742652925370,
+    "realtimeLatency": 20,
+    "originalTimestamp": 1742652925350
+  },
+  {
+    "discussionId": 13756,
+    "serverTimestamp": 1742652925365,
+    "clientReceiveTime": 1742652925393,
+    "realtimeLatency": 28,
+    "originalTimestamp": 1742652925365
+  },
+  {
+    "discussionId": 13757,
+    "serverTimestamp": 1742652925378,
+    "clientReceiveTime": 1742652925405,
+    "realtimeLatency": 27,
+    "originalTimestamp": 1742652925378
+  },
+  {
+    "discussionId": 13758,
+    "serverTimestamp": 1742652925402,
+    "clientReceiveTime": 1742652925451,
+    "realtimeLatency": 49,
+    "originalTimestamp": 1742652925402
+  },
+  {
+    "discussionId": 13760,
+    "serverTimestamp": 1742652925421,
+    "clientReceiveTime": 1742652925469,
+    "realtimeLatency": 48,
+    "originalTimestamp": 1742652925421
+  },
+  {
+    "discussionId": 13761,
+    "serverTimestamp": 1742652925428,
+    "clientReceiveTime": 1742652925473,
+    "realtimeLatency": 45,
+    "originalTimestamp": 1742652925428
+  },
+  {
+    "discussionId": 13762,
+    "serverTimestamp": 1742652925467,
+    "clientReceiveTime": 1742652925498,
+    "realtimeLatency": 31,
+    "originalTimestamp": 1742652925467
+  },
+  {
+    "discussionId": 13763,
+    "serverTimestamp": 1742652925485,
+    "clientReceiveTime": 1742652925519,
+    "realtimeLatency": 34,
+    "originalTimestamp": 1742652925485
+  },
+  {
+    "discussionId": 13759,
+    "serverTimestamp": 1742652925416,
+    "clientReceiveTime": 1742652925522,
+    "realtimeLatency": 106,
+    "originalTimestamp": 1742652925416
+  },
+  {
+    "discussionId": 13764,
+    "serverTimestamp": 1742652925526,
+    "clientReceiveTime": 1742652925550,
+    "realtimeLatency": 24,
+    "originalTimestamp": 1742652925526
+  },
+  {
+    "discussionId": 13765,
+    "serverTimestamp": 1742652925539,
+    "clientReceiveTime": 1742652925581,
+    "realtimeLatency": 42,
+    "originalTimestamp": 1742652925539
+  },
+  {
+    "discussionId": 13766,
+    "serverTimestamp": 1742652925579,
+    "clientReceiveTime": 1742652925602,
+    "realtimeLatency": 23,
+    "originalTimestamp": 1742652925579
+  },
+  {
+    "discussionId": 13768,
+    "serverTimestamp": 1742652925612,
+    "clientReceiveTime": 1742652925648,
+    "realtimeLatency": 36,
+    "originalTimestamp": 1742652925612
+  },
+  {
+    "discussionId": 13767,
+    "serverTimestamp": 1742652925600,
+    "clientReceiveTime": 1742652925664,
+    "realtimeLatency": 64,
+    "originalTimestamp": 1742652925600
+  },
+  {
+    "discussionId": 13771,
+    "serverTimestamp": 1742652925661,
+    "clientReceiveTime": 1742652925693,
+    "realtimeLatency": 32,
+    "originalTimestamp": 1742652925661
+  },
+  {
+    "discussionId": 13769,
+    "serverTimestamp": 1742652925616,
+    "clientReceiveTime": 1742652925697,
+    "realtimeLatency": 81,
+    "originalTimestamp": 1742652925616
+  },
+  {
+    "discussionId": 13770,
+    "serverTimestamp": 1742652925638,
+    "clientReceiveTime": 1742652925710,
+    "realtimeLatency": 72,
+    "originalTimestamp": 1742652925638
+  },
+  {
+    "discussionId": 13772,
+    "serverTimestamp": 1742652926095,
+    "clientReceiveTime": 1742652926116,
+    "realtimeLatency": 21,
+    "originalTimestamp": 1742652926095
+  },
+  {
+    "discussionId": 13773,
+    "serverTimestamp": 1742652926121,
+    "clientReceiveTime": 1742652926135,
+    "realtimeLatency": 14,
+    "originalTimestamp": 1742652926121
+  },
+  {
+    "discussionId": 13774,
+    "serverTimestamp": 1742652926141,
+    "clientReceiveTime": 1742652926166,
+    "realtimeLatency": 25,
+    "originalTimestamp": 1742652926141
+  },
+  {
+    "discussionId": 13776,
+    "serverTimestamp": 1742652926175,
+    "clientReceiveTime": 1742652926209,
+    "realtimeLatency": 34,
+    "originalTimestamp": 1742652926175
+  },
+  {
+    "discussionId": 13775,
+    "serverTimestamp": 1742652926159,
+    "clientReceiveTime": 1742652926233,
+    "realtimeLatency": 74,
+    "originalTimestamp": 1742652926159
+  },
+  {
+    "discussionId": 13777,
+    "serverTimestamp": 1742652926222,
+    "clientReceiveTime": 1742652926245,
+    "realtimeLatency": 23,
+    "originalTimestamp": 1742652926222
+  },
+  {
+    "discussionId": 13778,
+    "serverTimestamp": 1742652926257,
+    "clientReceiveTime": 1742652926271,
+    "realtimeLatency": 14,
+    "originalTimestamp": 1742652926257
+  },
+  {
+    "discussionId": 13779,
+    "serverTimestamp": 1742652926341,
+    "clientReceiveTime": 1742652926368,
+    "realtimeLatency": 27,
+    "originalTimestamp": 1742652926341
+  },
+  {
+    "discussionId": 13780,
+    "serverTimestamp": 1742652926344,
+    "clientReceiveTime": 1742652926372,
+    "realtimeLatency": 28,
+    "originalTimestamp": 1742652926344
+  },
+  {
+    "discussionId": 13781,
+    "serverTimestamp": 1742652926378,
+    "clientReceiveTime": 1742652926410,
+    "realtimeLatency": 32,
+    "originalTimestamp": 1742652926378
+  },
+  {
+    "discussionId": 13782,
+    "serverTimestamp": 1742652926380,
+    "clientReceiveTime": 1742652926414,
+    "realtimeLatency": 34,
+    "originalTimestamp": 1742652926380
+  },
+  {
+    "discussionId": 13784,
+    "serverTimestamp": 1742652926427,
+    "clientReceiveTime": 1742652926481,
+    "realtimeLatency": 54,
+    "originalTimestamp": 1742652926427
+  },
+  {
+    "discussionId": 13785,
+    "serverTimestamp": 1742652926432,
+    "clientReceiveTime": 1742652926485,
+    "realtimeLatency": 53,
+    "originalTimestamp": 1742652926432
+  },
+  {
+    "discussionId": 13783,
+    "serverTimestamp": 1742652926411,
+    "clientReceiveTime": 1742652926519,
+    "realtimeLatency": 108,
+    "originalTimestamp": 1742652926411
+  },
+  {
+    "discussionId": 13788,
+    "serverTimestamp": 1742652926501,
+    "clientReceiveTime": 1742652926531,
+    "realtimeLatency": 30,
+    "originalTimestamp": 1742652926501
+  },
+  {
+    "discussionId": 13786,
+    "serverTimestamp": 1742652926436,
+    "clientReceiveTime": 1742652926566,
+    "realtimeLatency": 130,
+    "originalTimestamp": 1742652926436
+  },
+  {
+    "discussionId": 13787,
+    "serverTimestamp": 1742652926450,
+    "clientReceiveTime": 1742652926569,
+    "realtimeLatency": 119,
+    "originalTimestamp": 1742652926450
+  },
+  {
+    "discussionId": 13789,
+    "serverTimestamp": 1742652926546,
+    "clientReceiveTime": 1742652926583,
+    "realtimeLatency": 37,
+    "originalTimestamp": 1742652926546
+  },
+  {
+    "discussionId": 13790,
+    "serverTimestamp": 1742652926579,
+    "clientReceiveTime": 1742652926604,
+    "realtimeLatency": 25,
+    "originalTimestamp": 1742652926579
+  },
+  {
+    "discussionId": 13792,
+    "serverTimestamp": 1742652926611,
+    "clientReceiveTime": 1742652926631,
+    "realtimeLatency": 20,
+    "originalTimestamp": 1742652926611
+  },
+  {
+    "discussionId": 13793,
+    "serverTimestamp": 1742652926636,
+    "clientReceiveTime": 1742652926653,
+    "realtimeLatency": 17,
+    "originalTimestamp": 1742652926636
+  },
+  {
+    "discussionId": 13791,
+    "serverTimestamp": 1742652926602,
+    "clientReceiveTime": 1742652926669,
+    "realtimeLatency": 67,
+    "originalTimestamp": 1742652926602
+  },
+  {
+    "discussionId": 13794,
+    "serverTimestamp": 1742652926664,
+    "clientReceiveTime": 1742652926682,
+    "realtimeLatency": 18,
+    "originalTimestamp": 1742652926664
+  },
+  {
+    "discussionId": 13795,
+    "serverTimestamp": 1742652926688,
+    "clientReceiveTime": 1742652926703,
+    "realtimeLatency": 15,
+    "originalTimestamp": 1742652926688
+  },
+  {
+    "discussionId": 13796,
+    "serverTimestamp": 1742652927682,
+    "clientReceiveTime": 1742652927704,
+    "realtimeLatency": 22,
+    "originalTimestamp": 1742652927682
+  },
+  {
+    "discussionId": 13797,
+    "serverTimestamp": 1742652928680,
+    "clientReceiveTime": 1742652928711,
+    "realtimeLatency": 31,
+    "originalTimestamp": 1742652928680
+  }
+]
