@@ -1,23 +1,23 @@
-import { useRef, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns';
+import { Download, Edit, MoreHorizontal, RefreshCw, Trash2, UserCheck, Users } from 'lucide-react';
+import { useRef, useState } from 'react';
 import { toast } from 'react-toastify';
-import { Users, Download, Edit, Trash2, UserCheck, MoreHorizontal, RefreshCw } from 'lucide-react';
 
-import { User, UserRole } from '@/features/users/types';
 import { adminApi } from '@/features/admin/services/adminApi';
 import { useUsers } from '@/features/users/hooks/useUsers';
+import { User, UserRole } from '@/features/users/types';
 import { useDropdown } from '@/hooks/useDropdown';
 
 // Import our reusable components
+import UserAvatar from '@/components/layouts/UserAvatar';
+import MainButton from '@/components/ui/buttons/MainButton';
 import { DataTable } from '@/features/admin/components/DataTable';
+import FilterBar from '@/features/admin/components/FilterBar';
 import Pagination from '@/features/admin/components/Pagination';
 import StatusBadge from '@/features/admin/components/StatusBadge';
-import FilterBar from '@/features/admin/components/FilterBar';
-import MainButton from '@/components/ui/buttons/MainButton';
-import AvatarImage from '@/features/users/components/AvatarImage';
-import DeleteConfirmationModal from '@/components/modals/DeleteConfirmationModal';
 import UserFormModal from '@/features/users/components/UserFormModal';
+import ConfirmationModal from '@/components/modals/ConfirmationModal';
 
 const UsersPage = () => {
   const queryClient = useQueryClient();
@@ -29,7 +29,11 @@ const UsersPage = () => {
 
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const { isOpen: isDropdownOpen, toggle: toggleDropdown, close: closeDropdown } = useDropdown(dropdownRef as React.RefObject<HTMLElement>);
+  const {
+    isOpen: isDropdownOpen,
+    toggle: toggleDropdown,
+    close: closeDropdown,
+  } = useDropdown(dropdownRef as React.RefObject<HTMLElement>);
 
   const {
     users,
@@ -114,7 +118,7 @@ const UsersPage = () => {
       header: 'User',
       accessor: (user: User) => (
         <div className="flex items-center">
-          <AvatarImage fullName={user.fullName} avatarUrl={user.avatarUrl} size="sm" />
+          <UserAvatar fullName={user.fullName} avatarUrl={user.avatarUrl} size="sm" />
           <div className="ml-4">
             <div className="text-sm font-medium text-dark">{user.fullName}</div>
             <div className="text-sm text-gray-500">@{user.username}</div>
@@ -279,7 +283,7 @@ const UsersPage = () => {
         user={selectedUser}
       />
 
-      <DeleteConfirmationModal
+      <ConfirmationModal
         isOpen={isDeleteModalOpen}
         title="Delete User"
         message={
@@ -287,7 +291,9 @@ const UsersPage = () => {
             ? `Are you sure you want to delete the user "${selectedUser.fullName}"? This action cannot be undone.`
             : 'Are you sure you want to delete this user? This action cannot be undone.'
         }
-        isDeleting={isDeleting}
+        confirmButtonText="Delete"
+        variant="danger"
+        isProcessing={isDeleting}
         onCancel={handleDeleteCancel}
         onConfirm={handleDeleteUser}
       />

@@ -1,4 +1,4 @@
-import { useCallback, RefObject } from 'react';
+import { RefObject, useCallback } from 'react';
 
 export function useTextareaResize(textareaRef: RefObject<HTMLTextAreaElement>) {
   const adjustTextareaHeight = useCallback(() => {

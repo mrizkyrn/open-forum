@@ -1,6 +1,7 @@
-import { DiscussionSortBy, SortOrder, SearchDiscussionDto } from '@/features/discussions/types/DiscussionRequestTypes';
 import DiscussionPost from '@/features/discussions/components/DiscussionPost/DiscussionPost';
 import NewDiscussionButton from '@/features/discussions/components/DiscussionPost/NewDiscussionButton';
+import { DiscussionSortBy, SearchDiscussionDto } from '@/features/discussions/types';
+import { SortOrder } from '@/types/SearchTypes';
 
 const Home = () => {
   const searchRequest: SearchDiscussionDto = {

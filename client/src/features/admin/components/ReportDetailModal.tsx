@@ -1,21 +1,12 @@
-import { useState } from 'react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import {
-  Flag,
-  X,
-  AlertTriangle,
-  CheckCircle,
-  XCircle,
-  Loader2,
-  ExternalLink,
-  Trash2,
-} from 'lucide-react';
-import { format } from 'date-fns';
+import UserAvatar from '@/components/layouts/UserAvatar';
+import Modal from '@/components/modals/Modal/Modal';
 import { adminApi } from '@/features/admin/services/adminApi';
 import { Report, ReportStatus, ReportTargetType } from '@/features/reports/types';
-import Modal from '@/components/modals/Modal';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { format } from 'date-fns';
+import { AlertTriangle, CheckCircle, ExternalLink, Flag, Loader2, Trash2, X, XCircle } from 'lucide-react';
+import { useState } from 'react';
 import { toast } from 'react-toastify';
-import AvatarImage from '@/features/users/components/AvatarImage';
 
 interface ReportDetailModalProps {
   isOpen: boolean;
@@ -215,7 +206,7 @@ const ReportDetailModal: React.FC<ReportDetailModalProps> = ({ isOpen, onClose, 
             <div className="mb-4">
               <h4 className="mb-2 font-medium text-gray-700">Reported by</h4>
               <div className="flex items-center rounded-md bg-gray-50 p-3">
-                <AvatarImage
+                <UserAvatar
                   avatarUrl={report.reporter?.avatarUrl}
                   fullName={report.reporter?.fullName || ''}
                   size="md"
@@ -277,7 +268,7 @@ const ReportDetailModal: React.FC<ReportDetailModalProps> = ({ isOpen, onClose, 
                 {report.reviewer && report.status !== ReportStatus.PENDING && (
                   <div className="mt-3 border-t border-gray-200 pt-3">
                     <div className="flex items-center">
-                      <AvatarImage
+                      <UserAvatar
                         avatarUrl={report.reviewer?.avatarUrl}
                         fullName={report.reviewer?.fullName || ''}
                         size="sm"
@@ -318,7 +309,7 @@ const ReportDetailModal: React.FC<ReportDetailModalProps> = ({ isOpen, onClose, 
                   {/* Content author info */}
                   <div className="mb-4 flex items-center justify-between">
                     <div className="flex items-center">
-                      <AvatarImage
+                      <UserAvatar
                         avatarUrl={report.targetDetails?.author?.avatarUrl}
                         fullName={report.targetDetails?.author?.fullName || ''}
                         size="md"

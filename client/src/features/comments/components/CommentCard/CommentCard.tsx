@@ -1,15 +1,15 @@
-import { useState } from 'react';
-import { useQueryClient } from '@tanstack/react-query';
-import { toast } from 'react-toastify';
+import UserAvatar from '@/components/layouts/UserAvatar';
+import ConfirmationModal from '@/components/modals/ConfirmationModal';
+import { commentApi } from '@/features/comments/services';
 import { Comment } from '@/features/comments/types';
-import { commentApi } from '@/features/comments/services/commentApi';
-import DeleteConfirmationModal from '@/components/modals/DeleteConfirmationModal';
-import AvatarImage from '@/features/users/components/AvatarImage';
-import CommentCardBody from './CommentCardBody';
-import CommentCardHeader from './CommentCardHeader';
-import CommentCardFooter from './CommentCardFooter';
+import { useQueryClient } from '@tanstack/react-query';
+import { useState } from 'react';
+import { toast } from 'react-toastify';
 import CommentForm from '../CommentForm/CommentForm';
 import CommentRepliesSection from '../CommentsSection/CommentRepliesSection';
+import CommentCardBody from './CommentCardBody';
+import CommentCardFooter from './CommentCardFooter';
+import CommentCardHeader from './CommentCardHeader';
 
 interface CommentCardProps {
   comment: Comment;
@@ -87,7 +87,7 @@ const CommentCard: React.FC<CommentCardProps> = ({
       <div className="w-full border-t border-t-gray-300 pt-2">
         <div className="flex gap-2">
           {/* Avatar */}
-          <AvatarImage
+          <UserAvatar
             fullName={comment.author.fullName}
             avatarUrl={comment.author.avatarUrl}
             size={isReply ? 'sm' : 'md'}
@@ -175,11 +175,13 @@ const CommentCard: React.FC<CommentCardProps> = ({
       </div>
 
       {/* Delete confirmation modal */}
-      <DeleteConfirmationModal
+      <ConfirmationModal
         isOpen={showDeleteModal}
         title="Delete Comment"
         message="Are you sure you want to delete this comment? This action cannot be undone."
-        isDeleting={isDeleting}
+        confirmButtonText="Delete"
+        variant="danger"
+        isProcessing={isDeleting}
         onCancel={handleDeleteCancel}
         onConfirm={handleDeleteConfirm}
       />

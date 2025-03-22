@@ -1,4 +1,4 @@
-import { useEffect, useRef, ReactNode, MouseEvent } from 'react';
+import { MouseEvent, ReactNode, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 
 let openModalCount = 0;
@@ -151,11 +151,11 @@ const Modal = ({
     >
       <div
         ref={modalRef}
-        className={`w-full ${sizeClasses[size]} rounded-lg bg-white ${className}`}
+        className={`w-full ${sizeClasses[size]} rounded-lg bg-white shadow-xl  ${className}`}
         tabIndex={-1}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="p-6">{children}</div>
+        <div className="flex h-full flex-col">{children}</div>
       </div>
     </div>
   );

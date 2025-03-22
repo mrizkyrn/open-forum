@@ -1,14 +1,14 @@
-import { useState, useRef, useEffect } from 'react';
-import { Loader2, ImagePlus } from 'lucide-react';
-import { toast } from 'react-toastify';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { commentApi } from '@/features/comments/services/commentApi';
-import { ALLOWED_FILE_TYPES, MAX_COMMENT_FILES, MAX_FILE_SIZE } from '@/utils/constants';
-import { Attachment } from '@/types/AttachmentTypes';
-import { useAuth } from '@/features/auth/hooks/useAuth';
-import { useFileHandling } from '@/hooks/useFileHandling';
-import AvatarImage from '@/features/users/components/AvatarImage';
+import UserAvatar from '@/components/layouts/UserAvatar';
 import FilePreview from '@/components/ui/file-displays/FilePreview';
+import { useAuth } from '@/features/auth/hooks/useAuth';
+import { commentApi } from '@/features/comments/services';
+import { useFileHandling } from '@/hooks/useFileHandling';
+import { Attachment } from '@/types/AttachmentTypes';
+import { ALLOWED_FILE_TYPES, MAX_COMMENT_FILES, MAX_FILE_SIZE } from '@/utils/constants';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { ImagePlus, Loader2 } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { toast } from 'react-toastify';
 
 interface CommentFormProps {
   discussionId: number;
@@ -139,50 +139,9 @@ const CommentForm: React.FC<CommentFormProps> = ({
     }
   };
 
-  // const validateFiles = (filesToCheck: File[]): boolean => {
-  //   if (filesToCheck.length > MAX_COMMENT_FILES) {
-  //     setFileErrors(`Maximum ${MAX_COMMENT_FILES} files allowed`);
-  //     return false;
-  //   }
-
-  //   for (const file of filesToCheck) {
-  //     if (file.size > MAX_FILE_SIZE) {
-  //       setFileErrors(`${file.name} is too large (max 5MB)`);
-  //       return false;
-  //     }
-
-  //     if (!ALLOWED_FILE_TYPES.includes(file.type)) {
-  //       setFileErrors(`${file.name} has an unsupported file type`);
-  //       return false;
-  //     }
-  //   }
-
-  //   setFileErrors(null);
-  //   return true;
-  // };
-
-  // const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const selectedFiles = Array.from(e.target.files || []);
-
-  //   if (validateFiles([...files, ...selectedFiles])) {
-  //     if (files.length + selectedFiles.length <= MAX_COMMENT_FILES) {
-  //       setFiles((prev) => [...prev, ...selectedFiles]);
-  //     }
-  //   }
-
-  //   if (fileInputRef.current) {
-  //     fileInputRef.current.value = '';
-  //   }
-  // };
-
   const removeExistingAttachment = (attachmentId: number) => {
     setAttachmentsToRemove((prev) => [...prev, attachmentId]);
   };
-
-  // const removeFile = (index: number) => {
-  //   setFiles((prev) => prev.filter((_, i) => i !== index));
-  //   setFileErrors(null);
-  // };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -212,9 +171,7 @@ const CommentForm: React.FC<CommentFormProps> = ({
     <div className="w-full">
       <form ref={commentFormRef} onSubmit={handleSubmit} className="flex flex-col gap-2 rounded-lg bg-white">
         <div className="flex items-start gap-2">
-          {isReply || isEditing ? null : (
-            <AvatarImage fullName={user?.fullName} avatarUrl={user?.avatarUrl} size="md" />
-          )}
+          {isReply || isEditing ? null : <UserAvatar fullName={user?.fullName} avatarUrl={user?.avatarUrl} size="md" />}
           <div className="flex w-full flex-col gap-3">
             <textarea
               ref={textareaRef}

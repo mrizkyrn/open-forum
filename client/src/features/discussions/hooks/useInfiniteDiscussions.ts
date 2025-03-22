@@ -1,6 +1,7 @@
+import { discussionApi } from '@/features/discussions/services';
+import { DiscussionSortBy } from '@/features/discussions/types';
+import { SortOrder } from '@/types/SearchTypes';
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { discussionApi } from '@/features/discussions/services/discussionApi';
-import { DiscussionSortBy, SortOrder } from '../types/DiscussionRequestTypes';
 
 interface UseInfiniteDiscussionsOptions {
   limit?: number;

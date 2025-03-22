@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Loader2, X, UserCheck } from 'lucide-react';
-import { toast } from 'react-toastify';
-import Modal from '@/components/modals/Modal';
+import Modal from '@/components/modals/Modal/Modal';
 import { adminApi } from '@/features/admin/services/adminApi';
 import { User, UserRole } from '@/features/users/types';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { Loader2, UserCheck, X } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 
 interface UserFormModalProps {
   isOpen: boolean;

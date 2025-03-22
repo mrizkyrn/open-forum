@@ -1,12 +1,14 @@
-import { useState } from 'react';
-import { toast } from 'react-toastify';
-import { X, Loader2, Tag as TagIcon, CheckCircle } from 'lucide-react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { discussionApi } from '@/features/discussions/services/discussionApi';
-import { ALLOWED_FILE_TYPES, MAX_FILE_SIZE, MAX_DISCUSSION_FILES } from '@/utils/constants';
-import { useFileHandling } from '@/hooks/useFileHandling';
+import { Modal, ModalBody, ModalFooter, ModalHeader } from '@/components/modals/Modal';
+import MainButton from '@/components/ui/buttons/MainButton';
 import FilePreview from '@/components/ui/file-displays/FilePreview';
-import Modal from '@/components/modals/Modal';
+import { discussionApi } from '@/features/discussions/services';
+import { useFileHandling } from '@/hooks/useFileHandling';
+import { ALLOWED_FILE_TYPES, MAX_DISCUSSION_FILES, MAX_FILE_SIZE } from '@/utils/constants';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { CheckCircle, Tag as TagIcon, Upload, X } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+import { CreateDiscussionDto } from '../../types';
 
 interface CreateDiscussionModalProps {
   preselectedSpaceId?: number;
@@ -17,9 +19,12 @@ interface CreateDiscussionModalProps {
 const CreateDiscussionModal: React.FC<CreateDiscussionModalProps> = ({ preselectedSpaceId, isOpen, onClose }) => {
   const queryClient = useQueryClient();
 
-  const [content, setContent] = useState<string>('');
-  const [isAnonymous, setIsAnonymous] = useState<boolean>(false);
-  const [tags, setTags] = useState<string[]>([]);
+  const [formData, setFormData] = useState<CreateDiscussionDto>({
+    content: '',
+    isAnonymous: false,
+    tags: [],
+    spaceId: preselectedSpaceId || 1,
+  });
   const [tagInput, setTagInput] = useState<string>('');
   const [contentError, setContentError] = useState<string | null>(null);
 
@@ -29,8 +34,12 @@ const CreateDiscussionModal: React.FC<CreateDiscussionModalProps> = ({ preselect
     MAX_FILE_SIZE,
   );
 
+  useEffect(() => {
+    updateFormField('files', files);
+  }, [files]);
+
   const { mutate: createDiscussion, isPending } = useMutation({
-    mutationFn: async (formData: FormData) => {
+    mutationFn: async (formData: CreateDiscussionDto) => {
       return await discussionApi.createDiscussion(formData);
     },
     onSuccess: () => {
@@ -44,10 +53,17 @@ const CreateDiscussionModal: React.FC<CreateDiscussionModalProps> = ({ preselect
     },
   });
 
+  const updateFormField = <K extends keyof CreateDiscussionDto>(field: K, value: CreateDiscussionDto[K]) => {
+    setFormData((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
+
   const handleAddTag = () => {
     const trimmedTag = tagInput.trim();
-    if (trimmedTag && !tags.includes(trimmedTag)) {
-      setTags((prev) => [...prev, trimmedTag]);
+    if (trimmedTag && !formData.tags.includes(trimmedTag)) {
+      updateFormField('tags', [...formData.tags, trimmedTag]);
       setTagInput('');
     }
   };
@@ -60,13 +76,15 @@ const CreateDiscussionModal: React.FC<CreateDiscussionModalProps> = ({ preselect
   };
 
   const removeTag = (index: number) => {
-    setTags((prev) => prev.filter((_, i) => i !== index));
+    const newTags = [...formData.tags];
+    newTags.splice(index, 1);
+    updateFormField('tags', newTags);
   };
 
   const validateForm = (): boolean => {
     let isValid = true;
 
-    if (!content.trim() || content.trim().length < 10) {
+    if (!formData.content.trim() || formData.content.trim().length < 10) {
       setContentError('Discussion content must be at least 10 characters long');
       isValid = false;
     } else {
@@ -82,39 +100,17 @@ const CreateDiscussionModal: React.FC<CreateDiscussionModalProps> = ({ preselect
 
   const handleSubmit = () => {
     if (!validateForm()) return;
-
-    const formData = new FormData();
-
-    // Add text fields
-    formData.append('content', content.trim());
-    formData.append('isAnonymous', String(isAnonymous));
-
-    // Add tags if present
-    if (tags.length > 0) {
-      tags.forEach((tag) => {
-        formData.append('tags', tag);
-      });
-    }
-
-    // Add files
-    files.forEach((file) => {
-      formData.append('files', file);
-    });
-
-    // Add space ID if present
-    if (preselectedSpaceId) {
-      formData.append('spaceId', String(preselectedSpaceId));
-    } else {
-      formData.append('spaceId', '1');
-    }
-
     createDiscussion(formData);
   };
 
   const handleClose = () => {
-    setContent('');
-    setIsAnonymous(false);
-    setTags([]);
+    setFormData({
+      content: '',
+      isAnonymous: false,
+      tags: [],
+      files: [],
+      spaceId: preselectedSpaceId || 1,
+    });
     setTagInput('');
     clearFiles();
     setContentError(null);
@@ -125,61 +121,49 @@ const CreateDiscussionModal: React.FC<CreateDiscussionModalProps> = ({ preselect
 
   return (
     <Modal isOpen={isOpen} onClose={handleClose} size="xl">
-      <div className="flex max-h-[85vh] flex-col" onClick={(e) => e.stopPropagation()}>
-        {/* Header */}
-        <div className="flex-shrink-0 border-b border-gray-200 pb-4">
-          <div className="flex items-center justify-between">
-            <h2 className="text-xl font-semibold">Create New Discussion</h2>
-            <button
-              onClick={handleClose}
-              className="rounded-full p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"
-            >
-              <X size={20} />
-            </button>
-          </div>
+      <ModalHeader title="Create New Discussion" onClose={handleClose} />
+
+      <ModalBody>
+        {/* Content textarea */}
+        <div className="mb-1">
+          <label htmlFor="content" className="mb-2 block text-sm font-medium text-gray-700">
+            Discussion Content
+          </label>
+          <textarea
+            id="content"
+            value={formData.content}
+            onChange={(e) => updateFormField('content', e.target.value)}
+            placeholder="What would you like to discuss?"
+            className={`w-full rounded-md border ${
+              contentError ? 'border-red-300' : 'border-gray-300'
+            } px-3 py-2 focus:ring-1 focus:ring-gray-500 focus:outline-none`}
+            rows={6}
+          />
+          {contentError && <p className="text-sm text-red-600">{contentError}</p>}
         </div>
 
-        {/* Form */}
-        <div className="flex-grow overflow-y-auto pt-4 px-1">
-          {/* Content textarea */}
-          <div className="mb-2">
-            <label htmlFor="content" className="mb-1 block text-sm font-medium text-gray-700">
-              Discussion Content
-            </label>
-            <textarea
-              id="content"
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              placeholder="What would you like to discuss?"
-              className={`w-full rounded-md border ${
-                contentError ? 'border-red-300' : 'border-gray-300'
-              } px-3 py-2 focus:ring-1 focus:ring-gray-500 focus:outline-none`}
-              rows={6}
-            />
-            {contentError && <p className="mt-1 text-sm text-red-600">{contentError}</p>}
-          </div>
+        {/* Anonymous toggle */}
+        <div className="mb-4 flex items-center">
+          <input
+            type="checkbox"
+            id="anonymous"
+            checked={formData.isAnonymous}
+            onChange={(e) => updateFormField('isAnonymous', e.target.checked)}
+            className="h-4 w-4 rounded border-gray-300 text-green-600 focus:ring-green-500"
+          />
+          <label htmlFor="anonymous" className="ml-2 block text-sm text-gray-700">
+            Post anonymously
+          </label>
+        </div>
 
-          {/* Anonymous toggle */}
-          <div className="mb-4 flex items-center">
-            <input
-              type="checkbox"
-              id="anonymous"
-              checked={isAnonymous}
-              onChange={(e) => setIsAnonymous(e.target.checked)}
-              className="h-4 w-4 rounded border-gray-300 text-green-600 focus:ring-green-500"
-            />
-            <label htmlFor="anonymous" className="ml-2 block text-sm text-gray-700">
-              Post anonymously
-            </label>
-          </div>
-
-          {/* Tags input */}
-          <div className="mb-4">
-            <label className="mb-1 block text-sm font-medium text-gray-700">
-              Tags <span className="text-xs text-gray-500">(comma or enter to add)</span>
-            </label>
-            <div className="mb-2 flex flex-wrap gap-2">
-              {tags.map((tag, index) => (
+        {/* Tags input */}
+        <div className="mb-4">
+          <label className="mb-2 block text-sm font-medium text-gray-700">
+            Tags <span className="text-xs text-gray-500">(comma or enter to add)</span>
+          </label>
+          {formData.tags.length > 0 && (
+            <div className="flex flex-wrap gap-2 mb-2">
+              {formData.tags.map((tag, index) => (
                 <span
                   key={index}
                   className="flex items-center gap-1 rounded-full bg-green-100 px-3 py-1 text-sm text-wrap text-green-800"
@@ -196,31 +180,48 @@ const CreateDiscussionModal: React.FC<CreateDiscussionModalProps> = ({ preselect
                 </span>
               ))}
             </div>
-            <div className="flex items-center">
+          )}
+          <div className="flex items-center gap-2">
+            <div className="relative flex-grow">
               <input
                 type="text"
                 value={tagInput}
                 onChange={(e) => setTagInput(e.target.value)}
                 onKeyDown={handleTagKeyDown}
                 placeholder="Add tags..."
-                className="w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-1 focus:ring-gray-500 focus:outline-none"
+                className="w-full h-10 rounded-md border border-gray-300 px-3 focus:ring-1 focus:ring-gray-500 focus:outline-none"
               />
-              <button
-                type="button"
-                onClick={handleAddTag}
-                className="ml-2 flex-1/4 rounded-md bg-green-600 px-4 py-2 text-white hover:bg-green-700"
-              >
-                Add Tag
-              </button>
+              {tagInput && (
+                <button
+                  type="button"
+                  onClick={() => setTagInput('')}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  aria-label="Clear tag input"
+                >
+                  <X size={16} />
+                </button>
+              )}
             </div>
+            <MainButton
+              onClick={handleAddTag}
+              disabled={!tagInput.trim()}
+              className="flex-shrink-0 h-10"
+              leftIcon={<TagIcon size={16} />}
+            >
+              Add Tag
+            </MainButton>
           </div>
+        </div>
 
-          {/* File upload */}
-          <div className="mb-4">
-            <label className="mb-1 block text-sm font-medium text-gray-700">
-              Attachments <span className="text-xs text-gray-500">(max 4 files, 10MB each)</span>
-            </label>
-            <div className="flex flex-wrap gap-2">
+        {/* File upload */}
+        <div className="mb-4">
+          <label className="mb-2 block text-sm font-medium text-gray-700">
+            Attachments <span className="text-xs text-gray-500">(max 4 files, 10MB each)</span>
+          </label>
+
+          {/* File previews */}
+          {files.length > 0 && (
+            <div className="flex flex-wrap gap-2 mb-2">
               {files.map((file, index) => (
                 <FilePreview
                   key={index}
@@ -230,59 +231,51 @@ const CreateDiscussionModal: React.FC<CreateDiscussionModalProps> = ({ preselect
                 />
               ))}
             </div>
-            {files.length < MAX_DISCUSSION_FILES && (
-              <div className="mt-2">
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  multiple
-                  onChange={handleFileChange}
-                  className="hidden"
-                  accept={ALLOWED_FILE_TYPES.join(',')}
-                />
-                <button
-                  type="button"
+          )}
+
+          {/* File upload button */}
+          {files.length < MAX_DISCUSSION_FILES && (
+            <div>
+              <input
+                ref={fileInputRef}
+                type="file"
+                multiple
+                onChange={handleFileChange}
+                className="hidden"
+                accept={ALLOWED_FILE_TYPES.join(',')}
+              />
+              <div className="flex flex-col gap-1">
+                <MainButton
                   onClick={() => fileInputRef.current?.click()}
-                  className="cursor-pointer rounded-md border border-gray-300 bg-white px-4 py-2 text-sm text-gray-700 transition-colors hover:bg-gray-50"
+                  variant="outline"
+                  leftIcon={<Upload size={16} />}
+                  className="w-full sm:w-auto"
                 >
                   Upload Files
-                </button>
+                </MainButton>
+                <p className="text-xs text-gray-500">
+                  {files.length} of {MAX_DISCUSSION_FILES} files added | Accepted formats: PDF, images, documents
+                </p>
               </div>
-            )}
-            {fileErrors && <p className="mt-1 text-sm text-red-600">{fileErrors}</p>}
-          </div>
+            </div>
+          )}
+          {fileErrors && <p className="mt-1 text-sm text-red-600">{fileErrors}</p>}
         </div>
+      </ModalBody>
 
-        {/* Footer */}
-        <div className="flex-shrink-0 border-t border-gray-200 bg-gray-50 pt-4">
-          <div className="flex items-center justify-end gap-2">
-            <button
-              onClick={handleClose}
-              className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50"
-              disabled={isPending}
-            >
-              Cancel
-            </button>
-            <button
-              onClick={handleSubmit}
-              disabled={isPending}
-              className="disabled:bg-opacity-70 flex items-center gap-2 rounded-md bg-green-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-green-700"
-            >
-              {isPending ? (
-                <>
-                  <Loader2 size={18} className="animate-spin" />
-                  Creating...
-                </>
-              ) : (
-                <>
-                  <CheckCircle size={18} />
-                  Create Discussion
-                </>
-              )}
-            </button>
-          </div>
-        </div>
-      </div>
+      <ModalFooter>
+        <MainButton onClick={handleClose} disabled={isPending} variant="outline">
+          Cancel
+        </MainButton>
+        <MainButton
+          onClick={handleSubmit}
+          disabled={isPending || !formData.content.trim()}
+          isLoading={isPending}
+          leftIcon={<CheckCircle size={18} />}
+        >
+          Create Discussion
+        </MainButton>
+      </ModalFooter>
     </Modal>
   );
 };

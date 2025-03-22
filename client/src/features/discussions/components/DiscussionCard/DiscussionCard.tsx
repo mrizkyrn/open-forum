@@ -1,14 +1,14 @@
+import ConfirmationModal from '@/components/modals/ConfirmationModal';
+import { UpdateDiscussionModal } from '@/features/discussions/components';
+import { discussionApi } from '@/features/discussions/services';
+import { Discussion } from '@/features/discussions/types';
+import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { useQueryClient } from '@tanstack/react-query';
-import { Discussion } from '@/features/discussions/types';
-import { UpdateDiscussionModal } from '@/features/discussions/components';
-import { discussionApi } from '@/features/discussions/services/discussionApi';
 import DiscussionCardBody from './DiscussionCardBody';
-import DiscussionCardHeader from './DiscussionCardHeader';
 import DiscussionCardFooter from './DiscussionCardFooter';
-import DeleteConfirmationModal from '@/components/modals/DeleteConfirmationModal';
+import DiscussionCardHeader from './DiscussionCardHeader';
 
 interface DiscussionCardProps {
   discussion: Discussion;
@@ -62,8 +62,8 @@ const DiscussionCard: React.FC<DiscussionCardProps> = ({ discussion, onDiscussio
 
   return (
     <>
-      <div 
-        className="flex w-full cursor-pointer flex-col gap-3 rounded-xl bg-white p-4" 
+      <div
+        className="flex w-full border border-gray-100 cursor-pointer flex-col gap-3 rounded-xl bg-white p-4"
         onClick={handleCardClick}
       >
         <DiscussionCardHeader
@@ -85,21 +85,19 @@ const DiscussionCard: React.FC<DiscussionCardProps> = ({ discussion, onDiscussio
           voteStatus={discussion.voteStatus}
         />
       </div>
-      
+
       {/* Modals */}
       {showEditModal && (
-        <UpdateDiscussionModal 
-          isOpen={true} 
-          onClose={() => setShowEditModal(false)} 
-          discussion={discussion} 
-        />
+        <UpdateDiscussionModal isOpen={true} onClose={() => setShowEditModal(false)} discussion={discussion} />
       )}
-      
-      <DeleteConfirmationModal
+
+      <ConfirmationModal
         isOpen={showDeleteConfirm}
         title="Delete Discussion"
         message="Are you sure you want to delete this discussion? This action cannot be undone."
-        isDeleting={isDeleting}
+        confirmButtonText="Delete"
+        variant="danger"
+        isProcessing={isDeleting}
         onCancel={() => setShowDeleteConfirm(false)}
         onConfirm={handleDeleteConfirm}
       />

@@ -1,9 +1,9 @@
-import { Loader2 } from 'lucide-react';
+import LoadingSpinner from '@/components/feedback/LoadingSpinner';
+import { CommentCard } from '@/features/comments/components';
+import { commentApi } from '@/features/comments/services';
 import { Comment } from '@/features/comments/types';
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { commentApi } from '@/features/comments/services/commentApi';
-import { CommentCard } from '@/features/comments/components';
-import LoadingSpinner from '@/components/feedback/LoadingSpinner';
+import { Loader2 } from 'lucide-react';
 
 interface CommentRepliesSectionProps {
   comment: Comment;
@@ -55,6 +55,8 @@ const CommentRepliesSection: React.FC<CommentRepliesSectionProps> = ({
     );
   }
 
+  const remainingReplies = comment.replyCount - replies.length;
+
   return (
     <div className="mt-2 flex flex-col gap-2">
       {/* Display all replies from all pages */}
@@ -82,7 +84,7 @@ const CommentRepliesSection: React.FC<CommentRepliesSectionProps> = ({
                 Loading more replies...
               </>
             ) : (
-              'Load more replies'
+              `Load more replies (${remainingReplies} remaining)`
             )}
           </button>
         </div>

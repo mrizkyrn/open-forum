@@ -1,15 +1,15 @@
-import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { ArrowUp, PencilLine } from 'lucide-react';
+import ErrorFetching from '@/components/feedback/ErrorFetching';
+import LoadingSpinner from '@/components/feedback/LoadingSpinner';
+import { useAuth } from '@/features/auth/hooks/useAuth';
 import { CreateDiscussionModal, DiscussionCard } from '@/features/discussions/components';
 import { useInfiniteDiscussions } from '@/features/discussions/hooks/useInfiniteDiscussions';
-import { useAuth } from '@/features/auth/hooks/useAuth';
 import { SearchDiscussionDto } from '@/features/discussions/types';
 import { useIntersectionObserver } from '@/hooks/useIntersectionObserver';
 import { useSocket } from '@/hooks/useSocket';
-import LoadingSpinner from '@/components/feedback/LoadingSpinner';
+import { ArrowUp, PencilLine } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import DiscussionPostSkeleton from './DiscussionPostSkeleton';
-import ErrorFetching from '@/components/feedback/ErrorFetching';
 
 interface DiscussionPostProps {
   search?: Partial<SearchDiscussionDto>;
@@ -58,7 +58,7 @@ const DiscussionPost: React.FC<DiscussionPostProps> = ({ search, preselectedSpac
       socket.off('newDiscussion', handleNewDiscussion);
       socket.off('newSpaceDiscussion', handleNewSpaceDiscussion);
     };
-  }, [socket, isConnected, preselectedSpaceId, search?.spaceId]);
+  }, [socket, isConnected, preselectedSpaceId, search?.spaceId, user?.id]);
 
   const handleRefreshDiscussions = async () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });

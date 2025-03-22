@@ -1,14 +1,15 @@
-import { useState, useEffect } from 'react';
-import { toast } from 'react-toastify';
-import { X, FileText, Image, Loader2, XCircle, Tag as TagIcon, CheckCircle } from 'lucide-react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { discussionApi } from '@/features/discussions/services/discussionApi';
-import { Discussion } from '@/features/discussions/types';
+import { Modal, ModalBody, ModalFooter, ModalHeader } from '@/components/modals/Modal';
+import MainButton from '@/components/ui/buttons/MainButton';
+import { discussionApi } from '@/features/discussions/services';
+import { Discussion, UpdateDiscussionDto } from '@/features/discussions/types';
+import { useFileHandling } from '@/hooks/useFileHandling';
 import { Attachment } from '@/types/AttachmentTypes';
 import { ALLOWED_FILE_TYPES, MAX_DISCUSSION_FILES, MAX_FILE_SIZE } from '@/utils/constants';
-import { useFileHandling } from '@/hooks/useFileHandling';
 import { getFileUrl } from '@/utils/helpers';
-import Modal from '@/components/modals/Modal';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { CheckCircle, FileText, Image, Tag as TagIcon, Upload, X, XCircle } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 
 interface UpdateDiscussionModalProps {
   isOpen: boolean;
@@ -19,36 +20,44 @@ interface UpdateDiscussionModalProps {
 const UpdateDiscussionModal: React.FC<UpdateDiscussionModalProps> = ({ isOpen, onClose, discussion }) => {
   const queryClient = useQueryClient();
 
-  const [content, setContent] = useState<string>('');
-  const [isAnonymous, setIsAnonymous] = useState<boolean>(false);
-  const [tags, setTags] = useState<string[]>([]);
+  const [formData, setFormData] = useState<UpdateDiscussionDto>({
+    content: '',
+    isAnonymous: false,
+    tags: [],
+    files: [],
+    attachmentsToRemove: [],
+  });
   const [tagInput, setTagInput] = useState<string>('');
-  const [existingAttachments, setExistingAttachments] = useState<Attachment[]>([]);
-  const [attachmentsToRemove, setAttachmentsToRemove] = useState<number[]>([]);
   const [contentError, setContentError] = useState<string | null>(null);
+  const [existingAttachments, setExistingAttachments] = useState<Attachment[]>([]);
 
-  const { files, fileErrors, fileInputRef, handleFileChange, removeFile, clearFiles, validateFiles } = useFileHandling(
-    MAX_DISCUSSION_FILES,
-    ALLOWED_FILE_TYPES,
-    MAX_FILE_SIZE,
-  );
+  const { files, fileErrors, setFileErrors, fileInputRef, handleFileChange, removeFile, clearFiles, validateFiles } =
+    useFileHandling(MAX_DISCUSSION_FILES, ALLOWED_FILE_TYPES, MAX_FILE_SIZE);
 
   useEffect(() => {
     if (discussion && isOpen) {
-      setContent(discussion.content);
-      setIsAnonymous(discussion.isAnonymous);
-      setTags(discussion.tags || []);
+      setFormData({
+        content: discussion.content,
+        isAnonymous: discussion.isAnonymous,
+        tags: discussion.tags || [],
+        files: [],
+        attachmentsToRemove: [],
+      });
       setExistingAttachments(discussion.attachments || []);
-      setAttachmentsToRemove([]);
       clearFiles();
+      setTagInput('');
       setContentError(null);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [discussion, isOpen]);
 
+  useEffect(() => {
+    updateFormField('files', files);
+  }, [files]);
+
   const { mutate: updateDiscussion, isPending } = useMutation({
-    mutationFn: async ({ discussionId, formData }: { discussionId: number; formData: FormData }) => {
-      return await discussionApi.updateDiscussion(discussionId, formData);
+    mutationFn: async ({ discussionId, data }: { discussionId: number; data: UpdateDiscussionDto }) => {
+      return await discussionApi.updateDiscussion(discussionId, data);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['discussions'] });
@@ -64,19 +73,47 @@ const UpdateDiscussionModal: React.FC<UpdateDiscussionModalProps> = ({ isOpen, o
     },
   });
 
+  const updateFormField = <K extends keyof UpdateDiscussionDto>(field: K, value: UpdateDiscussionDto[K]) => {
+    setFormData((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
+
   const markExistingAttachmentForRemoval = (id: number) => {
-    setAttachmentsToRemove((prev) => [...prev, id]);
-    clearFiles();
+    const currentExistingCount = existingAttachments.length - formData.attachmentsToRemove.length;
+    const wouldExceedLimit = currentExistingCount - 1 + files.length > MAX_DISCUSSION_FILES;
+
+    if (!wouldExceedLimit) {
+      updateFormField('attachmentsToRemove', [...formData.attachmentsToRemove, id]);
+    } else {
+      setFileErrors(`Maximum ${MAX_DISCUSSION_FILES} files allowed`);
+    }
   };
 
   const undoMarkForRemoval = (id: number) => {
-    setAttachmentsToRemove((prev) => prev.filter((attachmentId) => attachmentId !== id));
+    const remainingExistingAttachments = existingAttachments.filter(
+      (a) => !formData.attachmentsToRemove.filter((removeId) => removeId !== id).includes(a.id),
+    ).length;
+
+    const totalFilesAfterUndo = remainingExistingAttachments + files.length;
+
+    if (totalFilesAfterUndo > MAX_DISCUSSION_FILES) {
+      setFileErrors(`Cannot restore this attachment: maximum ${MAX_DISCUSSION_FILES} files allowed`);
+      return;
+    }
+
+    updateFormField(
+      'attachmentsToRemove',
+      formData.attachmentsToRemove.filter((attachmentId) => attachmentId !== id),
+    );
+    setFileErrors(null);
   };
 
   const handleAddTag = () => {
     const trimmedTag = tagInput.trim();
-    if (trimmedTag && !tags.includes(trimmedTag)) {
-      setTags((prev) => [...prev, trimmedTag]);
+    if (trimmedTag && formData.tags && !formData.tags.includes(trimmedTag)) {
+      updateFormField('tags', [...formData.tags, trimmedTag]);
       setTagInput('');
     }
   };
@@ -89,21 +126,34 @@ const UpdateDiscussionModal: React.FC<UpdateDiscussionModalProps> = ({ isOpen, o
   };
 
   const removeTag = (index: number) => {
-    setTags((prev) => prev.filter((_, i) => i !== index));
+    const newTags = [...(formData.tags || [])];
+    newTags.splice(index, 1);
+    updateFormField('tags', newTags);
   };
 
   const validateForm = (): boolean => {
     let isValid = true;
 
-    if (!content.trim()) {
+    if (!formData.content?.trim()) {
       setContentError('Discussion content is required');
       isValid = false;
     } else {
       setContentError(null);
     }
 
-    if (!validateFiles(files)) {
+    const remainingExistingAttachments = existingAttachments.filter(
+      (a) => !formData.attachmentsToRemove.includes(a.id),
+    ).length;
+
+    const totalFiles = remainingExistingAttachments + files.length;
+
+    if (totalFiles > MAX_DISCUSSION_FILES) {
+      setFileErrors(`Maximum ${MAX_DISCUSSION_FILES} files allowed (you have ${totalFiles})`);
       isValid = false;
+    } else {
+      if (!validateFiles(files)) {
+        isValid = false;
+      }
     }
 
     return isValid;
@@ -112,103 +162,82 @@ const UpdateDiscussionModal: React.FC<UpdateDiscussionModalProps> = ({ isOpen, o
   const handleSubmit = () => {
     if (!discussion || !validateForm()) return;
 
-    const formData = new FormData();
-
-    // Add text fields
-    formData.append('content', content.trim());
-    formData.append('isAnonymous', String(isAnonymous));
-
-    // Add tags if present
-    if (tags.length > 0) {
-      tags.forEach((tag) => {
-        formData.append('tags', tag);
-      });
-    }
-
-    // Add attachments to remove
-    if (attachmentsToRemove.length > 0) {
-      attachmentsToRemove.forEach((id) => {
-        formData.append('attachmentsToRemove', id.toString());
-      });
-    }
-
-    // Add new files
-    files.forEach((file: File) => {
-      formData.append('files', file);
+    updateDiscussion({
+      discussionId: discussion.id,
+      data: formData,
     });
-
-    updateDiscussion({ discussionId: discussion.id, formData });
   };
 
   const handleClose = () => {
-    setContent('');
-    setIsAnonymous(false);
-    setTags([]);
+    setFormData({
+      content: '',
+      isAnonymous: false,
+      tags: [],
+      files: [],
+      attachmentsToRemove: [],
+    });
     setTagInput('');
     setExistingAttachments([]);
-    setAttachmentsToRemove([]);
     clearFiles();
     setContentError(null);
     onClose();
+  };
+
+  const getEffectiveFileCount = () => {
+    const remainingExistingAttachments = existingAttachments.filter(
+      (a) => !formData.attachmentsToRemove.includes(a.id),
+    ).length;
+
+    return remainingExistingAttachments + files.length;
   };
 
   if (!isOpen || !discussion) return null;
 
   return (
     <Modal isOpen={isOpen} onClose={handleClose} size="xl">
-      <div className="flex max-h-[85vh] flex-col" onClick={(e) => e.stopPropagation()}>
-        {/* Header */}
-        <div className="flex flex-shrink-0 items-center justify-between border-b border-gray-200 pb-4">
-          <h2 className="text-xl font-semibold">Update Discussion</h2>
-          <button
-            onClick={handleClose}
-            className="rounded-full p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"
-          >
-            <X size={20} />
-          </button>
+      <ModalHeader title="Update Discussion" onClose={handleClose} />
+
+      <ModalBody>
+        {/* Content textarea */}
+        <div className="mb-1">
+          <label htmlFor="content" className="mb-2 block text-sm font-medium text-gray-700">
+            Discussion Content
+          </label>
+          <textarea
+            id="content"
+            value={formData.content}
+            onChange={(e) => updateFormField('content', e.target.value)}
+            placeholder="What would you like to discuss?"
+            className={`w-full rounded-md border ${
+              contentError ? 'border-red-300' : 'border-gray-300'
+            } px-3 py-2 focus:ring-1 focus:ring-gray-500 focus:outline-none`}
+            rows={6}
+          />
+          {contentError && <p className="text-sm text-red-600">{contentError}</p>}
         </div>
 
-        {/* Form */}
-        <div className="flex-grow overflow-y-auto py-4">
-          {/* Content textarea */}
-          <div className="mb-2">
-            <label htmlFor="content" className="mb-1 block text-sm font-medium text-gray-700">
-              Discussion Content
-            </label>
-            <textarea
-              id="content"
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              placeholder="What would you like to discuss?"
-              className={`w-full rounded-md border ${
-                contentError ? 'border-red-300' : 'border-gray-300'
-              } px-3 py-2 focus:ring-1 focus:ring-gray-500 focus:outline-none`}
-              rows={6}
-            />
-            {contentError && <p className="mt-1 text-sm text-red-600">{contentError}</p>}
-          </div>
+        {/* Anonymous toggle */}
+        <div className="mb-4 flex items-center">
+          <input
+            type="checkbox"
+            id="anonymous"
+            checked={formData.isAnonymous}
+            onChange={(e) => updateFormField('isAnonymous', e.target.checked)}
+            className="h-4 w-4 rounded border-gray-300 text-green-600 focus:ring-green-500"
+          />
+          <label htmlFor="anonymous" className="ml-2 block text-sm text-gray-700">
+            Post anonymously
+          </label>
+        </div>
 
-          {/* Anonymous toggle */}
-          <div className="mb-4 flex items-center">
-            <input
-              type="checkbox"
-              id="anonymous"
-              checked={isAnonymous}
-              onChange={(e) => setIsAnonymous(e.target.checked)}
-              className="h-4 w-4 rounded border-gray-300 text-green-600 focus:ring-green-500"
-            />
-            <label htmlFor="anonymous" className="ml-2 block text-sm text-gray-700">
-              Post anonymously
-            </label>
-          </div>
-
-          {/* Tags input */}
-          <div className="mb-4">
-            <label className="mb-1 block text-sm font-medium text-gray-700">
-              Tags <span className="text-xs text-gray-500">(comma or enter to add)</span>
-            </label>
-            <div className="mb-2 flex flex-wrap gap-2">
-              {tags.map((tag, index) => (
+        {/* Tags input */}
+        <div className="mb-4">
+          <label className="mb-2 block text-sm font-medium text-gray-700">
+            Tags <span className="text-xs text-gray-500">(comma or enter to add)</span>
+          </label>
+          {formData.tags && formData.tags.length > 0 && (
+            <div className="flex flex-wrap gap-2 mb-2 ">
+              {formData.tags.map((tag, index) => (
                 <span
                   key={index}
                   className="flex items-center gap-1 rounded-full bg-green-100 px-3 py-1 text-sm text-green-800"
@@ -225,162 +254,178 @@ const UpdateDiscussionModal: React.FC<UpdateDiscussionModalProps> = ({ isOpen, o
                 </span>
               ))}
             </div>
-            <div className="flex items-center">
+          )}
+          <div className="flex items-center gap-2">
+            <div className="relative flex-grow">
               <input
                 type="text"
                 value={tagInput}
                 onChange={(e) => setTagInput(e.target.value)}
                 onKeyDown={handleTagKeyDown}
                 placeholder="Add tags..."
-                className="w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-1 focus:ring-gray-500 focus:outline-none"
+                className="w-full h-10 rounded-md border border-gray-300 px-3 focus:ring-1 focus:ring-gray-500 focus:outline-none"
               />
-              <button
-                type="button"
-                onClick={handleAddTag}
-                className="ml-2 flex-1/4 rounded-md bg-green-600 px-4 py-2 text-white hover:bg-green-700"
-              >
-                Add Tag
-              </button>
-            </div>
-          </div>
-
-          {/* File upload section */}
-          <div className="mb-4">
-            <label className="mb-1 block text-sm font-medium text-gray-700">
-              Attachments <span className="text-xs text-gray-500">(max 4 files, 3MB each)</span>
-            </label>
-
-            {/* Existing attachments */}
-            {existingAttachments.length > 0 && (
-              <div className="mb-3">
-                <h4 className="mb-1 text-sm font-medium text-gray-600">Current Attachments:</h4>
-                <div className="flex flex-wrap gap-2">
-                  {existingAttachments.map((attachment) => {
-                    const isMarkedForRemoval = attachmentsToRemove.includes(attachment.id);
-
-                    return (
-                      <div
-                        key={attachment.id}
-                        className={`relative flex items-center gap-2 rounded-md border px-3 py-2 ${
-                          isMarkedForRemoval ? 'border-red-200 bg-red-50 text-red-700' : 'border-gray-200 bg-gray-50'
-                        }`}
-                      >
-                        {attachment.isImage ? (
-                          <div className="h-6 w-6 overflow-hidden rounded">
-                            <img
-                              src={getFileUrl(attachment.url)}
-                              alt={attachment.originalName}
-                              className="h-full w-full object-cover"
-                            />
-                          </div>
-                        ) : (
-                          <FileText size={18} className="text-orange-500" />
-                        )}
-
-                        <span className="max-w-xs truncate text-sm">{attachment.originalName}</span>
-
-                        {isMarkedForRemoval ? (
-                          <button
-                            type="button"
-                            onClick={() => undoMarkForRemoval(attachment.id)}
-                            className="rounded-full font-medium text-red-600 hover:text-red-800"
-                          >
-                            Undo
-                          </button>
-                        ) : (
-                          <button
-                            type="button"
-                            onClick={() => markExistingAttachmentForRemoval(attachment.id)}
-                            className="rounded-full text-gray-500 hover:text-red-500"
-                          >
-                            <XCircle size={18} />
-                          </button>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
-
-            {/* New files */}
-            <div className="flex flex-wrap gap-2">
-              {files.map((file: File, index: number) => (
-                <div
-                  key={index}
-                  className="relative flex items-center gap-2 rounded-md border border-gray-200 bg-gray-50 px-3 py-2"
-                >
-                  {file.type.startsWith('image/') ? (
-                    <Image size={18} className="text-blue-500" />
-                  ) : (
-                    <FileText size={18} className="text-orange-500" />
-                  )}
-                  <span className="max-w-xs truncate text-sm">{file.name}</span>
-                  <button
-                    type="button"
-                    onClick={() => removeFile(index)}
-                    className="rounded-full text-gray-500 hover:text-red-500"
-                  >
-                    <XCircle size={18} />
-                  </button>
-                </div>
-              ))}
-            </div>
-
-            {/* Upload button - only show if we haven't reached the max files yet */}
-            {existingAttachments.filter((a) => !attachmentsToRemove.includes(a.id)).length + files.length <
-              MAX_DISCUSSION_FILES && (
-              <div className="mt-2">
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  multiple
-                  onChange={handleFileChange}
-                  className="hidden"
-                  accept={ALLOWED_FILE_TYPES.join(',')}
-                />
+              {tagInput && (
                 <button
                   type="button"
-                  onClick={() => fileInputRef.current?.click()}
-                  className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm text-gray-700 transition-colors hover:bg-gray-50"
+                  onClick={() => setTagInput('')}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  aria-label="Clear tag input"
                 >
-                  Upload Files
+                  <X size={16} />
                 </button>
-              </div>
-            )}
-
-            {fileErrors && <p className="mt-1 text-sm text-red-600">{fileErrors}</p>}
+              )}
+            </div>
+            <MainButton
+              onClick={handleAddTag}
+              disabled={!tagInput.trim()}
+              className="flex-shrink-0 h-10"
+              leftIcon={<TagIcon size={16} />}
+            >
+              Add Tag
+            </MainButton>
           </div>
         </div>
 
-        {/* Footer */}
-        <div className="flex flex-shrink-0 items-center justify-end gap-2 border-t border-gray-200 pt-4">
-          <button
-            onClick={handleClose}
-            className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50"
-            disabled={isPending}
-          >
-            Cancel
-          </button>
-          <button
-            onClick={handleSubmit}
-            disabled={isPending}
-            className="disabled:bg-opacity-70 flex items-center gap-2 rounded-md bg-green-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-green-700"
-          >
-            {isPending ? (
-              <>
-                <Loader2 size={18} className="animate-spin" />
-                Updating...
-              </>
-            ) : (
-              <>
-                <CheckCircle size={18} />
-                Update Discussion
-              </>
-            )}
-          </button>
+        {/* File upload section */}
+        <div className="mb-4">
+          <label className="mb-1 block text-sm font-medium text-gray-700">
+            Attachments <span className="text-xs text-gray-500">(max 4 files, 10MB each)</span>
+          </label>
+
+          {/* Existing attachments */}
+          {existingAttachments.length > 0 && (
+            <div className="mb-2">
+              <div className="flex flex-wrap gap-2">
+                {existingAttachments.map((attachment) => {
+                  const isMarkedForRemoval = formData.attachmentsToRemove.includes(attachment.id);
+
+                  return (
+                    <div
+                      key={attachment.id}
+                      className={`relative flex items-center gap-2 rounded-md border px-3 py-2 ${
+                        isMarkedForRemoval ? 'border-red-200 bg-red-50 text-red-700' : 'border-gray-200 bg-gray-50'
+                      }`}
+                    >
+                      {attachment.isImage ? (
+                        <div className="h-6 w-6 overflow-hidden rounded">
+                          <img
+                            src={getFileUrl(attachment.url)}
+                            alt={attachment.originalName}
+                            className="h-full w-full object-cover"
+                          />
+                        </div>
+                      ) : (
+                        <FileText size={18} className="text-orange-500" />
+                      )}
+
+                      <span className="max-w-xs truncate text-sm">{attachment.originalName}</span>
+
+                      {isMarkedForRemoval ? (
+                        <button
+                          type="button"
+                          onClick={() => undoMarkForRemoval(attachment.id)}
+                          className="rounded-full font-medium text-red-600 hover:text-red-800"
+                        >
+                          Undo
+                        </button>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => markExistingAttachmentForRemoval(attachment.id)}
+                          className="rounded-full text-gray-500 hover:text-red-500"
+                        >
+                          <XCircle size={18} />
+                        </button>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* New files */}
+          <div className="flex flex-wrap gap-2">
+            {files.map((file: File, index: number) => (
+              <div
+                key={index}
+                className="relative flex items-center gap-2 rounded-md border border-gray-200 bg-gray-50 px-3 py-2"
+              >
+                {file.type.startsWith('image/') ? (
+                  <Image size={18} className="text-blue-500" />
+                ) : (
+                  <FileText size={18} className="text-orange-500" />
+                )}
+                <span className="max-w-xs truncate text-sm">{file.name}</span>
+                <button
+                  type="button"
+                  onClick={() => removeFile(index)}
+                  className="rounded-full text-gray-500 hover:text-red-500"
+                >
+                  <XCircle size={18} />
+                </button>
+              </div>
+            ))}
+          </div>
+
+          {/* File upload button */}
+          {getEffectiveFileCount() < MAX_DISCUSSION_FILES && (
+            <div>
+              <input
+                ref={fileInputRef}
+                type="file"
+                multiple
+                onChange={(e) => {
+                  // Check total files before processing
+                  const selectedFiles = Array.from(e.target.files || []);
+
+                  if (getEffectiveFileCount() + selectedFiles.length > MAX_DISCUSSION_FILES) {
+                    setFileErrors(`Maximum ${MAX_DISCUSSION_FILES} files allowed`);
+                    if (fileInputRef.current) {
+                      fileInputRef.current.value = '';
+                    }
+                    return;
+                  }
+
+                  handleFileChange(e);
+                }}
+                className="hidden"
+                accept={ALLOWED_FILE_TYPES.join(',')}
+              />
+              <div className="flex flex-col gap-1">
+                <MainButton
+                  onClick={() => fileInputRef.current?.click()}
+                  variant="outline"
+                  leftIcon={<Upload size={16} />}
+                  className="w-full sm:w-auto"
+                >
+                  Upload Files
+                </MainButton>
+                <p className="text-xs text-gray-500">
+                  {getEffectiveFileCount()} of {MAX_DISCUSSION_FILES} files added | Accepted formats: PDF, images,
+                  documents
+                </p>
+              </div>
+            </div>
+          )}
+          {fileErrors && <p className="mt-1 text-sm text-red-600">{fileErrors}</p>}
         </div>
-      </div>
+      </ModalBody>
+
+      <ModalFooter>
+        <MainButton onClick={handleClose} disabled={isPending} variant="outline">
+          Cancel
+        </MainButton>
+        <MainButton
+          onClick={handleSubmit}
+          disabled={isPending || !formData.content?.trim()}
+          isLoading={isPending}
+          leftIcon={<CheckCircle size={18} />}
+        >
+          Update Discussion
+        </MainButton>
+      </ModalFooter>
     </Modal>
   );
 };

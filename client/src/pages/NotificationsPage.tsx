@@ -1,28 +1,28 @@
-import { useEffect, useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useNavigate } from 'react-router-dom';
+import UserAvatar from '@/components/layouts/UserAvatar';
+import Pagination from '@/features/admin/components/Pagination';
+import { notificationApi } from '@/features/notifications/services/notificationApi';
+import { Notification, NotificationEntityType, NotificationType } from '@/features/notifications/types';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { format, formatDistanceToNow, isThisWeek, isToday, isYesterday } from 'date-fns';
 import {
+  AlertCircle,
+  AlertTriangle,
   Bell,
   Check,
   CheckCircle,
-  Trash2,
-  ThumbsUp,
-  MessageSquare,
-  AlertCircle,
-  Loader2,
-  RefreshCw,
   Filter,
+  Loader2,
+  MessageSquare,
+  RefreshCw,
+  Shield,
   ShieldCheck,
   ShieldX,
-  Shield,
-  AlertTriangle,
+  ThumbsUp,
+  Trash2,
 } from 'lucide-react';
-import { formatDistanceToNow, format, isToday, isYesterday, isThisWeek } from 'date-fns';
-import AvatarImage from '@/features/users/components/AvatarImage';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { notificationApi } from '@/features/notifications/services/notificationApi';
-import { NotificationEntityType, NotificationType, Notification } from '@/features/notifications/types';
-import Pagination from '@/features/admin/components/Pagination';
 
 const NotificationsPage: React.FC = () => {
   const queryClient = useQueryClient();
@@ -479,7 +479,7 @@ const NotificationsPage: React.FC = () => {
                 {getNotificationIcon(notification)}
               </div>
             ) : (
-              <AvatarImage fullName={notification.actor.fullName} avatarUrl={notification.actor.avatarUrl} size="sm" />
+              <UserAvatar fullName={notification.actor.fullName} avatarUrl={notification.actor.avatarUrl} size="sm" />
             )}
           </div>
 

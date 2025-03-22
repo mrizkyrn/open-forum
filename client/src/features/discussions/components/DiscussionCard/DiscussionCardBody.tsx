@@ -1,7 +1,7 @@
-import { useNavigate } from 'react-router-dom';
-import { Attachment } from '@/types/AttachmentTypes';
 import FileDisplay from '@/components/ui/file-displays/FileDisplay';
 import ImageDisplay from '@/components/ui/file-displays/ImageDisplay';
+import { Attachment } from '@/types/AttachmentTypes';
+import { useNavigate } from 'react-router-dom';
 
 interface DiscussionCardBodyProps {
   content: string;

@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import Modal from '@/components/modals/Modal/Modal';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { Flag, Loader2, X } from 'lucide-react';
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { reportApi } from '../services/reportApi';
 import { ReportReason, ReportTargetType } from '../types/ReportTypes';
-import Modal from '@/components/modals/Modal';
 
 interface ReportModalProps {
   isOpen: boolean;
@@ -76,14 +76,12 @@ const ReportModal: React.FC<ReportModalProps> = ({ isOpen, onClose, targetType, 
   };
 
   // Combine all possible error messages
-  const errorMessage = validationError || 
-    (submitError as Error)?.message || 
-    (reasonsError as Error)?.message;
+  const errorMessage = validationError || (submitError as Error)?.message || (reasonsError as Error)?.message;
 
   if (!isOpen) return null;
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size='lg'>
+    <Modal isOpen={isOpen} onClose={onClose} size="lg">
       <div onClick={(e) => e.stopPropagation()}>
         <div className="mb-4 flex items-center justify-between">
           <h3 className="flex items-center text-lg font-medium text-gray-900">
@@ -106,9 +104,7 @@ const ReportModal: React.FC<ReportModalProps> = ({ isOpen, onClose, targetType, 
           </div>
         )}
 
-        {errorMessage && (
-          <div className="mb-4 rounded-md bg-red-50 p-3 text-sm text-red-600">{errorMessage}</div>
-        )}
+        {errorMessage && <div className="mb-4 rounded-md bg-red-50 p-3 text-sm text-red-600">{errorMessage}</div>}
 
         <form onSubmit={handleSubmit}>
           <div className="mb-4">

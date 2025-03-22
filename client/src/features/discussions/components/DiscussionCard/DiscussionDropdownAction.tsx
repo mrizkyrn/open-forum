@@ -1,10 +1,10 @@
-import { useRef } from 'react';
-import { MoreVertical, Bookmark, Link, Flag, Edit, Trash } from 'lucide-react';
 import { useAuth } from '@/features/auth/hooks/useAuth';
 import { useBookmark } from '@/features/discussions/hooks/useBookmark';
 import { useReport } from '@/features/reports/hooks/useReport';
 import { ReportTargetType } from '@/features/reports/types';
 import { useDropdown } from '@/hooks/useDropdown';
+import { Bookmark, Edit, Flag, Link, MoreVertical, Trash } from 'lucide-react';
+import { useRef } from 'react';
 
 interface DiscussionDropdownActionProps {
   discussionId: number;

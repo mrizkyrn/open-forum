@@ -1,19 +1,15 @@
-import { useState, useEffect } from 'react';
-import { useNavigate, Outlet, useLocation } from 'react-router-dom';
-import {
-  LayoutDashboard,
-  Users,
-  MessagesSquare,
-  FolderKanban,
-  Flag,
-  BarChart2,
-  Settings,
-  LogOut,
-  ChevronLeft,
-  ChevronRight,
-} from 'lucide-react';
 import { useAuth } from '@/features/auth/hooks/useAuth';
 import { UserRole } from '@/features/users/types';
+import { BarChart2, Flag, FolderKanban, LayoutDashboard, MessagesSquare, Settings, Users } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import AdminSidebar from './AdminSidebar';
+
+interface MenuItem {
+  icon: React.ReactNode;
+  label: string;
+  path: string;
+}
 
 const AdminLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -28,7 +24,8 @@ const AdminLayout = () => {
     }
   }, [user, navigate, isLoading]);
 
-  const menuItems = [
+  // Admin menu items
+  const menuItems: MenuItem[] = [
     { icon: <LayoutDashboard size={18} />, label: 'Overview', path: '/admin' },
     { icon: <Users size={18} />, label: 'Users', path: '/admin/users' },
     { icon: <MessagesSquare size={18} />, label: 'Discussions', path: '/admin/discussions' },
@@ -38,95 +35,36 @@ const AdminLayout = () => {
     { icon: <Settings size={18} />, label: 'Settings', path: '/admin/settings' },
   ];
 
+  // Handle navigation
+  const handleNavigation = (path: string) => {
+    navigate(path);
+  };
+
+  // Handle logout
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate('/login');
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
+  };
+
   // If authentication is still being checked, show nothing
   if (!user) return null;
 
   return (
     <div className="flex h-screen bg-gray-50">
-      {/* Sidebar */}
-      <div
-        className={`${
-          collapsed ? 'w-16' : 'w-64'
-        } relative flex h-full flex-col border-r border-gray-100 bg-white transition-all duration-300 ease-in-out`}
-      >
-        {/* Collapse toggle button - Positioned on the edge */}
-        <button
-          onClick={() => setCollapsed(!collapsed)}
-          className="hover:text-primary absolute top-16 -right-3 flex h-6 w-6 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-400 shadow-sm transition-colors focus:outline-none"
-          aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-        >
-          {collapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
-        </button>
-
-        {/* Logo */}
-        <div
-          className={`flex h-16 items-center px-4 ${collapsed ? 'justify-center' : 'justify-between'} border-b border-gray-50`}
-        >
-          {!collapsed && (
-            <div className="flex items-center">
-              <div className="bg-primary/10 flex h-8 w-8 items-center justify-center rounded-md">
-                <span className="text-primary font-bold">U</span>
-              </div>
-              <h1 className="ml-2 text-base font-semibold tracking-tight text-gray-800">UPNVJ Admin</h1>
-            </div>
-          )}
-          {collapsed && (
-            <div className="bg-primary/10 flex h-8 w-8 items-center justify-center rounded-md">
-              <span className="text-primary font-bold">U</span>
-            </div>
-          )}
-        </div>
-
-        {/* Nav links */}
-        <nav className="flex-1 overflow-y-auto px-3 py-6">
-          <ul className="space-y-1">
-            {menuItems.map((item) => {
-              const isActive = location.pathname === item.path;
-              return (
-                <li key={item.path}>
-                  <button
-                    onClick={() => navigate(item.path)}
-                    className={`group flex w-full cursor-pointer items-center rounded-md transition-all ${
-                      isActive ? 'bg-primary/10 text-primary font-medium' : 'text-gray-600 hover:bg-gray-50'
-                    } ${collapsed ? 'justify-center p-3' : 'px-4 py-2.5'}`}
-                  >
-                    <span className={`${isActive ? 'text-primary' : 'text-gray-500 group-hover:text-gray-700'}`}>
-                      {item.icon}
-                    </span>
-                    {!collapsed && (
-                      <span className={`ml-3 text-sm tracking-tight ${isActive ? 'text-primary' : ''}`}>
-                        {item.label}
-                      </span>
-                    )}
-                    {isActive && collapsed && (
-                      <span className="bg-primary absolute top-1/2 -right-1 h-1.5 w-1.5 -translate-y-1/2 rounded-full"></span>
-                    )}
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
-        </nav>
-
-        {/* User & logout section */}
-        <div className={`border-t border-gray-50 p-4 ${collapsed ? 'flex justify-center' : ''}`}>
-          {!collapsed && (
-            <div className="mb-4">
-              <p className="text-xs text-gray-500">Logged in as</p>
-              <p className="text-sm font-medium text-gray-800">{user.username || 'Admin'}</p>
-            </div>
-          )}
-          <button
-            onClick={logout}
-            className={`flex cursor-pointer items-center rounded-md text-sm text-gray-700 transition-colors hover:bg-red-50 hover:text-red-600 ${
-              collapsed ? 'justify-center p-3' : 'w-full px-4 py-2'
-            }`}
-          >
-            <LogOut size={18} strokeWidth={2} className={collapsed ? '' : 'mr-2'} />
-            {!collapsed && <span>Logout</span>}
-          </button>
-        </div>
-      </div>
+      {/* Admin Sidebar */}
+      <AdminSidebar
+        collapsed={collapsed}
+        setCollapsed={setCollapsed}
+        menuItems={menuItems}
+        currentPath={location.pathname}
+        username={user.username}
+        onLogout={handleLogout}
+        onNavigate={handleNavigation}
+      />
 
       {/* Main content */}
       <div className="flex-1 overflow-auto">

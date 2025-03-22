@@ -1,12 +1,12 @@
-import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { useSocket } from '@/hooks/useSocket';
-import { discussionApi } from '@/features/discussions/services/discussionApi';
-import { CommentsSection, CommentForm } from '@/features/comments/components';
-import { DiscussionCard, UpdateDiscussionModal } from '@/features/discussions/components';
 import LoadingSpinner from '@/components/feedback/LoadingSpinner';
 import BackButton from '@/components/ui/buttons/BackButton';
+import { CommentForm, CommentsSection } from '@/features/comments/components';
+import { DiscussionCard, UpdateDiscussionModal } from '@/features/discussions/components';
+import { discussionApi } from '@/features/discussions/services';
+import { useSocket } from '@/hooks/useSocket';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 
 const DiscussionDetail = () => {
   const { id } = useParams<{ id: string }>();

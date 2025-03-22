@@ -1,6 +1,8 @@
-import { useState } from 'react';
-import { SlidersHorizontal, Calendar, MessageCircle, ThumbsUp, ChevronDown, Tags, User } from 'lucide-react';
-import { DiscussionSortBy, SortOrder, SearchDiscussionDto } from '@/features/discussions/types';
+import { DiscussionSortBy, SearchDiscussionDto } from '@/features/discussions/types';
+import { useDropdown } from '@/hooks/useDropdown';
+import { SortOrder } from '@/types/SearchTypes';
+import { Calendar, ChevronDown, MessageCircle, Plus, SlidersHorizontal, Tags, ThumbsUp, User, X } from 'lucide-react';
+import { useRef, useState } from 'react';
 
 interface FilterToolbarProps {
   currentFilters: SearchDiscussionDto;
@@ -8,17 +10,17 @@ interface FilterToolbarProps {
 }
 
 const FilterToolbar: React.FC<FilterToolbarProps> = ({ currentFilters, onFilterChange }) => {
-  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [customTagInput, setCustomTagInput] = useState<string>('');
 
+  // Dropdown refs and hooks
+  const tagsDropdownRef = useRef<HTMLDivElement>(null);
+  const authorDropdownRef = useRef<HTMLDivElement>(null);
+
+  const tagsDropdown = useDropdown(tagsDropdownRef as React.RefObject<HTMLElement>);
+  const authorDropdown = useDropdown(authorDropdownRef as React.RefObject<HTMLElement>);
+
+  // Common predefined tags
   const commonTags = ['question', 'help', 'announcement', 'discussion', 'general'];
-
-  const toggleDropdown = (dropdown: string) => {
-    if (activeDropdown === dropdown) {
-      setActiveDropdown(null);
-    } else {
-      setActiveDropdown(dropdown);
-    }
-  };
 
   const handleSortChange = (sortBy: DiscussionSortBy) => {
     if (currentFilters.sortBy === sortBy) {
@@ -44,9 +46,53 @@ const FilterToolbar: React.FC<FilterToolbarProps> = ({ currentFilters, onFilterC
     }
   };
 
+  const handleAddCustomTag = () => {
+    const tagToAdd = customTagInput.trim().toLowerCase();
+
+    // Validate the tag
+    if (!tagToAdd) return;
+
+    const currentTags = currentFilters.tags || [];
+
+    // Don't add duplicates
+    if (currentTags.includes(tagToAdd)) {
+      setCustomTagInput('');
+      return;
+    }
+
+    // Add the custom tag
+    onFilterChange({
+      tags: [...currentTags, tagToAdd],
+    });
+
+    // Clear the input
+    setCustomTagInput('');
+  };
+
+  const handleCustomTagInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleAddCustomTag();
+    }
+  };
+
   const handleAnonymityChange = (value: boolean | undefined) => {
     onFilterChange({ isAnonymous: value });
+    authorDropdown.close();
   };
+
+  // Get the total count of common tags that are currently active
+  const activeCommonTagsCount = currentFilters.tags
+    ? currentFilters.tags.filter((tag) => commonTags.includes(tag)).length
+    : 0;
+
+  // Get the total count of custom tags that are currently active
+  const activeCustomTagsCount = currentFilters.tags
+    ? currentFilters.tags.filter((tag) => !commonTags.includes(tag)).length
+    : 0;
+
+  // Total active tags
+  const totalActiveTags = activeCommonTagsCount + activeCustomTagsCount;
 
   return (
     <div>
@@ -114,48 +160,85 @@ const FilterToolbar: React.FC<FilterToolbarProps> = ({ currentFilters, onFilterC
       {/* Filter options */}
       <div className="flex flex-wrap items-center gap-2">
         {/* Tags Dropdown */}
-        <div className="relative">
+        <div ref={tagsDropdownRef} className="relative">
           <button
-            onClick={() => toggleDropdown('tags')}
+            onClick={tagsDropdown.toggle}
             className={`flex items-center gap-1 rounded-md px-3 py-1.5 text-sm ${
-              activeDropdown === 'tags' || (Array.isArray(currentFilters.tags) && currentFilters.tags.length > 0)
+              tagsDropdown.isOpen || totalActiveTags > 0
                 ? 'bg-green-100 text-green-700'
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
             }`}
           >
             <Tags size={14} />
-            Tags
+            Tags {totalActiveTags > 0 && `(${totalActiveTags})`}
             <ChevronDown size={14} />
           </button>
 
-          {activeDropdown === 'tags' && (
-            <div className="absolute top-full left-0 z-10 mt-1 w-56 rounded-md bg-white p-3 shadow-lg">
-              <div className="flex flex-wrap gap-2">
-                {commonTags.map((tag) => {
-                  const isSelected = Array.isArray(currentFilters.tags) && currentFilters.tags.includes(tag);
-                  return (
-                    <button
-                      key={tag}
-                      onClick={() => handleTagToggle(tag)}
-                      className={`rounded-full px-3 py-1 text-xs ${
-                        isSelected ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                      }`}
-                    >
-                      #{tag}
-                    </button>
-                  );
-                })}
+          {tagsDropdown.isOpen && (
+            <div className="absolute top-full left-0 z-10 mt-1 w-72 rounded-md bg-white p-3 shadow-sm">
+              {/* Custom Tag Section */}
+              <div className="mb-3">
+                <h3 className="mb-1 text-xs font-medium text-gray-500">Add Custom Tag</h3>
+                <div className="flex gap-1">
+                  <div className="relative flex-grow">
+                    <input
+                      type="text"
+                      value={customTagInput}
+                      onChange={(e) => setCustomTagInput(e.target.value)}
+                      onKeyDown={handleCustomTagInputKeyDown}
+                      placeholder="Enter tag..."
+                      className="w-full rounded-md border border-gray-300 px-3 py-1 text-sm focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
+                    />
+                    {customTagInput && (
+                      <button
+                        onClick={() => setCustomTagInput('')}
+                        className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                      >
+                        <X size={14} />
+                      </button>
+                    )}
+                  </div>
+                  <button
+                    onClick={handleAddCustomTag}
+                    disabled={!customTagInput.trim()}
+                    className="flex-shrink-0 rounded-md bg-green-100 px-3 py-1 text-xs text-green-700 hover:bg-green-200 disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-400"
+                  >
+                    <Plus size={14} className="inline mr-1" />
+                    Add
+                  </button>
+                </div>
+              </div>
+
+              {/* Common Tags Section */}
+              <div className="mb-3">
+                <h3 className="mb-1 text-xs font-medium text-gray-500">Common Tags</h3>
+                <div className="flex flex-wrap gap-2">
+                  {commonTags.map((tag) => {
+                    const isSelected = Array.isArray(currentFilters.tags) && currentFilters.tags.includes(tag);
+                    return (
+                      <button
+                        key={tag}
+                        onClick={() => handleTagToggle(tag)}
+                        className={`rounded-full px-3 py-1 text-xs ${
+                          isSelected ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                        }`}
+                      >
+                        #{tag}
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
             </div>
           )}
         </div>
 
         {/* Author Type Dropdown */}
-        <div className="relative">
+        <div ref={authorDropdownRef} className="relative">
           <button
-            onClick={() => toggleDropdown('author')}
+            onClick={authorDropdown.toggle}
             className={`flex items-center gap-1 rounded-md px-3 py-1.5 text-sm ${
-              activeDropdown === 'author' || currentFilters.isAnonymous !== undefined
+              authorDropdown.isOpen || currentFilters.isAnonymous !== undefined
                 ? 'bg-green-100 text-green-700'
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
             }`}
@@ -165,8 +248,8 @@ const FilterToolbar: React.FC<FilterToolbarProps> = ({ currentFilters, onFilterC
             <ChevronDown size={14} />
           </button>
 
-          {activeDropdown === 'author' && (
-            <div className="absolute top-full left-0 z-10 mt-1 w-56 rounded-md bg-white p-2 shadow-lg">
+          {authorDropdown.isOpen && (
+            <div className="absolute top-full left-0 z-10 mt-1 w-56 rounded-md bg-white p-2 shadow-sm">
               <button
                 onClick={() => handleAnonymityChange(undefined)}
                 className={`flex w-full items-center rounded px-3 py-2 text-left text-sm ${

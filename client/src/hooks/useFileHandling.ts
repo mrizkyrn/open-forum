@@ -59,5 +59,6 @@ export function useFileHandling(maxFiles: number, allowedTypes: string[], maxSiz
     removeFile,
     clearFiles,
     validateFiles,
+    setFileErrors
   };
 }

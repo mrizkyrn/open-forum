@@ -1,5 +1,5 @@
-import { ArrowBigDown, ArrowBigUp, MessageCircle } from 'lucide-react';
 import { useVote } from '@/features/votes/hooks/useVote';
+import { ArrowBigDown, ArrowBigUp, MessageCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 interface DiscussionCardFooterProps {

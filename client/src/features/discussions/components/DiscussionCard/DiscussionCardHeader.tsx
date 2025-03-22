@@ -1,8 +1,8 @@
-import { Loader2 } from 'lucide-react';
+import UserAvatar from '@/components/layouts/UserAvatar';
 import { User } from '@/features/users/types';
-import { useNavigate } from 'react-router-dom';
 import { formatDateDistance } from '@/utils/helpers';
-import AvatarImage from '@/features/users/components/AvatarImage';
+import { Loader2 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import DiscussionDropdownAction from './DiscussionDropdownAction';
 
 interface DiscussionCardHeaderProps {
@@ -40,7 +40,7 @@ const DiscussionCardHeader: React.FC<DiscussionCardHeaderProps> = ({
     <div className="flex items-start justify-between">
       {/* Profile image and user details */}
       <div className="flex items-center gap-2">
-        <AvatarImage fullName={author?.fullName} avatarUrl={author?.avatarUrl} size="md" />
+        <UserAvatar fullName={author?.fullName} avatarUrl={author?.avatarUrl} size="md" />
 
         <div className="flex flex-col justify-center">
           {author?.fullName ? (

@@ -1,9 +1,9 @@
-import { lazy, Suspense } from 'react';
-import { createBrowserRouter } from 'react-router-dom';
 import ErrorBoundary from '@/components/feedback/ErrorBoundary';
 import LoadingPage from '@/components/feedback/LoadingPage';
-import MainLayout from '@/components/layouts/MainLayout';
 import AdminLayout from '@/components/layouts/AdminLayout';
+import MainLayout from '@/components/layouts/MainLayout';
+import { lazy, Suspense } from 'react';
+import { createBrowserRouter } from 'react-router-dom';
 
 // Lazy-loaded components
 const Home = lazy(() => import('@/pages/Home'));
@@ -67,7 +67,7 @@ const routes = [
       {
         path: 'reports',
         element: lazyLoad(ReportsPage),
-      }
+      },
     ],
   },
   {

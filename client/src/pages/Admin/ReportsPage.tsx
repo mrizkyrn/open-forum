@@ -12,7 +12,7 @@ import Pagination from '@/features/admin/components/Pagination';
 import StatusBadge from '@/features/admin/components/StatusBadge';
 import FilterBar from '@/features/admin/components/FilterBar';
 import StatsCard from '@/features/admin/components/StatsCard';
-import AvatarImage from '@/features/users/components/AvatarImage';
+import UserAvatar from '@/components/layouts/UserAvatar';
 import ReportDetailModal from '@/features/admin/components/ReportDetailModal';
 
 const ReportsPage = () => {
@@ -86,7 +86,7 @@ const ReportsPage = () => {
       header: 'Reporter',
       accessor: (report: Report) => (
         <div className="flex items-center gap-2">
-          <AvatarImage fullName={report.reporter.fullName} avatarUrl={report.reporter.avatarUrl} size="sm" />
+          <UserAvatar fullName={report.reporter.fullName} avatarUrl={report.reporter.avatarUrl} size="sm" />
           <span>{report.reporter.username}</span>
         </div>
       ),

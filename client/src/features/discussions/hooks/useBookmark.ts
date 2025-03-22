@@ -1,6 +1,6 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { discussionApi } from '@/features/discussions/services/discussionApi';
+import { discussionApi } from '@/features/discussions/services';
 import { Discussion } from '@/features/discussions/types';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 export function useBookmark() {
   const queryClient = useQueryClient();
