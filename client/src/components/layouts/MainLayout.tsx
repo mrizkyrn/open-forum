@@ -2,64 +2,14 @@ import { useAuth } from '@/features/auth/hooks/useAuth';
 import { notificationApi } from '@/features/notifications/services/notificationApi';
 import { useSocket } from '@/hooks/useSocket';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { Bell, ChevronLeft, ChevronRight, Home, Layers, LogOut, Menu, Search, User } from 'lucide-react';
-import { JSX, useCallback, useEffect, useState } from 'react';
+import { Bell, Bookmark, Home, Layers, LogOut, Menu, Search, User } from 'lucide-react';
+import { useCallback, useEffect, useState } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import LeftSidebar, { NavItem } from './LeftSidebar';
 import Logo from './Logo';
+import RightSidebar from './RightSidebar';
 import UserAvatar from './UserAvatar';
 
-// Navigation item type
-type NavItem = {
-  name: string;
-  path: string;
-  icon: JSX.Element;
-  badge?: boolean;
-};
-
-// Navigation Item Component
-const NavigationItem = ({
-  item,
-  isActive,
-  collapsed = false,
-  unreadCount = 0,
-  onClick,
-}: {
-  item: NavItem;
-  isActive: boolean;
-  collapsed?: boolean;
-  unreadCount?: number;
-  onClick: () => void;
-}) => {
-  return (
-    <li>
-      <button
-        onClick={onClick}
-        className={`group flex w-full cursor-pointer items-center rounded-md transition-all ${
-          isActive ? 'bg-primary/10 text-primary font-medium' : 'text-gray-600 hover:bg-gray-50'
-        } ${collapsed ? 'relative justify-center p-3' : 'px-4 py-2.5'}`}
-      >
-        <span className={`${isActive ? 'text-primary' : 'text-gray-500 group-hover:text-gray-700'} relative`}>
-          {item.icon}
-          {item.badge && (
-            <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
-              {unreadCount > 0 ? (unreadCount > 99 ? '99+' : unreadCount) : ''}
-            </span>
-          )}
-        </span>
-        {!collapsed && (
-          <span className={`ml-3 text-sm tracking-tight ${isActive ? 'text-primary' : ''} flex items-center`}>
-            {item.name}
-          </span>
-        )}
-        {isActive && collapsed && (
-          <span className="bg-primary absolute top-1/2 -right-1 h-1.5 w-1.5 -translate-y-1/2 rounded-full"></span>
-        )}
-      </button>
-    </li>
-  );
-};
-
-// Mobile Navigation Item Component
 const MobileNavItem = ({
   item,
   isActive,
@@ -75,9 +25,9 @@ const MobileNavItem = ({
     <button onClick={onClick} className="relative flex h-full flex-1 flex-col items-center justify-center">
       <div className={`${isActive ? 'text-primary' : 'text-gray-500'} relative`}>
         {item.icon}
-        {item.badge && (
+        {item.badge && unreadCount > 0 && (
           <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
-            {unreadCount > 0 ? (unreadCount > 9 ? '9+' : unreadCount) : ''}
+            {unreadCount > 9 ? '9+' : unreadCount}
           </span>
         )}
       </div>
@@ -88,7 +38,6 @@ const MobileNavItem = ({
 
 const MainLayout = () => {
   const { isAuthenticated, isLoading, logout, user } = useAuth();
-  const [collapsed, setCollapsed] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
@@ -105,7 +54,7 @@ const MainLayout = () => {
 
   const unreadCount = unreadCountData?.count || 0;
 
-  // Check if a navigation item is active
+  // Navigation item active state check
   const isNavItemActive = useCallback(
     (itemPath: string) => {
       const searchParams = new URLSearchParams(location.search);
@@ -149,16 +98,17 @@ const MainLayout = () => {
 
   // Navigation items
   const navItems: NavItem[] = [
-    { name: 'Home', path: '/', icon: <Home size={18} /> },
-    { name: 'Spaces', path: '/spaces', icon: <Layers size={18} /> },
-    { name: 'Search', path: '/search', icon: <Search size={18} /> },
+    { name: 'Home', path: '/', icon: <Home size={20} /> },
+    { name: 'Spaces', path: '/spaces', icon: <Layers size={20} /> },
+    { name: 'Search', path: '/search', icon: <Search size={20} /> },
     {
       name: 'Notifications',
       path: '/notifications',
-      icon: <Bell size={18} />,
+      icon: <Bell size={20} />,
       badge: unreadCount > 0 || newNotificationReceived,
     },
-    { name: 'Profile', path: '/profile', icon: <User size={18} /> },
+    { name: 'Profile', path: '/profile', icon: <User size={20} /> },
+    { name: 'Bookmarks', path: '/bookmarks', icon: <Bookmark size={20} /> },
   ];
 
   // Navigate to login if not authenticated
@@ -194,79 +144,18 @@ const MainLayout = () => {
   }, [socket, isConnected, user?.id, refetchUnreadCount, queryClient]);
 
   return (
-    <div className="flex h-screen bg-gray-50">
-      {/* Desktop Sidebar - hidden on mobile */}
-      <div
-        className={`${
-          collapsed ? 'w-16' : 'w-64'
-        } relative hidden h-full flex-col border-r border-gray-100 bg-white transition-all duration-300 ease-in-out md:flex`}
-      >
-        {/* Collapse toggle button */}
-        <button
-          onClick={() => setCollapsed(!collapsed)}
-          className="hover:text-primary absolute top-16 -right-3 flex h-6 w-6 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-400 shadow-sm transition-colors focus:outline-none"
-          aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-        >
-          {collapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
-        </button>
-
-        {/* Logo */}
-        <Logo collapsed={collapsed} />
-
-        {/* Nav links */}
-        <nav className="flex-1 overflow-y-auto px-3 py-6">
-          <ul className="space-y-1">
-            {navItems.map((item) => (
-              <NavigationItem
-                key={item.name}
-                item={item}
-                isActive={isNavItemActive(item.path)}
-                collapsed={collapsed}
-                unreadCount={unreadCount}
-                onClick={() => navigate(item.path)}
-              />
-            ))}
-          </ul>
-        </nav>
-
-        {/* User & logout section */}
-        <div className={`border-t border-gray-50 p-4 ${collapsed ? 'flex flex-col items-center' : ''}`}>
-          {!collapsed ? (
-            <div className="mb-3 flex items-center">
-              <UserAvatar fullName={user?.fullName} avatarUrl={user?.avatarUrl} size="sm" />
-              <div className="ml-2">
-                <p className="truncate text-sm font-medium text-gray-800">{user?.fullName || 'User'}</p>
-                <p className="truncate text-xs text-gray-500">@{user?.username || 'username'}</p>
-              </div>
-            </div>
-          ) : (
-            <div className="mb-3">
-              <UserAvatar fullName={user?.fullName} avatarUrl={user?.avatarUrl} size="sm" />
-            </div>
-          )}
-          <button
-            onClick={onLogout}
-            className={`flex cursor-pointer items-center rounded-md text-sm text-gray-700 transition-colors hover:bg-red-50 hover:text-red-600 ${
-              collapsed ? 'justify-center p-2' : 'w-full px-3 py-2'
-            }`}
-          >
-            <LogOut size={16} strokeWidth={2} className={collapsed ? '' : 'mr-2'} />
-            {!collapsed && <span>Logout</span>}
-          </button>
-        </div>
-      </div>
-
+    <div className="text-dark min-h-screen bg-gray-50">
       {/* Mobile Header */}
-      <div className="fixed top-0 right-0 left-0 z-10 flex h-14 items-center justify-between border-b border-gray-100 bg-white px-4 md:hidden">
+      <div className="fixed top-0 right-0 left-0 z-10 flex h-14 items-center justify-between border-b border-gray-100 bg-white px-4 sm:hidden">
         <Logo />
         <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="p-2 text-gray-500">
           <Menu size={20} />
         </button>
       </div>
 
-      {/* Mobile Menu (optional, for user profile/logout) */}
+      {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="fixed inset-0 z-50 bg-black/50 md:hidden" onClick={() => setMobileMenuOpen(false)}>
+        <div className="fixed inset-0 z-50 bg-black/50 sm:hidden" onClick={() => setMobileMenuOpen(false)}>
           <div
             className="absolute top-0 right-0 h-full w-64 bg-white p-4 shadow-lg"
             onClick={(e) => e.stopPropagation()}
@@ -289,10 +178,42 @@ const MainLayout = () => {
         </div>
       )}
 
+      {/* Three-column Layout with fixed-width sidebar */}
+      <div className="mx-auto flex max-w-7xl pt-14 sm:pt-0">
+        {/* Left Sidebar */}
+        <div className="hidden flex-shrink-0 sm:block">
+          <LeftSidebar
+            navItems={navItems}
+            isNavItemActive={isNavItemActive}
+            unreadCount={unreadCount}
+            user={user}
+            onNavigate={(path) => navigate(path)}
+            onLogout={onLogout}
+          />
+        </div>
+
+        {/* Main Content & Right Sidebar */}
+        <div className="flex-grow">
+          <div className="grid grid-cols-12">
+            {/* Middle Column: Main Content */}
+            <div className="col-span-12 min-h-screen bg-white md:col-span-8">
+              <div className="p-4">
+                <Outlet />
+              </div>
+            </div>
+
+            {/* Right Column: Trending & Suggestions */}
+            <div className="hidden md:col-span-4 md:block">
+              <RightSidebar />
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Bottom Navigation for Mobile */}
-      <div className="fixed right-0 bottom-0 left-0 z-20 border-t border-gray-100 bg-white md:hidden">
+      <div className="fixed right-0 bottom-0 left-0 z-20 border-t border-gray-100 bg-white sm:hidden">
         <div className="flex h-16 items-center justify-around px-2">
-          {navItems.map((item) => (
+          {navItems.slice(0, 5).map((item) => (
             <MobileNavItem
               key={item.name}
               item={item}
@@ -301,15 +222,6 @@ const MainLayout = () => {
               onClick={() => navigate(item.path)}
             />
           ))}
-        </div>
-      </div>
-
-      {/* Main content */}
-      <div className="flex-1 overflow-auto pt-14 pb-16 md:pt-0 md:pb-0">
-        <div className="p-4 sm:p-6 md:p-8">
-          <div className="mx-auto w-full max-w-3xl">
-            <Outlet />
-          </div>
         </div>
       </div>
     </div>

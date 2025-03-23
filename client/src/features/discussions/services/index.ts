@@ -54,6 +54,17 @@ export const discussionApi = {
     }
   },
 
+  async getPopularTags(limit = 10): Promise<{ tag: string; count: number }[]> {
+    try {
+      const response = await apiClient.get<ApiResponse<{ tag: string; count: number }[]>>('/discussions/tags/popular', {
+        params: { limit },
+      });
+      return response.data.data;
+    } catch (error: any) {
+      return handleApiError(error, 'Failed to fetch popular tags');
+    }
+  },
+
   async updateDiscussion(id: number, data: UpdateDiscussionDto): Promise<Discussion> {
     try {
       const formData = new FormData();

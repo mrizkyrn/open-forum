@@ -5,7 +5,7 @@ interface LogoProps {
 }
 
 const Logo: FC<LogoProps> = ({ collapsed = false }) => (
-  <div className={`p-4 flex items-center ${collapsed ? 'justify-center' : ''}`}>
+  <div className={`flex items-center ${collapsed ? 'justify-center' : ''}`}>
     <div className="bg-primary/10 flex h-8 w-8 items-center justify-center rounded-md">
       <span className="text-primary font-bold">U</span>
     </div>

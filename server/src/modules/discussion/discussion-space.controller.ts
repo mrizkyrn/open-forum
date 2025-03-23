@@ -30,6 +30,18 @@ export class DiscussionSpaceController {
     return this.spaceService.findAll(searchDto, currentUser);
   }
 
+  @Get('popular')
+  @ApiOperation({ summary: 'Get popular discussion spaces' })
+  @ApiResponse({
+    status: 200,
+    description: 'Returns list of popular spaces',
+    type: [DiscussionSpaceResponseDto],
+  })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  async getPopularSpaces(@Query('limit', ParseIntPipe) limit: number = 10): Promise<DiscussionSpaceResponseDto[]> {
+    return this.spaceService.getPopularSpaces(limit);
+  }
+
   @Get('slug/:slug')
   @ApiOperation({ summary: 'Get a discussion space by slug' })
   @ApiParam({ name: 'slug', description: 'Space slug', example: 'web-development' })
@@ -42,18 +54,6 @@ export class DiscussionSpaceController {
   @ApiResponse({ status: 404, description: 'Space not found' })
   async findBySlug(@Param('slug') slug: string, @ReqUser() currentUser?: User): Promise<DiscussionSpaceResponseDto> {
     return this.spaceService.findBySlug(slug, currentUser);
-  }
-
-  @Get('popular')
-  @ApiOperation({ summary: 'Get popular discussion spaces' })
-  @ApiResponse({
-    status: 200,
-    description: 'Returns list of popular spaces',
-    type: [DiscussionSpaceResponseDto],
-  })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  async getPopularSpaces(@Query('limit', ParseIntPipe) limit: number = 10): Promise<DiscussionSpaceResponseDto[]> {
-    return this.spaceService.getPopularSpaces(limit);
   }
 
   @Get(':id')

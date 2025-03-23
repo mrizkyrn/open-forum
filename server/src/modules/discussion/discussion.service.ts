@@ -383,7 +383,10 @@ export class DiscussionService {
       .limit(limit)
       .getRawMany();
 
-    return result;
+    return result.map((item) => ({
+      tag: item.tag,
+      count: parseInt(item.count, 10),
+    }));
   }
 
   // ------ Other Operations ------

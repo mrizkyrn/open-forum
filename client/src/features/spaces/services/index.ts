@@ -33,9 +33,12 @@ export const spaceApi = {
     }
   },
 
-  async getPopularSpaces(): Promise<void> {
+  async getPopularSpaces({ limit = 5 }): Promise<Space[]> {
     try {
-      const response = await apiClient.get<ApiResponse<void>>('/spaces/popular');
+      const response = await apiClient.get<ApiResponse<Space[]>>('/spaces/popular', {
+        params: { limit },
+      });
+      console.log('response:', response);
       return response.data.data;
     } catch (error: any) {
       return handleApiError(error, 'Failed to fetch popular spaces');
