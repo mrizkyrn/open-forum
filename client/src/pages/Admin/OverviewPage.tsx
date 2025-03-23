@@ -1,10 +1,10 @@
-import { useState, useRef, useEffect } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { BarChart3, Users, MessageCircle, Flag, Activity, Calendar, UserCheck, UserX } from 'lucide-react';
-import { adminApi } from '@/features/admin/services/adminApi';
-import { TimePeriod } from '@/features/admin/types';
-import StatCard from '@/features/admin/components/StatCard';
 import LineChart from '@/features/admin/components/LineChart';
+import StatCard from '@/features/admin/components/StatCard';
+import { adminApi } from '@/features/admin/services';
+import { TimePeriod } from '@/features/admin/types';
+import { useQuery } from '@tanstack/react-query';
+import { Activity, BarChart3, Calendar, Flag, MessageCircle, UserCheck, Users, UserX } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 
 const OverviewPage = () => {
   const [statsFilter, setStatsFilter] = useState<TimePeriod>('day');

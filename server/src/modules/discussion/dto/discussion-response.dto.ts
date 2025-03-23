@@ -4,6 +4,7 @@ import { AttachmentResponseDto } from '../../../modules/attachment/dto/attachmen
 import { UserResponseDto } from '../../user/dto/user-response.dto';
 import { User } from '../../user/entities/user.entity';
 import { Discussion } from '../entities/discussion.entity';
+import { UserRole } from 'src/common/enums/user-role.enum';
 
 class DiscussionSpaceDto {
   @ApiProperty({ description: 'Space ID', example: 1 })
@@ -143,7 +144,7 @@ export class DiscussionResponseDto {
       : null;
 
     // Handle author based on anonymity
-    if (!discussion.isAnonymous) {
+    if (!discussion.isAnonymous || (currentUser && currentUser.role === UserRole.ADMIN)) {
       dto.author = discussion.author ? UserResponseDto.fromEntity(discussion.author) : null;
     } else if (currentUser && currentUser.id === discussion.authorId) {
       dto.author = UserResponseDto.createAnonymous(true);

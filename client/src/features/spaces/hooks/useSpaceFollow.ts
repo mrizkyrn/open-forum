@@ -1,97 +1,143 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { spaceApi } from '../services/spaceApi';
+import { useState } from 'react';
 import { toast } from 'react-toastify';
+import { spaceApi } from '../services';
 
-export function useSpaceFollow() {
+export const useSpaceFollow = () => {
   const queryClient = useQueryClient();
-
-  // Helper function to update cache
-  const updateSpaceInCache = (spaceId: number, isFollowing: boolean) => {
-    queryClient.setQueriesData({ queryKey: ['space'] }, (oldData: any) => {
-      if (!oldData || oldData.id !== spaceId) return oldData;
-
-      return {
-        ...oldData,
-        isFollowing: isFollowing,
-        followerCount: isFollowing ? oldData.followerCount + 1 : oldData.followerCount - 1,
-      };
-    });
-
-    queryClient.setQueriesData({ queryKey: ['spaces'] }, (oldData: any) => {
-      if (!oldData || !oldData.items) return oldData;
-
-      return {
-        ...oldData,
-        items: oldData.items.map((space: any) =>
-          space.id === spaceId
-            ? {
-                ...space,
-                isFollowing: isFollowing,
-                followerCount: isFollowing ? space.followerCount + 1 : space.followerCount - 1,
-              }
-            : space,
-        ),
-      };
-    });
-  };
+  const [followingMap, setFollowingMap] = useState<Record<number, boolean>>({});
 
   const followMutation = useMutation({
     mutationFn: (spaceId: number) => spaceApi.followSpace(spaceId),
     onMutate: async (spaceId) => {
-      await queryClient.cancelQueries({ queryKey: ['space'] });
+      // Set optimistic update state
+      setFollowingMap((prev) => ({ ...prev, [spaceId]: true }));
 
+      // Cancel any outgoing refetches
+      await queryClient.cancelQueries({ queryKey: ['spaces'] });
+      await queryClient.cancelQueries({ queryKey: ['space', spaceId] });
+
+      // Snapshot the previous value
       const previousSpaces = queryClient.getQueryData(['spaces']);
-      const previousSpace = queryClient.getQueryData(['space', spaceId]);
 
-      updateSpaceInCache(spaceId, true);
+      // Optimistically update spaces list
+      queryClient.setQueryData(['spaces'], (old: any) => {
+        if (!old || !old.pages) return old;
 
-      return { previousSpaces, previousSpace, spaceId };
+        return {
+          ...old,
+          pages: old.pages.map((page: any) => ({
+            ...page,
+            items: page.items.map((space: any) =>
+              space.id === spaceId ? { ...space, isFollowing: true, followerCount: space.followerCount + 1 } : space,
+            ),
+          })),
+        };
+      });
+
+      // Optimistically update single space
+      queryClient.setQueryData(['space', spaceId], (old: any) => {
+        if (!old) return old;
+        return { ...old, isFollowing: true, followerCount: old.followerCount + 1 };
+      });
+
+      return { previousSpaces };
     },
-    onSuccess: () => {
-      toast.success('You are now following this space');
+    onSuccess: (_, spaceId) => {
+      // Clear loading state
+      setFollowingMap((prev) => ({ ...prev, [spaceId]: false }));
+
+      // Update cache for the single space query
+      queryClient.invalidateQueries({ queryKey: ['space', spaceId] });
+
+      // Show success message
+      toast.success('Space followed successfully');
     },
-    onError: (_error, _spaceId, context) => {
-      if (context?.previousSpace) {
-        queryClient.setQueryData(['space', context.spaceId], context.previousSpace);
-      }
+    onError: (error, spaceId, context) => {
+      // Clear loading state
+      setFollowingMap((prev) => ({ ...prev, [spaceId]: false }));
+
+      // Revert optimistic updates
       if (context?.previousSpaces) {
         queryClient.setQueryData(['spaces'], context.previousSpaces);
       }
+
+      // Show error message
       toast.error('Failed to follow space');
+      console.error(error);
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ['space'] });
+      // Invalidate queries to refetch the latest data
       queryClient.invalidateQueries({ queryKey: ['spaces'] });
+      queryClient.invalidateQueries({ queryKey: ['space'] });
     },
   });
 
   const unfollowMutation = useMutation({
     mutationFn: (spaceId: number) => spaceApi.unfollowSpace(spaceId),
     onMutate: async (spaceId) => {
-      await queryClient.cancelQueries({ queryKey: ['space'] });
+      // Set optimistic update state
+      setFollowingMap((prev) => ({ ...prev, [spaceId]: true }));
 
+      // Cancel any outgoing refetches
+      await queryClient.cancelQueries({ queryKey: ['spaces'] });
+      await queryClient.cancelQueries({ queryKey: ['space', spaceId] });
+
+      // Snapshot the previous value
       const previousSpaces = queryClient.getQueryData(['spaces']);
-      const previousSpace = queryClient.getQueryData(['space', spaceId]);
 
-      updateSpaceInCache(spaceId, false);
+      // Optimistically update spaces list
+      queryClient.setQueryData(['spaces'], (old: any) => {
+        if (!old || !old.pages) return old;
 
-      return { previousSpaces, previousSpace, spaceId };
+        return {
+          ...old,
+          pages: old.pages.map((page: any) => ({
+            ...page,
+            items: page.items.map((space: any) =>
+              space.id === spaceId
+                ? { ...space, isFollowing: false, followerCount: Math.max(0, space.followerCount - 1) }
+                : space,
+            ),
+          })),
+        };
+      });
+
+      // Optimistically update single space
+      queryClient.setQueryData(['space', spaceId], (old: any) => {
+        if (!old) return old;
+        return { ...old, isFollowing: false, followerCount: Math.max(0, old.followerCount - 1) };
+      });
+
+      return { previousSpaces };
     },
-    onSuccess: () => {
-      toast.success('You have unfollowed this space');
+    onSuccess: (_, spaceId) => {
+      // Clear loading state
+      setFollowingMap((prev) => ({ ...prev, [spaceId]: false }));
+
+      // Update cache for the single space query
+      queryClient.invalidateQueries({ queryKey: ['space', spaceId] });
+
+      // Show success message
+      toast.success('Space unfollowed');
     },
-    onError: (_error, _spaceId, context) => {
-      if (context?.previousSpace) {
-        queryClient.setQueryData(['space', context.spaceId], context.previousSpace);
-      }
+    onError: (error, spaceId, context) => {
+      // Clear loading state
+      setFollowingMap((prev) => ({ ...prev, [spaceId]: false }));
+
+      // Revert optimistic updates
       if (context?.previousSpaces) {
         queryClient.setQueryData(['spaces'], context.previousSpaces);
       }
+
+      // Show error message
       toast.error('Failed to unfollow space');
+      console.error(error);
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ['space'] });
+      // Invalidate queries to refetch the latest data
       queryClient.invalidateQueries({ queryKey: ['spaces'] });
+      queryClient.invalidateQueries({ queryKey: ['space'] });
     },
   });
 
@@ -99,5 +145,6 @@ export function useSpaceFollow() {
     followSpace: followMutation.mutate,
     unfollowSpace: unfollowMutation.mutate,
     isLoading: followMutation.isPending || unfollowMutation.isPending,
+    followingMap, // Track which spaces have pending follow/unfollow operations
   };
-}
+};

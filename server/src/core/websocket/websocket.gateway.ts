@@ -194,15 +194,16 @@ export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection, OnG
     return this.onlineUsers.has(userId);
   }
 
-  notifyNewDiscussion(authorId: number) {
-    this.server.emit('newDiscussion', { authorId });
+  notifyNewDiscussion(authorId: number, discussionId: number, serverTimestamp: number) {
+    this.server.emit('newDiscussion', { authorId, discussionId, serverTimestamp });
     return true;
   }
 
-  notifyNewSpaceDiscussion(authorId: number, spaceId: number) {
+  notifyNewSpaceDiscussion(authorId: number, spaceId: number, discussionId: number) {
     this.server.to(`space:${spaceId}`).emit('newSpaceDiscussion', {
       authorId,
       spaceId,
+      discussionId,
     });
     return true;
   }

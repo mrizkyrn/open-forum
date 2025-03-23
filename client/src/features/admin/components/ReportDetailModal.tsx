@@ -1,6 +1,6 @@
 import UserAvatar from '@/components/layouts/UserAvatar';
 import Modal from '@/components/modals/Modal/Modal';
-import { adminApi } from '@/features/admin/services/adminApi';
+import { adminApi } from '@/features/admin/services';
 import { Report, ReportStatus, ReportTargetType } from '@/features/reports/types';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns';

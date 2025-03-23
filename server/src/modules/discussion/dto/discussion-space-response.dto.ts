@@ -19,10 +19,10 @@ export class DiscussionSpaceResponseDto {
   creatorId: number;
 
   @ApiPropertyOptional({ description: 'URL to the space icon', example: '/uploads/space-icons/2023/03/icon.png' })
-  iconUrl?: string;
+  iconUrl?: string | null;
 
   @ApiPropertyOptional({ description: 'URL to the space banner', example: '/uploads/space-banners/2023/03/banner.jpg' })
-  bannerUrl?: string;
+  bannerUrl?: string | null;
 
   @ApiProperty({ description: 'Number of followers', example: 42 })
   followerCount: number;

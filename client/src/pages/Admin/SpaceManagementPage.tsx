@@ -1,30 +1,29 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns';
-import { Download, Edit, MoreHorizontal, RefreshCw, Trash2, UserCheck, Users } from 'lucide-react';
+import { Boxes, Download, Edit, MoreHorizontal, Plus, RefreshCw, Trash2 } from 'lucide-react';
 import { useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 
-import { adminApi } from '@/features/admin/services/adminApi';
-import { useUsers } from '@/features/users/hooks/useUsers';
-import { User, UserRole } from '@/features/users/types';
+import { adminApi } from '@/features/admin/services';
+import { Space, SpaceSortBy } from '@/features/spaces/types';
 import { useDropdown } from '@/hooks/useDropdown';
 
 // Import our reusable components
-import UserAvatar from '@/components/layouts/UserAvatar';
+import ConfirmationModal from '@/components/modals/ConfirmationModal';
 import MainButton from '@/components/ui/buttons/MainButton';
 import { DataTable } from '@/features/admin/components/DataTable';
 import FilterBar from '@/features/admin/components/FilterBar';
 import Pagination from '@/features/admin/components/Pagination';
-import StatusBadge from '@/features/admin/components/StatusBadge';
-import UserFormModal from '@/features/users/components/UserFormModal';
-import ConfirmationModal from '@/components/modals/ConfirmationModal';
+import { getFileUrl } from '@/utils/helpers';
+import { useSpaces } from '@/features/spaces/hooks/useSpaces';
+import SpaceFormModal from '@/features/admin/components/SpaceFormModal';
 
-const UsersPage = () => {
+const SpaceManagementPage = () => {
   const queryClient = useQueryClient();
-  const [isUserModalOpen, setIsUserModalOpen] = useState(false);
+  const [isSpaceModalOpen, setIsSpaceModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [selectedSpace, setSelectedSpace] = useState<Space | null>(null);
   const [activeDropdownId, setActiveDropdownId] = useState<number | null>(null);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -36,54 +35,53 @@ const UsersPage = () => {
   } = useDropdown(dropdownRef as React.RefObject<HTMLElement>);
 
   const {
-    users,
+    spaces,
     meta,
     isLoading,
     filters,
     handlePageChange,
     handleLimitChange,
     handleSearchChange,
-    handleRoleFilterChange,
     handleSortChange,
-  } = useUsers();
+  } = useSpaces();
 
-  const handleToggleDropdown = (userId: number) => {
-    if (activeDropdownId === userId) {
+  const handleToggleDropdown = (spaceId: number) => {
+    if (activeDropdownId === spaceId) {
       toggleDropdown();
     } else {
-      setActiveDropdownId(userId);
+      setActiveDropdownId(spaceId);
       setTimeout(() => toggleDropdown(), 0);
     }
   };
 
-  const handleNewUser = () => {
-    setSelectedUser(null);
-    setIsUserModalOpen(true);
+  const handleNewSpace = () => {
+    setSelectedSpace(null);
+    setIsSpaceModalOpen(true);
   };
 
-  const handleEditUser = (user: User) => {
-    setSelectedUser(user);
-    setIsUserModalOpen(true);
+  const handleEditSpace = (space: Space) => {
+    setSelectedSpace(space);
+    setIsSpaceModalOpen(true);
     closeDropdown();
   };
 
-  const handleDeletePrompt = (user: User) => {
-    setSelectedUser(user);
+  const handleDeletePrompt = (space: Space) => {
+    setSelectedSpace(space);
     setIsDeleteModalOpen(true);
     closeDropdown();
   };
 
-  const handleDeleteUser = async () => {
-    if (selectedUser) {
+  const handleDeleteSpace = async () => {
+    if (selectedSpace) {
       try {
         setIsDeleting(true);
-        await adminApi.deleteUser(selectedUser.id);
-        queryClient.invalidateQueries({ queryKey: ['users'] });
+        await adminApi.deleteSpace(selectedSpace.id);
+        queryClient.invalidateQueries({ queryKey: ['spaces'] });
         setIsDeleteModalOpen(false);
-        toast.success('User deleted successfully');
+        toast.success('Space deleted successfully');
       } catch (error) {
-        console.error('Error deleting user:', error);
-        toast.error('Failed to delete user');
+        console.error('Error deleting space:', error);
+        toast.error('Failed to delete space');
       } finally {
         setIsDeleting(false);
       }
@@ -92,89 +90,89 @@ const UsersPage = () => {
 
   const handleDeleteCancel = () => {
     setIsDeleteModalOpen(false);
-    setSelectedUser(null);
+    setSelectedSpace(null);
   };
 
-  const getRoleColor = (role: string) => {
-    switch (role) {
-      case UserRole.ADMIN:
-        return 'red';
-      case UserRole.LECTURER:
-        return 'blue';
-      case UserRole.STUDENT:
-        return 'green';
-      default:
-        return 'gray';
-    }
-  };
-
-  const handleExportUsers = () => {
-    console.log('Export users');
-    // Implementation for exporting users
+  const handleExportSpaces = () => {
+    console.log('Export spaces');
+    // Implementation for exporting spaces
   };
 
   const columns = [
     {
-      header: 'User',
-      accessor: (user: User) => (
+      header: 'Space',
+      accessor: (space: Space) => (
         <div className="flex items-center">
-          <UserAvatar fullName={user.fullName} avatarUrl={user.avatarUrl} size="sm" />
+          <div className="flex-shrink-0 h-10 w-10">
+            {space.iconUrl ? (
+              <img src={getFileUrl(space.iconUrl)} alt={space.name} className="h-10 w-10 rounded-full object-cover" />
+            ) : (
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-100 font-bold text-green-600">
+                {space.name.charAt(0)}
+              </div>
+            )}
+          </div>
           <div className="ml-4">
-            <div className="text-sm font-medium text-dark">{user.fullName}</div>
-            <div className="text-sm text-gray-500">@{user.username}</div>
+            <div className="text-sm font-medium text-dark">{space.name}</div>
+            <div className="text-sm text-gray-500">/{space.slug}</div>
           </div>
         </div>
       ),
       sortable: true,
-      sortKey: 'username',
+      sortKey: 'name',
     },
     {
-      header: 'Role',
-      accessor: (user: User) => <StatusBadge label={user.role} color={getRoleColor(user.role)} />,
+      header: 'Description',
+      accessor: (space: Space) => (
+        <div className="max-w-xs">
+          <p className="truncate text-sm text-gray-500">{space.description || 'No description'}</p>
+        </div>
+      ),
+    },
+    {
+      header: 'Followers',
+      accessor: (space: Space) => space.followerCount,
+      className: 'text-gray-500',
       sortable: true,
-      sortKey: 'role',
+      sortKey: 'followerCount',
     },
     {
       header: 'Created At',
-      accessor: (user: User) => (user.createdAt ? format(new Date(user.createdAt), 'MMM d, yyyy') : 'N/A'),
-      className: 'text-gray-500 whitespace-nowrap',
+      accessor: (space: Space) => (
+        <span className="whitespace-nowrap">
+          {space.createdAt ? format(new Date(space.createdAt), 'MMM d, yyyy') : 'N/A'}
+        </span>
+      ),
+      className: 'text-gray-500',
       sortable: true,
       sortKey: 'createdAt',
     },
     {
-      header: 'Last Active',
-      accessor: (user: User) =>
-        user.lastActiveAt ? format(new Date(user.lastActiveAt), 'MMM d, yyyy HH:mm') : 'Never',
-      className: 'text-gray-500 whitespace-nowrap',
-      sortable: true,
-      sortKey: 'lastActiveAt',
-    },
-    {
       header: 'Actions',
-      accessor: (user: User) => (
-        <div className="relative" ref={user.id === activeDropdownId ? dropdownRef : undefined}>
+      accessor: (space: Space) => (
+        <div className="relative" ref={space.id === activeDropdownId ? dropdownRef : undefined}>
           <button
             className="inline-flex items-center rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-500"
-            onClick={() => handleToggleDropdown(user.id)}
+            onClick={() => handleToggleDropdown(space.id)}
           >
             <span className="sr-only">Open actions menu</span>
             <MoreHorizontal className="h-5 w-5" />
           </button>
-          {isDropdownOpen && user.id === activeDropdownId && (
+          {isDropdownOpen && space.id === activeDropdownId && (
             <div className="absolute right-0 z-10 mt-1 w-48 origin-top-right rounded-md border border-gray-100 bg-white py-1 shadow-sm">
               <button
                 className="flex w-full items-center px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50"
-                onClick={() => handleEditUser(user)}
+                onClick={() => handleEditSpace(space)}
               >
                 <Edit className="mr-3 h-4 w-4 text-gray-400" />
-                Edit User
+                Edit Space
               </button>
               <button
                 className="flex w-full items-center px-4 py-2 text-left text-sm text-red-600 hover:bg-gray-50"
-                onClick={() => handleDeletePrompt(user)}
+                onClick={() => handleDeletePrompt(space)}
               >
                 <Trash2 className="mr-3 h-4 w-4 text-red-400" />
-                Delete User
+                Delete Space
               </button>
             </div>
           )}
@@ -188,18 +186,18 @@ const UsersPage = () => {
     <div className="space-y-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight text-dark">Users Management</h1>
-          <p className="mt-2 text-sm text-gray-500">Manage user accounts and permissions</p>
+          <h1 className="text-2xl font-semibold tracking-tight text-dark">Spaces Management</h1>
+          <p className="mt-2 text-sm text-gray-500">Manage forum spaces and their properties</p>
         </div>
 
         {/* Action buttons and filters */}
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="flex gap-2">
-            <MainButton onClick={handleNewUser} leftIcon={<UserCheck size={16} />}>
-              New User
+            <MainButton onClick={handleNewSpace} leftIcon={<Plus size={16} />}>
+              New Space
             </MainButton>
             <button
-              onClick={handleExportUsers}
+              onClick={handleExportSpaces}
               className="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50"
             >
               <Download size={16} className="mr-2" />
@@ -214,24 +212,13 @@ const UsersPage = () => {
         searchProps={{
           value: filters.search || '',
           onChange: handleSearchChange,
-          placeholder: 'Search users by name or username...',
+          placeholder: 'Search spaces by name or slug...',
         }}
       >
-        <select
-          className="rounded-lg border border-gray-300 bg-gray-50 p-2 text-sm text-dark focus:border-blue-500 focus:ring-blue-500"
-          value={filters.role || ''}
-          onChange={(e) => handleRoleFilterChange(e.target.value as UserRole | undefined)}
-        >
-          <option value="">All Roles</option>
-          <option value={UserRole.ADMIN}>Admin</option>
-          <option value={UserRole.LECTURER}>Lecturer</option>
-          <option value={UserRole.STUDENT}>Student</option>
-        </select>
         <button
           onClick={() => {
             handleSearchChange('');
-            handleRoleFilterChange(undefined);
-            handleSortChange('createdAt');
+            handleSortChange(SpaceSortBy.name);
           }}
           className="inline-flex items-center justify-center rounded-md border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
         >
@@ -240,19 +227,19 @@ const UsersPage = () => {
         </button>
       </FilterBar>
 
-      {/* Users Table */}
+      {/* Spaces Table */}
       <div className="rounded-lg border border-gray-100 bg-white">
         <DataTable
-          data={users}
+          data={spaces}
           columns={columns}
           isLoading={isLoading}
-          keyExtractor={(user) => user.id}
+          keyExtractor={(space) => space.id}
           currentSortKey={filters.sortBy}
           sortOrder={filters.sortOrder}
           onSortChange={handleSortChange}
           emptyState={{
-            icon: <Users className="h-8 w-8 text-gray-300" />,
-            title: 'No users found',
+            icon: <Boxes className="h-8 w-8 text-gray-300" />,
+            title: 'No spaces found',
             description: "Try adjusting your search or filter to find what you're looking for.",
           }}
         />
@@ -274,31 +261,31 @@ const UsersPage = () => {
       </div>
 
       {/* Modals */}
-      <UserFormModal
-        isOpen={isUserModalOpen}
+      <SpaceFormModal
+        isOpen={isSpaceModalOpen}
         onClose={() => {
-          setIsUserModalOpen(false);
-          setSelectedUser(null);
+          setIsSpaceModalOpen(false);
+          setSelectedSpace(null);
         }}
-        user={selectedUser}
+        space={selectedSpace}
       />
 
       <ConfirmationModal
         isOpen={isDeleteModalOpen}
-        title="Delete User"
+        title="Delete Space"
         message={
-          selectedUser
-            ? `Are you sure you want to delete the user "${selectedUser.fullName}"? This action cannot be undone.`
-            : 'Are you sure you want to delete this user? This action cannot be undone.'
+          selectedSpace
+            ? `Are you sure you want to delete the space "${selectedSpace.name}"? This action cannot be undone and will remove all discussions and content within this space.`
+            : 'Are you sure you want to delete this space? This action cannot be undone.'
         }
         confirmButtonText="Delete"
         variant="danger"
         isProcessing={isDeleting}
         onCancel={handleDeleteCancel}
-        onConfirm={handleDeleteUser}
+        onConfirm={handleDeleteSpace}
       />
     </div>
   );
 };
 
-export default UsersPage;
+export default SpaceManagementPage;

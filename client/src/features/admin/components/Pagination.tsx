@@ -86,33 +86,33 @@ const Pagination: React.FC<PaginationProps> = ({
     // Always show first page
     buttons.push(1);
 
-    // Calculate start and end of page range around current page
-    let startPage = Math.max(2, currentPage - Math.floor(maxPageButtons / 2) + 1);
-    let endPage = startPage + maxPageButtons - 3; // -3 for first, last, and one ellipsis
+    // Calculate range to display (accounting for first and last pages that are always shown)
+    const maxMiddleButtons = maxPageButtons - 2; // -2 for first and last pages
+    const halfRange = Math.floor(maxMiddleButtons / 2);
 
-    // Adjust if end page is beyond total pages
-    if (endPage >= totalPages) {
+    // Calculate the ideal range around current page
+    let startPage = Math.max(2, currentPage - halfRange);
+    let endPage = Math.min(totalPages - 1, startPage + maxMiddleButtons - 1);
+
+    // Adjust start if end is too close to totalPages
+    if (endPage >= totalPages - 1) {
+      startPage = Math.max(2, totalPages - maxMiddleButtons);
       endPage = totalPages - 1;
-      startPage = Math.max(2, endPage - maxPageButtons + 3);
     }
 
-    // Add ellipsis if needed before middle pages
+    // Add ellipsis before middle pages if needed
     if (startPage > 2) {
       buttons.push('ellipsis');
-    } else if (startPage === 2) {
-      buttons.push(2);
     }
 
     // Add middle pages
-    for (let i = Math.max(startPage, 2); i <= Math.min(endPage, totalPages - 1); i++) {
+    for (let i = startPage; i <= endPage; i++) {
       buttons.push(i);
     }
 
-    // Add ellipsis if needed after middle pages
+    // Add ellipsis after middle pages if needed
     if (endPage < totalPages - 1) {
       buttons.push('ellipsis');
-    } else if (endPage === totalPages - 1) {
-      buttons.push(totalPages - 1);
     }
 
     // Always show last page if more than one page

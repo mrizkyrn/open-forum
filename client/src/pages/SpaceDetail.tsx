@@ -1,23 +1,25 @@
-import { useParams, useNavigate } from 'react-router-dom';
-import { Users } from 'lucide-react';
-import { useSpace } from '@/features/spaces/hooks/useSpace';
-import { useSpaceFollow } from '@/features/spaces/hooks/useSpaceFollow';
-import { getFileUrl } from '@/utils/helpers';
-import { DiscussionPost } from '@/features/discussions/components';
 import LoadingSpinner from '@/components/feedback/LoadingSpinner';
 import BackButton from '@/components/ui/buttons/BackButton';
-import { useEffect } from 'react';
-import { useSocket } from '@/hooks/useSocket';
+import { DiscussionPost } from '@/features/discussions/components';
 import NewDiscussionButton from '@/features/discussions/components/DiscussionPost/NewDiscussionButton';
+import { useSpace } from '@/features/spaces/hooks/useSpace';
+import { useSpaceFollow } from '@/features/spaces/hooks/useSpaceFollow';
+import { useSocket } from '@/hooks/useSocket';
+import { getFileUrl } from '@/utils/helpers';
+import { Users } from 'lucide-react';
+import { useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const SpaceDetailPage = () => {
   const { slug } = useParams<{ slug: string }>();
-
   const navigate = useNavigate();
 
   const { socket, isConnected } = useSocket();
   const { data: space, isLoading: spaceLoading } = useSpace(slug as string);
-  const { followSpace, unfollowSpace, isLoading: followLoading } = useSpaceFollow();
+  const { followSpace, unfollowSpace, followingMap } = useSpaceFollow();
+
+  // Track specific space loading state
+  const isFollowLoading = space ? followingMap[space.id] : false;
 
   useEffect(() => {
     if (!socket || !isConnected || !space?.id) return;
@@ -88,7 +90,7 @@ const SpaceDetailPage = () => {
             {/* Space Icon and Name */}
             <div className="flex items-center gap-4">
               {space.iconUrl ? (
-                <img src={space.iconUrl} alt={space.name} className="h-16 w-16 rounded-full" />
+                <img src={getFileUrl(space.iconUrl)} alt={space.name} className="h-16 w-16 rounded-full" />
               ) : (
                 <div className="flex h-16 w-16 items-center justify-center rounded-full bg-green-100 text-2xl font-bold text-green-600">
                   {space.name.charAt(0)}
@@ -108,16 +110,16 @@ const SpaceDetailPage = () => {
             {/* Follow button */}
             <button
               onClick={toggleFollow}
-              disabled={followLoading}
+              disabled={isFollowLoading}
               className={`rounded-lg px-4 py-2 text-sm font-medium ${
-                followLoading
+                isFollowLoading
                   ? 'cursor-wait opacity-70'
-                  : space?.isFollowing
+                  : space.isFollowing
                     ? 'bg-gray-200 text-gray-800 hover:bg-gray-300'
                     : 'bg-green-600 text-white hover:bg-green-700'
               }`}
             >
-              {followLoading ? 'Processing...' : space?.isFollowing ? 'Unfollow' : 'Follow'}
+              {space.isFollowing ? 'Unfollow' : 'Follow'}
             </button>
           </div>
 

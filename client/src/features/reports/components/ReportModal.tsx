@@ -3,8 +3,8 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { Flag, Loader2, X } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
-import { reportApi } from '../services/reportApi';
-import { ReportReason, ReportTargetType } from '../types/ReportTypes';
+import { reportApi } from '../services';
+import { ReportReason, ReportTargetType } from '@/features/reports/types';
 
 interface ReportModalProps {
   isOpen: boolean;

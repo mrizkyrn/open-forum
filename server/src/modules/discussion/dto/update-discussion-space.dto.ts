@@ -1,6 +1,6 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
-import { IsOptional, IsString, MaxLength } from 'class-validator';
+import { IsBoolean, IsOptional, IsString, MaxLength } from 'class-validator';
 
 export class UpdateDiscussionSpaceDto {
   @ApiPropertyOptional({ description: 'Name of the discussion space', example: 'Web Development' })
@@ -23,4 +23,24 @@ export class UpdateDiscussionSpaceDto {
   @MaxLength(100)
   @Transform(({ value }) => value?.toLowerCase().replace(/\s+/g, '-'))
   slug?: string;
+
+  @ApiPropertyOptional({ description: 'Remove the icon from the space' })
+  @IsOptional()
+  @IsBoolean()
+  @Transform(({ value }) => {
+    if (value === 'true') return true;
+    if (value === 'false') return false;
+    return value;
+  })
+  removeIcon?: boolean;
+
+  @ApiPropertyOptional({ description: 'Remove the banner from the space' })
+  @IsOptional()
+  @IsBoolean()
+  @Transform(({ value }) => {
+    if (value === 'true') return true;
+    if (value === 'false') return false;
+    return value;
+  })
+  removeBanner?: boolean;
 }

@@ -171,14 +171,18 @@ export class DiscussionSpaceService {
       if (updateDto.description !== undefined) space.description = updateDto.description;
       if (updateDto.slug) space.slug = updateDto.slug;
 
-      // Handle icon update
+      // Handle icon update/removal
       if (files?.icon && files.icon.length > 0) {
         await this.updateSpaceImage(space, 'icon', files.icon[0]);
+      } else if (updateDto.removeIcon) {
+        await this.removeSpaceImage(space, 'icon');
       }
 
-      // Handle banner update
+      // Handle banner update/removal
       if (files?.banner && files.banner.length > 0) {
         await this.updateSpaceImage(space, 'banner', files.banner[0]);
+      } else if (updateDto.removeBanner) {
+        await this.removeSpaceImage(space, 'banner');
       }
 
       await queryRunner.manager.save(space);
@@ -423,6 +427,23 @@ export class DiscussionSpaceService {
       space.iconUrl = newUrl;
     } else {
       space.bannerUrl = newUrl;
+    }
+  }
+
+  private async removeSpaceImage(space: DiscussionSpace, type: 'icon' | 'banner'): Promise<void> {
+    // Get current URL
+    const currentUrl = type === 'icon' ? space.iconUrl : space.bannerUrl;
+
+    // If URL exists, delete the file
+    if (currentUrl) {
+      await this.fileService.deleteFile(currentUrl);
+    }
+
+    // Update entity field to null
+    if (type === 'icon') {
+      space.iconUrl = null;
+    } else {
+      space.bannerUrl = null;
     }
   }
 

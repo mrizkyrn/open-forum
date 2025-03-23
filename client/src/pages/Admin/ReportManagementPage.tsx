@@ -1,65 +1,45 @@
-import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Flag, AlertTriangle, CheckCircle, X } from 'lucide-react';
-import { formatDistanceToNow } from 'date-fns';
-import { useDebounce } from '@/hooks/useDebounce';
+import { format } from 'date-fns';
+import { AlertTriangle, CheckCircle, Flag, RefreshCw, X } from 'lucide-react';
+import { useState } from 'react';
 
-import { reportApi } from '@/features/reports/services/reportApi';
-import { Report, ReportStatus, ReportTargetType } from '@/features/reports/types';
-// import ReportDetailModal from '@/features/reports/components/ReportDetailModal';
-import { DataTable } from '@/features/admin/components/DataTable';
-import Pagination from '@/features/admin/components/Pagination';
-import StatusBadge from '@/features/admin/components/StatusBadge';
-import FilterBar from '@/features/admin/components/FilterBar';
-import StatsCard from '@/features/admin/components/StatsCard';
 import UserAvatar from '@/components/layouts/UserAvatar';
+import { DataTable } from '@/features/admin/components/DataTable';
+import FilterBar from '@/features/admin/components/FilterBar';
+import Pagination from '@/features/admin/components/Pagination';
 import ReportDetailModal from '@/features/admin/components/ReportDetailModal';
+import StatsCard from '@/features/admin/components/StatsCard';
+import StatusBadge from '@/features/admin/components/StatusBadge';
+import { useReports } from '@/features/reports/hooks/useReports';
+import { reportApi } from '@/features/reports/services';
+import { Report, ReportStatus, ReportTargetType } from '@/features/reports/types';
 
-const ReportsPage = () => {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState<ReportStatus | ''>('');
-  const [typeFilter, setTypeFilter] = useState<ReportTargetType | ''>('');
+const ReportManagementPage = () => {
+  // State for report detail modal
   const [selectedReport, setSelectedReport] = useState<Report | null>(null);
 
-  const debouncedSearchTerm = useDebounce(searchTerm, 500);
-
-  // Fetch reports with filters
+  // Use the reports hook for data fetching and filtering
   const {
-    data: reportsData,
+    reports,
+    meta,
     isLoading,
     isError,
+    filters,
     refetch,
-  } = useQuery({
-    queryKey: ['adminReports', currentPage, pageSize, debouncedSearchTerm, statusFilter, typeFilter],
-    queryFn: () => reportApi.getReports(),
-  });
+    handlePageChange,
+    handleLimitChange,
+    handleSearchChange,
+    handleStatusFilterChange,
+    handleTypeFilterChange,
+    handleSortChange,
+    resetFilters,
+  } = useReports();
 
   // Fetch report statistics
   const { data: reportStats } = useQuery({
     queryKey: ['reportStats'],
     queryFn: reportApi.getReportStats,
   });
-
-  const handleStatusChange = (status: ReportStatus | '') => {
-    setStatusFilter(status);
-    setCurrentPage(1);
-  };
-
-  const handleTypeChange = (type: ReportTargetType | '') => {
-    setTypeFilter(type);
-    setCurrentPage(1);
-  };
-
-  const handleSearchChange = (value: string) => {
-    setSearchTerm(value);
-    setCurrentPage(1);
-  };
-
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-  };
 
   const handleViewReport = (report: Report) => {
     setSelectedReport(report);
@@ -103,6 +83,8 @@ const ReportsPage = () => {
             return <StatusBadge label={report.targetType} color="gray" />;
         }
       },
+      sortable: true,
+      sortKey: 'targetType',
     },
     {
       header: 'Status',
@@ -118,16 +100,31 @@ const ReportsPage = () => {
             return <StatusBadge label={report.status} color="gray" />;
         }
       },
+      sortable: true,
+      sortKey: 'status',
     },
     {
-      header: 'Date',
-      accessor: (report: Report) => formatDistanceToNow(new Date(report.createdAt), { addSuffix: true }),
-      className: 'text-gray-500',
+      header: 'Submitted',
+      accessor: (report: Report) => format(new Date(report.createdAt), 'MMM d, yyyy HH:mm'),
+      className: 'text-gray-500 whitespace-nowrap',
+      sortable: true,
+      sortKey: 'createdAt',
+    },
+    {
+      header: 'Reviewed',
+      accessor: (report: Report) =>
+        report.reviewedAt ? format(new Date(report.reviewedAt), 'MMM d, yyyy HH:mm') : 'Not reviewed',
+      className: 'text-gray-500 whitespace-nowrap',
+      sortable: true,
+      sortKey: 'reviewedAt',
     },
     {
       header: 'Actions',
       accessor: (report: Report) => (
-        <button onClick={() => handleViewReport(report)} className="text-blue-600 hover:text-blue-900">
+        <button
+          onClick={() => handleViewReport(report)}
+          className="rounded-md bg-blue-50 px-3 py-1 text-sm font-medium text-blue-600 hover:bg-blue-100"
+        >
           Review
         </button>
       ),
@@ -177,15 +174,15 @@ const ReportsPage = () => {
       {/* Filters */}
       <FilterBar
         searchProps={{
-          value: searchTerm,
+          value: filters.search || '',
           onChange: handleSearchChange,
           placeholder: 'Search reports...',
         }}
       >
         <select
           className="rounded-lg border border-gray-300 bg-gray-50 p-2 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
-          value={statusFilter}
-          onChange={(e) => handleStatusChange(e.target.value as ReportStatus | '')}
+          value={filters.status || ''}
+          onChange={(e) => handleStatusFilterChange((e.target.value as ReportStatus) || undefined)}
         >
           <option value="">All Statuses</option>
           <option value={ReportStatus.PENDING}>Pending</option>
@@ -194,24 +191,34 @@ const ReportsPage = () => {
         </select>
         <select
           className="rounded-lg border border-gray-300 bg-gray-50 p-2 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
-          value={typeFilter}
-          onChange={(e) => handleTypeChange(e.target.value as ReportTargetType | '')}
+          value={filters.targetType || ''}
+          onChange={(e) => handleTypeFilterChange((e.target.value as ReportTargetType) || undefined)}
         >
           <option value="">All Types</option>
           <option value={ReportTargetType.DISCUSSION}>Discussions</option>
           <option value={ReportTargetType.COMMENT}>Comments</option>
         </select>
+        <button
+          onClick={resetFilters}
+          className="inline-flex items-center justify-center rounded-md border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
+        >
+          <RefreshCw className="mr-2 h-4 w-4" />
+          Reset Filters
+        </button>
       </FilterBar>
 
       {/* Reports Table */}
       <div className="overflow-hidden rounded-lg border border-gray-100 bg-white">
         <DataTable
-          data={reportsData?.items}
+          data={reports}
           columns={columns}
           isLoading={isLoading}
           isError={isError}
           onRetry={refetch}
           keyExtractor={(report) => report.id}
+          currentSortKey={filters.sortBy}
+          sortOrder={filters.sortOrder}
+          onSortChange={handleSortChange}
           emptyState={{
             icon: <Flag className="mb-2 h-10 w-10 text-gray-400" />,
             title: 'No reports found',
@@ -220,16 +227,16 @@ const ReportsPage = () => {
         />
 
         {/* Pagination */}
-        {reportsData && reportsData.meta.totalPages > 0 && (
+        {meta && meta.totalPages > 0 && (
           <Pagination
-            currentPage={currentPage}
-            totalPages={reportsData.meta.totalPages}
-            hasNextPage={reportsData.meta.hasNextPage}
-            hasPreviousPage={reportsData.meta.hasPreviousPage}
-            pageSize={pageSize}
-            totalItems={reportsData.meta.totalItems}
+            currentPage={meta.currentPage}
+            totalPages={meta.totalPages}
+            hasNextPage={meta.hasNextPage}
+            hasPreviousPage={meta.hasPreviousPage}
+            pageSize={meta.itemsPerPage}
+            totalItems={meta.totalItems}
             onPageChange={handlePageChange}
-            onPageSizeChange={setPageSize}
+            onPageSizeChange={handleLimitChange}
             pageSizeOptions={[5, 10, 25, 50, 100]}
           />
         )}
@@ -241,4 +248,4 @@ const ReportsPage = () => {
   );
 };
 
-export default ReportsPage;
+export default ReportManagementPage;

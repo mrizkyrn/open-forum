@@ -9,12 +9,15 @@ import { createBrowserRouter } from 'react-router-dom';
 const Home = lazy(() => import('@/pages/Home'));
 const Login = lazy(() => import('@/pages/Login'));
 const DiscussionDetail = lazy(() => import('@/pages/DiscussionDetail'));
+const SpacesPage = lazy(() => import('@/pages/SpacesPage'));
 const SpaceDetailPage = lazy(() => import('@/pages/SpaceDetail'));
 const SearchPage = lazy(() => import('@/pages/SearchPage'));
 const NotificationsPage = lazy(() => import('@/pages/NotificationsPage'));
 const OverviewPage = lazy(() => import('@/pages/Admin/OverviewPage'));
-const UsersPage = lazy(() => import('@/pages/Admin/UsersPage'));
-const ReportsPage = lazy(() => import('@/pages/Admin/ReportsPage'));
+const UserManagementPage = lazy(() => import('@/pages/Admin/UserManagementPage'));
+const DiscussionManagementPage = lazy(() => import('@/pages/Admin/DiscussionManagementPage'));
+const SpaceManagementPage = lazy(() => import('@/pages/Admin/SpaceManagementPage'));
+const ReportManagementPage = lazy(() => import('@/pages/Admin/ReportManagementPage'));
 const NotFound = lazy(() => import('@/pages/NotFound'));
 
 // Wrap Suspense in a reusable function
@@ -33,6 +36,10 @@ const routes = [
       {
         index: true,
         element: lazyLoad(Home),
+      },
+      {
+        path: '/spaces',
+        element: lazyLoad(SpacesPage),
       },
       {
         path: '/discussions/:id',
@@ -62,11 +69,19 @@ const routes = [
       },
       {
         path: 'users',
-        element: lazyLoad(UsersPage),
+        element: lazyLoad(UserManagementPage),
+      },
+      {
+        path: 'discussions',
+        element: lazyLoad(DiscussionManagementPage),
+      },
+      {
+        path: 'spaces',
+        element: lazyLoad(SpaceManagementPage),
       },
       {
         path: 'reports',
-        element: lazyLoad(ReportsPage),
+        element: lazyLoad(ReportManagementPage),
       },
     ],
   },

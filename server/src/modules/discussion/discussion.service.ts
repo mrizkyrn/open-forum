@@ -25,6 +25,7 @@ import { UpdateDiscussionDto } from './dto/update-discussion.dto';
 import { Bookmark } from './entities/bookmark.entity';
 import { DiscussionSpace } from './entities/discussion-space.entity';
 import { Discussion } from './entities/discussion.entity';
+import { UserRole } from 'src/common/enums/user-role.enum';
 
 @Injectable()
 export class DiscussionService {
@@ -50,6 +51,8 @@ export class DiscussionService {
     currentUser: User,
     files?: Express.Multer.File[],
   ): Promise<DiscussionResponseDto> {
+    const serverTimestamp = Date.now();
+
     if (!currentUser?.id) {
       throw new BadRequestException('User information is required');
     }
@@ -106,9 +109,13 @@ export class DiscussionService {
         const createdDiscussion = await this.getDiscussionById(savedDiscussion.id);
 
         // Notify users about new discussion
-        this.websocketGateway.notifyNewDiscussion(createdDiscussion.authorId);
+        this.websocketGateway.notifyNewDiscussion(createdDiscussion.authorId, createdDiscussion.id, serverTimestamp);
         if (createdDiscussion.spaceId !== 1) {
-          this.websocketGateway.notifyNewSpaceDiscussion(createdDiscussion.authorId, createdDiscussion.spaceId);
+          this.websocketGateway.notifyNewSpaceDiscussion(
+            createdDiscussion.authorId,
+            createdDiscussion.spaceId,
+            createdDiscussion.id,
+          );
         }
 
         return DiscussionResponseDto.fromEntity(createdDiscussion, currentUser);
@@ -258,7 +265,7 @@ export class DiscussionService {
 
   async delete(id: number, currentUser?: User): Promise<void> {
     if (currentUser) {
-      await this.validateDiscussionAccess(id, currentUser.id);
+      await this.validateDiscussionAccess(id, currentUser.id, currentUser.role);
     }
     await this.discussionRepository.softDelete(id);
   }
@@ -492,7 +499,7 @@ export class DiscussionService {
     return Array.from(new Set(tags.map((tag) => tag.toLowerCase().trim()))).filter(Boolean);
   }
 
-  private async validateDiscussionAccess(discussionId: number, userId: number): Promise<Discussion> {
+  private async validateDiscussionAccess(discussionId: number, userId: number, userRole?: UserRole): Promise<Discussion> {
     const discussion = await this.discussionRepository.findOne({
       where: { id: discussionId },
       relations: ['author'],
@@ -502,7 +509,7 @@ export class DiscussionService {
       throw new NotFoundException(`Discussion with ID ${discussionId} not found`);
     }
 
-    if (discussion.authorId !== userId) {
+    if (discussion.authorId !== userId && userRole !== UserRole.ADMIN) {
       throw new ForbiddenException('You do not have permission to modify this discussion');
     }
 

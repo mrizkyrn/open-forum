@@ -1,5 +1,5 @@
 import Modal from '@/components/modals/Modal/Modal';
-import { adminApi } from '@/features/admin/services/adminApi';
+import { adminApi } from '@/features/admin/services';
 import { User, UserRole } from '@/features/users/types';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Loader2, UserCheck, X } from 'lucide-react';

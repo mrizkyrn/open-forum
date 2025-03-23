@@ -53,6 +53,27 @@ export async function seedDiscussionSpaces(dataSource: DataSource, users: User[]
       creatorId: adminUser.id,
       followerCount: 0,
     }),
+    spaceRepository.create({
+      name: 'Housing & Accommodation',
+      description: 'Find roommates and discuss housing options.',
+      slug: 'housing-accommodation',
+      creatorId: adminUser.id,
+      followerCount: 0,
+    }),
+    spaceRepository.create({
+      name: 'Student Jobs',
+      description: 'Find part-time jobs and internships for students.',
+      slug: 'student-jobs',
+      creatorId: adminUser.id,
+      followerCount: 0,
+    }),
+    spaceRepository.create({
+      name: 'Study Abroad',
+      description: 'Discuss study abroad opportunities and experiences.',
+      slug: 'study-abroad',
+      creatorId: adminUser.id,
+      followerCount: 0,
+    }),
   ];
 
   // Save spaces

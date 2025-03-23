@@ -28,12 +28,12 @@ export class AuthService {
   async login(loginDto: LoginDto) {
     const user = await this.userService.getUserWithCredentials(loginDto.username);
     if (!user) {
-      throw new UnauthorizedException('Invalid credentials');
+      throw new UnauthorizedException('Incorrect username or password');
     }
 
     const isPasswordValid = await this.userService.verifyPassword(loginDto.password, user.password);
     if (!isPasswordValid) {
-      throw new UnauthorizedException('Invalid credentials');
+      throw new UnauthorizedException('Incorrect username or password');
     }
 
     const tokens = await this.generateAuthTokens(user);

@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { ReportTargetType } from '../types/ReportTypes';
-import ReportModal from '../components/ReportModal';
+import { ReportTargetType } from '@/features/reports/types';
+import ReportModal from '@/features/reports/components/ReportModal';
 
 export function useReport() {
   const [reportModalState, setReportModalState] = useState<{

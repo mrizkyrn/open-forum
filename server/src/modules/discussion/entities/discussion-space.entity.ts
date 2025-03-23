@@ -22,10 +22,10 @@ export class DiscussionSpace extends BaseEntity {
   discussions: Discussion[];
 
   @Column({ name: 'icon_url', type: 'varchar', length: 255, nullable: true })
-  iconUrl: string;
+  iconUrl: string | null;
 
   @Column({ name: 'banner_url', type: 'varchar', length: 255, nullable: true })
-  bannerUrl: string;
+  bannerUrl: string | null;
 
   @Column({ name: 'follower_count', type: 'integer', default: 0 })
   followerCount: number;
