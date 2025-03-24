@@ -5,6 +5,7 @@ import { DiscussionCard, UpdateDiscussionModal } from '@/features/discussions/co
 import { discussionApi } from '@/features/discussions/services';
 import { useSocket } from '@/hooks/useSocket';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { AlertCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -62,7 +63,6 @@ const DiscussionDetail = () => {
     data: discussion,
     isLoading,
     isError,
-    error,
   } = useQuery({
     queryKey: ['discussion', discussionId],
     queryFn: () => discussionApi.getDiscussionById(discussionId),
@@ -75,14 +75,16 @@ const DiscussionDetail = () => {
 
   if (isError || !discussion) {
     return (
-      <div className="container mx-auto max-w-xl px-4 py-8">
-        <div className="flex flex-col items-center rounded-lg bg-red-50 p-8 text-center">
-          <h2 className="mb-3 text-2xl font-bold text-red-700">Error Loading Discussion</h2>
-          <p className="mb-6 text-red-600">
-            {error instanceof Error ? error.message : 'This discussion could not be found or may have been deleted.'}
-          </p>
-          <BackButton />
+      <div className="flex flex-col items-center justify-center gap-4 px-4 py-16 text-center">
+        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-red-50">
+          <AlertCircle size={32} className="text-red-500" />
         </div>
+        <h2 className="text-xl font-semibold text-gray-900">Discussion Not Found</h2>
+        <p className="max-w-md text-gray-500">
+          This discussion may have been removed or doesn't exist. It might have been deleted by the author or a
+          moderator.
+        </p>
+        <BackButton />
       </div>
     );
   }
@@ -97,11 +99,9 @@ const DiscussionDetail = () => {
         <DiscussionCard discussion={discussion} />
 
         {/* Comments section */}
-        <div className="mt-8 rounded-xl bg-white p-6">
-          <h2 className="mb-4 text-xl font-semibold text-gray-900">Comments ({discussion.commentCount || 0})</h2>
-
+        <div className="rounded-xl bg-white mt-4">
           {/* Comment form */}
-          <div className="mb-6">
+          <div className="mb-3">
             <CommentForm discussionId={discussion.id} />
           </div>
 

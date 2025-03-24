@@ -222,10 +222,11 @@ export class DiscussionService {
         if (updateDiscussionDto.isAnonymous !== undefined) {
           discussion.isAnonymous = updateDiscussionDto.isAnonymous;
         }
-        if (updateDiscussionDto.tags) {
+        if (updateDiscussionDto.tags !== undefined) {
           discussion.tags = this.processTags(updateDiscussionDto.tags);
         }
 
+        discussion.isEdited = true;
         await queryRunner.manager.save(discussion);
 
         // Remove attachments if specified

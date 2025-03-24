@@ -134,6 +134,12 @@ const MainLayout = () => {
       refetchUnreadCount();
       setNewNotificationReceived(true);
       queryClient.invalidateQueries({ queryKey: ['notifications'] });
+
+      if (notification.entityType === 'report' && notification.data.isContentDeleted) {
+        if (notification.data.targetType === 'discussion') {
+          queryClient.invalidateQueries({ queryKey: ['discussion', notification.data.targetId] });
+        }
+      }
     };
 
     socket.on('newNotification', handleNewNotification);

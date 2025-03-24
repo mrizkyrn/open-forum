@@ -1,4 +1,5 @@
 import UserAvatar from '@/components/layouts/UserAvatar';
+import ConfirmationModal from '@/components/modals/ConfirmationModal';
 import Pagination from '@/features/admin/components/Pagination';
 import { notificationApi } from '@/features/notifications/services/notificationApi';
 import { Notification, NotificationEntityType, NotificationType } from '@/features/notifications/types';
@@ -31,6 +32,7 @@ const NotificationsPage: React.FC = () => {
   const [limit, setLimit] = useState(10);
   const [filter, setFilter] = useState<'all' | 'read' | 'unread'>('all');
   const [initialLoadTime] = useState(new Date());
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [newlyArrivedNotifications, setNewlyArrivedNotifications] = useState<Record<number, boolean>>({});
 
   const { data, isLoading, isError, refetch } = useQuery({
@@ -96,7 +98,11 @@ const NotificationsPage: React.FC = () => {
     },
     onError: () => toast.error('Failed to delete all notifications'),
   });
-  console.log(data);
+
+  const handleDeleteConfirm = () => {
+    deleteAllNotificationsMutation.mutate();
+    setShowDeleteConfirm(false);
+  };
 
   // Helper to generate the right link based on notification type
   const getNotificationLink = (notification: Notification) => {
@@ -198,9 +204,7 @@ const NotificationsPage: React.FC = () => {
 
   // Handle "Clear all" button click
   const handleClearAll = () => {
-    if (confirm('Are you sure you want to delete all notifications?')) {
-      deleteAllNotificationsMutation.mutate();
-    }
+    setShowDeleteConfirm(true);
   };
 
   // Handle notification click
@@ -256,6 +260,7 @@ const NotificationsPage: React.FC = () => {
   };
 
   return (
+    <>
     <div className="mx-auto max-w-4xl">
       <div className="mb-6 flex flex-col space-y-4 sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
         <div>
@@ -446,6 +451,19 @@ const NotificationsPage: React.FC = () => {
         </div>
       )}
     </div>
+
+    {/* Delete confirmation dialog */}
+    <ConfirmationModal
+        isOpen={showDeleteConfirm}
+        title="Clear all notifications"
+        message="Are you sure you want to clear all notifications? This action cannot be undone."
+        confirmButtonText="Delete"
+        variant="danger"
+        isProcessing={deleteAllNotificationsMutation.isPending}
+        onCancel={() => setShowDeleteConfirm(false)}
+        onConfirm={handleDeleteConfirm}
+      />
+    </>
   );
 
   // Helper function to render a notification item

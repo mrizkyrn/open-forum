@@ -11,6 +11,7 @@ export interface Report {
   updatedAt: string;
   reporter: User;
   targetDetails: {
+    discussionId?: number;
     content: string;
     author: User;
     createdAt: string;

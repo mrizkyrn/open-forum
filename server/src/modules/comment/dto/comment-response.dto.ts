@@ -24,6 +24,12 @@ export class CommentResponseDto {
   author: UserResponseDto;
 
   @ApiProperty({
+    description: 'Whether the comment has been edited',
+    example: false,
+  })
+  isEdited: boolean;
+
+  @ApiProperty({
     description: 'ID of the discussion this comment belongs to',
     example: 1,
   })
@@ -93,6 +99,7 @@ export class CommentResponseDto {
     dto.content = comment.content;
     dto.createdAt = comment.createdAt;
     dto.updatedAt = comment.updatedAt;
+    dto.isEdited = comment.isEdited;
     dto.discussionId = comment.discussionId;
     dto.parentId = comment.parentId;
     dto.upvoteCount = comment.upvoteCount;

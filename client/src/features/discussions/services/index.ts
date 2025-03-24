@@ -54,6 +54,17 @@ export const discussionApi = {
     }
   },
 
+  async getBookmarkedDiscussions(search: SearchDiscussionDto): Promise<PaginatedResponse<Discussion>> {
+    try {
+      const response = await apiClient.get<ApiResponse<PaginatedResponse<Discussion>>>('/discussions/bookmarks', {
+        params: search,
+      });
+      return response.data.data;
+    } catch (error: any) {
+      return handleApiError(error, 'Failed to fetch bookmarked discussions');
+    }
+  },
+
   async getPopularTags(limit = 10): Promise<{ tag: string; count: number }[]> {
     try {
       const response = await apiClient.get<ApiResponse<{ tag: string; count: number }[]>>('/discussions/tags/popular', {
@@ -77,10 +88,14 @@ export const discussionApi = {
         formData.append('isAnonymous', String(data.isAnonymous));
       }
 
-      if (data.tags && data.tags.length > 0) {
-        data.tags.forEach((tag) => {
-          formData.append('tags', tag);
-        });
+      if (data.tags !== undefined) {
+        if (data.tags.length > 0) {
+          data.tags.forEach((tag) => {
+            formData.append('tags', tag);
+          });
+        } else {
+          formData.append('tags', '');
+        }
       }
 
       if (data.files && data.files.length > 0) {

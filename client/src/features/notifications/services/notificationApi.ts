@@ -11,7 +11,6 @@ export const notificationApi = {
    * Get paginated list of user notifications
    */
   async getNotifications(params: NotificationQueryParams = {}): Promise<PaginatedResponse<Notification>> {
-    console.log(params);
     try {
       const response = await apiClient.get<ApiResponse<PaginatedResponse<Notification>>>('/notifications', {
         params,

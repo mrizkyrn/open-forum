@@ -43,7 +43,6 @@ export class NotificationController {
     @ReqUser() currentUser: User,
     @Query() queryDto: NotificationQueryDto,
   ): Promise<Pageable<NotificationResponseDto>> {
-    console.log('From controller: ', queryDto);
     return this.notificationService.findUserNotifications(currentUser.id, queryDto);
   }
 

@@ -3,7 +3,7 @@ import { spaceApi } from '@/features/spaces/services';
 import { Space } from '@/features/spaces/types';
 import { getFileUrl } from '@/utils/helpers';
 import { useQuery } from '@tanstack/react-query';
-import { Search, TrendingUp } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 

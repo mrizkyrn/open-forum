@@ -16,6 +16,9 @@ export class Comment extends BaseEntity {
   @JoinColumn({ name: 'author_id' })
   author: User;
 
+  @Column({ name: 'is_edited', type: 'boolean', default: false })
+  isEdited: boolean;
+
   @Column({ name: 'discussion_id' })
   discussionId: number;
 

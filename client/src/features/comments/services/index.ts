@@ -30,7 +30,6 @@ export const commentApi = {
     limit: number,
     sortOrder: SortOrder = SortOrder.DESC,
   ): Promise<PaginatedResponse<Comment>> {
-    console.log('sortOrder', sortOrder);
     try {
       const response = await apiClient.get<ApiResponse<PaginatedResponse<Comment>>>(`/comments/${commentId}/replies`, {
         params: { page, limit, sortOrder },

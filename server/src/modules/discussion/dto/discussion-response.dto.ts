@@ -1,10 +1,10 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { UserRole } from 'src/common/enums/user-role.enum';
 import { PaginationMetaDto } from '../../../common/dto/pagination-meta.dto';
 import { AttachmentResponseDto } from '../../../modules/attachment/dto/attachment-response.dto';
 import { UserResponseDto } from '../../user/dto/user-response.dto';
 import { User } from '../../user/entities/user.entity';
 import { Discussion } from '../entities/discussion.entity';
-import { UserRole } from 'src/common/enums/user-role.enum';
 
 class DiscussionSpaceDto {
   @ApiProperty({ description: 'Space ID', example: 1 })
@@ -71,6 +71,12 @@ export class DiscussionResponseDto {
   attachments: AttachmentResponseDto[];
 
   @ApiProperty({
+    description: 'Whether the discussion has been edited',
+    example: false,
+  })
+  isEdited: boolean;
+
+  @ApiProperty({
     description: 'Number of comments on the discussion',
     example: 5,
     default: 0,
@@ -126,6 +132,7 @@ export class DiscussionResponseDto {
     dto.tags = discussion.tags || [];
     dto.createdAt = discussion.createdAt;
     dto.updatedAt = discussion.updatedAt;
+    dto.isEdited = discussion.isEdited;
     dto.commentCount = discussion.commentCount ?? 0;
     dto.upvoteCount = discussion.upvoteCount ?? 0;
     dto.downvoteCount = discussion.downvoteCount ?? 0;
@@ -147,7 +154,7 @@ export class DiscussionResponseDto {
     if (!discussion.isAnonymous || (currentUser && currentUser.role === UserRole.ADMIN)) {
       dto.author = discussion.author ? UserResponseDto.fromEntity(discussion.author) : null;
     } else if (currentUser && currentUser.id === discussion.authorId) {
-      dto.author = UserResponseDto.createAnonymous(true);
+      dto.author = UserResponseDto.createAnonymous(currentUser.id);
     } else {
       dto.author = UserResponseDto.createAnonymous();
     }

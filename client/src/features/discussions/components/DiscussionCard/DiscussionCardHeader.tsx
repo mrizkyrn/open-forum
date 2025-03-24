@@ -14,6 +14,7 @@ interface DiscussionCardHeaderProps {
   };
   discussionId: number;
   createdAt: Date;
+  isEdited: boolean;
   isBookmarked?: boolean;
   onEditClick: () => void;
   onDeleteClick: () => void;
@@ -25,6 +26,7 @@ const DiscussionCardHeader: React.FC<DiscussionCardHeaderProps> = ({
   space,
   discussionId,
   createdAt,
+  isEdited,
   isBookmarked,
   onEditClick,
   onDeleteClick,
@@ -57,6 +59,7 @@ const DiscussionCardHeader: React.FC<DiscussionCardHeaderProps> = ({
             </button>
             <span>·</span>
             <span>{formatDateDistance(createdAt)}</span>
+            {isEdited && <span className="text-xs text-gray-500">(edited)</span>}
           </div>
         </div>
       </div>

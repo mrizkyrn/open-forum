@@ -71,6 +71,7 @@ const DiscussionCard: React.FC<DiscussionCardProps> = ({ discussion, onDiscussio
           space={discussion.space}
           discussionId={discussion.id}
           createdAt={discussion.createdAt}
+          isEdited={discussion.isEdited}
           isBookmarked={discussion.isBookmarked}
           onEditClick={handleEditClick}
           onDeleteClick={handleDeleteClick}

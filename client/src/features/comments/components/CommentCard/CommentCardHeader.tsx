@@ -1,12 +1,13 @@
-import { Loader2 } from 'lucide-react';
 import { User } from '@/features/users/types';
 import { formatDateDistance } from '@/utils/helpers';
+import { Loader2 } from 'lucide-react';
 import DiscussionDropdownAction from './CommentDropdownAction';
 
 interface CommentCardHeaderProps {
   author: User;
   commentId: number;
   createdAt: Date;
+  isEdited: boolean;
   isEditing: boolean;
   onEditClick: () => void;
   onDeleteClick: () => void;
@@ -17,6 +18,7 @@ const CommentCardHeader: React.FC<CommentCardHeaderProps> = ({
   author,
   commentId,
   createdAt,
+  isEdited,
   isEditing,
   onEditClick,
   onDeleteClick,
@@ -30,6 +32,7 @@ const CommentCardHeader: React.FC<CommentCardHeaderProps> = ({
             <span className="font-medium">{author.fullName}</span>
             <span className="text-xs text-gray-500">·</span>
             <span className="text-xs text-gray-500">{formatDateDistance(createdAt)}</span>
+            {isEdited && <span className="text-xs text-gray-500">(edited)</span>}
           </div>
         </div>
       </div>

@@ -388,6 +388,7 @@ export class ReportService {
       } else if (report.targetType === ReportTargetType.COMMENT) {
         const comment = await this.commentService.getCommentEntity(report.targetId, ['author']);
         report['targetDetails'] = {
+          discussionId: comment.discussionId,
           content: comment.content,
           author: {
             id: comment.author.id,
@@ -450,6 +451,7 @@ export class ReportService {
         targetType: report.targetType,
         targetId: report.targetId,
         contentPreview,
+        isContentDeleted,
         note: note || '',
         reasonText: report.reason?.name || '',
       };

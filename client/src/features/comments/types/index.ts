@@ -7,6 +7,7 @@ export interface Comment {
   id: number;
   content: string;
   author: User;
+  isEdited: boolean;
   discussionId: number;
   parentId: number | null;
   replies?: Comment[];

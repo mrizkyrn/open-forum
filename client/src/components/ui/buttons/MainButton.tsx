@@ -1,7 +1,7 @@
-import React from 'react';
 import { Loader2 } from 'lucide-react';
+import React from 'react';
 
-export type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'warning';
+export type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'warning' | 'success';
 export type ButtonSize = 'sm' | 'md' | 'lg';
 
 export interface MainButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -42,6 +42,7 @@ const MainButton = React.forwardRef<HTMLButtonElement, MainButtonProps>(
       ghost: 'bg-transparent text-gray-700 hover:bg-gray-100 focus:ring-1 focus:ring-gray-200',
       danger: 'bg-red-600 text-white hover:bg-red-700 focus:ring-1 focus:ring-red-800',
       warning: 'bg-yellow-500 text-white hover:bg-yellow-600 focus:ring-1 focus:ring-yellow-600',
+      success: 'bg-green-500 text-white hover:bg-green-600 focus:ring-1 focus:ring-green-600',
     };
 
     // Size styles
@@ -62,14 +63,7 @@ const MainButton = React.forwardRef<HTMLButtonElement, MainButtonProps>(
         ref={ref}
         type={type}
         disabled={disabled || isLoading}
-        className={`
-          ${baseStyles} 
-          ${variantStyles[variant]} 
-          ${sizeStyles[size]}
-          ${isLoading || disabled ? stateStyles.disabled : 'cursor-pointer'}
-          ${fullWidth ? stateStyles.fullWidth : ''}
-          ${className || ''}
-        `}
+        className={` ${baseStyles} ${variantStyles[variant]} ${sizeStyles[size]} ${isLoading || disabled ? stateStyles.disabled : 'cursor-pointer'} ${fullWidth ? stateStyles.fullWidth : ''} ${className || ''} `}
         {...props}
       >
         {isLoading && <Loader2 size={size === 'sm' ? 14 : size === 'md' ? 16 : 18} className="mr-2 animate-spin" />}

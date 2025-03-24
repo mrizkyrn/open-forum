@@ -38,7 +38,6 @@ export const spaceApi = {
       const response = await apiClient.get<ApiResponse<Space[]>>('/spaces/popular', {
         params: { limit },
       });
-      console.log('response:', response);
       return response.data.data;
     } catch (error: any) {
       return handleApiError(error, 'Failed to fetch popular spaces');

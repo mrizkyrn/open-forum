@@ -14,6 +14,7 @@ import { WsJwtGuard } from '../../common/guards/ws-jwt.guard';
 import { JWTConfig } from '../../config';
 import { JwtPayload } from '../../modules/auth/interfaces/jwt-payload.interface';
 import { UserService } from '../../modules/user/user.service';
+import { VoteEntityType } from 'src/modules/vote/entities/vote.entity';
 
 @WebSocketGateway({
   cors: {

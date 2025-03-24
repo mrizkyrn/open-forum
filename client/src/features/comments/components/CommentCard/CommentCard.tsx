@@ -100,6 +100,7 @@ const CommentCard: React.FC<CommentCardProps> = ({
               author={comment.author}
               commentId={comment.id}
               createdAt={comment.createdAt}
+              isEdited={comment.isEdited}
               isEditing={isEditing}
               onEditClick={handleEditClick}
               onDeleteClick={handleDeleteClick}

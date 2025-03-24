@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { UserRole } from '../../../common/enums/user-role.enum';
 import { PaginationMetaDto } from '../../../common/dto/pagination-meta.dto';
+import { UserRole } from '../../../common/enums/user-role.enum';
 import { User } from '../entities/user.entity';
 
 export class UserResponseDto {
@@ -42,23 +42,24 @@ export class UserResponseDto {
     dto.lastActiveAt = user.lastActiveAt;
     dto.createdAt = user.createdAt;
     dto.updatedAt = user.updatedAt;
-    
+
     return dto;
   }
 
-  static createAnonymous(isOwnContent = false): UserResponseDto {
+  static createAnonymous(userId?: number): UserResponseDto {
     const dto = new UserResponseDto();
-    
-    if (isOwnContent) {
+
+    if (userId) {
+      dto.id = userId;
       dto.username = '(You - Anonymous)';
       dto.fullName = '(You - Anonymous)';
     } else {
       dto.username = 'Anonymous';
       dto.fullName = 'Anonymous';
     }
-    
+
     dto.avatarUrl = null;
-    
+
     return dto;
   }
 }

@@ -62,7 +62,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({ discussionId }) => {
   }
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-2">
       {/* Header section with sort options */}
       <div className="flex items-center justify-between mb-2">
         <h3 className="text-lg font-medium">Comments {comments.length > 0 && `(${comments.length})`}</h3>

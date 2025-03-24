@@ -9,6 +9,7 @@ export interface Discussion {
   tags?: string[];
   createdAt: Date;
   updatedAt: Date;
+  isEdited: boolean;
   author?: User | null;
   space: {
     id: number;

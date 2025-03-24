@@ -4,6 +4,9 @@ import { UserResponseDto } from '../../user/dto/user-response.dto';
 import { Report, ReportStatus, ReportTargetType } from '../entities/report.entity';
 
 export class ReportTargetDetailsDto {
+  @ApiProperty({ description: 'ID of the reported item', example: 1 })
+  discussionId?: number;
+
   @ApiProperty({ description: 'The content of the reported item', example: 'This is the content' })
   content?: string;
 

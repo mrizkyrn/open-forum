@@ -168,116 +168,114 @@ const CommentForm: React.FC<CommentFormProps> = ({
   };
 
   return (
-    <div className="w-full">
-      <form ref={commentFormRef} onSubmit={handleSubmit} className="flex flex-col gap-2 rounded-lg bg-white">
-        <div className="flex items-start gap-2">
-          {isReply || isEditing ? null : <UserAvatar fullName={user?.fullName} avatarUrl={user?.avatarUrl} size="md" />}
-          <div className="flex w-full flex-col gap-3">
-            <textarea
-              ref={textareaRef}
-              value={value}
-              onChange={(e) => {
-                onChange(e.target.value);
-                adjustTextareaHeight();
-              }}
-              onFocus={() => setIsFocused(true)}
-              placeholder={isReply ? `Write a reply...` : 'Write a comment...'}
-              className={`focus:ring-primary-lighter w-full resize-none overflow-hidden rounded-md border border-gray-300 px-3 py-1 transition-all focus:ring-1 focus:outline-none ${
-                isReply ? 'min-h-[30px] text-sm' : 'min-h-[38px]'
-              }`}
-              rows={1}
-            />
+    <form ref={commentFormRef} onSubmit={handleSubmit} className="flex flex-col gap-2 rounded-lg bg-white">
+      <div className="flex items-start gap-2">
+        {isReply || isEditing ? null : <UserAvatar fullName={user?.fullName} avatarUrl={user?.avatarUrl} size="md" />}
+        <div className="flex w-full flex-col gap-3">
+          <textarea
+            ref={textareaRef}
+            value={value}
+            onChange={(e) => {
+              onChange(e.target.value);
+              adjustTextareaHeight();
+            }}
+            onFocus={() => setIsFocused(true)}
+            placeholder={isReply ? `Write a reply...` : 'Write a comment...'}
+            className={`focus:ring-primary-lighter w-full resize-none overflow-hidden rounded-md border border-gray-300 px-3 py-1 transition-all focus:ring-1 focus:outline-none ${
+              isReply ? 'min-h-[30px] text-sm' : 'min-h-[38px]'
+            }`}
+            rows={1}
+          />
 
-            {/* Show existing attachments that haven't been marked for removal */}
-            {isEditing && existingAttachments.length > 0 && (
-              <div className="mb-2 flex flex-wrap gap-2">
-                {existingAttachments
-                  .filter((attachment) => !attachmentsToRemove.includes(attachment.id))
-                  .map((attachment) => (
-                    <FilePreview
-                      key={attachment.id}
-                      fileName={attachment.originalName}
-                      isImage={attachment.isImage}
-                      onRemove={() => removeExistingAttachment(attachment.id)}
-                    />
-                  ))}
-              </div>
-            )}
-
-            {/* File attachment previews - always show if files exist */}
-            {files.length > 0 && (
-              <div className="mb-2 flex flex-wrap gap-2">
-                {files.map((file, index) => (
+          {/* Show existing attachments that haven't been marked for removal */}
+          {isEditing && existingAttachments.length > 0 && (
+            <div className="mb-2 flex flex-wrap gap-2">
+              {existingAttachments
+                .filter((attachment) => !attachmentsToRemove.includes(attachment.id))
+                .map((attachment) => (
                   <FilePreview
-                    key={file.name}
-                    fileName={file.name}
-                    isImage={file.type.includes('image')}
-                    onRemove={() => removeFile(index)}
+                    key={attachment.id}
+                    fileName={attachment.originalName}
+                    isImage={attachment.isImage}
+                    onRemove={() => removeExistingAttachment(attachment.id)}
                   />
                 ))}
-              </div>
-            )}
+            </div>
+          )}
 
-            {/* Error messages - always show if there are errors */}
-            {fileErrors && <p className="mt-1 text-xs text-red-600">{fileErrors}</p>}
+          {/* File attachment previews - always show if files exist */}
+          {files.length > 0 && (
+            <div className="mb-2 flex flex-wrap gap-2">
+              {files.map((file, index) => (
+                <FilePreview
+                  key={file.name}
+                  fileName={file.name}
+                  isImage={file.type.includes('image')}
+                  onRemove={() => removeFile(index)}
+                />
+              ))}
+            </div>
+          )}
 
-            {/* File input and submit/cancel buttons */}
-            <div
-              className={`flex items-start justify-between transition-opacity duration-200 ${
-                isFocused || value.trim().length > 0 ? 'opacity-100' : 'h-0 overflow-hidden opacity-0'
-              }`}
-            >
-              {/* File input button - unchanged */}
-              <div className="flex items-center gap-2">
+          {/* Error messages - always show if there are errors */}
+          {fileErrors && <p className="mt-1 text-xs text-red-600">{fileErrors}</p>}
+
+          {/* File input and submit/cancel buttons */}
+          <div
+            className={`flex items-start justify-between transition-opacity duration-200 ${
+              isFocused || value.trim().length > 0 ? 'opacity-100' : 'h-0 overflow-hidden opacity-0'
+            }`}
+          >
+            {/* File input button - unchanged */}
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={files.length >= MAX_COMMENT_FILES}
+                className={`flex rounded-md border border-gray-300 px-2 py-1 text-xs text-gray-700 hover:bg-gray-100 ${
+                  files.length >= MAX_COMMENT_FILES ? 'bg-gray-100' : 'cursor-pointer bg-white'
+                }`}
+              >
+                <ImagePlus size={16} className="text-primary mr-2" />
+                <p className="text-xs text-gray-500">Add Files</p>
+              </button>
+              <input
+                ref={fileInputRef}
+                type="file"
+                multiple
+                className="hidden"
+                accept={ALLOWED_FILE_TYPES.join(',')}
+                onChange={handleFileChange}
+              />
+            </div>
+
+            <div className="flex items-center gap-2">
+              {/* Add Cancel button when editing */}
+              {isEditing && onCancel && (
                 <button
                   type="button"
-                  onClick={() => fileInputRef.current?.click()}
-                  disabled={files.length >= MAX_COMMENT_FILES}
-                  className={`flex rounded-md border border-gray-300 px-2 py-1 text-xs text-gray-700 hover:bg-gray-100 ${
-                    files.length >= MAX_COMMENT_FILES ? 'bg-gray-100' : 'cursor-pointer bg-white'
-                  }`}
+                  onClick={onCancel}
+                  className="rounded-md border border-gray-300 px-3 py-1 text-xs text-gray-700 hover:bg-gray-100"
                 >
-                  <ImagePlus size={16} className="text-primary mr-2" />
-                  <p className="text-xs text-gray-500">Add Files</p>
+                  Cancel
                 </button>
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  multiple
-                  className="hidden"
-                  accept={ALLOWED_FILE_TYPES.join(',')}
-                  onChange={handleFileChange}
-                />
-              </div>
+              )}
 
-              <div className="flex items-center gap-2">
-                {/* Add Cancel button when editing */}
-                {isEditing && onCancel && (
-                  <button
-                    type="button"
-                    onClick={onCancel}
-                    className="rounded-md border border-gray-300 px-3 py-1 text-xs text-gray-700 hover:bg-gray-100"
-                  >
-                    Cancel
-                  </button>
-                )}
-
-                <button
-                  type="submit"
-                  disabled={!value.trim() || isPending}
-                  className={`bg-primary hover:bg-primary-dark flex items-center gap-1 rounded-md py-2 text-white disabled:bg-gray-400 ${
-                    isReply || isEditing ? 'px-3 text-xs' : 'px-4 text-sm'
-                  }`}
-                >
-                  {isPending ? <Loader2 size={isReply || isEditing ? 12 : 14} className="animate-spin" /> : null}
-                  {getActionText()}
-                </button>
-              </div>
+              <button
+                type="submit"
+                disabled={!value.trim() || isPending}
+                className={`bg-primary hover:bg-primary-dark flex items-center gap-1 rounded-md py-2 text-white disabled:bg-gray-400 ${
+                  isReply || isEditing ? 'px-3 text-xs' : 'px-4 text-sm'
+                }`}
+              >
+                {isPending ? <Loader2 size={isReply || isEditing ? 12 : 14} className="animate-spin" /> : null}
+                {getActionText()}
+              </button>
             </div>
           </div>
         </div>
-      </form>
-    </div>
+      </div>
+    </form>
   );
 };
 

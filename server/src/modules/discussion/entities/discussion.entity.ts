@@ -44,4 +44,7 @@ export class Discussion extends BaseEntity {
   @ManyToOne(() => DiscussionSpace, (space) => space.discussions)
   @JoinColumn({ name: 'space_id' })
   space: DiscussionSpace;
+
+  @Column({ name: 'is_edited', type: 'boolean', default: false })
+  isEdited: boolean;
 }

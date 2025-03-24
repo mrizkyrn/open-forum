@@ -298,6 +298,7 @@ export class CommentService {
           comment.content = updateCommentDto.content;
         }
 
+        comment.isEdited = true;
         await queryRunner.manager.save(comment);
 
         // Remove attachments if specified
