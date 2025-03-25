@@ -1,0 +1,593 @@
+{
+  "aggregate": {
+    "counters": {
+      "vusers.created_by_name.Add comments to discussions": 30,
+      "vusers.created": 30,
+      "http.requests": 120,
+      "http.codes.200": 30,
+      "http.responses": 120,
+      "http.downloaded_bytes": 688763,
+      "plugins.metrics-by-endpoint./api/v1/discussions?limit=20.codes.200": 30,
+      "http.codes.201": 90,
+      "plugins.metrics-by-endpoint./api/v1/discussions/{{ discussionId }}/comments.codes.201": 90,
+      "plugins.expect.ok": 90,
+      "plugins.expect.ok.statusCode": 90,
+      "vusers.failed": 0,
+      "vusers.completed": 30
+    },
+    "rates": {
+      "http.request_rate": 8
+    },
+    "firstCounterAt": 1742933399328,
+    "firstHistogramAt": 1742933399697,
+    "lastCounterAt": 1742933412196,
+    "lastHistogramAt": 1742933412196,
+    "firstMetricAt": 1742933399328,
+    "lastMetricAt": 1742933412196,
+    "period": 1742933410000,
+    "summaries": {
+      "http.response_time": {
+        "min": 18,
+        "max": 335,
+        "count": 120,
+        "mean": 102.8,
+        "p50": 85.6,
+        "median": 85.6,
+        "p75": 144,
+        "p90": 219.2,
+        "p95": 247.2,
+        "p99": 314.2,
+        "p999": 314.2
+      },
+      "http.response_time.2xx": {
+        "min": 18,
+        "max": 335,
+        "count": 120,
+        "mean": 102.8,
+        "p50": 85.6,
+        "median": 85.6,
+        "p75": 144,
+        "p90": 219.2,
+        "p95": 247.2,
+        "p99": 314.2,
+        "p999": 314.2
+      },
+      "plugins.metrics-by-endpoint.response_time./api/v1/discussions?limit=20": {
+        "min": 99,
+        "max": 335,
+        "count": 30,
+        "mean": 193.1,
+        "p50": 183.1,
+        "median": 183.1,
+        "p75": 242.3,
+        "p90": 290.1,
+        "p95": 314.2,
+        "p99": 314.2,
+        "p999": 314.2
+      },
+      "plugins.metrics-by-endpoint.response_time./api/v1/discussions/{{ discussionId }}/comments": {
+        "min": 18,
+        "max": 188,
+        "count": 90,
+        "mean": 72.7,
+        "p50": 57.4,
+        "median": 57.4,
+        "p75": 92.8,
+        "p90": 144,
+        "p95": 165.7,
+        "p99": 175.9,
+        "p999": 175.9
+      },
+      "vusers.session_length": {
+        "min": 3290.6,
+        "max": 3637.7,
+        "count": 30,
+        "mean": 3522.2,
+        "p50": 3534.1,
+        "median": 3534.1,
+        "p75": 3605.5,
+        "p90": 3605.5,
+        "p95": 3605.5,
+        "p99": 3605.5,
+        "p999": 3605.5
+      }
+    },
+    "histograms": {
+      "http.response_time": {
+        "min": 18,
+        "max": 335,
+        "count": 120,
+        "mean": 102.8,
+        "p50": 85.6,
+        "median": 85.6,
+        "p75": 144,
+        "p90": 219.2,
+        "p95": 247.2,
+        "p99": 314.2,
+        "p999": 314.2
+      },
+      "http.response_time.2xx": {
+        "min": 18,
+        "max": 335,
+        "count": 120,
+        "mean": 102.8,
+        "p50": 85.6,
+        "median": 85.6,
+        "p75": 144,
+        "p90": 219.2,
+        "p95": 247.2,
+        "p99": 314.2,
+        "p999": 314.2
+      },
+      "plugins.metrics-by-endpoint.response_time./api/v1/discussions?limit=20": {
+        "min": 99,
+        "max": 335,
+        "count": 30,
+        "mean": 193.1,
+        "p50": 183.1,
+        "median": 183.1,
+        "p75": 242.3,
+        "p90": 290.1,
+        "p95": 314.2,
+        "p99": 314.2,
+        "p999": 314.2
+      },
+      "plugins.metrics-by-endpoint.response_time./api/v1/discussions/{{ discussionId }}/comments": {
+        "min": 18,
+        "max": 188,
+        "count": 90,
+        "mean": 72.7,
+        "p50": 57.4,
+        "median": 57.4,
+        "p75": 92.8,
+        "p90": 144,
+        "p95": 165.7,
+        "p99": 175.9,
+        "p999": 175.9
+      },
+      "vusers.session_length": {
+        "min": 3290.6,
+        "max": 3637.7,
+        "count": 30,
+        "mean": 3522.2,
+        "p50": 3534.1,
+        "median": 3534.1,
+        "p75": 3605.5,
+        "p90": 3605.5,
+        "p95": 3605.5,
+        "p99": 3605.5,
+        "p999": 3605.5
+      }
+    }
+  },
+  "intermediate": [
+    {
+      "counters": {
+        "vusers.created_by_name.Add comments to discussions": 1,
+        "vusers.created": 1,
+        "http.requests": 2,
+        "http.codes.200": 1,
+        "http.responses": 2,
+        "http.downloaded_bytes": 21665,
+        "plugins.metrics-by-endpoint./api/v1/discussions?limit=20.codes.200": 1,
+        "http.codes.201": 1,
+        "plugins.metrics-by-endpoint./api/v1/discussions/{{ discussionId }}/comments.codes.201": 1,
+        "plugins.expect.ok": 1,
+        "plugins.expect.ok.statusCode": 1
+      },
+      "rates": {
+        "http.request_rate": 2
+      },
+      "http.request_rate": null,
+      "firstCounterAt": 1742933399328,
+      "firstHistogramAt": 1742933399697,
+      "lastCounterAt": 1742933399751,
+      "lastHistogramAt": 1742933399751,
+      "firstMetricAt": 1742933399328,
+      "lastMetricAt": 1742933399751,
+      "period": "1742933390000",
+      "summaries": {
+        "http.response_time": {
+          "min": 46,
+          "max": 229,
+          "count": 2,
+          "mean": 137.5,
+          "p50": 46.1,
+          "median": 46.1,
+          "p75": 46.1,
+          "p90": 46.1,
+          "p95": 46.1,
+          "p99": 46.1,
+          "p999": 46.1
+        },
+        "http.response_time.2xx": {
+          "min": 46,
+          "max": 229,
+          "count": 2,
+          "mean": 137.5,
+          "p50": 46.1,
+          "median": 46.1,
+          "p75": 46.1,
+          "p90": 46.1,
+          "p95": 46.1,
+          "p99": 46.1,
+          "p999": 46.1
+        },
+        "plugins.metrics-by-endpoint.response_time./api/v1/discussions?limit=20": {
+          "min": 229,
+          "max": 229,
+          "count": 1,
+          "mean": 229,
+          "p50": 228.2,
+          "median": 228.2,
+          "p75": 228.2,
+          "p90": 228.2,
+          "p95": 228.2,
+          "p99": 228.2,
+          "p999": 228.2
+        },
+        "plugins.metrics-by-endpoint.response_time./api/v1/discussions/{{ discussionId }}/comments": {
+          "min": 46,
+          "max": 46,
+          "count": 1,
+          "mean": 46,
+          "p50": 46.1,
+          "median": 46.1,
+          "p75": 46.1,
+          "p90": 46.1,
+          "p95": 46.1,
+          "p99": 46.1,
+          "p999": 46.1
+        }
+      },
+      "histograms": {
+        "http.response_time": {
+          "min": 46,
+          "max": 229,
+          "count": 2,
+          "mean": 137.5,
+          "p50": 46.1,
+          "median": 46.1,
+          "p75": 46.1,
+          "p90": 46.1,
+          "p95": 46.1,
+          "p99": 46.1,
+          "p999": 46.1
+        },
+        "http.response_time.2xx": {
+          "min": 46,
+          "max": 229,
+          "count": 2,
+          "mean": 137.5,
+          "p50": 46.1,
+          "median": 46.1,
+          "p75": 46.1,
+          "p90": 46.1,
+          "p95": 46.1,
+          "p99": 46.1,
+          "p999": 46.1
+        },
+        "plugins.metrics-by-endpoint.response_time./api/v1/discussions?limit=20": {
+          "min": 229,
+          "max": 229,
+          "count": 1,
+          "mean": 229,
+          "p50": 228.2,
+          "median": 228.2,
+          "p75": 228.2,
+          "p90": 228.2,
+          "p95": 228.2,
+          "p99": 228.2,
+          "p999": 228.2
+        },
+        "plugins.metrics-by-endpoint.response_time./api/v1/discussions/{{ discussionId }}/comments": {
+          "min": 46,
+          "max": 46,
+          "count": 1,
+          "mean": 46,
+          "p50": 46.1,
+          "median": 46.1,
+          "p75": 46.1,
+          "p90": 46.1,
+          "p95": 46.1,
+          "p99": 46.1,
+          "p999": 46.1
+        }
+      }
+    },
+    {
+      "counters": {
+        "vusers.created_by_name.Add comments to discussions": 29,
+        "vusers.created": 29,
+        "http.requests": 108,
+        "http.codes.200": 29,
+        "http.responses": 106,
+        "http.downloaded_bytes": 659120,
+        "plugins.metrics-by-endpoint./api/v1/discussions?limit=20.codes.200": 29,
+        "http.codes.201": 77,
+        "plugins.metrics-by-endpoint./api/v1/discussions/{{ discussionId }}/comments.codes.201": 77,
+        "plugins.expect.ok": 77,
+        "plugins.expect.ok.statusCode": 77,
+        "vusers.failed": 0,
+        "vusers.completed": 17
+      },
+      "rates": {
+        "http.request_rate": 19
+      },
+      "http.request_rate": null,
+      "firstCounterAt": 1742933400347,
+      "firstHistogramAt": 1742933400539,
+      "lastCounterAt": 1742933409997,
+      "lastHistogramAt": 1742933409910,
+      "firstMetricAt": 1742933400347,
+      "lastMetricAt": 1742933409997,
+      "period": "1742933400000",
+      "summaries": {
+        "http.response_time": {
+          "min": 19,
+          "max": 335,
+          "count": 106,
+          "mean": 111,
+          "p50": 90.9,
+          "median": 90.9,
+          "p75": 147,
+          "p90": 219.2,
+          "p95": 247.2,
+          "p99": 314.2,
+          "p999": 314.2
+        },
+        "http.response_time.2xx": {
+          "min": 19,
+          "max": 335,
+          "count": 106,
+          "mean": 111,
+          "p50": 90.9,
+          "median": 90.9,
+          "p75": 147,
+          "p90": 219.2,
+          "p95": 247.2,
+          "p99": 314.2,
+          "p999": 314.2
+        },
+        "plugins.metrics-by-endpoint.response_time./api/v1/discussions?limit=20": {
+          "min": 99,
+          "max": 335,
+          "count": 29,
+          "mean": 191.8,
+          "p50": 183.1,
+          "median": 183.1,
+          "p75": 247.2,
+          "p90": 290.1,
+          "p95": 314.2,
+          "p99": 314.2,
+          "p999": 314.2
+        },
+        "plugins.metrics-by-endpoint.response_time./api/v1/discussions/{{ discussionId }}/comments": {
+          "min": 19,
+          "max": 188,
+          "count": 77,
+          "mean": 80.5,
+          "p50": 66,
+          "median": 66,
+          "p75": 113.3,
+          "p90": 147,
+          "p95": 165.7,
+          "p99": 175.9,
+          "p999": 175.9
+        },
+        "vusers.session_length": {
+          "min": 3380.3,
+          "max": 3636.5,
+          "count": 17,
+          "mean": 3513.8,
+          "p50": 3534.1,
+          "median": 3534.1,
+          "p75": 3534.1,
+          "p90": 3605.5,
+          "p95": 3605.5,
+          "p99": 3605.5,
+          "p999": 3605.5
+        }
+      },
+      "histograms": {
+        "http.response_time": {
+          "min": 19,
+          "max": 335,
+          "count": 106,
+          "mean": 111,
+          "p50": 90.9,
+          "median": 90.9,
+          "p75": 147,
+          "p90": 219.2,
+          "p95": 247.2,
+          "p99": 314.2,
+          "p999": 314.2
+        },
+        "http.response_time.2xx": {
+          "min": 19,
+          "max": 335,
+          "count": 106,
+          "mean": 111,
+          "p50": 90.9,
+          "median": 90.9,
+          "p75": 147,
+          "p90": 219.2,
+          "p95": 247.2,
+          "p99": 314.2,
+          "p999": 314.2
+        },
+        "plugins.metrics-by-endpoint.response_time./api/v1/discussions?limit=20": {
+          "min": 99,
+          "max": 335,
+          "count": 29,
+          "mean": 191.8,
+          "p50": 183.1,
+          "median": 183.1,
+          "p75": 247.2,
+          "p90": 290.1,
+          "p95": 314.2,
+          "p99": 314.2,
+          "p999": 314.2
+        },
+        "plugins.metrics-by-endpoint.response_time./api/v1/discussions/{{ discussionId }}/comments": {
+          "min": 19,
+          "max": 188,
+          "count": 77,
+          "mean": 80.5,
+          "p50": 66,
+          "median": 66,
+          "p75": 113.3,
+          "p90": 147,
+          "p95": 165.7,
+          "p99": 175.9,
+          "p999": 175.9
+        },
+        "vusers.session_length": {
+          "min": 3380.3,
+          "max": 3636.5,
+          "count": 17,
+          "mean": 3513.8,
+          "p50": 3534.1,
+          "median": 3534.1,
+          "p75": 3534.1,
+          "p90": 3605.5,
+          "p95": 3605.5,
+          "p99": 3605.5,
+          "p999": 3605.5
+        }
+      }
+    },
+    {
+      "counters": {
+        "vusers.failed": 0,
+        "vusers.completed": 13,
+        "http.requests": 10,
+        "http.codes.201": 12,
+        "http.responses": 12,
+        "http.downloaded_bytes": 7978,
+        "plugins.metrics-by-endpoint./api/v1/discussions/{{ discussionId }}/comments.codes.201": 12,
+        "plugins.expect.ok": 12,
+        "plugins.expect.ok.statusCode": 12
+      },
+      "rates": {
+        "http.request_rate": 10
+      },
+      "http.request_rate": null,
+      "firstCounterAt": 1742933410021,
+      "firstHistogramAt": 1742933410021,
+      "lastCounterAt": 1742933412196,
+      "lastHistogramAt": 1742933412196,
+      "firstMetricAt": 1742933410021,
+      "lastMetricAt": 1742933412196,
+      "period": "1742933410000",
+      "summaries": {
+        "vusers.session_length": {
+          "min": 3290.6,
+          "max": 3637.7,
+          "count": 13,
+          "mean": 3533.2,
+          "p50": 3605.5,
+          "median": 3605.5,
+          "p75": 3605.5,
+          "p90": 3605.5,
+          "p95": 3605.5,
+          "p99": 3605.5,
+          "p999": 3605.5
+        },
+        "http.response_time": {
+          "min": 18,
+          "max": 38,
+          "count": 12,
+          "mean": 25.1,
+          "p50": 24.8,
+          "median": 24.8,
+          "p75": 26.8,
+          "p90": 30.3,
+          "p95": 34.1,
+          "p99": 34.1,
+          "p999": 34.1
+        },
+        "http.response_time.2xx": {
+          "min": 18,
+          "max": 38,
+          "count": 12,
+          "mean": 25.1,
+          "p50": 24.8,
+          "median": 24.8,
+          "p75": 26.8,
+          "p90": 30.3,
+          "p95": 34.1,
+          "p99": 34.1,
+          "p999": 34.1
+        },
+        "plugins.metrics-by-endpoint.response_time./api/v1/discussions/{{ discussionId }}/comments": {
+          "min": 18,
+          "max": 38,
+          "count": 12,
+          "mean": 25.1,
+          "p50": 24.8,
+          "median": 24.8,
+          "p75": 26.8,
+          "p90": 30.3,
+          "p95": 34.1,
+          "p99": 34.1,
+          "p999": 34.1
+        }
+      },
+      "histograms": {
+        "vusers.session_length": {
+          "min": 3290.6,
+          "max": 3637.7,
+          "count": 13,
+          "mean": 3533.2,
+          "p50": 3605.5,
+          "median": 3605.5,
+          "p75": 3605.5,
+          "p90": 3605.5,
+          "p95": 3605.5,
+          "p99": 3605.5,
+          "p999": 3605.5
+        },
+        "http.response_time": {
+          "min": 18,
+          "max": 38,
+          "count": 12,
+          "mean": 25.1,
+          "p50": 24.8,
+          "median": 24.8,
+          "p75": 26.8,
+          "p90": 30.3,
+          "p95": 34.1,
+          "p99": 34.1,
+          "p999": 34.1
+        },
+        "http.response_time.2xx": {
+          "min": 18,
+          "max": 38,
+          "count": 12,
+          "mean": 25.1,
+          "p50": 24.8,
+          "median": 24.8,
+          "p75": 26.8,
+          "p90": 30.3,
+          "p95": 34.1,
+          "p99": 34.1,
+          "p999": 34.1
+        },
+        "plugins.metrics-by-endpoint.response_time./api/v1/discussions/{{ discussionId }}/comments": {
+          "min": 18,
+          "max": 38,
+          "count": 12,
+          "mean": 25.1,
+          "p50": 24.8,
+          "median": 24.8,
+          "p75": 26.8,
+          "p90": 30.3,
+          "p95": 34.1,
+          "p99": 34.1,
+          "p999": 34.1
+        }
+      }
+    }
+  ]
+}

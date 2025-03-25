@@ -46,7 +46,7 @@ if not exist "%CONFIG_FILE%" (
 
 REM ====================== PREPARE DIRECTORY STRUCTURE ====================
 echo [INFO] Setting up test environment...
-for %%d in (metrics reports summary latency) do (
+for %%d in (metrics reports summary e2e-latency) do (
     if not exist "%RESULTS_ROOT%\%%d\%TEST_NAME%" (
         mkdir "%RESULTS_ROOT%\%%d\%TEST_NAME%" 2>NUL
         if !errorlevel! neq 0 (

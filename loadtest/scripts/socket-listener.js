@@ -1,7 +1,3 @@
-/**
- * Simplified Socket.IO Latency Monitor
- * Measures end-to-end real-time latency from server processing to client notification
- */
 const io = require('socket.io-client');
 const fs = require('fs');
 const path = require('path');
@@ -19,7 +15,7 @@ const CONFIG = {
     username: '2110511091',
     password: 'password123',
   },
-  outputDir: path.join(__dirname, '..', 'results', 'latency', testName),
+  outputDir: path.join(__dirname, '..', 'results', 'e2e-latency', testName),
   resultsFile: `${phaseName}-${Date.now()}.json`,
 };
 
@@ -33,15 +29,12 @@ if (!fs.existsSync(CONFIG.outputDir)) {
 //==============================================================================
 
 // Store results for analysis
-const latencyResults = new Map(); // discussionId -> result object
+const latencyResults = new Map();
 
 //==============================================================================
 // AUTHENTICATION
 //==============================================================================
 
-/**
- * Get auth token for Socket.IO connection
- */
 async function getAuthToken() {
   try {
     console.log('Authenticating to API...');
@@ -69,9 +62,6 @@ async function getAuthToken() {
 // SOCKET CONNECTION
 //==============================================================================
 
-/**
- * Connect to Socket.IO server and set up listeners
- */
 async function connectSocket() {
   try {
     // Get authentication token
@@ -102,6 +92,7 @@ async function connectSocket() {
 
     // Set up listener for new discussion events
     socket.on('newDiscussion', handleNewDiscussionEvent);
+    socket.on('newComment', handleNewCommentEvent);
 
     return socket;
   } catch (error) {
@@ -114,16 +105,14 @@ async function connectSocket() {
 // EVENT HANDLERS
 //==============================================================================
 
-/**
- * Handle incoming 'newDiscussion' events from Socket.IO
- */
 function handleNewDiscussionEvent(data) {
   try {
     const clientReceiveTime = Date.now();
-    console.log(`📨 Received event: ${JSON.stringify(data)}`);
+    console.log(`📨 Received event data:`, data);
 
-    // Extract discussion ID
-    let discussionId;
+    // Extract discussion ID from event data
+    let discussionId; // Declare variable first
+
     if (typeof data === 'object') {
       if (data.discussionId !== undefined) {
         discussionId = data.discussionId;
@@ -135,51 +124,113 @@ function handleNewDiscussionEvent(data) {
     }
 
     if (!discussionId) {
-      console.warn(`❓ No discussion ID in event data:`, data);
+      console.warn(`❓ No discussion ID found in event data:`, data);
       return;
     }
 
     // Ensure numeric format if possible
-    discussionId = !isNaN(discussionId) ? Number(discussionId) : discussionId;
+    if (!isNaN(discussionId)) {
+      discussionId = Number(discussionId);
+    }
 
-    // Check for server timestamp in the event data
-    let serverTimestamp = data.serverTimestamp;
+    // Look for client request timestamp in the event data
+    let clientRequestTime = null;
 
-    if (!serverTimestamp) {
-      console.warn(`❌ No server timestamp in event for discussion #${discussionId}`);
+    if (data.clientRequestTime !== undefined) {
+      clientRequestTime = data.clientRequestTime;
+    } else if (data.meta && data.meta.clientRequestTime !== undefined) {
+      clientRequestTime = data.meta.clientRequestTime;
+    }
+
+    if (!clientRequestTime) {
+      console.warn(`❌ No client request timestamp in event for discussion #${discussionId}`, data);
       return;
     }
 
-    // Handle ISO string timestamp format
-    if (typeof serverTimestamp === 'string') {
-      try {
-        // Convert ISO string to timestamp
-        serverTimestamp = new Date(serverTimestamp).getTime();
-        console.log(`🕒 Parsed timestamp: ${serverTimestamp} from "${data.serverTimestamp}"`);
-      } catch (error) {
-        console.error(`❌ Error parsing timestamp: ${error.message}`);
-        return;
-      }
+    // Convert to number if it's a string
+    if (typeof clientRequestTime === 'string') {
+      clientRequestTime = parseInt(clientRequestTime, 10);
     }
 
-    // Calculate end-to-end real-time latency
-    const realtimeLatency = clientReceiveTime - serverTimestamp;
+    // Calculate true end-to-end latency
+    const e2eLatency = clientReceiveTime - clientRequestTime;
 
-    console.log(`⏱️ END-TO-END REAL-TIME LATENCY: ${realtimeLatency}ms for discussion #${discussionId}`);
+    console.log(`⏱️ END-TO-END LATENCY: ${e2eLatency}ms for discussion #${discussionId}`);
 
     // Store latency result
     latencyResults.set(discussionId, {
       discussionId,
-      serverTimestamp,
+      clientRequestTime,
       clientReceiveTime,
-      realtimeLatency,
-      originalTimestamp: data.serverTimestamp, // Store original for debugging
+      e2eLatency,
     });
 
     // Save updated results
     saveLatencyResults();
   } catch (error) {
-    console.error(`Error handling event: ${error.message}`);
+    console.error(`Error handling event: ${error.message}`, error);
+  }
+}
+
+function handleNewCommentEvent(data) {
+  try {
+    const clientReceiveTime = Date.now();
+    console.log(`📨 Received comment event:`, data);
+
+    // Extract discussion and comment IDs
+    let discussionId = data.discussionId;
+    let commentId = data.commentId;
+
+    if (!discussionId || !commentId) {
+      console.warn(`❓ Missing IDs in comment event data:`, data);
+      return;
+    }
+
+    // Ensure numeric format
+    if (!isNaN(discussionId)) discussionId = Number(discussionId);
+    if (!isNaN(commentId)) commentId = Number(commentId);
+
+    // Look for client request timestamp
+    let clientRequestTime = null;
+
+    if (data.clientRequestTime !== undefined) {
+      clientRequestTime = data.clientRequestTime;
+    } else if (data.meta && data.meta.clientRequestTime !== undefined) {
+      clientRequestTime = data.meta.clientRequestTime;
+    }
+
+    if (!clientRequestTime) {
+      console.warn(`❌ No client request timestamp in comment event:`, data);
+      return;
+    }
+
+    // Convert to number if string
+    if (typeof clientRequestTime === 'string') {
+      clientRequestTime = parseInt(clientRequestTime, 10);
+    }
+
+    // Calculate end-to-end latency
+    const e2eLatency = clientReceiveTime - clientRequestTime;
+
+    console.log(`⏱️ COMMENT E2E LATENCY: ${e2eLatency}ms for comment #${commentId} on discussion #${discussionId}`);
+
+    // Create a unique key using both IDs
+    const resultKey = `comment-${commentId}-${discussionId}`;
+
+    // Store latency result
+    latencyResults.set(resultKey, {
+      discussionId,
+      commentId,
+      clientRequestTime,
+      clientReceiveTime,
+      e2eLatency,
+      isReply: data.isReply || false,
+    });
+
+    // Save updated results
+    saveLatencyResults();
+  } catch (error) {
+    console.error(`Error handling comment event: ${error.message}`, error);
   }
 }
 
@@ -187,9 +238,6 @@ function handleNewDiscussionEvent(data) {
 // RESULT STORAGE
 //==============================================================================
 
-/**
- * Save latency results to file
- */
 function saveLatencyResults() {
   try {
     const resultsFilePath = path.join(CONFIG.outputDir, CONFIG.resultsFile);
@@ -211,16 +259,6 @@ process.on('SIGINT', () => {
   saveLatencyResults();
   process.exit(0);
 });
-
-// Print stats periodically
-setInterval(() => {
-  const count = latencyResults.size;
-  if (count > 0) {
-    const latencies = Array.from(latencyResults.values()).map((r) => r.realtimeLatency);
-    const avg = latencies.reduce((sum, val) => sum + val, 0) / latencies.length;
-    console.log(`📊 Total measurements: ${count}, Average end-to-end real-time latency: ${avg.toFixed(2)}ms`);
-  }
-}, 30000);
 
 // Start the monitor
 console.log('🚀 Starting End-to-End Real-Time Latency Monitor...');

@@ -1,7 +1,3 @@
-/**
- * Server Resource Monitor
- * Tracks system and Node.js metrics during load tests
- */
 const os = require('os');
 const fs = require('fs');
 const path = require('path');
@@ -43,9 +39,6 @@ const CSV_HEADER = [
 // RESOURCE MONITOR CLASS
 //==============================================================================
 
-/**
- * ResourceMonitor class for tracking system and application metrics
- */
 class ResourceMonitor {
   constructor(config) {
     this.config = config;
@@ -56,9 +49,6 @@ class ResourceMonitor {
     this.startTime = Date.now();
   }
 
-  /**
-   * Initialize the monitoring system
-   */
   initialize() {
     try {
       // Create directory if it doesn't exist
@@ -82,9 +72,6 @@ class ResourceMonitor {
     }
   }
 
-  /**
-   * Start monitoring resources at regular intervals
-   */
   start() {
     if (!this.initialize()) {
       return;
@@ -106,9 +93,6 @@ class ResourceMonitor {
     }, this.config.sampleInterval);
   }
 
-  /**
-   * Stop monitoring and clean up
-   */
   stop() {
     clearInterval(this.interval);
     const elapsedSec = Math.round((Date.now() - this.startTime) / 1000);
@@ -123,9 +107,6 @@ class ResourceMonitor {
     process.exit(0);
   }
 
-  /**
-   * Register handlers for process termination signals
-   */
   registerSignalHandlers() {
     // Handle graceful shutdown
     ['SIGINT', 'SIGTERM'].forEach((signal) => {
@@ -136,9 +117,6 @@ class ResourceMonitor {
     });
   }
 
-  /**
-   * Record all system metrics to the output file
-   */
   recordMetrics() {
     const timestamp = new Date().toISOString();
     const metrics = {
@@ -166,10 +144,6 @@ class ResourceMonitor {
     fs.appendFileSync(OUTPUT_FILE, `${line}\n`);
   }
 
-  /**
-   * Get CPU info for usage calculation
-   * @returns {Object} Idle and total CPU time
-   */
   getCpuInfo() {
     const cpus = os.cpus();
     let idle = 0;
@@ -185,10 +159,6 @@ class ResourceMonitor {
     return { idle, total };
   }
 
-  /**
-   * Calculate CPU usage percentage
-   * @returns {Object} CPU usage metrics
-   */
   getCpuUsage() {
     const currentInfo = this.getCpuInfo();
     const idleDiff = currentInfo.idle - this.lastCpuInfo.idle;
@@ -202,10 +172,6 @@ class ResourceMonitor {
     return { usagePercent };
   }
 
-  /**
-   * Get system memory usage metrics
-   * @returns {Object} Memory usage metrics
-   */
   getMemoryUsage() {
     const totalMB = os.totalmem() / (1024 * 1024);
     const freeMB = os.freemem() / (1024 * 1024);
@@ -215,10 +181,6 @@ class ResourceMonitor {
     return { totalMB, freeMB, usedMB, usagePercent };
   }
 
-  /**
-   * Get Node.js process memory metrics
-   * @returns {Object} Process memory metrics
-   */
   getProcessMetrics() {
     const memUsage = process.memoryUsage();
 
@@ -230,10 +192,6 @@ class ResourceMonitor {
     };
   }
 
-  /**
-   * Get Node.js resource metrics
-   * @returns {Object} Node.js resource metrics
-   */
   getNodeMetrics() {
     return {
       activeHandles: process._getActiveHandles().length,
@@ -241,9 +199,6 @@ class ResourceMonitor {
     };
   }
 
-  /**
-   * Print initial monitoring information
-   */
   printStartMessage() {
     console.log('╔════════════════════════════════════════════════════════╗');
     console.log('║               LOAD TEST RESOURCE MONITOR               ║');
@@ -257,9 +212,6 @@ class ResourceMonitor {
     console.log('Monitoring started... Press Ctrl+C to stop');
   }
 
-  /**
-   * Update progress indicator in console
-   */
   updateProgress() {
     const elapsed = Math.round((Date.now() - this.startTime) / 1000);
     const percent = Math.min(100, Math.round((elapsed / this.config.durationSec) * 100));
@@ -278,6 +230,5 @@ class ResourceMonitor {
 // MAIN EXECUTION
 //==============================================================================
 
-// Create and start the monitor
 const monitor = new ResourceMonitor(CONFIG);
 monitor.start();

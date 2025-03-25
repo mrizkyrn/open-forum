@@ -1,0 +1,75 @@
+---
+#----------------------------------------------------------------------
+# Comment Creation Load Test Configuration
+#----------------------------------------------------------------------
+config:
+  # API endpoint configuration
+  target: 'http://localhost:3000/api/v1'
+
+  # Test execution phases
+  phases:
+    - name: 'Warmup Phase'
+      duration: 10
+      arrivalRate: 1
+      rampTo: 5
+      comment: 'Gradually increase load to warm up the system'
+
+    # - name: 'Sustained Load Phase'
+    #   duration: 60
+    #   arrivalRate: 10
+    #   comment: 'Maintain steady load to evaluate comment performance'
+
+  # Helper scripts
+  processor: '../scripts/helpers.js'
+
+  # Plugins configuration
+  plugins:
+    metrics-by-endpoint: {} # Track metrics per endpoint
+    expect: {} # Response validation
+
+  # Performance thresholds
+  thresholds:
+    http.response_time.median: 300 # 50% of requests should be under 300ms
+    http.response_time.p95: 800 # 95% of requests should be under 800ms
+    http.response_time.p99: 1500 # 99% of requests should be under 1500ms
+    http.errors: 1 # Error rate threshold (percentage)
+    http.request_rate: 5 # Minimum request rate
+
+#----------------------------------------------------------------------
+# Test Scenarios
+#----------------------------------------------------------------------
+scenarios:
+  - name: 'Add comments to discussions'
+    flow:
+      # Load pre-fetched discussion IDs
+      - function: 'loadDiscussionIds'
+
+      # Make sure we have a valid discussion ID
+      - function: 'checkDiscussionId'
+
+      - loop:
+          # Generate random comment data
+          - function: 'generateCommentData'
+
+          # Capture timestamp for e2e latency
+          - function: 'captureTimestamp'
+
+          # Join discussion room via WebSocket to receive updates
+          - function: 'joinDiscussionRoom'
+          
+          # Post comment to the discussion - FIXED URL to match controller route
+          - post:
+              url: '/discussions/{{ discussionId }}/comments'
+              beforeRequest: 'setAuthHeader'
+              json:
+                content: '{{ commentContent }}'
+                clientRequestTime: '{{ timestamp }}'
+              capture:
+                - json: '$.data.id'
+                  as: 'commentId'
+              expect:
+                - statusCode: 201
+
+          # Wait briefly to ensure notification is processed
+          - think: 1
+        count: 3

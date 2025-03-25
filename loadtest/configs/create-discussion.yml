@@ -9,9 +9,9 @@ config:
   # Test execution phases
   phases:
     - name: 'Warmup Phase'
-      duration: 60
+      duration: 10
       arrivalRate: 1
-      rampTo: 8
+      rampTo: 5
       comment: 'Gradually increase load to warm up the system'
 
     # - name: 'Sustained Load Phase'
@@ -26,7 +26,7 @@ config:
     #   comment: 'Ramp up to peak load to identify breaking points'
 
   # Helper scripts
-  processor: '../scripts/load-test-helpers.js'
+  processor: '../scripts/helpers.js'
 
   # Plugins configuration
   plugins:
@@ -54,6 +54,8 @@ scenarios:
           # Generate random discussion data
           - function: 'generateDiscussionData'
 
+          - function: 'captureTimestamp'
+
           # Create discussion via API
           - post:
               url: '/discussions'
@@ -63,6 +65,7 @@ scenarios:
                 isAnonymous: '{{ isAnonymous }}'
                 tags: '{{ tags }}'
                 spaceId: '{{ spaceId }}'
+                clientRequestTime: '{{ timestamp }}'
               capture:
                 - json: '$.data.id'
                   as: 'discussionId'

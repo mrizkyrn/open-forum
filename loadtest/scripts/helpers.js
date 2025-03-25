@@ -1,10 +1,6 @@
-/**
- * Artillery Load Test Helper Functions
- * Provides authentication and data generation for discussion creation tests
- */
-
 const fs = require('fs');
 const path = require('path');
+const io = require('socket.io-client');
 
 //==============================================================================
 // AUTHENTICATION HELPERS
@@ -228,12 +224,12 @@ function generateFileAttachments(userContext, events, done) {
   }
 }
 
-/**
- * Creates a discussion with file attachments using FormData
- * This replaces the standard Artillery HTTP request with a custom one
- */
 async function createDiscussionWithAttachments(userContext, events, done) {
   try {
+    // Record client request timestamp
+    const clientRequestTime = Date.now();
+    userContext.vars.timestamp = clientRequestTime;
+
     // Get authentication token
     const token = await getAuthToken(userContext);
     if (!token) {
@@ -253,6 +249,7 @@ async function createDiscussionWithAttachments(userContext, events, done) {
     form.append('content', content.trim());
     form.append('isAnonymous', isAnonymous);
     form.append('spaceId', spaceId);
+    form.append('clientRequestTime', clientRequestTime.toString());
 
     // Add tags
     if (Array.isArray(tags) && tags.length > 0) {
@@ -362,6 +359,273 @@ async function createDiscussionWithAttachments(userContext, events, done) {
   }
 }
 
+function captureTimestamp(userContext, events, done) {
+  const timestamp = Date.now();
+  userContext.vars.timestamp = timestamp;
+  console.log(`📝 Captured timestamp: ${timestamp} for request`);
+  return done();
+}
+
+//==============================================================================
+// COMMENT HELPERS
+//==============================================================================
+
+function generateCommentData(userContext, events, done) {
+  try {
+    // Generate random comment content
+    const templates = [
+      'I completely agree with your point about {{topic}}. Have you considered {{suggestion}}?',
+      'This is really interesting. I had a similar experience with {{topic}} when I tried {{suggestion}}.',
+      "Great discussion! I think {{topic}} is crucial, but we shouldn't overlook {{suggestion}}.",
+      "I'm not sure I agree with your assessment of {{topic}}. In my experience, {{suggestion}} works better.",
+      "Thanks for bringing up {{topic}}. It's an important issue that needs more {{suggestion}}.",
+    ];
+
+    const topics = [
+      'performance optimization',
+      'architecture patterns',
+      'dependency management',
+      'testing strategies',
+      'caching mechanisms',
+      'error handling',
+      'security concerns',
+    ];
+
+    const suggestions = [
+      'parallel processing',
+      'modular design',
+      'versioning',
+      'integration tests',
+      'distributed caching',
+      'circuit breakers',
+      'input validation',
+    ];
+
+    // Select random template and fill in placeholders
+    let template = UTILS.randomItem(templates);
+    const topic = UTILS.randomItem(topics);
+    const suggestion = UTILS.randomItem(suggestions);
+
+    const content = template.replace('{{topic}}', topic).replace('{{suggestion}}', suggestion);
+
+    // Add some randomness to make content unique
+    const uniqueId = UTILS.uniqueId();
+    const commentContent = `${content}\n\nRef: ${uniqueId}`;
+
+    // Store in context
+    userContext.vars.commentContent = commentContent;
+
+    // Default parentId to null (top-level comment)
+    userContext.vars.parentId = null;
+
+    return done();
+  } catch (error) {
+    console.error('Error generating comment data:', error);
+    return done(error);
+  }
+}
+
+function generateReplyData(userContext, events, done) {
+  try {
+    // Generate random reply content
+    const templates = [
+      "Thanks for your response! I'd like to clarify my point about {{topic}}.",
+      "That's a good point. I'd add that {{topic}} also affects the overall system design.",
+      "I've tried your suggestion and found that {{topic}} still needs some improvement.",
+      'Interesting perspective. Have you looked at how {{topic}} is implemented in other frameworks?',
+      'I appreciate your feedback. My concern is specifically about {{topic}} in high-load scenarios.',
+    ];
+
+    const topics = [
+      'error propagation',
+      'state management',
+      'API design',
+      'resource utilization',
+      'concurrency patterns',
+      'graceful degradation',
+      'fault tolerance',
+    ];
+
+    // Select random template and fill in placeholders
+    let template = UTILS.randomItem(templates);
+    const topic = UTILS.randomItem(topics);
+
+    const content = template.replace('{{topic}}', topic);
+
+    // Add some randomness to make content unique
+    const uniqueId = UTILS.uniqueId();
+    const replyContent = `${content}\n\nRef: ${uniqueId}`;
+
+    // Store in context
+    userContext.vars.replyContent = replyContent;
+
+    return done();
+  } catch (error) {
+    console.error('Error generating reply data:', error);
+    return done(error);
+  }
+}
+
+function checkDiscussionId(userContext, events, done) {
+  const discussionIds = userContext.vars.discussionIds;
+  
+  if (!discussionIds || discussionIds.length === 0) {
+    // If no discussions found, use a fallback ID
+    userContext.vars.discussionId = 1;
+    console.log('No discussions found, using fallback ID: 1');
+  } else if (Array.isArray(discussionIds)) {
+    // If it's an array, pick a random ID
+    const randomIndex = Math.floor(Math.random() * discussionIds.length);
+    userContext.vars.discussionId = discussionIds[randomIndex];
+    console.log(`Selected discussion ID: ${userContext.vars.discussionId} from ${discussionIds.length} discussions`);
+  } else {
+    // If it's already a single value, use it directly
+    userContext.vars.discussionId = discussionIds;
+    console.log(`Using provided discussion ID: ${userContext.vars.discussionId}`);
+  }
+  
+  return done();
+}
+
+function checkCommentId(userContext, events, done) {
+  const commentIds = userContext.vars.commentIds;
+
+  if (!commentIds || !Array.isArray(commentIds) || commentIds.length === 0) {
+    // If no comments found, set parentId to null (make a top-level comment instead)
+    userContext.vars.commentId = null;
+    console.log('No comments found for discussion, will create top-level comment instead');
+  } else {
+    // Use the captured comment ID
+    userContext.vars.commentId = commentIds;
+  }
+
+  return done();
+}
+
+async function joinDiscussionRoom(userContext, events, done) {
+  try {
+    const discussionId = userContext.vars.discussionId;
+    if (!discussionId) {
+      console.log('No discussion ID available, skipping room join');
+      return done(); // Make sure done is called
+    }
+
+    console.log(`Attempting to join discussion room: ${discussionId}`);
+    
+    userContext.vars.joinedRoom = discussionId;
+    
+    
+    if (typeof done === 'function') {
+      return done();
+    }
+    return;
+    
+  } catch (error) {
+    console.error('Error joining discussion room:', error);
+    if (typeof done === 'function') {
+      return done(error);
+    }
+  }
+}
+
+//==============================================================================
+// TEST SETUP HELPERS
+//==============================================================================
+
+async function fetchAndSaveDiscussionIds() {
+  try {
+    console.log('Pre-fetching discussion IDs...');
+    
+    // Get auth token
+    const token = await getAuthToken({});
+    if (!token) {
+      throw new Error('Authentication failed while pre-fetching discussion IDs');
+    }
+    
+    // Fetch discussions
+    const response = await fetch('http://localhost:3000/api/v1/discussions?limit=50', {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error ${response.status} while pre-fetching discussion IDs`);
+    }
+    
+    const data = await response.json();
+    
+    // Extract IDs
+    let discussionIds = [];
+    if (data.data && data.data.items && Array.isArray(data.data.items)) {
+      discussionIds = data.data.items.map(item => item.id);
+      console.log(`Found ${discussionIds.length} discussion IDs`);
+    } else {
+      console.warn('Unexpected API response format, no discussion IDs found');
+    }
+    
+    // Save to file
+    const outputDir = path.join(__dirname, '..', 'test-data');
+    if (!fs.existsSync(outputDir)) {
+      fs.mkdirSync(outputDir, { recursive: true });
+    }
+    
+    const outputFile = path.join(outputDir, 'discussion-ids.json');
+    fs.writeFileSync(outputFile, JSON.stringify(discussionIds, null, 2));
+    
+    console.log(`Saved ${discussionIds.length} discussion IDs to ${outputFile}`);
+    return discussionIds;
+  } catch (error) {
+    console.error('Error pre-fetching discussion IDs:', error);
+    return [];
+  }
+}
+
+function loadDiscussionIds(userContext, events, done) {
+  try {
+    const filePath = path.join(__dirname, '..', 'test-data', 'discussion-ids.json');
+    
+    // Check if file exists
+    if (!fs.existsSync(filePath)) {
+      console.log('No cached discussion IDs found, fetching new ones...');
+      
+      // Fetch IDs asynchronously
+      fetchAndSaveDiscussionIds()
+        .then(ids => {
+          if (ids.length === 0) {
+            // Fallback to hardcoded IDs if we couldn't fetch any
+            userContext.vars.discussionIds = [1, 2, 3, 4, 5];
+            console.log('Using fallback discussion IDs:', userContext.vars.discussionIds);
+          } else {
+            userContext.vars.discussionIds = ids;
+            console.log(`Loaded ${ids.length} discussion IDs from fresh fetch`);
+          }
+          done();
+        })
+        .catch(error => {
+          console.error('Error fetching discussion IDs:', error);
+          userContext.vars.discussionIds = [1, 2, 3, 4, 5];
+          console.log('Using fallback discussion IDs due to error');
+          done();
+        });
+      return;
+    }
+    
+    // Load from file
+    const ids = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+    userContext.vars.discussionIds = ids;
+    console.log(`Loaded ${ids.length} discussion IDs from cache`);
+    
+    return done();
+  } catch (error) {
+    console.error('Error loading discussion IDs:', error);
+    userContext.vars.discussionIds = [1, 2, 3, 4, 5]; // Fallback
+    return done();
+  }
+}
+
 //==============================================================================
 // MODULE EXPORTS
 //==============================================================================
@@ -381,4 +645,18 @@ module.exports = {
   // File attachment generation
   generateFileAttachments,
   createDiscussionWithAttachments,
+
+  // Timestamp capture
+  captureTimestamp,
+
+  // Comment data generation
+  generateCommentData,
+  generateReplyData,
+  checkDiscussionId,
+  checkCommentId,
+  joinDiscussionRoom,
+
+  // Test setup helpers
+  fetchAndSaveDiscussionIds,
+  loadDiscussionIds,
 };

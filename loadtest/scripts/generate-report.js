@@ -1,7 +1,3 @@
-/**
- * Artillery Load Test Report Generator
- * Generates Markdown summary reports from Artillery JSON output and resource metrics
- */
 const fs = require('fs');
 const path = require('path');
 
@@ -10,11 +6,6 @@ const path = require('path');
 //==============================================================================
 
 class TestReportGenerator {
-  /**
-   * Creates a new test report generator instance
-   * @param {string} testName - Name of the test
-   * @param {string} phaseName - Phase name (or 'all')
-   */
   constructor(testName, phaseName) {
     this.testName = testName || 'default';
     this.phaseName = phaseName || 'all';
@@ -35,9 +26,6 @@ class TestReportGenerator {
     this.outputFiles = [];
   }
 
-  /**
-   * Ensures all necessary directories exist
-   */
   ensureDirectoriesExist() {
     Object.values(this.paths).forEach((dir) => {
       if (!fs.existsSync(dir)) {
@@ -46,12 +34,6 @@ class TestReportGenerator {
     });
   }
 
-  /**
-   * Finds the most recent file with a given prefix
-   * @param {string} directory - Directory to search
-   * @param {string} prefix - File name prefix
-   * @returns {string|null} Most recent file name or null
-   */
   findLatestFile(directory, prefix) {
     try {
       const files = fs
@@ -70,10 +52,6 @@ class TestReportGenerator {
     }
   }
 
-  /**
-   * Loads the report data from JSON file
-   * @returns {boolean} Success status
-   */
   loadReportData() {
     try {
       const reportPrefix = this.phaseName !== 'all' ? `${this.phaseName}-report` : 'report';
@@ -92,10 +70,6 @@ class TestReportGenerator {
     }
   }
 
-  /**
-   * Loads metrics data from CSV file
-   * @returns {boolean} Success status
-   */
   loadMetricsData() {
     try {
       const metricsPrefix = this.phaseName !== 'all' ? this.phaseName : '';
@@ -127,54 +101,48 @@ class TestReportGenerator {
     }
   }
 
-  /**
-   * Loads real-time latency data from JSON file
-   * @returns {boolean} Success status
-   */
-  loadRealTimeLatencyData() {
+  loadEndToEndLatencyData() {
     try {
-      // Look for latency data in the latency directory
-      const latencyDir = path.join(this.basePath, 'results', 'latency', this.testName);
+      // Look for e2e latency data in the e2e-latency directory
+      const latencyDir = path.join(this.basePath, 'results', 'e2e-latency', this.testName);
 
       if (!fs.existsSync(latencyDir)) {
-        // Try generic latency directory if test-specific doesn't exist
-        const genericLatencyDir = path.join(this.basePath, 'results', 'latency');
-        if (!fs.existsSync(genericLatencyDir)) {
-          console.log('No latency directory found, real-time latency will not be included');
-          return false;
-        }
-
-        // Find the latest latency file in the generic directory
-        const latencyFile = this.findLatestFile(genericLatencyDir, '');
-        if (!latencyFile) {
-          console.log('No latency file found, real-time latency will not be included');
-          return false;
-        }
-
-        console.log(`Using latency file: ${latencyFile}`);
-        this.latencyData = JSON.parse(fs.readFileSync(path.join(genericLatencyDir, latencyFile)));
-        return true;
-      }
-
-      // Find the latest latency file in the test-specific directory
-      const latencyFile = this.findLatestFile(latencyDir, '');
-      if (!latencyFile) {
-        console.log('No latency file found, real-time latency will not be included');
+        console.log('No e2e-latency directory found, end-to-end latency will not be included');
         return false;
       }
 
-      console.log(`Using latency file: ${latencyFile}`);
-      this.latencyData = JSON.parse(fs.readFileSync(path.join(latencyDir, latencyFile)));
+      // List all files for debugging
+      const allFiles = fs.readdirSync(latencyDir);
+      console.log(`DEBUG: Found ${allFiles.length} files in latency dir:`, allFiles);
+
+      // Use the phase name as the file prefix instead of "e2e-latency-"
+      const phasePrefix = this.phaseName !== 'all' ? this.phaseName : '';
+
+      // Find the latest latency file in the directory
+      const latencyFile = this.findLatestFile(latencyDir, phasePrefix);
+
+      if (!latencyFile) {
+        console.log(`No latency file with prefix "${phasePrefix}" found, end-to-end latency will not be included`);
+        return false;
+      }
+
+      console.log(`Using e2e-latency file: ${latencyFile}`);
+      this.e2eLatencyData = JSON.parse(fs.readFileSync(path.join(latencyDir, latencyFile)));
+
+      // Field name mapping - accommodate your existing field names
+      this.e2eLatencyData = this.e2eLatencyData.map((item) => ({
+        clientRequestTime: item.clientRequestTime,
+        clientReceiveTime: item.clientReceiveTime,
+        e2eLatency: item.e2eLatency,
+        discussionId: item.discussionId,
+      }));
       return true;
     } catch (error) {
-      console.error(`Warning: Could not load real-time latency data: ${error.message}`);
+      console.error(`Warning: Could not load end-to-end latency data: ${error.message}`);
       return false;
     }
   }
 
-  /**
-   * Extracts key metrics from Artillery report
-   */
   processArtilleryMetrics() {
     try {
       if (!this.reportData) {
@@ -254,9 +222,6 @@ class TestReportGenerator {
     }
   }
 
-  /**
-   * Processes resource monitoring data
-   */
   processResourceMetrics() {
     try {
       if (!this.metricsData || this.metricsData.length === 0) {
@@ -289,22 +254,24 @@ class TestReportGenerator {
     }
   }
 
-  processRealTimeLatencyMetrics() {
+  processEndToEndLatencyMetrics() {
     try {
-      if (!this.latencyData || this.latencyData.length === 0) {
+      if (!this.e2eLatencyData || this.e2eLatencyData.length === 0) {
         return false;
       }
 
-      // Extract latency values
-      const latencies = this.latencyData
-        .map((item) => item.realtimeLatency)
-        .filter((l) => typeof l === 'number' && !isNaN(l))
-        .sort((a, b) => a - b);
+      // Extract only completed requests with end-to-end latency
+      const completedRequests = this.e2eLatencyData.filter(
+        (item) => item.e2eLatency && !isNaN(item.e2eLatency) && item.clientRequestTime && item.clientReceiveTime
+      );
 
-      if (latencies.length === 0) {
-        console.log('No valid real-time latency values found');
+      if (completedRequests.length === 0) {
+        console.log('No valid end-to-end latency measurements found');
         return false;
       }
+
+      // Sort latencies for percentile calculations
+      const e2eLatencies = completedRequests.map((item) => item.e2eLatency).sort((a, b) => a - b);
 
       // Calculate percentiles
       const getPercentile = (arr, p) => {
@@ -312,29 +279,25 @@ class TestReportGenerator {
         return arr[index];
       };
 
-      this.realTimeLatencyMetrics = {
-        count: latencies.length,
-        min: latencies[0],
-        max: latencies[latencies.length - 1],
-        median: getPercentile(latencies, 50),
-        p75: getPercentile(latencies, 75),
-        p90: getPercentile(latencies, 90),
-        p95: getPercentile(latencies, 95),
-        p99: getPercentile(latencies, 99),
-        avg: latencies.reduce((sum, val) => sum + val, 0) / latencies.length,
+      this.e2eLatencyMetrics = {
+        count: e2eLatencies.length,
+        min: e2eLatencies[0],
+        max: e2eLatencies[e2eLatencies.length - 1],
+        median: getPercentile(e2eLatencies, 50),
+        p75: getPercentile(e2eLatencies, 75),
+        p90: getPercentile(e2eLatencies, 90),
+        p95: getPercentile(e2eLatencies, 95),
+        p99: getPercentile(e2eLatencies, 99),
+        avg: e2eLatencies.reduce((sum, val) => sum + val, 0) / e2eLatencies.length,
       };
 
       return true;
     } catch (error) {
-      console.error(`Warning: Error processing real-time latency metrics: ${error.message}`);
+      console.error(`Warning: Error processing end-to-end latency metrics: ${error.message}`);
       return false;
     }
   }
 
-  /**
-   * Generates markdown report from processed metrics
-   * @returns {Object} Report path and content
-   */
   generateMarkdownReport() {
     try {
       if (!this.artilleryMetrics) {
@@ -390,20 +353,20 @@ Successful Requests: ${this.artilleryMetrics.requests.success_rate.toFixed(1)}%
 | Total Requests | ${fmt(this.artilleryMetrics.requests.total)} |
 | Completed Scenarios | ${fmt(this.artilleryMetrics.scenarios.completed)} |`,
 
-        realTimeLatency: this.realTimeLatencyMetrics
-          ? `## ⚡ Real-Time Latency Summary
+        e2eLatency: this.e2eLatencyMetrics
+          ? `## ⚡ End-to-End Latency Summary
 
 | Metric | Value |
 |--------|-------|
-| Min    | ${fmt(this.realTimeLatencyMetrics.min)} ms |
-| Median (p50) | ${fmt(this.realTimeLatencyMetrics.median)} ms |
-| p75    | ${fmt(this.realTimeLatencyMetrics.p75)} ms |
-| p90    | ${fmt(this.realTimeLatencyMetrics.p90)} ms |
-| p95    | ${fmt(this.realTimeLatencyMetrics.p95)} ms |
-| p99    | ${fmt(this.realTimeLatencyMetrics.p99)} ms |
-| Max    | ${fmt(this.realTimeLatencyMetrics.max)} ms |
-| Avg    | ${fmt(this.realTimeLatencyMetrics.avg)} ms |
-| Total Measurements | ${fmt(this.realTimeLatencyMetrics.count)} |`
+| Min    | ${fmt(this.e2eLatencyMetrics.min)} ms |
+| Median (p50) | ${fmt(this.e2eLatencyMetrics.median)} ms |
+| p75    | ${fmt(this.e2eLatencyMetrics.p75)} ms |
+| p90    | ${fmt(this.e2eLatencyMetrics.p90)} ms |
+| p95    | ${fmt(this.e2eLatencyMetrics.p95)} ms |
+| p99    | ${fmt(this.e2eLatencyMetrics.p99)} ms |
+| Max    | ${fmt(this.e2eLatencyMetrics.max)} ms |
+| Avg    | ${fmt(this.e2eLatencyMetrics.avg)} ms |
+| Total Measurements | ${fmt(this.e2eLatencyMetrics.count)} |`
           : '',
 
         resources: this.resourceMetrics
@@ -443,14 +406,14 @@ ${
 }
 
 ${
-  this.realTimeLatencyMetrics
-    ? this.realTimeLatencyMetrics.p95 < 50
-      ? '\n- **Excellent real-time performance**: 95% of real-time updates arrive in under 50ms'
-      : this.realTimeLatencyMetrics.p95 < 100
-      ? '\n- **Good real-time performance**: 95% of real-time updates arrive in under 100ms'
-      : this.realTimeLatencyMetrics.p95 < 200
-      ? '\n- **Acceptable real-time performance**: 95% of real-time updates arrive in under 200ms'
-      : '\n- **Real-time performance needs improvement**: 95% of real-time updates take more than 200ms'
+  this.e2eLatencyMetrics
+    ? this.e2eLatencyMetrics.p95 < 100
+      ? '\n- **Excellent end-to-end performance**: 95% of real-time updates arrive in under 100ms'
+      : this.e2eLatencyMetrics.p95 < 200
+      ? '\n- **Good end-to-end performance**: 95% of real-time updates arrive in under 200ms'
+      : this.e2eLatencyMetrics.p95 < 500
+      ? '\n- **Acceptable end-to-end performance**: 95% of real-time updates arrive in under 500ms'
+      : '\n- **End-to-end performance needs improvement**: 95% of real-time updates take more than 500ms'
     : ''
 }
 
@@ -495,7 +458,7 @@ ${
         sections.overview,
         sections.responseTimes,
         sections.throughput,
-        sections.realTimeLatency,
+        sections.e2eLatency,
         sections.resources,
         sections.endpoints,
         sections.analysis,
@@ -516,59 +479,6 @@ ${
     }
   }
 
-  /**
-   * Prints summary statistics to console
-   */
-  printSummary() {
-    if (!this.artilleryMetrics) return;
-
-    console.log('\n══════════ LOAD TEST SUMMARY ══════════');
-
-    // Main statistics
-    console.log('\n📊 Key Metrics:');
-    console.log(
-      `• Requests: ${this.artilleryMetrics.requests.total} total, ` +
-        `${this.artilleryMetrics.requests.failed} failed ` +
-        `(${this.artilleryMetrics.requests.success_rate.toFixed(1)}% success)`
-    );
-    console.log(
-      `• 'Response Time: ${this.artilleryMetrics.responses.latencies.median} ms median, ` + `${this.artilleryMetrics.responses.latencies.p95} ms p95`
-    );
-    console.log(`• Throughput: ${this.artilleryMetrics.responses.rps.mean.toFixed(1)} req/sec average`);
-
-    // Resource metrics (if available)
-    if (this.resourceMetrics) {
-      console.log('\n📈 Resource Usage:');
-      console.log(`• CPU: ${this.resourceMetrics.cpu.avg.toFixed(1)}% avg, ` + `${this.resourceMetrics.cpu.max.toFixed(1)}% peak`);
-      console.log(`• Memory: ${this.resourceMetrics.memory.avg.toFixed(1)}% avg, ` + `${this.resourceMetrics.memory.max.toFixed(1)}% peak`);
-    }
-
-    // Output files
-    console.log('\n📄 Generated Reports:');
-    this.outputFiles.forEach((file) => {
-      console.log(`• ${file}`);
-    });
-
-    console.log('\n══════════════════════════════════════');
-  }
-
-  /**
-   * Prints a preview of the markdown report
-   * @param {string} markdown - Markdown content
-   * @param {number} lines - Number of lines to preview
-   */
-  printReportPreview(markdown, lines = 15) {
-    if (!markdown) return;
-
-    console.log('\n----- REPORT PREVIEW -----\n');
-    const previewLines = markdown.split('\n').slice(0, lines);
-    console.log(previewLines.join('\n'));
-    console.log('\n...(see full report in file)');
-  }
-
-  /**
-   * Main method to generate the complete report
-   */
   async generateReport() {
     console.log(`Generating summary report for test: ${this.testName}`);
     console.log(`Phase: ${this.phaseName}`);
@@ -580,24 +490,20 @@ ${
         throw new Error('Failed to load report data');
       }
       this.loadMetricsData(); // Optional, can proceed without metrics
-      this.loadRealTimeLatencyData(); // Optional, can proceed without real-time latency
+      this.loadEndToEndLatencyData(); // Optional, can proceed without e2e latency
 
       // Process metrics
       if (!this.processArtilleryMetrics()) {
         throw new Error('Failed to process Artillery metrics');
       }
       this.processResourceMetrics(); // Optional
-      this.processRealTimeLatencyMetrics(); // Optional
+      this.processEndToEndLatencyMetrics(); // Optional
 
       // Generate report
       const { mdPath, markdown } = this.generateMarkdownReport();
       if (!mdPath) {
         throw new Error('Failed to generate report');
       }
-
-      // Output results
-      this.printSummary();
-      this.printReportPreview(markdown);
 
       return { success: true, files: this.outputFiles };
     } catch (error) {
