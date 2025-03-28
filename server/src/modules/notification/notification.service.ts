@@ -34,7 +34,7 @@ export class NotificationService {
       const savedNotification = await this.notificationRepository.save(notification);
 
       // Notify the user through websocket
-      this.notifyRecipient(savedNotification);
+      this.notifyRecipient(savedNotification, createDto.clientRequestTime);
 
       return savedNotification;
     } catch (error) {
@@ -293,7 +293,7 @@ export class NotificationService {
 
   // ----- Helper Methods -----
 
-  private notifyRecipient(notification: Notification): void {
+  private notifyRecipient(notification: Notification, clientRequestTime?: number): void {
     try {
       // Skip notification if it's a system notification
       if (!notification.recipientId) return;
@@ -308,6 +308,7 @@ export class NotificationService {
         createdAt: notification.createdAt,
         isRead: notification.isRead,
         actorId: notification.actorId,
+        clientRequestTime,
       });
     } catch (error) {
       // Log but don't throw - notification delivery should be best-effort

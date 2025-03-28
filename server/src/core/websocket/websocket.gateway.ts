@@ -14,7 +14,6 @@ import { WsJwtGuard } from '../../common/guards/ws-jwt.guard';
 import { JWTConfig } from '../../config';
 import { JwtPayload } from '../../modules/auth/interfaces/jwt-payload.interface';
 import { UserService } from '../../modules/user/user.service';
-import { VoteEntityType } from 'src/modules/vote/entities/vote.entity';
 
 @WebSocketGateway({
   cors: {
@@ -169,10 +168,7 @@ export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection, OnG
   // Utility methods for other services to use
 
   sendNotification(userId: number, notification: any) {
-    this.server.to(`user:${userId}`).emit('newNotification', {
-      ...notification,
-      timestamp: new Date(),
-    });
+    this.server.to(`user:${userId}`).emit('newNotification', notification);
     return true;
   }
 
@@ -195,8 +191,8 @@ export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection, OnG
     return this.onlineUsers.has(userId);
   }
 
-  notifyNewDiscussion(authorId: number, discussionId: number, serverTimestamp: number) {
-    this.server.emit('newDiscussion', { authorId, discussionId, serverTimestamp });
+  notifyNewDiscussion(authorId: number, discussionId: number, clientRequestTime: number) {
+    this.server.emit('newDiscussion', { authorId, discussionId, clientRequestTime });
     return true;
   }
 
@@ -209,7 +205,7 @@ export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection, OnG
     return true;
   }
 
-  notifyNewComment(comment: any) {
+  notifyNewComment(comment: any, clientRequestTime: number) {
     const discussionId = comment.discussionId;
 
     const payload = {
@@ -217,6 +213,7 @@ export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection, OnG
       commentId: comment.id,
       isReply: !!comment.parentId,
       parentId: comment.parentId || null,
+      clientRequestTime,
     };
 
     this.server.to(`discussion:${discussionId}`).emit('newComment', payload);

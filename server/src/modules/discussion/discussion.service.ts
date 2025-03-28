@@ -11,8 +11,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import * as fs from 'fs';
 import * as path from 'path';
 import { Between, EntityManager, Repository } from 'typeorm';
+import { UserRole } from '../../common/enums/user-role.enum';
 import { Pageable } from '../../common/interfaces/pageable.interface';
 import { WebsocketGateway } from '../../core/websocket/websocket.gateway';
+import { AnalyticService } from '../analytic/analytic.service';
+import { ActivityEntityType, ActivityType } from '../analytic/entities/user-activity.entity';
 import { AttachmentService } from '../attachment/attachment.service';
 import { AttachmentType } from '../attachment/entities/attachment.entity';
 import { User } from '../user/entities/user.entity';
@@ -25,7 +28,6 @@ import { UpdateDiscussionDto } from './dto/update-discussion.dto';
 import { Bookmark } from './entities/bookmark.entity';
 import { DiscussionSpace } from './entities/discussion-space.entity';
 import { Discussion } from './entities/discussion.entity';
-import { UserRole } from 'src/common/enums/user-role.enum';
 
 @Injectable()
 export class DiscussionService {
@@ -42,6 +44,7 @@ export class DiscussionService {
     @Inject(forwardRef(() => VoteService))
     private readonly voteService: VoteService,
     private readonly websocketGateway: WebsocketGateway,
+    private readonly analyticService: AnalyticService,
   ) {}
 
   // ------ Discussion CRUD Operations ------
@@ -51,7 +54,7 @@ export class DiscussionService {
     currentUser: User,
     files?: Express.Multer.File[],
   ): Promise<DiscussionResponseDto> {
-    const serverTimestamp = Date.now();
+    const { clientRequestTime, ...create } = createDiscussionDto;
 
     if (!currentUser?.id) {
       throw new BadRequestException('User information is required');
@@ -77,7 +80,7 @@ export class DiscussionService {
 
       try {
         const discussion = this.discussionRepository.create({
-          ...createDiscussionDto,
+          ...create,
           authorId: currentUser.id,
           commentCount: 0,
           upvoteCount: 0,
@@ -109,7 +112,11 @@ export class DiscussionService {
         const createdDiscussion = await this.getDiscussionById(savedDiscussion.id);
 
         // Notify users about new discussion
-        this.websocketGateway.notifyNewDiscussion(createdDiscussion.authorId, createdDiscussion.id, serverTimestamp);
+        this.websocketGateway.notifyNewDiscussion(
+          createdDiscussion.authorId,
+          createdDiscussion.id,
+          clientRequestTime || 0,
+        );
         if (createdDiscussion.spaceId !== 1) {
           this.websocketGateway.notifyNewSpaceDiscussion(
             createdDiscussion.authorId,
@@ -117,6 +124,21 @@ export class DiscussionService {
             createdDiscussion.id,
           );
         }
+
+        // Record activity
+        await this.analyticService.recordActivity(
+          currentUser.id,
+          ActivityType.CREATE_DISCUSSION,
+          ActivityEntityType.DISCUSSION,
+          savedDiscussion.id,
+          {
+            spaceId: createdDiscussion.spaceId,
+            isAnonymous: createdDiscussion.isAnonymous,
+            hasTags: (discussion.tags?.length || 0) > 0,
+            hasAttachments: files && files.length > 0,
+            content: this.truncateContent(createdDiscussion.content, 100),
+          },
+        );
 
         return DiscussionResponseDto.fromEntity(createdDiscussion, currentUser);
       } catch (error) {
@@ -251,6 +273,22 @@ export class DiscussionService {
         await queryRunner.commitTransaction();
 
         const updatedDiscussion = await this.getDiscussionById(id);
+
+        // Record edit activity
+        await this.analyticService.recordActivity(
+          currentUser.id,
+          ActivityType.EDIT_DISCUSSION,
+          ActivityEntityType.DISCUSSION,
+          id,
+          {
+            spaceId: updatedDiscussion.spaceId,
+            isAnonymous: updatedDiscussion.isAnonymous,
+            tagsChanged: updateDiscussionDto.tags !== undefined,
+            contentChanged: updateDiscussionDto.content !== undefined,
+            attachmentsChanged: (updateDiscussionDto.attachmentsToRemove?.length ?? 0) > 0 || (files?.length ?? 0) > 0,
+          },
+        );
+
         return DiscussionResponseDto.fromEntity(updatedDiscussion, currentUser);
       } catch (error) {
         await queryRunner.rollbackTransaction();
@@ -269,6 +307,17 @@ export class DiscussionService {
       await this.validateDiscussionAccess(id, currentUser.id, currentUser.role);
     }
     await this.discussionRepository.softDelete(id);
+
+    // Record delete activity if user is provided
+    if (currentUser) {
+      await this.analyticService.recordActivity(
+        currentUser.id,
+        ActivityType.DELETE_DISCUSSION,
+        ActivityEntityType.DISCUSSION,
+        id,
+        { softDelete: true },
+      );
+    }
   }
 
   async hardDelete(id: number, currentUser: User): Promise<void> {
@@ -296,7 +345,7 @@ export class DiscussionService {
 
   async bookmarkDiscussion(discussionId: number, userId: number): Promise<void> {
     // Validate discussion exists
-    await this.getDiscussionById(discussionId);
+    const discussion = await this.getDiscussionById(discussionId);
 
     // Check if bookmark already exists
     const existingBookmark = await this.bookmarkRepository.findOne({
@@ -310,6 +359,18 @@ export class DiscussionService {
       });
 
       await this.bookmarkRepository.save(bookmark);
+
+      // Record bookmark activity
+      await this.analyticService.recordActivity(
+        userId,
+        ActivityType.BOOKMARK_DISCUSSION,
+        ActivityEntityType.DISCUSSION,
+        discussionId,
+        {
+          spaceId: discussion.spaceId,
+          authorId: discussion.authorId,
+        },
+      );
     }
   }
 
@@ -322,7 +383,19 @@ export class DiscussionService {
       throw new NotFoundException('Bookmark not found');
     }
 
+    const discussion = await this.getDiscussionById(discussionId);
     await this.bookmarkRepository.remove(bookmark);
+
+    await this.analyticService.recordActivity(
+      userId,
+      ActivityType.REMOVE_BOOKMARK,
+      ActivityEntityType.DISCUSSION,
+      discussionId,
+      {
+        spaceId: discussion.spaceId,
+        authorId: discussion.authorId,
+      },
+    );
   }
 
   async getBookmarkedDiscussions(
@@ -503,7 +576,11 @@ export class DiscussionService {
     return Array.from(new Set(tags.map((tag) => tag.toLowerCase().trim()))).filter(Boolean);
   }
 
-  private async validateDiscussionAccess(discussionId: number, userId: number, userRole?: UserRole): Promise<Discussion> {
+  private async validateDiscussionAccess(
+    discussionId: number,
+    userId: number,
+    userRole?: UserRole,
+  ): Promise<Discussion> {
     const discussion = await this.discussionRepository.findOne({
       where: { id: discussionId },
       relations: ['author'],
@@ -543,6 +620,7 @@ export class DiscussionService {
 
     if (searchDto.authorId) {
       queryBuilder.andWhere('discussion.authorId = :authorId', { authorId: searchDto.authorId });
+      queryBuilder.andWhere('discussion.isAnonymous = false');
     }
 
     if (searchDto.isAnonymous !== undefined) {
@@ -598,5 +676,10 @@ export class DiscussionService {
         hasPreviousPage: page > 1,
       },
     };
+  }
+
+  private truncateContent(content: string, maxLength: number): string {
+    if (!content) return '';
+    return content.length > maxLength ? `${content.substring(0, maxLength)}...` : content;
   }
 }

@@ -1,5 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsEnum, IsInt, IsNotEmpty, IsObject, IsOptional } from 'class-validator';
+import { Transform } from 'class-transformer';
+import { IsEnum, IsInt, IsNotEmpty, IsNumber, IsObject, IsOptional } from 'class-validator';
 import { NotificationEntityType, NotificationType } from '../entities/notification.entity';
 
 export class CreateNotificationDto {
@@ -53,6 +54,11 @@ export class CreateNotificationDto {
   @IsObject()
   @IsOptional()
   data?: Record<string, any>;
+
+  @IsOptional()
+  @IsNumber()
+  @Transform(({ value }) => (value ? parseInt(value, 10) : undefined))
+  clientRequestTime?: number;
 }
 
 export class BatchCreateNotificationDto {

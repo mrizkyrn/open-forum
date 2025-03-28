@@ -13,6 +13,8 @@ import * as path from 'path';
 import { Between, EntityManager, Repository } from 'typeorm';
 import { Pageable } from '../../common/interfaces/pageable.interface';
 import { WebsocketGateway } from '../../core/websocket/websocket.gateway';
+import { AnalyticService } from '../analytic/analytic.service';
+import { ActivityEntityType, ActivityType } from '../analytic/entities/user-activity.entity';
 import { AttachmentService } from '../attachment/attachment.service';
 import { AttachmentType } from '../attachment/entities/attachment.entity';
 import { DiscussionService } from '../discussion/discussion.service';
@@ -42,6 +44,7 @@ export class CommentService {
     private readonly voteService: VoteService,
     private readonly websocketGateway: WebsocketGateway,
     private readonly notificationService: NotificationService,
+    private readonly analyticService: AnalyticService,
   ) {}
 
   // ----- Core CRUD Operations -----
@@ -128,9 +131,31 @@ export class CommentService {
         // Fetch the complete comment with all relations
         const createdComment = await this.getCommentWithAttachmentById(savedComment.id);
 
-        // Send real-time update and notifications
-        this.websocketGateway.notifyNewComment(createdComment);
-        await this.createCommentNotifications(createdComment, discussion, currentUser);
+        // Send real-time notification
+        await this.createCommentNotifications(
+          createdComment,
+          discussion,
+          currentUser,
+          createCommentDto.clientRequestTime,
+        );
+
+        // Send real-time update to the discussion channel
+        this.websocketGateway.notifyNewComment(createdComment, createCommentDto.clientRequestTime || Date.now());
+
+        // Record user activity
+        await this.analyticService.recordActivity(
+          currentUser.id,
+          ActivityType.CREATE_COMMENT,
+          ActivityEntityType.COMMENT,
+          savedComment.id,
+          {
+            spaceId: discussion.spaceId,
+            discussionId: discussion.id,
+            parentCommentId: savedComment.parentId,
+            commentContent: this.truncateContent(savedComment.content, 100),
+            hasAttachments: files && files.length > 0,
+          },
+        );
 
         return CommentResponseDto.fromEntity(createdComment, null);
       } catch (error) {
@@ -326,6 +351,19 @@ export class CommentService {
         const updatedComment = await this.getCommentWithAttachmentById(id);
         const voteStatus = await this.voteService.getUserVoteStatus(currentUser.id, VoteEntityType.COMMENT, comment.id);
 
+        // Record edit activity
+        await this.analyticService.recordActivity(
+          currentUser.id,
+          ActivityType.EDIT_COMMENT,
+          ActivityEntityType.COMMENT,
+          id,
+          {
+            discussionId: comment.discussionId,
+            contentChanged: updateCommentDto.content !== undefined,
+            attachmentsChanged: (updateCommentDto.attachmentsToRemove?.length ?? 0) > 0 || (files?.length ?? 0) > 0,
+          },
+        );
+
         return CommentResponseDto.fromEntity(updatedComment, voteStatus);
       } catch (error) {
         await queryRunner.rollbackTransaction();
@@ -363,6 +401,23 @@ export class CommentService {
           await queryRunner.manager.decrement(Comment, { id: comment.parentId }, 'replyCount', 1);
         }
         await this.discussionService.decrementCommentCount(comment.discussionId, queryRunner.manager);
+
+        // Record delete activity
+        if (currentUser) {
+          await this.analyticService.recordActivity(
+            currentUser.id,
+            ActivityType.DELETE_COMMENT,
+            ActivityEntityType.COMMENT,
+            id,
+            {
+              discussionId: comment.discussionId,
+              parentCommentId: comment.parentId,
+              hasAttachments: comment.attachments?.length > 0,
+              isAuthorDeleting: comment.authorId === currentUser.id,
+              isReply: comment.parentId !== null,
+            },
+          );
+        }
 
         await queryRunner.commitTransaction();
       } catch (error) {
@@ -446,7 +501,7 @@ export class CommentService {
 
   // ----- Helper Methods -----
 
-  private async getCommentWithAttachmentById(id: number): Promise<Comment> {
+  async getCommentWithAttachmentById(id: number): Promise<Comment> {
     const comment = await this.commentRepository.findOne({
       where: { id },
       relations: ['author'],
@@ -516,7 +571,12 @@ export class CommentService {
     return attachments.map((attachment) => path.join(process.cwd(), attachment.url.replace(/^\//, '')));
   }
 
-  private async createCommentNotifications(comment: Comment, discussion: Discussion, currentUser: User): Promise<void> {
+  private async createCommentNotifications(
+    comment: Comment,
+    discussion: Discussion,
+    currentUser: User,
+    clientRequestTime?: number,
+  ) {
     try {
       // Don't process if we don't have required data
       if (!comment || !discussion || !currentUser) return;
@@ -551,6 +611,7 @@ export class CommentService {
                 parentCommentId: parentComment.id,
                 parentCommentContent: this.truncateContent(parentComment.content, 100),
               },
+              clientRequestTime: clientRequestTime || Date.now(),
             },
             5,
           ); // 5-minute deduplication window
@@ -566,6 +627,7 @@ export class CommentService {
               entityType: NotificationEntityType.COMMENT,
               entityId: comment.id,
               data: baseNotificationData,
+              clientRequestTime: clientRequestTime || Date.now(),
             },
             5,
           ); // 5-minute deduplication window

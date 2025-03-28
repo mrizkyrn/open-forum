@@ -20,4 +20,9 @@ export class CreateCommentDto {
   @IsNumber()
   @Transform(({ value }) => (value ? parseInt(value, 10) : null))
   parentId?: number;
+
+  @IsOptional()
+  @IsNumber()
+  @Transform(({ value }) => (value ? parseInt(value, 10) : undefined))
+  clientRequestTime?: number;
 }

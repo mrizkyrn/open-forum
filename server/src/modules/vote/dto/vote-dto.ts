@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEnum, IsNotEmpty } from 'class-validator';
+import { Transform } from 'class-transformer';
+import { IsEnum, IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
 import { VoteValue } from '../entities/vote.entity';
 
 export class VoteDto {
@@ -12,4 +13,9 @@ export class VoteDto {
   @IsNotEmpty({ message: 'Vote value is required' })
   @IsEnum(VoteValue, { message: 'Vote value must be either 1 (upvote) or -1 (downvote)' })
   value: VoteValue;
+
+  @IsOptional()
+  @IsNumber()
+  @Transform(({ value }) => (value ? parseInt(value, 10) : undefined))
+  clientRequestTime?: number;
 }

@@ -10,6 +10,6 @@ export const databaseConfig = registerAs(
     password: process.env.DB_PASSWORD || 'password',
     database: process.env.DB_NAME || 'forum_upnvj',
     synchronize: false,
-    logging: process.env.NODE_ENV === 'development',
+    logging: false,
   }),
 );

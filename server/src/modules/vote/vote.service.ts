@@ -1,12 +1,15 @@
 import { forwardRef, Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Between, Repository } from 'typeorm';
+import { AnalyticService } from '../analytic/analytic.service';
+import { ActivityEntityType, ActivityType } from '../analytic/entities/user-activity.entity';
 import { CommentService } from '../comment/comment.service';
 import { Comment } from '../comment/entities/comment.entity';
 import { DiscussionService } from '../discussion/discussion.service';
 import { Discussion } from '../discussion/entities/discussion.entity';
 import { NotificationEntityType, NotificationType } from '../notification/entities/notification.entity';
 import { NotificationService } from '../notification/notification.service';
+import { VoteDto } from './dto/vote-dto';
 import { VoteCountsDto, VoteResponseDto } from './dto/vote-response.dto';
 import { Vote, VoteEntityType, VoteValue } from './entities/vote.entity';
 
@@ -22,16 +25,17 @@ export class VoteService {
     @Inject(forwardRef(() => CommentService))
     private readonly commentService: CommentService,
     private readonly notificationService: NotificationService,
+    private readonly analyticService: AnalyticService,
   ) {}
 
   // ----- Core Vote Operations -----
 
-  async voteDiscussion(userId: number, discussionId: number, value: VoteValue): Promise<VoteResponseDto | null> {
-    return this.voteEntity(userId, VoteEntityType.DISCUSSION, discussionId, value);
+  async voteDiscussion(userId: number, discussionId: number, voteDto: VoteDto): Promise<VoteResponseDto | null> {
+    return this.voteEntity(userId, VoteEntityType.DISCUSSION, discussionId, voteDto.value, voteDto.clientRequestTime);
   }
 
-  async voteComment(userId: number, commentId: number, value: VoteValue): Promise<VoteResponseDto | null> {
-    return this.voteEntity(userId, VoteEntityType.COMMENT, commentId, value);
+  async voteComment(userId: number, commentId: number, voteDto: VoteDto): Promise<VoteResponseDto | null> {
+    return this.voteEntity(userId, VoteEntityType.COMMENT, commentId, voteDto.value, voteDto.clientRequestTime);
   }
 
   async getUserVoteStatus(userId: number, entityType: VoteEntityType, entityId: number): Promise<number | null> {
@@ -104,6 +108,7 @@ export class VoteService {
     entityType: VoteEntityType,
     entityId: number,
     value: VoteValue,
+    clientRequestTime?: number,
   ): Promise<VoteResponseDto | null> {
     const queryRunner = this.voteRepository.manager.connection.createQueryRunner();
 
@@ -121,7 +126,13 @@ export class VoteService {
           : await this.commentService.getCommentEntity(entityId);
 
       // Get the recipient ID for notification
-      const recipientId = entityType === VoteEntityType.DISCUSSION ? entity.authorId : (entity as Comment).authorId;
+      const recipientId = entity.authorId;
+
+      // Determine parent entity info for analytics
+      let discussionId = entityId;
+      if (entityType === VoteEntityType.COMMENT) {
+        discussionId = (entity as Comment).discussionId;
+      }
 
       // Find existing vote within transaction
       const existingVote = await queryRunner.manager.findOne(Vote, {
@@ -135,12 +146,17 @@ export class VoteService {
 
       let result: Vote | null = null;
       let shouldNotify = false;
+      let voteAction: 'added' | 'removed' | 'changed' = 'added';
+      let oldVoteValue: VoteValue | null = null;
 
       // Handle vote based on existing state
       if (existingVote) {
+        oldVoteValue = existingVote.value;
+
         // If same vote exists, remove it (toggle behavior)
         if (existingVote.value === value) {
           await queryRunner.manager.remove(existingVote);
+          voteAction = 'removed';
 
           // Update counts
           if (value === VoteValue.UPVOTE) {
@@ -152,6 +168,7 @@ export class VoteService {
           // Change vote direction
           existingVote.value = value;
           result = await queryRunner.manager.save(Vote, existingVote);
+          voteAction = 'changed';
 
           // Update counts
           if (value === VoteValue.UPVOTE) {
@@ -173,6 +190,7 @@ export class VoteService {
         });
 
         result = await queryRunner.manager.save(Vote, vote);
+        voteAction = 'added';
 
         // Update counts
         if (value === VoteValue.UPVOTE) {
@@ -187,8 +205,14 @@ export class VoteService {
 
       // Create notification after successful transaction
       if (shouldNotify && recipientId !== userId) {
-        await this.createVoteNotification(entityType, entityId, userId, recipientId, value);
+        await this.createVoteNotification(entityType, entityId, userId, recipientId, value, clientRequestTime);
       }
+
+      // Record analytics event - without spaceId
+      this.recordVoteActivity(userId, entityType, entityId, value, voteAction, oldVoteValue, {
+        discussionId,
+        recipientId,
+      });
 
       return result ? VoteResponseDto.fromEntity(result) : null;
     } catch (error) {
@@ -200,12 +224,52 @@ export class VoteService {
     }
   }
 
+  private async recordVoteActivity(
+    userId: number,
+    entityType: VoteEntityType,
+    entityId: number,
+    voteValue: VoteValue,
+    action: 'added' | 'removed' | 'changed',
+    oldValue: VoteValue | null,
+    contextData: {
+      discussionId: number;
+      recipientId: number;
+    },
+  ): Promise<void> {
+    try {
+      // Determine the analytic activity type based on the entity type
+      const activityType =
+        entityType === VoteEntityType.DISCUSSION ? ActivityType.VOTE_DISCUSSION : ActivityType.VOTE_COMMENT;
+
+      // Determine the analytic entity type
+      const activityEntityType =
+        entityType === VoteEntityType.DISCUSSION ? ActivityEntityType.DISCUSSION : ActivityEntityType.COMMENT;
+
+      // Create metadata with extended context
+      const metadata = {
+        ...contextData,
+        voteValue,
+        action,
+        oldValue,
+        isUpvote: voteValue === VoteValue.UPVOTE,
+        isDownvote: voteValue === VoteValue.DOWNVOTE,
+      };
+
+      // Record the activity asynchronously (non-blocking)
+      await this.analyticService.recordActivity(userId, activityType, activityEntityType, entityId, metadata);
+    } catch (error) {
+      this.logger.error(`Error recording vote activity: ${error.message}`, error.stack);
+      // Non-blocking - failure to record analytics shouldn't affect voting
+    }
+  }
+
   private async createVoteNotification(
     entityType: VoteEntityType,
     entityId: number,
     voterId: number,
     recipientId: number,
     value: VoteValue,
+    clientRequestTime?: number,
   ): Promise<void> {
     // Only notify for upvotes and when recipient isn't the voter
     if (value !== VoteValue.UPVOTE || voterId === recipientId) {
@@ -248,6 +312,7 @@ export class VoteService {
           entityType: notificationEntityType,
           entityId: entityId,
           data: notificationData,
+          clientRequestTime,
         },
         60,
       ); // Deduplicate within 1 hour window

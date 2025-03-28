@@ -2,6 +2,8 @@ import { BadRequestException, ForbiddenException, Injectable, Logger, NotFoundEx
 import { InjectRepository } from '@nestjs/typeorm';
 import { Between, FindOptionsWhere, Repository } from 'typeorm';
 import { Pageable } from '../../common/interfaces/pageable.interface';
+import { AnalyticService } from '../analytic/analytic.service';
+import { ActivityEntityType, ActivityType } from '../analytic/entities/user-activity.entity';
 import { CommentService } from '../comment/comment.service';
 import { DiscussionService } from '../discussion/discussion.service';
 import { NotificationEntityType, NotificationType } from '../notification/entities/notification.entity';
@@ -26,6 +28,7 @@ export class ReportService {
     private readonly discussionService: DiscussionService,
     private readonly commentService: CommentService,
     private readonly notificationService: NotificationService,
+    private readonly analyticService: AnalyticService,
   ) {}
 
   // ----- Report CRUD Operations -----
@@ -47,6 +50,14 @@ export class ReportService {
 
       const report = await this.reportRepository.save(newReport);
       await this.populateTargetDetails(report);
+
+      await this.analyticService.recordActivity(
+        currentUser.id,
+        ActivityType.REPORT_CONTENT,
+        ActivityEntityType.REPORT,
+        report.id,
+        { targetType: report.targetType, targetId: report.targetId },
+      );
 
       return ReportResponseDto.fromEntity(report);
     } catch (error) {
@@ -313,8 +324,6 @@ export class ReportService {
 
     return { content, discussionId, targetAuthorId };
   }
-
-
 
   private async getActiveReasonById(id: number): Promise<ReportReason> {
     const reason = await this.reasonRepository.findOne({

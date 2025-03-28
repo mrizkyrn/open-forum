@@ -1,5 +1,6 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AnalyticModule } from '../analytic/analytic.module';
 import { CommentModule } from '../comment/comment.module';
 import { DiscussionModule } from '../discussion/discussion.module';
 import { NotificationModule } from '../notification/notification.module';
@@ -13,6 +14,7 @@ import { VoteService } from './vote.service';
     forwardRef(() => DiscussionModule),
     forwardRef(() => CommentModule),
     NotificationModule,
+    AnalyticModule,
   ],
   providers: [VoteService],
   controllers: [VoteController],

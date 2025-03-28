@@ -2,6 +2,7 @@ import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { FileModule } from '../../core/file/file.module';
 import { WebsocketModule } from '../../core/websocket/websocket.module';
+import { AnalyticModule } from '../analytic/analytic.module';
 import { AttachmentModule } from '../attachment/attachment.module';
 import { VoteModule } from '../vote/vote.module';
 import { DiscussionSpaceService } from './discusison-space.service';
@@ -19,6 +20,7 @@ import { Discussion } from './entities/discussion.entity';
     forwardRef(() => VoteModule),
     WebsocketModule,
     FileModule,
+    AnalyticModule,
   ],
   providers: [DiscussionService, DiscussionSpaceService],
   controllers: [DiscussionController, DiscussionSpaceController],

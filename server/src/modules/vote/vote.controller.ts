@@ -30,7 +30,7 @@ export class VoteController {
     @Body() voteDto: VoteDto,
     @ReqUser() currentUser: User,
   ): Promise<VoteResponseDto | null> {
-    return await this.voteService.voteDiscussion(currentUser.id, discussionId, voteDto.value);
+    return await this.voteService.voteDiscussion(currentUser.id, discussionId, voteDto);
   }
 
   @Get('discussions/:discussionId/votes')
@@ -59,7 +59,7 @@ export class VoteController {
     @Body() voteDto: VoteDto,
     @ReqUser() currentUser: User,
   ): Promise<VoteResponseDto | null> {
-    return await this.voteService.voteComment(currentUser.id, commentId, voteDto.value);
+    return await this.voteService.voteComment(currentUser.id, commentId, voteDto);
   }
 
   @Get('comments/:commentId/votes')

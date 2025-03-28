@@ -56,4 +56,9 @@ export class CreateDiscussionDto {
   @IsNumber()
   @Transform(({ value }) => (value ? parseInt(value, 10) : undefined))
   spaceId: number;
+
+  @IsOptional()
+  @IsNumber()
+  @Transform(({ value }) => (value ? parseInt(value, 10) : undefined))
+  clientRequestTime?: number;
 }

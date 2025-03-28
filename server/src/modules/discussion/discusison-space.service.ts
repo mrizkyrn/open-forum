@@ -11,6 +11,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Pageable } from '../../common/interfaces/pageable.interface';
 import { FileService } from '../../core/file/file.service';
+import { AnalyticService } from '../analytic/analytic.service';
+import { ActivityEntityType, ActivityType } from '../analytic/entities/user-activity.entity';
 import { User } from '../user/entities/user.entity';
 import { CreateDiscussionSpaceDto } from './dto/create-discussion-space.dto';
 import { DiscussionSpaceResponseDto } from './dto/discussion-space-response.dto';
@@ -26,6 +28,7 @@ export class DiscussionSpaceService {
     @InjectRepository(DiscussionSpace)
     private readonly spaceRepository: Repository<DiscussionSpace>,
     private readonly fileService: FileService,
+    private readonly analyticService: AnalyticService,
   ) {}
 
   // ----- Core CRUD Operations -----
@@ -277,6 +280,18 @@ export class DiscussionSpaceService {
 
         await queryRunner.manager.save(space);
         await queryRunner.commitTransaction();
+
+        // Record follow activity - non-blocking
+        await this.analyticService.recordActivity(
+          userId,
+          ActivityType.FOLLOW_SPACE,
+          ActivityEntityType.DISCUSSION_SPACE,
+          spaceId,
+          {
+            spaceName: space.name,
+            spaceSlug: space.slug,
+          },
+        );
       } catch (error) {
         await queryRunner.rollbackTransaction();
         throw error;
@@ -309,6 +324,18 @@ export class DiscussionSpaceService {
 
       await queryRunner.manager.save(space);
       await queryRunner.commitTransaction();
+
+      // Record unfollow activity
+      await this.analyticService.recordActivity(
+        userId,
+        ActivityType.UNFOLLOW_SPACE,
+        ActivityEntityType.DISCUSSION_SPACE,
+        spaceId,
+        {
+          spaceName: space.name,
+          spaceSlug: space.slug,
+        },
+      );
     } catch (error) {
       await queryRunner.rollbackTransaction();
       throw new InternalServerErrorException('Failed to unfollow space');
