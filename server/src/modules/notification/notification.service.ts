@@ -1,21 +1,166 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { forwardRef, Inject, Injectable, Logger, NotFoundException, OnModuleInit } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, In, MoreThan, Repository } from 'typeorm';
 import { Pageable } from '../../common/interfaces/pageable.interface';
+import { RedisChannels } from '../../core/redis/redis.constants';
+import { RedisService } from '../../core/redis/redis.service';
 import { WebsocketGateway } from '../../core/websocket/websocket.gateway';
+import { CommentService } from '../comment/comment.service';
+import { DiscussionService } from '../discussion/discussion.service';
+import { VoteEntityType, VoteValue } from '../vote/entities/vote.entity';
 import { BatchCreateNotificationDto, CreateNotificationDto } from './dto/create-notification.dto';
 import { NotificationQueryDto, NotificationResponseDto } from './dto/notification.dto';
 import { Notification, NotificationEntityType, NotificationType } from './entities/notification.entity';
 
 @Injectable()
-export class NotificationService {
+export class NotificationService implements OnModuleInit {
   private readonly logger = new Logger(NotificationService.name);
 
   constructor(
     @InjectRepository(Notification)
     private readonly notificationRepository: Repository<Notification>,
     private readonly websocketGateway: WebsocketGateway,
+    private readonly redisService: RedisService,
+    @Inject(forwardRef(() => CommentService))
+    private readonly commentService: CommentService,
+    @Inject(forwardRef(() => DiscussionService))
+    private readonly discussionService: DiscussionService,
   ) {}
+
+  onModuleInit() {
+    this.subscribeToRedisEvents();
+  }
+
+  private subscribeToRedisEvents() {
+    this.redisService.subscribe(RedisChannels.COMMENT_CREATED, async (message) => {
+      try {
+        const data = JSON.parse(message);
+
+        // Get necessary data
+
+        // Process notifications
+        // Prepare common notification data
+        const baseNotificationData = {
+          discussionId: data.discussionId,
+          commentId: data.commentId,
+          content: data.content,
+          spaceId: data.spaceId,
+        };
+
+        if (data.parentId) {
+          // This is a reply to another comment
+          const parentComment = await this.commentService.getCommentEntity(data.parentId);
+
+          if (parentComment && parentComment.authorId !== data.authorId) {
+            // Only notify if the parent author is different from current user
+            await this.createNotificationIfNotExists(
+              {
+                recipientId: parentComment.authorId,
+                actorId: data.authorId,
+                type: NotificationType.NEW_REPLY,
+                entityType: NotificationEntityType.COMMENT,
+                entityId: data.commentId,
+                data: {
+                  ...baseNotificationData,
+                  parentId: parentComment.authorId,
+                },
+              },
+              5,
+            );
+          }
+        } else {
+          const discussion = await this.discussionService.getDiscussionEntity(data.discussionId);
+
+          // This is a comment on a discussion
+          if (discussion.authorId !== data.authorId) {
+            await this.createNotificationIfNotExists(
+              {
+                recipientId: discussion.authorId,
+                actorId: data.authorId,
+                type: NotificationType.NEW_COMMENT,
+                entityType: NotificationEntityType.COMMENT,
+                entityId: data.commentId,
+                data: baseNotificationData,
+              },
+              5,
+            );
+          }
+        }
+
+        this.logger.log(`Notifications processed for comment ID ${data.commentId}`);
+      } catch (error) {
+        this.logger.error(`Error processing notifications for comment: ${error.message}`, error.stack);
+      }
+    });
+
+    // Add subscription for vote events
+    this.redisService
+      .subscribe(RedisChannels.VOTE_UPDATED, async (message) => {
+        try {
+          const data = JSON.parse(message);
+
+          // Only notify for upvotes and when recipient isn't the voter
+          if (!data.shouldNotify || data.voteValue !== VoteValue.UPVOTE || data.userId === data.recipientId) {
+            return;
+          }
+
+          // Define notification types based on entity
+          const notificationType =
+            data.entityType === VoteEntityType.DISCUSSION
+              ? NotificationType.DISCUSSION_UPVOTE
+              : NotificationType.COMMENT_UPVOTE;
+
+          const notificationEntityType =
+            data.entityType === VoteEntityType.DISCUSSION
+              ? NotificationEntityType.DISCUSSION
+              : NotificationEntityType.COMMENT;
+
+          // Prepare notification data
+          const notificationData: Record<string, any> = {};
+
+          // Add entity-specific data
+          if (data.entityType === VoteEntityType.DISCUSSION) {
+            // For discussions, just include the discussion ID
+            notificationData.discussionId = data.entityId;
+          } else {
+            // For comments, include both comment and discussion IDs
+            notificationData.commentId = data.entityId;
+            notificationData.discussionId = data.discussionId;
+
+            // Optionally fetch the comment to include content preview
+            try {
+              const comment = await this.commentService.getCommentEntity(data.entityId);
+              if (comment?.content) {
+                notificationData.contentPreview =
+                  comment.content.length > 100 ? `${comment.content.substring(0, 100)}...` : comment.content;
+              }
+            } catch (commentError) {
+              this.logger.warn(`Could not fetch comment ${data.entityId} for notification: ${commentError.message}`);
+            }
+          }
+
+          // Create the notification
+          await this.createNotificationIfNotExists(
+            {
+              recipientId: data.recipientId,
+              actorId: data.userId,
+              type: notificationType,
+              entityType: notificationEntityType,
+              entityId: data.entityId,
+              data: notificationData,
+              clientRequestTime: data.clientRequestTime,
+            },
+            60, // Deduplicate within 1 hour window
+          );
+          this.logger.log(`Vote notification processed for ${data.entityType} ID ${data.entityId}`);
+        } catch (error) {
+          this.logger.error(`Error processing vote notification: ${error.message}`, error.stack);
+        }
+      })
+      .catch((error) => {
+        this.logger.error(`Failed to subscribe to vote events: ${error.message}`);
+      });
+  }
 
   // ----- Create Operations -----
 

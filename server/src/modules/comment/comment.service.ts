@@ -12,15 +12,13 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { Between, EntityManager, Repository } from 'typeorm';
 import { Pageable } from '../../common/interfaces/pageable.interface';
-import { WebsocketGateway } from '../../core/websocket/websocket.gateway';
+import { RedisChannels } from '../../core/redis/redis.constants';
+import { RedisService } from '../../core/redis/redis.service';
 import { AnalyticService } from '../analytic/analytic.service';
 import { ActivityEntityType, ActivityType } from '../analytic/entities/user-activity.entity';
 import { AttachmentService } from '../attachment/attachment.service';
 import { AttachmentType } from '../attachment/entities/attachment.entity';
 import { DiscussionService } from '../discussion/discussion.service';
-import { Discussion } from '../discussion/entities/discussion.entity';
-import { NotificationEntityType, NotificationType } from '../notification/entities/notification.entity';
-import { NotificationService } from '../notification/notification.service';
 import { User } from '../user/entities/user.entity';
 import { VoteEntityType } from '../vote/entities/vote.entity';
 import { VoteService } from '../vote/vote.service';
@@ -42,9 +40,8 @@ export class CommentService {
     private readonly attachmentService: AttachmentService,
     @Inject(forwardRef(() => VoteService))
     private readonly voteService: VoteService,
-    private readonly websocketGateway: WebsocketGateway,
-    private readonly notificationService: NotificationService,
     private readonly analyticService: AnalyticService,
+    private readonly redisService: RedisService,
   ) {}
 
   // ----- Core CRUD Operations -----
@@ -128,34 +125,19 @@ export class CommentService {
         // Commit the transaction
         await queryRunner.commitTransaction();
 
-        // Fetch the complete comment with all relations
+        // Publish to Redis
+        await this.redisService.publish(RedisChannels.COMMENT_CREATED, {
+          commentId: savedComment.id,
+          discussionId,
+          spaceId: discussion.spaceId,
+          authorId: currentUser.id,
+          content: this.truncateContent(savedComment.content, 100),
+          parentId: savedComment.parentId,
+          hasAttachments: files && files.length > 0,
+          clientRequestTime: createCommentDto.clientRequestTime || Date.now(),
+        });
+
         const createdComment = await this.getCommentWithAttachmentById(savedComment.id);
-
-        // Send real-time notification
-        await this.createCommentNotifications(
-          createdComment,
-          discussion,
-          currentUser,
-          createCommentDto.clientRequestTime,
-        );
-
-        // Send real-time update to the discussion channel
-        this.websocketGateway.notifyNewComment(createdComment, createCommentDto.clientRequestTime || Date.now());
-
-        // Record user activity
-        await this.analyticService.recordActivity(
-          currentUser.id,
-          ActivityType.CREATE_COMMENT,
-          ActivityEntityType.COMMENT,
-          savedComment.id,
-          {
-            spaceId: discussion.spaceId,
-            discussionId: discussion.id,
-            parentCommentId: savedComment.parentId,
-            commentContent: this.truncateContent(savedComment.content, 100),
-            hasAttachments: files && files.length > 0,
-          },
-        );
 
         return CommentResponseDto.fromEntity(createdComment, null);
       } catch (error) {
@@ -569,74 +551,6 @@ export class CommentService {
 
   private extractFilePaths(attachments: any[]): string[] {
     return attachments.map((attachment) => path.join(process.cwd(), attachment.url.replace(/^\//, '')));
-  }
-
-  private async createCommentNotifications(
-    comment: Comment,
-    discussion: Discussion,
-    currentUser: User,
-    clientRequestTime?: number,
-  ) {
-    try {
-      // Don't process if we don't have required data
-      if (!comment || !discussion || !currentUser) return;
-
-      // Prepare common notification data
-      const baseNotificationData = {
-        discussionId: discussion.id,
-        discussionContent: this.truncateContent(discussion.content, 100),
-        commentId: comment.id,
-        commentContent: this.truncateContent(comment.content, 100),
-        spaceId: discussion.spaceId,
-      };
-
-      if (comment.parentId) {
-        // This is a reply to another comment
-        const parentComment = await this.commentRepository.findOne({
-          where: { id: comment.parentId },
-          select: ['id', 'authorId', 'content'],
-        });
-
-        if (parentComment && parentComment.authorId !== currentUser.id) {
-          // Only notify if the parent author is different from current user
-          await this.notificationService.createNotificationIfNotExists(
-            {
-              recipientId: parentComment.authorId,
-              actorId: currentUser.id,
-              type: NotificationType.NEW_REPLY,
-              entityType: NotificationEntityType.COMMENT,
-              entityId: comment.id,
-              data: {
-                ...baseNotificationData,
-                parentCommentId: parentComment.id,
-                parentCommentContent: this.truncateContent(parentComment.content, 100),
-              },
-              clientRequestTime: clientRequestTime || Date.now(),
-            },
-            5,
-          ); // 5-minute deduplication window
-        }
-      } else {
-        // This is a comment on a discussion
-        if (discussion.authorId !== currentUser.id) {
-          await this.notificationService.createNotificationIfNotExists(
-            {
-              recipientId: discussion.authorId,
-              actorId: currentUser.id,
-              type: NotificationType.NEW_COMMENT,
-              entityType: NotificationEntityType.COMMENT,
-              entityId: comment.id,
-              data: baseNotificationData,
-              clientRequestTime: clientRequestTime || Date.now(),
-            },
-            5,
-          ); // 5-minute deduplication window
-        }
-      }
-    } catch (error) {
-      this.logger.error(`Failed to create comment notifications: ${error.message}`, error.stack);
-      // Non-critical error, don't throw - comment creation can still succeed
-    }
   }
 
   private truncateContent(content: string, maxLength: number): string {

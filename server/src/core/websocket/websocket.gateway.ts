@@ -14,6 +14,8 @@ import { WsJwtGuard } from '../../common/guards/ws-jwt.guard';
 import { JWTConfig } from '../../config';
 import { JwtPayload } from '../../modules/auth/interfaces/jwt-payload.interface';
 import { UserService } from '../../modules/user/user.service';
+import { RedisChannels } from '../redis/redis.constants';
+import { RedisService } from '../redis/redis.service';
 
 @WebSocketGateway({
   cors: {
@@ -34,10 +36,61 @@ export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection, OnG
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
     private readonly userService: UserService,
+    private readonly redisService: RedisService,
   ) {}
+
+  onModuleInit(server: Server) {
+    this.subscribeToRedisEvents();
+  }
 
   afterInit(server: Server) {
     this.logger.log('WebSocket Server Initialized');
+  }
+
+  private subscribeToRedisEvents() {
+    // Subscribe to discussion creation events
+    this.redisService
+      .subscribe(RedisChannels.DISCUSSION_CREATED, (message) => {
+        try {
+          const data = JSON.parse(message);
+
+          // Notify all users
+          this.notifyNewDiscussion(data.authorId, data.discussionId, data.clientRequestTime);
+
+          // Notify space users if it's in a specific space
+          if (data.spaceId !== 1) {
+            this.notifyNewSpaceDiscussion(data.authorId, data.spaceId, data.discussionId);
+          }
+        } catch (error) {
+          this.logger.error(`Error processing discussion created event: ${error.message}`);
+        }
+      })
+      .catch((error) => {
+        this.logger.error(`Failed to subscribe to discussion events: ${error.message}`);
+      });
+
+    // Subscribe to comment creation events
+    this.redisService
+      .subscribe(RedisChannels.COMMENT_CREATED, (message) => {
+        try {
+          const data = JSON.parse(message);
+
+          // Send real-time update to the discussion channel
+          this.notifyNewComment(
+            {
+              id: data.commentId,
+              discussionId: data.discussionId,
+              parentId: data.parentId,
+            },
+            data.clientRequestTime,
+          );
+        } catch (error) {
+          this.logger.error(`Error processing comment created event: ${error.message}`);
+        }
+      })
+      .catch((error) => {
+        this.logger.error(`Failed to subscribe to comment events: ${error.message}`);
+      });
   }
 
   async handleConnection(client: Socket) {
@@ -216,7 +269,7 @@ export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection, OnG
       clientRequestTime,
     };
 
-    this.server.to(`discussion:${discussionId}`).emit('newComment', payload);
+    this.server.emit('newComment', payload);
     return true;
   }
 }

@@ -1,14 +1,12 @@
 import { forwardRef, Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { RedisChannels } from 'src/core/redis/redis.constants';
+import { RedisService } from 'src/core/redis/redis.service';
 import { Between, Repository } from 'typeorm';
-import { AnalyticService } from '../analytic/analytic.service';
-import { ActivityEntityType, ActivityType } from '../analytic/entities/user-activity.entity';
 import { CommentService } from '../comment/comment.service';
 import { Comment } from '../comment/entities/comment.entity';
 import { DiscussionService } from '../discussion/discussion.service';
 import { Discussion } from '../discussion/entities/discussion.entity';
-import { NotificationEntityType, NotificationType } from '../notification/entities/notification.entity';
-import { NotificationService } from '../notification/notification.service';
 import { VoteDto } from './dto/vote-dto';
 import { VoteCountsDto, VoteResponseDto } from './dto/vote-response.dto';
 import { Vote, VoteEntityType, VoteValue } from './entities/vote.entity';
@@ -24,8 +22,7 @@ export class VoteService {
     private readonly discussionService: DiscussionService,
     @Inject(forwardRef(() => CommentService))
     private readonly commentService: CommentService,
-    private readonly notificationService: NotificationService,
-    private readonly analyticService: AnalyticService,
+    private readonly redisService: RedisService,
   ) {}
 
   // ----- Core Vote Operations -----
@@ -203,15 +200,17 @@ export class VoteService {
 
       await queryRunner.commitTransaction();
 
-      // Create notification after successful transaction
-      if (shouldNotify && recipientId !== userId) {
-        await this.createVoteNotification(entityType, entityId, userId, recipientId, value, clientRequestTime);
-      }
-
-      // Record analytics event - without spaceId
-      this.recordVoteActivity(userId, entityType, entityId, value, voteAction, oldVoteValue, {
-        discussionId,
+      // Publish vote event to Redis
+      await this.redisService.publish(RedisChannels.VOTE_UPDATED, {
+        userId,
         recipientId,
+        shouldNotify,
+        entityType,
+        entityId,
+        voteAction,
+        voteValue: value,
+        discussionId,
+        clientRequestTime,
       });
 
       return result ? VoteResponseDto.fromEntity(result) : null;
@@ -221,104 +220,6 @@ export class VoteService {
       throw error;
     } finally {
       await queryRunner.release();
-    }
-  }
-
-  private async recordVoteActivity(
-    userId: number,
-    entityType: VoteEntityType,
-    entityId: number,
-    voteValue: VoteValue,
-    action: 'added' | 'removed' | 'changed',
-    oldValue: VoteValue | null,
-    contextData: {
-      discussionId: number;
-      recipientId: number;
-    },
-  ): Promise<void> {
-    try {
-      // Determine the analytic activity type based on the entity type
-      const activityType =
-        entityType === VoteEntityType.DISCUSSION ? ActivityType.VOTE_DISCUSSION : ActivityType.VOTE_COMMENT;
-
-      // Determine the analytic entity type
-      const activityEntityType =
-        entityType === VoteEntityType.DISCUSSION ? ActivityEntityType.DISCUSSION : ActivityEntityType.COMMENT;
-
-      // Create metadata with extended context
-      const metadata = {
-        ...contextData,
-        voteValue,
-        action,
-        oldValue,
-        isUpvote: voteValue === VoteValue.UPVOTE,
-        isDownvote: voteValue === VoteValue.DOWNVOTE,
-      };
-
-      // Record the activity asynchronously (non-blocking)
-      await this.analyticService.recordActivity(userId, activityType, activityEntityType, entityId, metadata);
-    } catch (error) {
-      this.logger.error(`Error recording vote activity: ${error.message}`, error.stack);
-      // Non-blocking - failure to record analytics shouldn't affect voting
-    }
-  }
-
-  private async createVoteNotification(
-    entityType: VoteEntityType,
-    entityId: number,
-    voterId: number,
-    recipientId: number,
-    value: VoteValue,
-    clientRequestTime?: number,
-  ): Promise<void> {
-    // Only notify for upvotes and when recipient isn't the voter
-    if (value !== VoteValue.UPVOTE || voterId === recipientId) {
-      return;
-    }
-
-    try {
-      // Define notification types based on entity
-      const notificationType =
-        entityType === VoteEntityType.DISCUSSION ? NotificationType.DISCUSSION_UPVOTE : NotificationType.COMMENT_UPVOTE;
-
-      const notificationEntityType =
-        entityType === VoteEntityType.DISCUSSION ? NotificationEntityType.DISCUSSION : NotificationEntityType.COMMENT;
-
-      // Prepare notification data with enhanced context
-      const notificationData: Record<string, any> = {};
-
-      // Add entity-specific data
-      if (entityType === VoteEntityType.DISCUSSION) {
-        // For discussions, just include the discussion ID
-        notificationData.discussionId = entityId;
-      } else {
-        // For comments, include both comment and parent discussion IDs
-        const comment = await this.commentService.getCommentEntity(entityId);
-        notificationData.commentId = entityId;
-        notificationData.discussionId = comment.discussionId;
-
-        // Add the comment content preview
-        if (comment.content) {
-          notificationData.contentPreview =
-            comment.content.length > 100 ? `${comment.content.substring(0, 100)}...` : comment.content;
-        }
-      }
-
-      await this.notificationService.createNotificationIfNotExists(
-        {
-          recipientId: recipientId,
-          actorId: voterId,
-          type: notificationType,
-          entityType: notificationEntityType,
-          entityId: entityId,
-          data: notificationData,
-          clientRequestTime,
-        },
-        60,
-      ); // Deduplicate within 1 hour window
-    } catch (error) {
-      this.logger.error(`Error creating vote notification: ${error.message}`, error.stack);
-      // Don't throw - notifications are non-critical
     }
   }
 }

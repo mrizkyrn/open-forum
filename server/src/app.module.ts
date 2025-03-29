@@ -5,6 +5,7 @@ import { UserActivityInterceptor } from './common/interceptors/user-activity.int
 import { appConfig, databaseConfig, jwtConfig, redisConfig } from './config';
 import { DatabaseModule } from './core/database/database.module';
 import { FileModule } from './core/file/file.module';
+import { RedisModule } from './core/redis/redis.module';
 import { WebsocketModule } from './core/websocket/websocket.module';
 import { AdminModule } from './modules/admin/admin.module';
 import { AnalyticModule } from './modules/analytic/analytic.module';
@@ -33,6 +34,7 @@ import { VoteModule } from './modules/vote/vote.module';
     UserModule,
     NotificationModule,
     AnalyticModule,
+    RedisModule,
   ],
   providers: [
     {
