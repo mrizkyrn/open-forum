@@ -1,12 +1,9 @@
----
 #----------------------------------------------------------------------
 # Comment Creation Load Test Configuration
 #----------------------------------------------------------------------
 config:
-  # API endpoint configuration
   target: 'http://localhost:3000/api/v1'
 
-  # Test execution phases
   phases:
     - name: 'Warmup Phase'
       duration: 60
@@ -21,28 +18,27 @@ config:
 
     # - name: 'Peak Load Phase'
     #   duration: 120
-    #   arrivalRate: 8
-    #   rampTo: 25
+    #   arrivalRate: 10
+    #   rampTo: 23
     #   comment: 'Ramp up to peak load to identify breaking points'
 
-  # Helper scripts
   processor: '../scripts/helpers.js'
 
-  # Performance thresholds
-  thresholds:
-    http.response_time.median: 300 # 50% of requests should be under 300ms
-    http.response_time.p95: 800 # 95% of requests should be under 800ms
-    http.response_time.p99: 1500 # 99% of requests should be under 1500ms
-    http.errors: 1 # Error rate threshold (percentage)
-    http.request_rate: 5 # Minimum request rate
-  
-  http:
-    timeout: 15000
+  plugins:
+    expect: {}
 
-# Add pre-script hook to fetch data before the test starts
+  thresholds:
+    http.response_time.median: 300
+    http.response_time.p95: 800
+    http.response_time.p99: 1500
+    http.errors: 1
+    http.request_rate: 5
+
+  http:
+    timeout: 20000
+
 before:
   flow:
-    # Pre-fetch discussion IDs (this won't be counted in the metrics)
     - function: 'preFetchAllDiscussions'
     - think: 1
 
@@ -78,6 +74,8 @@ scenarios:
               capture:
                 - json: '$.data.id'
                   as: 'commentId'
+              expect:
+                - statusCode: 201
 
           # Wait briefly to ensure notification is processed
           - think: 1

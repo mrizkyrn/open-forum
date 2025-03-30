@@ -1,12 +1,9 @@
 ---
-#----------------------------------------------------------------------
 # Discussion Creation Load Test Configuration
 #----------------------------------------------------------------------
 config:
-  # API endpoint configuration
   target: 'http://localhost:3000/api/v1'
 
-  # Test execution phases
   phases:
     - name: 'Warmup Phase'
       duration: 60
@@ -25,21 +22,17 @@ config:
     #   rampTo: 25
     #   comment: 'Ramp up to peak load to identify breaking points'
 
-  # Helper scripts
   processor: '../scripts/helpers.js'
 
-  # Plugins configuration
   plugins:
-    metrics-by-endpoint: {} # Track metrics per endpoint
-    expect: {} # Response validation
+    expect: {}
 
-  # Performance thresholds
   thresholds:
-    http.response_time.median: 400 # 50% of requests should be under 400ms
-    http.response_time.p95: 1000 # 95% of requests should be under 1000ms
-    http.response_time.p99: 2000 # 99% of requests should be under 2000ms
-    http.errors: 1 # Error rate threshold (percentage)
-    http.request_rate: 5 # Minimum request rate
+    http.response_time.median: 400
+    http.response_time.p95: 1000
+    http.response_time.p99: 2000
+    http.errors: 1
+    http.request_rate: 5
     'socketio.latency.median': 200
     'socketio.latency.p95': 500
 
@@ -51,12 +44,13 @@ config:
 #----------------------------------------------------------------------
 scenarios:
   - name: 'Create discussions with text only'
-    weight: 80 # 80% of virtual users run this scenario
+    weight: 80
     flow:
       - loop:
           # Generate random discussion data
           - function: 'generateDiscussionData'
 
+          # Capture timestamp for e2e latency
           - function: 'captureTimestamp'
 
           # Create discussion via API
@@ -77,7 +71,7 @@ scenarios:
         count: 3
 
   - name: 'Create discussions with file attachments'
-    weight: 20 # 20% of virtual users run this scenario
+    weight: 20
     flow:
       - loop:
           # Generate random discussion data

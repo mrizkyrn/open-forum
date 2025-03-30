@@ -12,7 +12,7 @@ const phaseName = args[1] || 'all';
 const CONFIG = {
   socketUrl: 'http://localhost:3000/events',
   auth: {
-    username: '2110511037',
+    username: '2110511040',
     password: 'password123',
   },
   outputDir: path.join(__dirname, '..', 'results', 'e2e-latency', testName),

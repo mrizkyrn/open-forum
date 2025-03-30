@@ -1,0 +1,6034 @@
+[
+  {
+    "discussionId": 3898,
+    "commentId": 47,
+    "clientRequestTime": 1743354285274,
+    "clientReceiveTime": 1743354285408,
+    "e2eLatency": 134,
+    "isReply": false
+  },
+  {
+    "discussionId": 3856,
+    "commentId": 48,
+    "clientRequestTime": 1743354286284,
+    "clientReceiveTime": 1743354286321,
+    "e2eLatency": 37,
+    "isReply": false
+  },
+  {
+    "discussionId": 3898,
+    "commentId": 49,
+    "clientRequestTime": 1743354286426,
+    "clientReceiveTime": 1743354286450,
+    "e2eLatency": 24,
+    "isReply": false
+  },
+  {
+    "discussionId": 3856,
+    "commentId": 50,
+    "clientRequestTime": 1743354287339,
+    "clientReceiveTime": 1743354287371,
+    "e2eLatency": 32,
+    "isReply": false
+  },
+  {
+    "discussionId": 3791,
+    "commentId": 51,
+    "clientRequestTime": 1743354287294,
+    "clientReceiveTime": 1743354287391,
+    "e2eLatency": 97,
+    "isReply": false
+  },
+  {
+    "discussionId": 3898,
+    "commentId": 52,
+    "clientRequestTime": 1743354287465,
+    "clientReceiveTime": 1743354287491,
+    "e2eLatency": 26,
+    "isReply": false
+  },
+  {
+    "discussionId": 3841,
+    "commentId": 53,
+    "clientRequestTime": 1743354288302,
+    "clientReceiveTime": 1743354288405,
+    "e2eLatency": 103,
+    "isReply": false
+  },
+  {
+    "discussionId": 3856,
+    "commentId": 54,
+    "clientRequestTime": 1743354288383,
+    "clientReceiveTime": 1743354288420,
+    "e2eLatency": 37,
+    "isReply": false
+  },
+  {
+    "discussionId": 3791,
+    "commentId": 55,
+    "clientRequestTime": 1743354288402,
+    "clientReceiveTime": 1743354288428,
+    "e2eLatency": 26,
+    "isReply": false
+  },
+  {
+    "discussionId": 3862,
+    "commentId": 56,
+    "clientRequestTime": 1743354289286,
+    "clientReceiveTime": 1743354289386,
+    "e2eLatency": 100,
+    "isReply": false
+  },
+  {
+    "discussionId": 3841,
+    "commentId": 57,
+    "clientRequestTime": 1743354289419,
+    "clientReceiveTime": 1743354289435,
+    "e2eLatency": 16,
+    "isReply": false
+  },
+  {
+    "discussionId": 3796,
+    "commentId": 58,
+    "clientRequestTime": 1743354290303,
+    "clientReceiveTime": 1743354290399,
+    "e2eLatency": 96,
+    "isReply": false
+  },
+  {
+    "discussionId": 3862,
+    "commentId": 59,
+    "clientRequestTime": 1743354290395,
+    "clientReceiveTime": 1743354290413,
+    "e2eLatency": 18,
+    "isReply": false
+  },
+  {
+    "discussionId": 3841,
+    "commentId": 60,
+    "clientRequestTime": 1743354290443,
+    "clientReceiveTime": 1743354290467,
+    "e2eLatency": 24,
+    "isReply": false
+  },
+  {
+    "discussionId": 3823,
+    "commentId": 61,
+    "clientRequestTime": 1743354290386,
+    "clientReceiveTime": 1743354290498,
+    "e2eLatency": 112,
+    "isReply": false
+  },
+  {
+    "discussionId": 3877,
+    "commentId": 62,
+    "clientRequestTime": 1743354291315,
+    "clientReceiveTime": 1743354291400,
+    "e2eLatency": 85,
+    "isReply": false
+  },
+  {
+    "discussionId": 3796,
+    "commentId": 63,
+    "clientRequestTime": 1743354291403,
+    "clientReceiveTime": 1743354291432,
+    "e2eLatency": 29,
+    "isReply": false
+  },
+  {
+    "discussionId": 3862,
+    "commentId": 64,
+    "clientRequestTime": 1743354291421,
+    "clientReceiveTime": 1743354291434,
+    "e2eLatency": 13,
+    "isReply": false
+  },
+  {
+    "discussionId": 3889,
+    "commentId": 65,
+    "clientRequestTime": 1743354291392,
+    "clientReceiveTime": 1743354291492,
+    "e2eLatency": 100,
+    "isReply": false
+  },
+  {
+    "discussionId": 3823,
+    "commentId": 66,
+    "clientRequestTime": 1743354291501,
+    "clientReceiveTime": 1743354291524,
+    "e2eLatency": 23,
+    "isReply": false
+  },
+  {
+    "discussionId": 3836,
+    "commentId": 67,
+    "clientRequestTime": 1743354292318,
+    "clientReceiveTime": 1743354292413,
+    "e2eLatency": 95,
+    "isReply": false
+  },
+  {
+    "discussionId": 3877,
+    "commentId": 68,
+    "clientRequestTime": 1743354292415,
+    "clientReceiveTime": 1743354292429,
+    "e2eLatency": 14,
+    "isReply": false
+  },
+  {
+    "discussionId": 3786,
+    "commentId": 69,
+    "clientRequestTime": 1743354292401,
+    "clientReceiveTime": 1743354292494,
+    "e2eLatency": 93,
+    "isReply": false
+  },
+  {
+    "discussionId": 3889,
+    "commentId": 70,
+    "clientRequestTime": 1743354292502,
+    "clientReceiveTime": 1743354292515,
+    "e2eLatency": 13,
+    "isReply": false
+  },
+  {
+    "discussionId": 3889,
+    "commentId": 71,
+    "clientRequestTime": 1743354293335,
+    "clientReceiveTime": 1743354293441,
+    "e2eLatency": 106,
+    "isReply": false
+  },
+  {
+    "discussionId": 3836,
+    "commentId": 72,
+    "clientRequestTime": 1743354293419,
+    "clientReceiveTime": 1743354293442,
+    "e2eLatency": 23,
+    "isReply": false
+  },
+  {
+    "discussionId": 3877,
+    "commentId": 73,
+    "clientRequestTime": 1743354293434,
+    "clientReceiveTime": 1743354293448,
+    "e2eLatency": 14,
+    "isReply": false
+  },
+  {
+    "discussionId": 3838,
+    "commentId": 74,
+    "clientRequestTime": 1743354293402,
+    "clientReceiveTime": 1743354293493,
+    "e2eLatency": 91,
+    "isReply": false
+  },
+  {
+    "discussionId": 3889,
+    "commentId": 76,
+    "clientRequestTime": 1743354293518,
+    "clientReceiveTime": 1743354293532,
+    "e2eLatency": 14,
+    "isReply": false
+  },
+  {
+    "discussionId": 3786,
+    "commentId": 75,
+    "clientRequestTime": 1743354293503,
+    "clientReceiveTime": 1743354293534,
+    "e2eLatency": 31,
+    "isReply": false
+  },
+  {
+    "discussionId": 3808,
+    "commentId": 77,
+    "clientRequestTime": 1743354294335,
+    "clientReceiveTime": 1743354294427,
+    "e2eLatency": 92,
+    "isReply": false
+  },
+  {
+    "discussionId": 3889,
+    "commentId": 78,
+    "clientRequestTime": 1743354294457,
+    "clientReceiveTime": 1743354294486,
+    "e2eLatency": 29,
+    "isReply": false
+  },
+  {
+    "discussionId": 3860,
+    "commentId": 79,
+    "clientRequestTime": 1743354294412,
+    "clientReceiveTime": 1743354294497,
+    "e2eLatency": 85,
+    "isReply": false
+  },
+  {
+    "discussionId": 3838,
+    "commentId": 80,
+    "clientRequestTime": 1743354294500,
+    "clientReceiveTime": 1743354294526,
+    "e2eLatency": 26,
+    "isReply": false
+  },
+  {
+    "discussionId": 3808,
+    "commentId": 82,
+    "clientRequestTime": 1743354295433,
+    "clientReceiveTime": 1743354295445,
+    "e2eLatency": 12,
+    "isReply": false
+  },
+  {
+    "discussionId": 3859,
+    "commentId": 81,
+    "clientRequestTime": 1743354295357,
+    "clientReceiveTime": 1743354295446,
+    "e2eLatency": 89,
+    "isReply": false
+  },
+  {
+    "discussionId": 3889,
+    "commentId": 84,
+    "clientRequestTime": 1743354295496,
+    "clientReceiveTime": 1743354295509,
+    "e2eLatency": 13,
+    "isReply": false
+  },
+  {
+    "discussionId": 3879,
+    "commentId": 83,
+    "clientRequestTime": 1743354295418,
+    "clientReceiveTime": 1743354295511,
+    "e2eLatency": 93,
+    "isReply": false
+  },
+  {
+    "discussionId": 3860,
+    "commentId": 85,
+    "clientRequestTime": 1743354295512,
+    "clientReceiveTime": 1743354295537,
+    "e2eLatency": 25,
+    "isReply": false
+  },
+  {
+    "discussionId": 3838,
+    "commentId": 86,
+    "clientRequestTime": 1743354295539,
+    "clientReceiveTime": 1743354295565,
+    "e2eLatency": 26,
+    "isReply": false
+  },
+  {
+    "discussionId": 3864,
+    "commentId": 87,
+    "clientRequestTime": 1743354296353,
+    "clientReceiveTime": 1743354296449,
+    "e2eLatency": 96,
+    "isReply": false
+  },
+  {
+    "discussionId": 3808,
+    "commentId": 88,
+    "clientRequestTime": 1743354296451,
+    "clientReceiveTime": 1743354296467,
+    "e2eLatency": 16,
+    "isReply": false
+  },
+  {
+    "discussionId": 3859,
+    "commentId": 89,
+    "clientRequestTime": 1743354296453,
+    "clientReceiveTime": 1743354296471,
+    "e2eLatency": 18,
+    "isReply": false
+  },
+  {
+    "discussionId": 3867,
+    "commentId": 90,
+    "clientRequestTime": 1743354296434,
+    "clientReceiveTime": 1743354296531,
+    "e2eLatency": 97,
+    "isReply": false
+  },
+  {
+    "discussionId": 3879,
+    "commentId": 91,
+    "clientRequestTime": 1743354296519,
+    "clientReceiveTime": 1743354296537,
+    "e2eLatency": 18,
+    "isReply": false
+  },
+  {
+    "discussionId": 3791,
+    "commentId": 92,
+    "clientRequestTime": 1743354297367,
+    "clientReceiveTime": 1743354297468,
+    "e2eLatency": 101,
+    "isReply": false
+  },
+  {
+    "discussionId": 3864,
+    "commentId": 93,
+    "clientRequestTime": 1743354297451,
+    "clientReceiveTime": 1743354297471,
+    "e2eLatency": 20,
+    "isReply": false
+  },
+  {
+    "discussionId": 3858,
+    "commentId": 94,
+    "clientRequestTime": 1743354297418,
+    "clientReceiveTime": 1743354297508,
+    "e2eLatency": 90,
+    "isReply": false
+  },
+  {
+    "discussionId": 3867,
+    "commentId": 95,
+    "clientRequestTime": 1743354297535,
+    "clientReceiveTime": 1743354297564,
+    "e2eLatency": 29,
+    "isReply": false
+  },
+  {
+    "discussionId": 3857,
+    "commentId": 96,
+    "clientRequestTime": 1743354298394,
+    "clientReceiveTime": 1743354298424,
+    "e2eLatency": 30,
+    "isReply": false
+  },
+  {
+    "discussionId": 3868,
+    "commentId": 97,
+    "clientRequestTime": 1743354298440,
+    "clientReceiveTime": 1743354298463,
+    "e2eLatency": 23,
+    "isReply": false
+  },
+  {
+    "discussionId": 3864,
+    "commentId": 98,
+    "clientRequestTime": 1743354298487,
+    "clientReceiveTime": 1743354298510,
+    "e2eLatency": 23,
+    "isReply": false
+  },
+  {
+    "discussionId": 3791,
+    "commentId": 99,
+    "clientRequestTime": 1743354298486,
+    "clientReceiveTime": 1743354298512,
+    "e2eLatency": 26,
+    "isReply": false
+  },
+  {
+    "discussionId": 3858,
+    "commentId": 100,
+    "clientRequestTime": 1743354298517,
+    "clientReceiveTime": 1743354298539,
+    "e2eLatency": 22,
+    "isReply": false
+  },
+  {
+    "discussionId": 3867,
+    "commentId": 101,
+    "clientRequestTime": 1743354298579,
+    "clientReceiveTime": 1743354298604,
+    "e2eLatency": 25,
+    "isReply": false
+  },
+  {
+    "discussionId": 3806,
+    "commentId": 102,
+    "clientRequestTime": 1743354298491,
+    "clientReceiveTime": 1743354298609,
+    "e2eLatency": 118,
+    "isReply": false
+  },
+  {
+    "discussionId": 3857,
+    "commentId": 103,
+    "clientRequestTime": 1743354299437,
+    "clientReceiveTime": 1743354299468,
+    "e2eLatency": 31,
+    "isReply": false
+  },
+  {
+    "discussionId": 3815,
+    "commentId": 104,
+    "clientRequestTime": 1743354299453,
+    "clientReceiveTime": 1743354299477,
+    "e2eLatency": 24,
+    "isReply": false
+  },
+  {
+    "discussionId": 3868,
+    "commentId": 105,
+    "clientRequestTime": 1743354299468,
+    "clientReceiveTime": 1743354299483,
+    "e2eLatency": 15,
+    "isReply": false
+  },
+  {
+    "discussionId": 3830,
+    "commentId": 106,
+    "clientRequestTime": 1743354299409,
+    "clientReceiveTime": 1743354299489,
+    "e2eLatency": 80,
+    "isReply": false
+  },
+  {
+    "discussionId": 3791,
+    "commentId": 107,
+    "clientRequestTime": 1743354299516,
+    "clientReceiveTime": 1743354299538,
+    "e2eLatency": 22,
+    "isReply": false
+  },
+  {
+    "discussionId": 3858,
+    "commentId": 108,
+    "clientRequestTime": 1743354299546,
+    "clientReceiveTime": 1743354299571,
+    "e2eLatency": 25,
+    "isReply": false
+  },
+  {
+    "discussionId": 3815,
+    "commentId": 109,
+    "clientRequestTime": 1743354299501,
+    "clientReceiveTime": 1743354299579,
+    "e2eLatency": 78,
+    "isReply": false
+  },
+  {
+    "discussionId": 3806,
+    "commentId": 110,
+    "clientRequestTime": 1743354299624,
+    "clientReceiveTime": 1743354299645,
+    "e2eLatency": 21,
+    "isReply": false
+  },
+  {
+    "discussionId": 3789,
+    "commentId": 111,
+    "clientRequestTime": 1743354300403,
+    "clientReceiveTime": 1743354300511,
+    "e2eLatency": 108,
+    "isReply": false
+  },
+  {
+    "discussionId": 3815,
+    "commentId": 113,
+    "clientRequestTime": 1743354300484,
+    "clientReceiveTime": 1743354300512,
+    "e2eLatency": 28,
+    "isReply": false
+  },
+  {
+    "discussionId": 3857,
+    "commentId": 112,
+    "clientRequestTime": 1743354300484,
+    "clientReceiveTime": 1743354300548,
+    "e2eLatency": 64,
+    "isReply": false
+  },
+  {
+    "discussionId": 3868,
+    "commentId": 114,
+    "clientRequestTime": 1743354300501,
+    "clientReceiveTime": 1743354300564,
+    "e2eLatency": 63,
+    "isReply": false
+  },
+  {
+    "discussionId": 3830,
+    "commentId": 116,
+    "clientRequestTime": 1743354300501,
+    "clientReceiveTime": 1743354300566,
+    "e2eLatency": 65,
+    "isReply": false
+  },
+  {
+    "discussionId": 3882,
+    "commentId": 115,
+    "clientRequestTime": 1743354300443,
+    "clientReceiveTime": 1743354300572,
+    "e2eLatency": 129,
+    "isReply": false
+  },
+  {
+    "discussionId": 3876,
+    "commentId": 117,
+    "clientRequestTime": 1743354300487,
+    "clientReceiveTime": 1743354300580,
+    "e2eLatency": 93,
+    "isReply": false
+  },
+  {
+    "discussionId": 3815,
+    "commentId": 118,
+    "clientRequestTime": 1743354300583,
+    "clientReceiveTime": 1743354300610,
+    "e2eLatency": 27,
+    "isReply": false
+  },
+  {
+    "discussionId": 3806,
+    "commentId": 119,
+    "clientRequestTime": 1743354300651,
+    "clientReceiveTime": 1743354300673,
+    "e2eLatency": 22,
+    "isReply": false
+  },
+  {
+    "discussionId": 3896,
+    "commentId": 120,
+    "clientRequestTime": 1743354301418,
+    "clientReceiveTime": 1743354301517,
+    "e2eLatency": 99,
+    "isReply": false
+  },
+  {
+    "discussionId": 3789,
+    "commentId": 122,
+    "clientRequestTime": 1743354301517,
+    "clientReceiveTime": 1743354301529,
+    "e2eLatency": 12,
+    "isReply": false
+  },
+  {
+    "discussionId": 3818,
+    "commentId": 121,
+    "clientRequestTime": 1743354301446,
+    "clientReceiveTime": 1743354301530,
+    "e2eLatency": 84,
+    "isReply": false
+  },
+  {
+    "discussionId": 3815,
+    "commentId": 123,
+    "clientRequestTime": 1743354301533,
+    "clientReceiveTime": 1743354301558,
+    "e2eLatency": 25,
+    "isReply": false
+  },
+  {
+    "discussionId": 3812,
+    "commentId": 124,
+    "clientRequestTime": 1743354301501,
+    "clientReceiveTime": 1743354301603,
+    "e2eLatency": 102,
+    "isReply": false
+  },
+  {
+    "discussionId": 3882,
+    "commentId": 125,
+    "clientRequestTime": 1743354301584,
+    "clientReceiveTime": 1743354301607,
+    "e2eLatency": 23,
+    "isReply": false
+  },
+  {
+    "discussionId": 3830,
+    "commentId": 126,
+    "clientRequestTime": 1743354301584,
+    "clientReceiveTime": 1743354301609,
+    "e2eLatency": 25,
+    "isReply": false
+  },
+  {
+    "discussionId": 3876,
+    "commentId": 127,
+    "clientRequestTime": 1743354301585,
+    "clientReceiveTime": 1743354301612,
+    "e2eLatency": 27,
+    "isReply": false
+  },
+  {
+    "discussionId": 3815,
+    "commentId": 128,
+    "clientRequestTime": 1743354301614,
+    "clientReceiveTime": 1743354301643,
+    "e2eLatency": 29,
+    "isReply": false
+  },
+  {
+    "discussionId": 3786,
+    "commentId": 129,
+    "clientRequestTime": 1743354302428,
+    "clientReceiveTime": 1743354302462,
+    "e2eLatency": 34,
+    "isReply": false
+  },
+  {
+    "discussionId": 3885,
+    "commentId": 131,
+    "clientRequestTime": 1743354302459,
+    "clientReceiveTime": 1743354302547,
+    "e2eLatency": 88,
+    "isReply": false
+  },
+  {
+    "discussionId": 3896,
+    "commentId": 130,
+    "clientRequestTime": 1743354302521,
+    "clientReceiveTime": 1743354302550,
+    "e2eLatency": 29,
+    "isReply": false
+  },
+  {
+    "discussionId": 3789,
+    "commentId": 132,
+    "clientRequestTime": 1743354302535,
+    "clientReceiveTime": 1743354302554,
+    "e2eLatency": 19,
+    "isReply": false
+  },
+  {
+    "discussionId": 3818,
+    "commentId": 133,
+    "clientRequestTime": 1743354302535,
+    "clientReceiveTime": 1743354302555,
+    "e2eLatency": 20,
+    "isReply": false
+  },
+  {
+    "discussionId": 3791,
+    "commentId": 134,
+    "clientRequestTime": 1743354302506,
+    "clientReceiveTime": 1743354302588,
+    "e2eLatency": 82,
+    "isReply": false
+  },
+  {
+    "discussionId": 3882,
+    "commentId": 135,
+    "clientRequestTime": 1743354302612,
+    "clientReceiveTime": 1743354302638,
+    "e2eLatency": 26,
+    "isReply": false
+  },
+  {
+    "discussionId": 3812,
+    "commentId": 136,
+    "clientRequestTime": 1743354302612,
+    "clientReceiveTime": 1743354302639,
+    "e2eLatency": 27,
+    "isReply": false
+  },
+  {
+    "discussionId": 3786,
+    "commentId": 137,
+    "clientRequestTime": 1743354303467,
+    "clientReceiveTime": 1743354303505,
+    "e2eLatency": 38,
+    "isReply": false
+  },
+  {
+    "discussionId": 3812,
+    "commentId": 138,
+    "clientRequestTime": 1743354303436,
+    "clientReceiveTime": 1743354303511,
+    "e2eLatency": 75,
+    "isReply": false
+  },
+  {
+    "discussionId": 3836,
+    "commentId": 139,
+    "clientRequestTime": 1743354303467,
+    "clientReceiveTime": 1743354303549,
+    "e2eLatency": 82,
+    "isReply": false
+  },
+  {
+    "discussionId": 3889,
+    "commentId": 140,
+    "clientRequestTime": 1743354303514,
+    "clientReceiveTime": 1743354303552,
+    "e2eLatency": 38,
+    "isReply": false
+  },
+  {
+    "discussionId": 3885,
+    "commentId": 141,
+    "clientRequestTime": 1743354303552,
+    "clientReceiveTime": 1743354303570,
+    "e2eLatency": 18,
+    "isReply": false
+  },
+  {
+    "discussionId": 3818,
+    "commentId": 142,
+    "clientRequestTime": 1743354303561,
+    "clientReceiveTime": 1743354303578,
+    "e2eLatency": 17,
+    "isReply": false
+  },
+  {
+    "discussionId": 3896,
+    "commentId": 143,
+    "clientRequestTime": 1743354303561,
+    "clientReceiveTime": 1743354303579,
+    "e2eLatency": 18,
+    "isReply": false
+  },
+  {
+    "discussionId": 3791,
+    "commentId": 144,
+    "clientRequestTime": 1743354303594,
+    "clientReceiveTime": 1743354303614,
+    "e2eLatency": 20,
+    "isReply": false
+  },
+  {
+    "discussionId": 3812,
+    "commentId": 145,
+    "clientRequestTime": 1743354303654,
+    "clientReceiveTime": 1743354303678,
+    "e2eLatency": 24,
+    "isReply": false
+  },
+  {
+    "discussionId": 3827,
+    "commentId": 146,
+    "clientRequestTime": 1743354304452,
+    "clientReceiveTime": 1743354304481,
+    "e2eLatency": 29,
+    "isReply": false
+  },
+  {
+    "discussionId": 3812,
+    "commentId": 147,
+    "clientRequestTime": 1743354304517,
+    "clientReceiveTime": 1743354304542,
+    "e2eLatency": 25,
+    "isReply": false
+  },
+  {
+    "discussionId": 3790,
+    "commentId": 148,
+    "clientRequestTime": 1743354304468,
+    "clientReceiveTime": 1743354304547,
+    "e2eLatency": 79,
+    "isReply": false
+  },
+  {
+    "discussionId": 3889,
+    "commentId": 149,
+    "clientRequestTime": 1743354304558,
+    "clientReceiveTime": 1743354304570,
+    "e2eLatency": 12,
+    "isReply": false
+  },
+  {
+    "discussionId": 3836,
+    "commentId": 150,
+    "clientRequestTime": 1743354304558,
+    "clientReceiveTime": 1743354304571,
+    "e2eLatency": 13,
+    "isReply": false
+  },
+  {
+    "discussionId": 3885,
+    "commentId": 151,
+    "clientRequestTime": 1743354304573,
+    "clientReceiveTime": 1743354304590,
+    "e2eLatency": 17,
+    "isReply": false
+  },
+  {
+    "discussionId": 3881,
+    "commentId": 152,
+    "clientRequestTime": 1743354304518,
+    "clientReceiveTime": 1743354304597,
+    "e2eLatency": 79,
+    "isReply": false
+  },
+  {
+    "discussionId": 3791,
+    "commentId": 153,
+    "clientRequestTime": 1743354304619,
+    "clientReceiveTime": 1743354304644,
+    "e2eLatency": 25,
+    "isReply": false
+  },
+  {
+    "discussionId": 3807,
+    "commentId": 154,
+    "clientRequestTime": 1743354305473,
+    "clientReceiveTime": 1743354305506,
+    "e2eLatency": 33,
+    "isReply": false
+  },
+  {
+    "discussionId": 3827,
+    "commentId": 155,
+    "clientRequestTime": 1743354305486,
+    "clientReceiveTime": 1743354305518,
+    "e2eLatency": 32,
+    "isReply": false
+  },
+  {
+    "discussionId": 3882,
+    "commentId": 156,
+    "clientRequestTime": 1743354305436,
+    "clientReceiveTime": 1743354305520,
+    "e2eLatency": 84,
+    "isReply": false
+  },
+  {
+    "discussionId": 3881,
+    "commentId": 157,
+    "clientRequestTime": 1743354305520,
+    "clientReceiveTime": 1743354305541,
+    "e2eLatency": 21,
+    "isReply": false
+  },
+  {
+    "discussionId": 3812,
+    "commentId": 158,
+    "clientRequestTime": 1743354305552,
+    "clientReceiveTime": 1743354305577,
+    "e2eLatency": 25,
+    "isReply": false
+  },
+  {
+    "discussionId": 3790,
+    "commentId": 159,
+    "clientRequestTime": 1743354305552,
+    "clientReceiveTime": 1743354305578,
+    "e2eLatency": 26,
+    "isReply": false
+  },
+  {
+    "discussionId": 3836,
+    "commentId": 160,
+    "clientRequestTime": 1743354305579,
+    "clientReceiveTime": 1743354305594,
+    "e2eLatency": 15,
+    "isReply": false
+  },
+  {
+    "discussionId": 3889,
+    "commentId": 161,
+    "clientRequestTime": 1743354305585,
+    "clientReceiveTime": 1743354305597,
+    "e2eLatency": 12,
+    "isReply": false
+  },
+  {
+    "discussionId": 3881,
+    "commentId": 162,
+    "clientRequestTime": 1743354305598,
+    "clientReceiveTime": 1743354305627,
+    "e2eLatency": 29,
+    "isReply": false
+  },
+  {
+    "discussionId": 3891,
+    "commentId": 163,
+    "clientRequestTime": 1743354306458,
+    "clientReceiveTime": 1743354306484,
+    "e2eLatency": 26,
+    "isReply": false
+  },
+  {
+    "discussionId": 3807,
+    "commentId": 164,
+    "clientRequestTime": 1743354306518,
+    "clientReceiveTime": 1743354306542,
+    "e2eLatency": 24,
+    "isReply": false
+  },
+  {
+    "discussionId": 3882,
+    "commentId": 165,
+    "clientRequestTime": 1743354306534,
+    "clientReceiveTime": 1743354306546,
+    "e2eLatency": 12,
+    "isReply": false
+  },
+  {
+    "discussionId": 3881,
+    "commentId": 166,
+    "clientRequestTime": 1743354306549,
+    "clientReceiveTime": 1743354306564,
+    "e2eLatency": 15,
+    "isReply": false
+  },
+  {
+    "discussionId": 3789,
+    "commentId": 167,
+    "clientRequestTime": 1743354306488,
+    "clientReceiveTime": 1743354306565,
+    "e2eLatency": 77,
+    "isReply": false
+  },
+  {
+    "discussionId": 3790,
+    "commentId": 168,
+    "clientRequestTime": 1743354306580,
+    "clientReceiveTime": 1743354306595,
+    "e2eLatency": 15,
+    "isReply": false
+  },
+  {
+    "discussionId": 3848,
+    "commentId": 169,
+    "clientRequestTime": 1743354306519,
+    "clientReceiveTime": 1743354306600,
+    "e2eLatency": 81,
+    "isReply": false
+  },
+  {
+    "discussionId": 3881,
+    "commentId": 170,
+    "clientRequestTime": 1743354306642,
+    "clientReceiveTime": 1743354306666,
+    "e2eLatency": 24,
+    "isReply": false
+  },
+  {
+    "discussionId": 3808,
+    "commentId": 171,
+    "clientRequestTime": 1743354307471,
+    "clientReceiveTime": 1743354307501,
+    "e2eLatency": 30,
+    "isReply": false
+  },
+  {
+    "discussionId": 3890,
+    "commentId": 173,
+    "clientRequestTime": 1743354307502,
+    "clientReceiveTime": 1743354307526,
+    "e2eLatency": 24,
+    "isReply": false
+  },
+  {
+    "discussionId": 3891,
+    "commentId": 172,
+    "clientRequestTime": 1743354307502,
+    "clientReceiveTime": 1743354307531,
+    "e2eLatency": 29,
+    "isReply": false
+  },
+  {
+    "discussionId": 3882,
+    "commentId": 174,
+    "clientRequestTime": 1743354307548,
+    "clientReceiveTime": 1743354307564,
+    "e2eLatency": 16,
+    "isReply": false
+  },
+  {
+    "discussionId": 3807,
+    "commentId": 175,
+    "clientRequestTime": 1743354307548,
+    "clientReceiveTime": 1743354307566,
+    "e2eLatency": 18,
+    "isReply": false
+  },
+  {
+    "discussionId": 3789,
+    "commentId": 176,
+    "clientRequestTime": 1743354307567,
+    "clientReceiveTime": 1743354307583,
+    "e2eLatency": 16,
+    "isReply": false
+  },
+  {
+    "discussionId": 3881,
+    "commentId": 177,
+    "clientRequestTime": 1743354307579,
+    "clientReceiveTime": 1743354307590,
+    "e2eLatency": 11,
+    "isReply": false
+  },
+  {
+    "discussionId": 3848,
+    "commentId": 178,
+    "clientRequestTime": 1743354307611,
+    "clientReceiveTime": 1743354307625,
+    "e2eLatency": 14,
+    "isReply": false
+  },
+  {
+    "discussionId": 3889,
+    "commentId": 179,
+    "clientRequestTime": 1743354307549,
+    "clientReceiveTime": 1743354307631,
+    "e2eLatency": 82,
+    "isReply": false
+  },
+  {
+    "discussionId": 3854,
+    "commentId": 180,
+    "clientRequestTime": 1743354307554,
+    "clientReceiveTime": 1743354307679,
+    "e2eLatency": 125,
+    "isReply": false
+  },
+  {
+    "discussionId": 3837,
+    "commentId": 181,
+    "clientRequestTime": 1743354308470,
+    "clientReceiveTime": 1743354308493,
+    "e2eLatency": 23,
+    "isReply": false
+  },
+  {
+    "discussionId": 3808,
+    "commentId": 182,
+    "clientRequestTime": 1743354308505,
+    "clientReceiveTime": 1743354308524,
+    "e2eLatency": 19,
+    "isReply": false
+  },
+  {
+    "discussionId": 3899,
+    "commentId": 183,
+    "clientRequestTime": 1743354308505,
+    "clientReceiveTime": 1743354308525,
+    "e2eLatency": 20,
+    "isReply": false
+  },
+  {
+    "discussionId": 3890,
+    "commentId": 184,
+    "clientRequestTime": 1743354308534,
+    "clientReceiveTime": 1743354308550,
+    "e2eLatency": 16,
+    "isReply": false
+  },
+  {
+    "discussionId": 3894,
+    "commentId": 185,
+    "clientRequestTime": 1743354308542,
+    "clientReceiveTime": 1743354308555,
+    "e2eLatency": 13,
+    "isReply": false
+  },
+  {
+    "discussionId": 3789,
+    "commentId": 186,
+    "clientRequestTime": 1743354308600,
+    "clientReceiveTime": 1743354308625,
+    "e2eLatency": 25,
+    "isReply": false
+  },
+  {
+    "discussionId": 3861,
+    "commentId": 187,
+    "clientRequestTime": 1743354308535,
+    "clientReceiveTime": 1743354308626,
+    "e2eLatency": 91,
+    "isReply": false
+  },
+  {
+    "discussionId": 3848,
+    "commentId": 188,
+    "clientRequestTime": 1743354308636,
+    "clientReceiveTime": 1743354308648,
+    "e2eLatency": 12,
+    "isReply": false
+  },
+  {
+    "discussionId": 3889,
+    "commentId": 189,
+    "clientRequestTime": 1743354308637,
+    "clientReceiveTime": 1743354308649,
+    "e2eLatency": 12,
+    "isReply": false
+  },
+  {
+    "discussionId": 3854,
+    "commentId": 190,
+    "clientRequestTime": 1743354308692,
+    "clientReceiveTime": 1743354308709,
+    "e2eLatency": 17,
+    "isReply": false
+  },
+  {
+    "discussionId": 3837,
+    "commentId": 191,
+    "clientRequestTime": 1743354309501,
+    "clientReceiveTime": 1743354309532,
+    "e2eLatency": 31,
+    "isReply": false
+  },
+  {
+    "discussionId": 3808,
+    "commentId": 192,
+    "clientRequestTime": 1743354309534,
+    "clientReceiveTime": 1743354309565,
+    "e2eLatency": 31,
+    "isReply": false
+  },
+  {
+    "discussionId": 3899,
+    "commentId": 193,
+    "clientRequestTime": 1743354309539,
+    "clientReceiveTime": 1743354309566,
+    "e2eLatency": 27,
+    "isReply": false
+  },
+  {
+    "discussionId": 3840,
+    "commentId": 194,
+    "clientRequestTime": 1743354309470,
+    "clientReceiveTime": 1743354309573,
+    "e2eLatency": 103,
+    "isReply": false
+  },
+  {
+    "discussionId": 3890,
+    "commentId": 195,
+    "clientRequestTime": 1743354309562,
+    "clientReceiveTime": 1743354309584,
+    "e2eLatency": 22,
+    "isReply": false
+  },
+  {
+    "discussionId": 3883,
+    "commentId": 196,
+    "clientRequestTime": 1743354309491,
+    "clientReceiveTime": 1743354309586,
+    "e2eLatency": 95,
+    "isReply": false
+  },
+  {
+    "discussionId": 3894,
+    "commentId": 197,
+    "clientRequestTime": 1743354309567,
+    "clientReceiveTime": 1743354309586,
+    "e2eLatency": 19,
+    "isReply": false
+  },
+  {
+    "discussionId": 3860,
+    "commentId": 199,
+    "clientRequestTime": 1743354309543,
+    "clientReceiveTime": 1743354309625,
+    "e2eLatency": 82,
+    "isReply": false
+  },
+  {
+    "discussionId": 3800,
+    "commentId": 198,
+    "clientRequestTime": 1743354309543,
+    "clientReceiveTime": 1743354309628,
+    "e2eLatency": 85,
+    "isReply": false
+  },
+  {
+    "discussionId": 3861,
+    "commentId": 200,
+    "clientRequestTime": 1743354309629,
+    "clientReceiveTime": 1743354309641,
+    "e2eLatency": 12,
+    "isReply": false
+  },
+  {
+    "discussionId": 3889,
+    "commentId": 201,
+    "clientRequestTime": 1743354309652,
+    "clientReceiveTime": 1743354309664,
+    "e2eLatency": 12,
+    "isReply": false
+  },
+  {
+    "discussionId": 3854,
+    "commentId": 202,
+    "clientRequestTime": 1743354309718,
+    "clientReceiveTime": 1743354309741,
+    "e2eLatency": 23,
+    "isReply": false
+  },
+  {
+    "discussionId": 3791,
+    "commentId": 203,
+    "clientRequestTime": 1743354310487,
+    "clientReceiveTime": 1743354310508,
+    "e2eLatency": 21,
+    "isReply": false
+  },
+  {
+    "discussionId": 3837,
+    "commentId": 204,
+    "clientRequestTime": 1743354310533,
+    "clientReceiveTime": 1743354310555,
+    "e2eLatency": 22,
+    "isReply": false
+  },
+  {
+    "discussionId": 3840,
+    "commentId": 205,
+    "clientRequestTime": 1743354310581,
+    "clientReceiveTime": 1743354310603,
+    "e2eLatency": 22,
+    "isReply": false
+  },
+  {
+    "discussionId": 3899,
+    "commentId": 206,
+    "clientRequestTime": 1743354310581,
+    "clientReceiveTime": 1743354310605,
+    "e2eLatency": 24,
+    "isReply": false
+  },
+  {
+    "discussionId": 3800,
+    "commentId": 207,
+    "clientRequestTime": 1743354310519,
+    "clientReceiveTime": 1743354310624,
+    "e2eLatency": 105,
+    "isReply": false
+  },
+  {
+    "discussionId": 3883,
+    "commentId": 208,
+    "clientRequestTime": 1743354310597,
+    "clientReceiveTime": 1743354310627,
+    "e2eLatency": 30,
+    "isReply": false
+  },
+  {
+    "discussionId": 3894,
+    "commentId": 209,
+    "clientRequestTime": 1743354310597,
+    "clientReceiveTime": 1743354310629,
+    "e2eLatency": 32,
+    "isReply": false
+  },
+  {
+    "discussionId": 3860,
+    "commentId": 212,
+    "clientRequestTime": 1743354310643,
+    "clientReceiveTime": 1743354310665,
+    "e2eLatency": 22,
+    "isReply": false
+  },
+  {
+    "discussionId": 3861,
+    "commentId": 213,
+    "clientRequestTime": 1743354310645,
+    "clientReceiveTime": 1743354310666,
+    "e2eLatency": 21,
+    "isReply": false
+  },
+  {
+    "discussionId": 3806,
+    "commentId": 211,
+    "clientRequestTime": 1743354310566,
+    "clientReceiveTime": 1743354310667,
+    "e2eLatency": 101,
+    "isReply": false
+  },
+  {
+    "discussionId": 3800,
+    "commentId": 210,
+    "clientRequestTime": 1743354310632,
+    "clientReceiveTime": 1743354310669,
+    "e2eLatency": 37,
+    "isReply": false
+  },
+  {
+    "discussionId": 3790,
+    "commentId": 214,
+    "clientRequestTime": 1743354310567,
+    "clientReceiveTime": 1743354310703,
+    "e2eLatency": 136,
+    "isReply": false
+  },
+  {
+    "discussionId": 3884,
+    "commentId": 215,
+    "clientRequestTime": 1743354311493,
+    "clientReceiveTime": 1743354311524,
+    "e2eLatency": 31,
+    "isReply": false
+  },
+  {
+    "discussionId": 3791,
+    "commentId": 216,
+    "clientRequestTime": 1743354311523,
+    "clientReceiveTime": 1743354311536,
+    "e2eLatency": 13,
+    "isReply": false
+  },
+  {
+    "discussionId": 3860,
+    "commentId": 217,
+    "clientRequestTime": 1743354311524,
+    "clientReceiveTime": 1743354311608,
+    "e2eLatency": 84,
+    "isReply": false
+  },
+  {
+    "discussionId": 3840,
+    "commentId": 218,
+    "clientRequestTime": 1743354311615,
+    "clientReceiveTime": 1743354311654,
+    "e2eLatency": 39,
+    "isReply": false
+  },
+  {
+    "discussionId": 3883,
+    "commentId": 220,
+    "clientRequestTime": 1743354311633,
+    "clientReceiveTime": 1743354311658,
+    "e2eLatency": 25,
+    "isReply": false
+  },
+  {
+    "discussionId": 3862,
+    "commentId": 221,
+    "clientRequestTime": 1743354311569,
+    "clientReceiveTime": 1743354311660,
+    "e2eLatency": 91,
+    "isReply": false
+  },
+  {
+    "discussionId": 3800,
+    "commentId": 219,
+    "clientRequestTime": 1743354311631,
+    "clientReceiveTime": 1743354311662,
+    "e2eLatency": 31,
+    "isReply": false
+  },
+  {
+    "discussionId": 3796,
+    "commentId": 222,
+    "clientRequestTime": 1743354311569,
+    "clientReceiveTime": 1743354311667,
+    "e2eLatency": 98,
+    "isReply": false
+  },
+  {
+    "discussionId": 3860,
+    "commentId": 223,
+    "clientRequestTime": 1743354311670,
+    "clientReceiveTime": 1743354311687,
+    "e2eLatency": 17,
+    "isReply": false
+  },
+  {
+    "discussionId": 3806,
+    "commentId": 224,
+    "clientRequestTime": 1743354311678,
+    "clientReceiveTime": 1743354311694,
+    "e2eLatency": 16,
+    "isReply": false
+  },
+  {
+    "discussionId": 3790,
+    "commentId": 225,
+    "clientRequestTime": 1743354311710,
+    "clientReceiveTime": 1743354311732,
+    "e2eLatency": 22,
+    "isReply": false
+  },
+  {
+    "discussionId": 3801,
+    "commentId": 226,
+    "clientRequestTime": 1743354312500,
+    "clientReceiveTime": 1743354312535,
+    "e2eLatency": 35,
+    "isReply": false
+  },
+  {
+    "discussionId": 3884,
+    "commentId": 227,
+    "clientRequestTime": 1743354312535,
+    "clientReceiveTime": 1743354312546,
+    "e2eLatency": 11,
+    "isReply": false
+  },
+  {
+    "discussionId": 3791,
+    "commentId": 228,
+    "clientRequestTime": 1743354312539,
+    "clientReceiveTime": 1743354312550,
+    "e2eLatency": 11,
+    "isReply": false
+  },
+  {
+    "discussionId": 3864,
+    "commentId": 229,
+    "clientRequestTime": 1743354312520,
+    "clientReceiveTime": 1743354312606,
+    "e2eLatency": 86,
+    "isReply": false
+  },
+  {
+    "discussionId": 3860,
+    "commentId": 230,
+    "clientRequestTime": 1743354312617,
+    "clientReceiveTime": 1743354312648,
+    "e2eLatency": 31,
+    "isReply": false
+  },
+  {
+    "discussionId": 3824,
+    "commentId": 231,
+    "clientRequestTime": 1743354312574,
+    "clientReceiveTime": 1743354312655,
+    "e2eLatency": 81,
+    "isReply": false
+  },
+  {
+    "discussionId": 3871,
+    "commentId": 232,
+    "clientRequestTime": 1743354312574,
+    "clientReceiveTime": 1743354312656,
+    "e2eLatency": 82,
+    "isReply": false
+  },
+  {
+    "discussionId": 3862,
+    "commentId": 233,
+    "clientRequestTime": 1743354312667,
+    "clientReceiveTime": 1743354312697,
+    "e2eLatency": 30,
+    "isReply": false
+  },
+  {
+    "discussionId": 3796,
+    "commentId": 234,
+    "clientRequestTime": 1743354312686,
+    "clientReceiveTime": 1743354312706,
+    "e2eLatency": 20,
+    "isReply": false
+  },
+  {
+    "discussionId": 3802,
+    "commentId": 235,
+    "clientRequestTime": 1743354313525,
+    "clientReceiveTime": 1743354313550,
+    "e2eLatency": 25,
+    "isReply": false
+  },
+  {
+    "discussionId": 3801,
+    "commentId": 236,
+    "clientRequestTime": 1743354313550,
+    "clientReceiveTime": 1743354313566,
+    "e2eLatency": 16,
+    "isReply": false
+  },
+  {
+    "discussionId": 3884,
+    "commentId": 237,
+    "clientRequestTime": 1743354313551,
+    "clientReceiveTime": 1743354313567,
+    "e2eLatency": 16,
+    "isReply": false
+  },
+  {
+    "discussionId": 3885,
+    "commentId": 238,
+    "clientRequestTime": 1743354313485,
+    "clientReceiveTime": 1743354313568,
+    "e2eLatency": 83,
+    "isReply": false
+  },
+  {
+    "discussionId": 3800,
+    "commentId": 239,
+    "clientRequestTime": 1743354313585,
+    "clientReceiveTime": 1743354313599,
+    "e2eLatency": 14,
+    "isReply": false
+  },
+  {
+    "discussionId": 3864,
+    "commentId": 240,
+    "clientRequestTime": 1743354313618,
+    "clientReceiveTime": 1743354313631,
+    "e2eLatency": 13,
+    "isReply": false
+  },
+  {
+    "discussionId": 3860,
+    "commentId": 241,
+    "clientRequestTime": 1743354313651,
+    "clientReceiveTime": 1743354313681,
+    "e2eLatency": 30,
+    "isReply": false
+  },
+  {
+    "discussionId": 3897,
+    "commentId": 242,
+    "clientRequestTime": 1743354313585,
+    "clientReceiveTime": 1743354313683,
+    "e2eLatency": 98,
+    "isReply": false
+  },
+  {
+    "discussionId": 3871,
+    "commentId": 243,
+    "clientRequestTime": 1743354313667,
+    "clientReceiveTime": 1743354313687,
+    "e2eLatency": 20,
+    "isReply": false
+  },
+  {
+    "discussionId": 3824,
+    "commentId": 244,
+    "clientRequestTime": 1743354313667,
+    "clientReceiveTime": 1743354313689,
+    "e2eLatency": 22,
+    "isReply": false
+  },
+  {
+    "discussionId": 3862,
+    "commentId": 245,
+    "clientRequestTime": 1743354313702,
+    "clientReceiveTime": 1743354313725,
+    "e2eLatency": 23,
+    "isReply": false
+  },
+  {
+    "discussionId": 3802,
+    "commentId": 246,
+    "clientRequestTime": 1743354314556,
+    "clientReceiveTime": 1743354314587,
+    "e2eLatency": 31,
+    "isReply": false
+  },
+  {
+    "discussionId": 3801,
+    "commentId": 247,
+    "clientRequestTime": 1743354314572,
+    "clientReceiveTime": 1743354314595,
+    "e2eLatency": 23,
+    "isReply": false
+  },
+  {
+    "discussionId": 3885,
+    "commentId": 248,
+    "clientRequestTime": 1743354314574,
+    "clientReceiveTime": 1743354314596,
+    "e2eLatency": 22,
+    "isReply": false
+  },
+  {
+    "discussionId": 3820,
+    "commentId": 249,
+    "clientRequestTime": 1743354314512,
+    "clientReceiveTime": 1743354314598,
+    "e2eLatency": 86,
+    "isReply": false
+  },
+  {
+    "discussionId": 3800,
+    "commentId": 250,
+    "clientRequestTime": 1743354314602,
+    "clientReceiveTime": 1743354314617,
+    "e2eLatency": 15,
+    "isReply": false
+  },
+  {
+    "discussionId": 3864,
+    "commentId": 251,
+    "clientRequestTime": 1743354314542,
+    "clientReceiveTime": 1743354314619,
+    "e2eLatency": 77,
+    "isReply": false
+  },
+  {
+    "discussionId": 3864,
+    "commentId": 252,
+    "clientRequestTime": 1743354314635,
+    "clientReceiveTime": 1743354314647,
+    "e2eLatency": 12,
+    "isReply": false
+  },
+  {
+    "discussionId": 3790,
+    "commentId": 253,
+    "clientRequestTime": 1743354314573,
+    "clientReceiveTime": 1743354314651,
+    "e2eLatency": 78,
+    "isReply": false
+  },
+  {
+    "discussionId": 3891,
+    "commentId": 254,
+    "clientRequestTime": 1743354314587,
+    "clientReceiveTime": 1743354314671,
+    "e2eLatency": 84,
+    "isReply": false
+  },
+  {
+    "discussionId": 3871,
+    "commentId": 255,
+    "clientRequestTime": 1743354314697,
+    "clientReceiveTime": 1743354314715,
+    "e2eLatency": 18,
+    "isReply": false
+  },
+  {
+    "discussionId": 3897,
+    "commentId": 256,
+    "clientRequestTime": 1743354314697,
+    "clientReceiveTime": 1743354314716,
+    "e2eLatency": 19,
+    "isReply": false
+  },
+  {
+    "discussionId": 3824,
+    "commentId": 257,
+    "clientRequestTime": 1743354314698,
+    "clientReceiveTime": 1743354314717,
+    "e2eLatency": 19,
+    "isReply": false
+  },
+  {
+    "discussionId": 3839,
+    "commentId": 258,
+    "clientRequestTime": 1743354315518,
+    "clientReceiveTime": 1743354315550,
+    "e2eLatency": 32,
+    "isReply": false
+  },
+  {
+    "discussionId": 3802,
+    "commentId": 259,
+    "clientRequestTime": 1743354315594,
+    "clientReceiveTime": 1743354315607,
+    "e2eLatency": 13,
+    "isReply": false
+  },
+  {
+    "discussionId": 3812,
+    "commentId": 260,
+    "clientRequestTime": 1743354315534,
+    "clientReceiveTime": 1743354315616,
+    "e2eLatency": 82,
+    "isReply": false
+  },
+  {
+    "discussionId": 3885,
+    "commentId": 261,
+    "clientRequestTime": 1743354315610,
+    "clientReceiveTime": 1743354315623,
+    "e2eLatency": 13,
+    "isReply": false
+  },
+  {
+    "discussionId": 3820,
+    "commentId": 262,
+    "clientRequestTime": 1743354315611,
+    "clientReceiveTime": 1743354315624,
+    "e2eLatency": 13,
+    "isReply": false
+  },
+  {
+    "discussionId": 3864,
+    "commentId": 263,
+    "clientRequestTime": 1743354315626,
+    "clientReceiveTime": 1743354315648,
+    "e2eLatency": 22,
+    "isReply": false
+  },
+  {
+    "discussionId": 3800,
+    "commentId": 264,
+    "clientRequestTime": 1743354315626,
+    "clientReceiveTime": 1743354315649,
+    "e2eLatency": 23,
+    "isReply": false
+  },
+  {
+    "discussionId": 3790,
+    "commentId": 265,
+    "clientRequestTime": 1743354315658,
+    "clientReceiveTime": 1743354315678,
+    "e2eLatency": 20,
+    "isReply": false
+  },
+  {
+    "discussionId": 3888,
+    "commentId": 267,
+    "clientRequestTime": 1743354315595,
+    "clientReceiveTime": 1743354315681,
+    "e2eLatency": 86,
+    "isReply": false
+  },
+  {
+    "discussionId": 3886,
+    "commentId": 266,
+    "clientRequestTime": 1743354315595,
+    "clientReceiveTime": 1743354315685,
+    "e2eLatency": 90,
+    "isReply": false
+  },
+  {
+    "discussionId": 3891,
+    "commentId": 268,
+    "clientRequestTime": 1743354315673,
+    "clientReceiveTime": 1743354315690,
+    "e2eLatency": 17,
+    "isReply": false
+  },
+  {
+    "discussionId": 3897,
+    "commentId": 269,
+    "clientRequestTime": 1743354315719,
+    "clientReceiveTime": 1743354315740,
+    "e2eLatency": 21,
+    "isReply": false
+  },
+  {
+    "discussionId": 3812,
+    "commentId": 270,
+    "clientRequestTime": 1743354315677,
+    "clientReceiveTime": 1743354315785,
+    "e2eLatency": 108,
+    "isReply": false
+  },
+  {
+    "discussionId": 3839,
+    "commentId": 271,
+    "clientRequestTime": 1743354316557,
+    "clientReceiveTime": 1743354316577,
+    "e2eLatency": 20,
+    "isReply": false
+  },
+  {
+    "discussionId": 3848,
+    "commentId": 272,
+    "clientRequestTime": 1743354316512,
+    "clientReceiveTime": 1743354316593,
+    "e2eLatency": 81,
+    "isReply": false
+  },
+  {
+    "discussionId": 3808,
+    "commentId": 273,
+    "clientRequestTime": 1743354316603,
+    "clientReceiveTime": 1743354316629,
+    "e2eLatency": 26,
+    "isReply": false
+  },
+  {
+    "discussionId": 3896,
+    "commentId": 274,
+    "clientRequestTime": 1743354316603,
+    "clientReceiveTime": 1743354316631,
+    "e2eLatency": 28,
+    "isReply": false
+  },
+  {
+    "discussionId": 3812,
+    "commentId": 275,
+    "clientRequestTime": 1743354316617,
+    "clientReceiveTime": 1743354316636,
+    "e2eLatency": 19,
+    "isReply": false
+  },
+  {
+    "discussionId": 3900,
+    "commentId": 276,
+    "clientRequestTime": 1743354316557,
+    "clientReceiveTime": 1743354316642,
+    "e2eLatency": 85,
+    "isReply": false
+  },
+  {
+    "discussionId": 3820,
+    "commentId": 277,
+    "clientRequestTime": 1743354316633,
+    "clientReceiveTime": 1743354316645,
+    "e2eLatency": 12,
+    "isReply": false
+  },
+  {
+    "discussionId": 3864,
+    "commentId": 278,
+    "clientRequestTime": 1743354316664,
+    "clientReceiveTime": 1743354316685,
+    "e2eLatency": 21,
+    "isReply": false
+  },
+  {
+    "discussionId": 3790,
+    "commentId": 279,
+    "clientRequestTime": 1743354316695,
+    "clientReceiveTime": 1743354316715,
+    "e2eLatency": 20,
+    "isReply": false
+  },
+  {
+    "discussionId": 3888,
+    "commentId": 280,
+    "clientRequestTime": 1743354316696,
+    "clientReceiveTime": 1743354316716,
+    "e2eLatency": 20,
+    "isReply": false
+  },
+  {
+    "discussionId": 3891,
+    "commentId": 282,
+    "clientRequestTime": 1743354316697,
+    "clientReceiveTime": 1743354316718,
+    "e2eLatency": 21,
+    "isReply": false
+  },
+  {
+    "discussionId": 3886,
+    "commentId": 281,
+    "clientRequestTime": 1743354316695,
+    "clientReceiveTime": 1743354316722,
+    "e2eLatency": 27,
+    "isReply": false
+  },
+  {
+    "discussionId": 3827,
+    "commentId": 283,
+    "clientRequestTime": 1743354316666,
+    "clientReceiveTime": 1743354316747,
+    "e2eLatency": 81,
+    "isReply": false
+  },
+  {
+    "discussionId": 3812,
+    "commentId": 284,
+    "clientRequestTime": 1743354316803,
+    "clientReceiveTime": 1743354316824,
+    "e2eLatency": 21,
+    "isReply": false
+  },
+  {
+    "discussionId": 3893,
+    "commentId": 285,
+    "clientRequestTime": 1743354317538,
+    "clientReceiveTime": 1743354317571,
+    "e2eLatency": 33,
+    "isReply": false
+  },
+  {
+    "discussionId": 3890,
+    "commentId": 286,
+    "clientRequestTime": 1743354317568,
+    "clientReceiveTime": 1743354317580,
+    "e2eLatency": 12,
+    "isReply": false
+  },
+  {
+    "discussionId": 3839,
+    "commentId": 287,
+    "clientRequestTime": 1743354317583,
+    "clientReceiveTime": 1743354317609,
+    "e2eLatency": 26,
+    "isReply": false
+  },
+  {
+    "discussionId": 3848,
+    "commentId": 288,
+    "clientRequestTime": 1743354317599,
+    "clientReceiveTime": 1743354317619,
+    "e2eLatency": 20,
+    "isReply": false
+  },
+  {
+    "discussionId": 3812,
+    "commentId": 289,
+    "clientRequestTime": 1743354317646,
+    "clientReceiveTime": 1743354317663,
+    "e2eLatency": 17,
+    "isReply": false
+  },
+  {
+    "discussionId": 3896,
+    "commentId": 290,
+    "clientRequestTime": 1743354317645,
+    "clientReceiveTime": 1743354317665,
+    "e2eLatency": 20,
+    "isReply": false
+  },
+  {
+    "discussionId": 3808,
+    "commentId": 291,
+    "clientRequestTime": 1743354317646,
+    "clientReceiveTime": 1743354317666,
+    "e2eLatency": 20,
+    "isReply": false
+  },
+  {
+    "discussionId": 3900,
+    "commentId": 292,
+    "clientRequestTime": 1743354317647,
+    "clientReceiveTime": 1743354317667,
+    "e2eLatency": 20,
+    "isReply": false
+  },
+  {
+    "discussionId": 3828,
+    "commentId": 293,
+    "clientRequestTime": 1743354317614,
+    "clientReceiveTime": 1743354317690,
+    "e2eLatency": 76,
+    "isReply": false
+  },
+  {
+    "discussionId": 3786,
+    "commentId": 294,
+    "clientRequestTime": 1743354317614,
+    "clientReceiveTime": 1743354317693,
+    "e2eLatency": 79,
+    "isReply": false
+  },
+  {
+    "discussionId": 3888,
+    "commentId": 295,
+    "clientRequestTime": 1743354317722,
+    "clientReceiveTime": 1743354317743,
+    "e2eLatency": 21,
+    "isReply": false
+  },
+  {
+    "discussionId": 3827,
+    "commentId": 296,
+    "clientRequestTime": 1743354317753,
+    "clientReceiveTime": 1743354317764,
+    "e2eLatency": 11,
+    "isReply": false
+  },
+  {
+    "discussionId": 3794,
+    "commentId": 297,
+    "clientRequestTime": 1743354317693,
+    "clientReceiveTime": 1743354317765,
+    "e2eLatency": 72,
+    "isReply": false
+  },
+  {
+    "discussionId": 3812,
+    "commentId": 298,
+    "clientRequestTime": 1743354317832,
+    "clientReceiveTime": 1743354317856,
+    "e2eLatency": 24,
+    "isReply": false
+  },
+  {
+    "discussionId": 3801,
+    "commentId": 299,
+    "clientRequestTime": 1743354318551,
+    "clientReceiveTime": 1743354318576,
+    "e2eLatency": 25,
+    "isReply": false
+  },
+  {
+    "discussionId": 3864,
+    "commentId": 300,
+    "clientRequestTime": 1743354318567,
+    "clientReceiveTime": 1743354318586,
+    "e2eLatency": 19,
+    "isReply": false
+  },
+  {
+    "discussionId": 3893,
+    "commentId": 301,
+    "clientRequestTime": 1743354318577,
+    "clientReceiveTime": 1743354318598,
+    "e2eLatency": 21,
+    "isReply": false
+  },
+  {
+    "discussionId": 3890,
+    "commentId": 302,
+    "clientRequestTime": 1743354318586,
+    "clientReceiveTime": 1743354318609,
+    "e2eLatency": 23,
+    "isReply": false
+  },
+  {
+    "discussionId": 3808,
+    "commentId": 303,
+    "clientRequestTime": 1743354318673,
+    "clientReceiveTime": 1743354318702,
+    "e2eLatency": 29,
+    "isReply": false
+  },
+  {
+    "discussionId": 3900,
+    "commentId": 304,
+    "clientRequestTime": 1743354318673,
+    "clientReceiveTime": 1743354318703,
+    "e2eLatency": 30,
+    "isReply": false
+  },
+  {
+    "discussionId": 3896,
+    "commentId": 305,
+    "clientRequestTime": 1743354318673,
+    "clientReceiveTime": 1743354318704,
+    "e2eLatency": 31,
+    "isReply": false
+  },
+  {
+    "discussionId": 3788,
+    "commentId": 306,
+    "clientRequestTime": 1743354318618,
+    "clientReceiveTime": 1743354318714,
+    "e2eLatency": 96,
+    "isReply": false
+  },
+  {
+    "discussionId": 3885,
+    "commentId": 307,
+    "clientRequestTime": 1743354318618,
+    "clientReceiveTime": 1743354318721,
+    "e2eLatency": 103,
+    "isReply": false
+  },
+  {
+    "discussionId": 3828,
+    "commentId": 308,
+    "clientRequestTime": 1743354318700,
+    "clientReceiveTime": 1743354318722,
+    "e2eLatency": 22,
+    "isReply": false
+  },
+  {
+    "discussionId": 3786,
+    "commentId": 309,
+    "clientRequestTime": 1743354318700,
+    "clientReceiveTime": 1743354318723,
+    "e2eLatency": 23,
+    "isReply": false
+  },
+  {
+    "discussionId": 3827,
+    "commentId": 310,
+    "clientRequestTime": 1743354318767,
+    "clientReceiveTime": 1743354318782,
+    "e2eLatency": 15,
+    "isReply": false
+  },
+  {
+    "discussionId": 3794,
+    "commentId": 311,
+    "clientRequestTime": 1743354318769,
+    "clientReceiveTime": 1743354318784,
+    "e2eLatency": 15,
+    "isReply": false
+  },
+  {
+    "discussionId": 3792,
+    "commentId": 312,
+    "clientRequestTime": 1743354318701,
+    "clientReceiveTime": 1743354318786,
+    "e2eLatency": 85,
+    "isReply": false
+  },
+  {
+    "discussionId": 3855,
+    "commentId": 313,
+    "clientRequestTime": 1743354319538,
+    "clientReceiveTime": 1743354319560,
+    "e2eLatency": 22,
+    "isReply": false
+  },
+  {
+    "discussionId": 3801,
+    "commentId": 314,
+    "clientRequestTime": 1743354319585,
+    "clientReceiveTime": 1743354319610,
+    "e2eLatency": 25,
+    "isReply": false
+  },
+  {
+    "discussionId": 3864,
+    "commentId": 315,
+    "clientRequestTime": 1743354319601,
+    "clientReceiveTime": 1743354319618,
+    "e2eLatency": 17,
+    "isReply": false
+  },
+  {
+    "discussionId": 3816,
+    "commentId": 316,
+    "clientRequestTime": 1743354319624,
+    "clientReceiveTime": 1743354319644,
+    "e2eLatency": 20,
+    "isReply": false
+  },
+  {
+    "discussionId": 3784,
+    "commentId": 317,
+    "clientRequestTime": 1743354319586,
+    "clientReceiveTime": 1743354319674,
+    "e2eLatency": 88,
+    "isReply": false
+  },
+  {
+    "discussionId": 3812,
+    "commentId": 318,
+    "clientRequestTime": 1743354319624,
+    "clientReceiveTime": 1743354319707,
+    "e2eLatency": 83,
+    "isReply": false
+  },
+  {
+    "discussionId": 3788,
+    "commentId": 319,
+    "clientRequestTime": 1743354319723,
+    "clientReceiveTime": 1743354319741,
+    "e2eLatency": 18,
+    "isReply": false
+  },
+  {
+    "discussionId": 3828,
+    "commentId": 321,
+    "clientRequestTime": 1743354319724,
+    "clientReceiveTime": 1743354319743,
+    "e2eLatency": 19,
+    "isReply": false
+  },
+  {
+    "discussionId": 3786,
+    "commentId": 322,
+    "clientRequestTime": 1743354319725,
+    "clientReceiveTime": 1743354319744,
+    "e2eLatency": 19,
+    "isReply": false
+  },
+  {
+    "discussionId": 3885,
+    "commentId": 320,
+    "clientRequestTime": 1743354319723,
+    "clientReceiveTime": 1743354319745,
+    "e2eLatency": 22,
+    "isReply": false
+  },
+  {
+    "discussionId": 3844,
+    "commentId": 323,
+    "clientRequestTime": 1743354319702,
+    "clientReceiveTime": 1743354319791,
+    "e2eLatency": 89,
+    "isReply": false
+  },
+  {
+    "discussionId": 3794,
+    "commentId": 324,
+    "clientRequestTime": 1743354319794,
+    "clientReceiveTime": 1743354319804,
+    "e2eLatency": 10,
+    "isReply": false
+  },
+  {
+    "discussionId": 3792,
+    "commentId": 325,
+    "clientRequestTime": 1743354319795,
+    "clientReceiveTime": 1743354319807,
+    "e2eLatency": 12,
+    "isReply": false
+  },
+  {
+    "discussionId": 3855,
+    "commentId": 327,
+    "clientRequestTime": 1743354320570,
+    "clientReceiveTime": 1743354320600,
+    "e2eLatency": 30,
+    "isReply": false
+  },
+  {
+    "discussionId": 3860,
+    "commentId": 326,
+    "clientRequestTime": 1743354320568,
+    "clientReceiveTime": 1743354320604,
+    "e2eLatency": 36,
+    "isReply": false
+  },
+  {
+    "discussionId": 3846,
+    "commentId": 328,
+    "clientRequestTime": 1743354320597,
+    "clientReceiveTime": 1743354320608,
+    "e2eLatency": 11,
+    "isReply": false
+  },
+  {
+    "discussionId": 3801,
+    "commentId": 329,
+    "clientRequestTime": 1743354320627,
+    "clientReceiveTime": 1743354320649,
+    "e2eLatency": 22,
+    "isReply": false
+  },
+  {
+    "discussionId": 3816,
+    "commentId": 330,
+    "clientRequestTime": 1743354320658,
+    "clientReceiveTime": 1743354320684,
+    "e2eLatency": 26,
+    "isReply": false
+  },
+  {
+    "discussionId": 3784,
+    "commentId": 331,
+    "clientRequestTime": 1743354320689,
+    "clientReceiveTime": 1743354320706,
+    "e2eLatency": 17,
+    "isReply": false
+  },
+  {
+    "discussionId": 3788,
+    "commentId": 332,
+    "clientRequestTime": 1743354320628,
+    "clientReceiveTime": 1743354320711,
+    "e2eLatency": 83,
+    "isReply": false
+  },
+  {
+    "discussionId": 3817,
+    "commentId": 333,
+    "clientRequestTime": 1743354320628,
+    "clientReceiveTime": 1743354320712,
+    "e2eLatency": 84,
+    "isReply": false
+  },
+  {
+    "discussionId": 3812,
+    "commentId": 334,
+    "clientRequestTime": 1743354320713,
+    "clientReceiveTime": 1743354320725,
+    "e2eLatency": 12,
+    "isReply": false
+  },
+  {
+    "discussionId": 3788,
+    "commentId": 335,
+    "clientRequestTime": 1743354320750,
+    "clientReceiveTime": 1743354320759,
+    "e2eLatency": 9,
+    "isReply": false
+  },
+  {
+    "discussionId": 3845,
+    "commentId": 336,
+    "clientRequestTime": 1743354320705,
+    "clientReceiveTime": 1743354320787,
+    "e2eLatency": 82,
+    "isReply": false
+  },
+  {
+    "discussionId": 3844,
+    "commentId": 337,
+    "clientRequestTime": 1743354320796,
+    "clientReceiveTime": 1743354320821,
+    "e2eLatency": 25,
+    "isReply": false
+  },
+  {
+    "discussionId": 3792,
+    "commentId": 338,
+    "clientRequestTime": 1743354320812,
+    "clientReceiveTime": 1743354320824,
+    "e2eLatency": 12,
+    "isReply": false
+  },
+  {
+    "discussionId": 3890,
+    "commentId": 339,
+    "clientRequestTime": 1743354321587,
+    "clientReceiveTime": 1743354321618,
+    "e2eLatency": 31,
+    "isReply": false
+  },
+  {
+    "discussionId": 3855,
+    "commentId": 340,
+    "clientRequestTime": 1743354321618,
+    "clientReceiveTime": 1743354321632,
+    "e2eLatency": 14,
+    "isReply": false
+  },
+  {
+    "discussionId": 3846,
+    "commentId": 341,
+    "clientRequestTime": 1743354321618,
+    "clientReceiveTime": 1743354321634,
+    "e2eLatency": 16,
+    "isReply": false
+  },
+  {
+    "discussionId": 3860,
+    "commentId": 342,
+    "clientRequestTime": 1743354321619,
+    "clientReceiveTime": 1743354321644,
+    "e2eLatency": 25,
+    "isReply": false
+  },
+  {
+    "discussionId": 3820,
+    "commentId": 343,
+    "clientRequestTime": 1743354321634,
+    "clientReceiveTime": 1743354321655,
+    "e2eLatency": 21,
+    "isReply": false
+  },
+  {
+    "discussionId": 3881,
+    "commentId": 344,
+    "clientRequestTime": 1743354321572,
+    "clientReceiveTime": 1743354321661,
+    "e2eLatency": 89,
+    "isReply": false
+  },
+  {
+    "discussionId": 3848,
+    "commentId": 345,
+    "clientRequestTime": 1743354321634,
+    "clientReceiveTime": 1743354321719,
+    "e2eLatency": 85,
+    "isReply": false
+  },
+  {
+    "discussionId": 3784,
+    "commentId": 346,
+    "clientRequestTime": 1743354321711,
+    "clientReceiveTime": 1743354321722,
+    "e2eLatency": 11,
+    "isReply": false
+  },
+  {
+    "discussionId": 3817,
+    "commentId": 347,
+    "clientRequestTime": 1743354321721,
+    "clientReceiveTime": 1743354321735,
+    "e2eLatency": 14,
+    "isReply": false
+  },
+  {
+    "discussionId": 3788,
+    "commentId": 348,
+    "clientRequestTime": 1743354321726,
+    "clientReceiveTime": 1743354321742,
+    "e2eLatency": 16,
+    "isReply": false
+  },
+  {
+    "discussionId": 3812,
+    "commentId": 349,
+    "clientRequestTime": 1743354321738,
+    "clientReceiveTime": 1743354321747,
+    "e2eLatency": 9,
+    "isReply": false
+  },
+  {
+    "discussionId": 3835,
+    "commentId": 350,
+    "clientRequestTime": 1743354321713,
+    "clientReceiveTime": 1743354321799,
+    "e2eLatency": 86,
+    "isReply": false
+  },
+  {
+    "discussionId": 3845,
+    "commentId": 351,
+    "clientRequestTime": 1743354321789,
+    "clientReceiveTime": 1743354321802,
+    "e2eLatency": 13,
+    "isReply": false
+  },
+  {
+    "discussionId": 3844,
+    "commentId": 352,
+    "clientRequestTime": 1743354321836,
+    "clientReceiveTime": 1743354321858,
+    "e2eLatency": 22,
+    "isReply": false
+  },
+  {
+    "discussionId": 3890,
+    "commentId": 353,
+    "clientRequestTime": 1743354322629,
+    "clientReceiveTime": 1743354322666,
+    "e2eLatency": 37,
+    "isReply": false
+  },
+  {
+    "discussionId": 3846,
+    "commentId": 355,
+    "clientRequestTime": 1743354322644,
+    "clientReceiveTime": 1743354322667,
+    "e2eLatency": 23,
+    "isReply": false
+  },
+  {
+    "discussionId": 3826,
+    "commentId": 356,
+    "clientRequestTime": 1743354322583,
+    "clientReceiveTime": 1743354322669,
+    "e2eLatency": 86,
+    "isReply": false
+  },
+  {
+    "discussionId": 3821,
+    "commentId": 354,
+    "clientRequestTime": 1743354322645,
+    "clientReceiveTime": 1743354322679,
+    "e2eLatency": 34,
+    "isReply": false
+  },
+  {
+    "discussionId": 3820,
+    "commentId": 357,
+    "clientRequestTime": 1743354322660,
+    "clientReceiveTime": 1743354322684,
+    "e2eLatency": 24,
+    "isReply": false
+  },
+  {
+    "discussionId": 3827,
+    "commentId": 359,
+    "clientRequestTime": 1743354322613,
+    "clientReceiveTime": 1743354322694,
+    "e2eLatency": 81,
+    "isReply": false
+  },
+  {
+    "discussionId": 3881,
+    "commentId": 358,
+    "clientRequestTime": 1743354322675,
+    "clientReceiveTime": 1743354322695,
+    "e2eLatency": 20,
+    "isReply": false
+  },
+  {
+    "discussionId": 3841,
+    "commentId": 360,
+    "clientRequestTime": 1743354322645,
+    "clientReceiveTime": 1743354322730,
+    "e2eLatency": 85,
+    "isReply": false
+  },
+  {
+    "discussionId": 3848,
+    "commentId": 361,
+    "clientRequestTime": 1743354322722,
+    "clientReceiveTime": 1743354322733,
+    "e2eLatency": 11,
+    "isReply": false
+  },
+  {
+    "discussionId": 3817,
+    "commentId": 362,
+    "clientRequestTime": 1743354322738,
+    "clientReceiveTime": 1743354322758,
+    "e2eLatency": 20,
+    "isReply": false
+  },
+  {
+    "discussionId": 3833,
+    "commentId": 363,
+    "clientRequestTime": 1743354322723,
+    "clientReceiveTime": 1743354322809,
+    "e2eLatency": 86,
+    "isReply": false
+  },
+  {
+    "discussionId": 3845,
+    "commentId": 365,
+    "clientRequestTime": 1743354322815,
+    "clientReceiveTime": 1743354322828,
+    "e2eLatency": 13,
+    "isReply": false
+  },
+  {
+    "discussionId": 3835,
+    "commentId": 364,
+    "clientRequestTime": 1743354322812,
+    "clientReceiveTime": 1743354322830,
+    "e2eLatency": 18,
+    "isReply": false
+  },
+  {
+    "discussionId": 3807,
+    "commentId": 366,
+    "clientRequestTime": 1743354323592,
+    "clientReceiveTime": 1743354323622,
+    "e2eLatency": 30,
+    "isReply": false
+  },
+  {
+    "discussionId": 3784,
+    "commentId": 367,
+    "clientRequestTime": 1743354323623,
+    "clientReceiveTime": 1743354323645,
+    "e2eLatency": 22,
+    "isReply": false
+  },
+  {
+    "discussionId": 3887,
+    "commentId": 368,
+    "clientRequestTime": 1743354323638,
+    "clientReceiveTime": 1743354323648,
+    "e2eLatency": 10,
+    "isReply": false
+  },
+  {
+    "discussionId": 3826,
+    "commentId": 369,
+    "clientRequestTime": 1743354323684,
+    "clientReceiveTime": 1743354323727,
+    "e2eLatency": 43,
+    "isReply": false
+  },
+  {
+    "discussionId": 3827,
+    "commentId": 370,
+    "clientRequestTime": 1743354323698,
+    "clientReceiveTime": 1743354323734,
+    "e2eLatency": 36,
+    "isReply": false
+  },
+  {
+    "discussionId": 3820,
+    "commentId": 372,
+    "clientRequestTime": 1743354323700,
+    "clientReceiveTime": 1743354323736,
+    "e2eLatency": 36,
+    "isReply": false
+  },
+  {
+    "discussionId": 3784,
+    "commentId": 373,
+    "clientRequestTime": 1743354323638,
+    "clientReceiveTime": 1743354323739,
+    "e2eLatency": 101,
+    "isReply": false
+  },
+  {
+    "discussionId": 3821,
+    "commentId": 371,
+    "clientRequestTime": 1743354323699,
+    "clientReceiveTime": 1743354323740,
+    "e2eLatency": 41,
+    "isReply": false
+  },
+  {
+    "discussionId": 3848,
+    "commentId": 375,
+    "clientRequestTime": 1743354323743,
+    "clientReceiveTime": 1743354323754,
+    "e2eLatency": 11,
+    "isReply": false
+  },
+  {
+    "discussionId": 3841,
+    "commentId": 374,
+    "clientRequestTime": 1743354323742,
+    "clientReceiveTime": 1743354323757,
+    "e2eLatency": 15,
+    "isReply": false
+  },
+  {
+    "discussionId": 3882,
+    "commentId": 377,
+    "clientRequestTime": 1743354323762,
+    "clientReceiveTime": 1743354323850,
+    "e2eLatency": 88,
+    "isReply": false
+  },
+  {
+    "discussionId": 3833,
+    "commentId": 376,
+    "clientRequestTime": 1743354323826,
+    "clientReceiveTime": 1743354323852,
+    "e2eLatency": 26,
+    "isReply": false
+  },
+  {
+    "discussionId": 3801,
+    "commentId": 378,
+    "clientRequestTime": 1743354323846,
+    "clientReceiveTime": 1743354323971,
+    "e2eLatency": 125,
+    "isReply": false
+  },
+  {
+    "discussionId": 3861,
+    "commentId": 379,
+    "clientRequestTime": 1743354324599,
+    "clientReceiveTime": 1743354324634,
+    "e2eLatency": 35,
+    "isReply": false
+  },
+  {
+    "discussionId": 3816,
+    "commentId": 380,
+    "clientRequestTime": 1743354324619,
+    "clientReceiveTime": 1743354324640,
+    "e2eLatency": 21,
+    "isReply": false
+  },
+  {
+    "discussionId": 3807,
+    "commentId": 381,
+    "clientRequestTime": 1743354324635,
+    "clientReceiveTime": 1743354324645,
+    "e2eLatency": 10,
+    "isReply": false
+  },
+  {
+    "discussionId": 3784,
+    "commentId": 382,
+    "clientRequestTime": 1743354324650,
+    "clientReceiveTime": 1743354324666,
+    "e2eLatency": 16,
+    "isReply": false
+  },
+  {
+    "discussionId": 3896,
+    "commentId": 384,
+    "clientRequestTime": 1743354324652,
+    "clientReceiveTime": 1743354324668,
+    "e2eLatency": 16,
+    "isReply": false
+  },
+  {
+    "discussionId": 3887,
+    "commentId": 383,
+    "clientRequestTime": 1743354324651,
+    "clientReceiveTime": 1743354324672,
+    "e2eLatency": 21,
+    "isReply": false
+  },
+  {
+    "discussionId": 3800,
+    "commentId": 385,
+    "clientRequestTime": 1743354324660,
+    "clientReceiveTime": 1743354324741,
+    "e2eLatency": 81,
+    "isReply": false
+  },
+  {
+    "discussionId": 3826,
+    "commentId": 386,
+    "clientRequestTime": 1743354324733,
+    "clientReceiveTime": 1743354324745,
+    "e2eLatency": 12,
+    "isReply": false
+  },
+  {
+    "discussionId": 3784,
+    "commentId": 387,
+    "clientRequestTime": 1743354324743,
+    "clientReceiveTime": 1743354324756,
+    "e2eLatency": 13,
+    "isReply": false
+  },
+  {
+    "discussionId": 3827,
+    "commentId": 388,
+    "clientRequestTime": 1743354324746,
+    "clientReceiveTime": 1743354324757,
+    "e2eLatency": 11,
+    "isReply": false
+  },
+  {
+    "discussionId": 3841,
+    "commentId": 389,
+    "clientRequestTime": 1743354324767,
+    "clientReceiveTime": 1743354324781,
+    "e2eLatency": 14,
+    "isReply": false
+  },
+  {
+    "discussionId": 3888,
+    "commentId": 390,
+    "clientRequestTime": 1743354324734,
+    "clientReceiveTime": 1743354324825,
+    "e2eLatency": 91,
+    "isReply": false
+  },
+  {
+    "discussionId": 3882,
+    "commentId": 391,
+    "clientRequestTime": 1743354324866,
+    "clientReceiveTime": 1743354324875,
+    "e2eLatency": 9,
+    "isReply": false
+  },
+  {
+    "discussionId": 3860,
+    "commentId": 392,
+    "clientRequestTime": 1743354324850,
+    "clientReceiveTime": 1743354324927,
+    "e2eLatency": 77,
+    "isReply": false
+  },
+  {
+    "discussionId": 3801,
+    "commentId": 393,
+    "clientRequestTime": 1743354324984,
+    "clientReceiveTime": 1743354325002,
+    "e2eLatency": 18,
+    "isReply": false
+  },
+  {
+    "discussionId": 3861,
+    "commentId": 398,
+    "clientRequestTime": 1743354325653,
+    "clientReceiveTime": 1743354325676,
+    "e2eLatency": 23,
+    "isReply": false
+  },
+  {
+    "discussionId": 3819,
+    "commentId": 394,
+    "clientRequestTime": 1743354325635,
+    "clientReceiveTime": 1743354325678,
+    "e2eLatency": 43,
+    "isReply": false
+  },
+  {
+    "discussionId": 3807,
+    "commentId": 397,
+    "clientRequestTime": 1743354325652,
+    "clientReceiveTime": 1743354325679,
+    "e2eLatency": 27,
+    "isReply": false
+  },
+  {
+    "discussionId": 3823,
+    "commentId": 399,
+    "clientRequestTime": 1743354325586,
+    "clientReceiveTime": 1743354325680,
+    "e2eLatency": 94,
+    "isReply": false
+  },
+  {
+    "discussionId": 3861,
+    "commentId": 396,
+    "clientRequestTime": 1743354325650,
+    "clientReceiveTime": 1743354325682,
+    "e2eLatency": 32,
+    "isReply": false
+  },
+  {
+    "discussionId": 3816,
+    "commentId": 395,
+    "clientRequestTime": 1743354325650,
+    "clientReceiveTime": 1743354325683,
+    "e2eLatency": 33,
+    "isReply": false
+  },
+  {
+    "discussionId": 3784,
+    "commentId": 401,
+    "clientRequestTime": 1743354325684,
+    "clientReceiveTime": 1743354325698,
+    "e2eLatency": 14,
+    "isReply": false
+  },
+  {
+    "discussionId": 3896,
+    "commentId": 400,
+    "clientRequestTime": 1743354325683,
+    "clientReceiveTime": 1743354325699,
+    "e2eLatency": 16,
+    "isReply": false
+  },
+  {
+    "discussionId": 3887,
+    "commentId": 402,
+    "clientRequestTime": 1743354325685,
+    "clientReceiveTime": 1743354325701,
+    "e2eLatency": 16,
+    "isReply": false
+  },
+  {
+    "discussionId": 3897,
+    "commentId": 403,
+    "clientRequestTime": 1743354325653,
+    "clientReceiveTime": 1743354325740,
+    "e2eLatency": 87,
+    "isReply": false
+  },
+  {
+    "discussionId": 3800,
+    "commentId": 404,
+    "clientRequestTime": 1743354325751,
+    "clientReceiveTime": 1743354325762,
+    "e2eLatency": 11,
+    "isReply": false
+  },
+  {
+    "discussionId": 3784,
+    "commentId": 405,
+    "clientRequestTime": 1743354325764,
+    "clientReceiveTime": 1743354325779,
+    "e2eLatency": 15,
+    "isReply": false
+  },
+  {
+    "discussionId": 3839,
+    "commentId": 406,
+    "clientRequestTime": 1743354325720,
+    "clientReceiveTime": 1743354325815,
+    "e2eLatency": 95,
+    "isReply": false
+  },
+  {
+    "discussionId": 3888,
+    "commentId": 407,
+    "clientRequestTime": 1743354325835,
+    "clientReceiveTime": 1743354325857,
+    "e2eLatency": 22,
+    "isReply": false
+  },
+  {
+    "discussionId": 3882,
+    "commentId": 408,
+    "clientRequestTime": 1743354325885,
+    "clientReceiveTime": 1743354325906,
+    "e2eLatency": 21,
+    "isReply": false
+  },
+  {
+    "discussionId": 3882,
+    "commentId": 409,
+    "clientRequestTime": 1743354325852,
+    "clientReceiveTime": 1743354325941,
+    "e2eLatency": 89,
+    "isReply": false
+  },
+  {
+    "discussionId": 3860,
+    "commentId": 410,
+    "clientRequestTime": 1743354325934,
+    "clientReceiveTime": 1743354325946,
+    "e2eLatency": 12,
+    "isReply": false
+  },
+  {
+    "discussionId": 3801,
+    "commentId": 411,
+    "clientRequestTime": 1743354326017,
+    "clientReceiveTime": 1743354326034,
+    "e2eLatency": 17,
+    "isReply": false
+  },
+  {
+    "discussionId": 3840,
+    "commentId": 412,
+    "clientRequestTime": 1743354326612,
+    "clientReceiveTime": 1743354326720,
+    "e2eLatency": 108,
+    "isReply": false
+  },
+  {
+    "discussionId": 3861,
+    "commentId": 414,
+    "clientRequestTime": 1743354326689,
+    "clientReceiveTime": 1743354326722,
+    "e2eLatency": 33,
+    "isReply": false
+  },
+  {
+    "discussionId": 3823,
+    "commentId": 413,
+    "clientRequestTime": 1743354326689,
+    "clientReceiveTime": 1743354326728,
+    "e2eLatency": 39,
+    "isReply": false
+  },
+  {
+    "discussionId": 3819,
+    "commentId": 416,
+    "clientRequestTime": 1743354326689,
+    "clientReceiveTime": 1743354326730,
+    "e2eLatency": 41,
+    "isReply": false
+  },
+  {
+    "discussionId": 3861,
+    "commentId": 415,
+    "clientRequestTime": 1743354326690,
+    "clientReceiveTime": 1743354326731,
+    "e2eLatency": 41,
+    "isReply": false
+  },
+  {
+    "discussionId": 3816,
+    "commentId": 417,
+    "clientRequestTime": 1743354326690,
+    "clientReceiveTime": 1743354326732,
+    "e2eLatency": 42,
+    "isReply": false
+  },
+  {
+    "discussionId": 3896,
+    "commentId": 418,
+    "clientRequestTime": 1743354326704,
+    "clientReceiveTime": 1743354326733,
+    "e2eLatency": 29,
+    "isReply": false
+  },
+  {
+    "discussionId": 3813,
+    "commentId": 419,
+    "clientRequestTime": 1743354326642,
+    "clientReceiveTime": 1743354326736,
+    "e2eLatency": 94,
+    "isReply": false
+  },
+  {
+    "discussionId": 3802,
+    "commentId": 420,
+    "clientRequestTime": 1743354326735,
+    "clientReceiveTime": 1743354326760,
+    "e2eLatency": 25,
+    "isReply": false
+  },
+  {
+    "discussionId": 3797,
+    "commentId": 421,
+    "clientRequestTime": 1743354326674,
+    "clientReceiveTime": 1743354326762,
+    "e2eLatency": 88,
+    "isReply": false
+  },
+  {
+    "discussionId": 3877,
+    "commentId": 423,
+    "clientRequestTime": 1743354326674,
+    "clientReceiveTime": 1743354326763,
+    "e2eLatency": 89,
+    "isReply": false
+  },
+  {
+    "discussionId": 3897,
+    "commentId": 422,
+    "clientRequestTime": 1743354326743,
+    "clientReceiveTime": 1743354326764,
+    "e2eLatency": 21,
+    "isReply": false
+  },
+  {
+    "discussionId": 3800,
+    "commentId": 424,
+    "clientRequestTime": 1743354326764,
+    "clientReceiveTime": 1743354326788,
+    "e2eLatency": 24,
+    "isReply": false
+  },
+  {
+    "discussionId": 3839,
+    "commentId": 425,
+    "clientRequestTime": 1743354326828,
+    "clientReceiveTime": 1743354326852,
+    "e2eLatency": 24,
+    "isReply": false
+  },
+  {
+    "discussionId": 3888,
+    "commentId": 426,
+    "clientRequestTime": 1743354326874,
+    "clientReceiveTime": 1743354326895,
+    "e2eLatency": 21,
+    "isReply": false
+  },
+  {
+    "discussionId": 3827,
+    "commentId": 427,
+    "clientRequestTime": 1743354326859,
+    "clientReceiveTime": 1743354326942,
+    "e2eLatency": 83,
+    "isReply": false
+  },
+  {
+    "discussionId": 3882,
+    "commentId": 428,
+    "clientRequestTime": 1743354326944,
+    "clientReceiveTime": 1743354326960,
+    "e2eLatency": 16,
+    "isReply": false
+  },
+  {
+    "discussionId": 3860,
+    "commentId": 429,
+    "clientRequestTime": 1743354326952,
+    "clientReceiveTime": 1743354326964,
+    "e2eLatency": 12,
+    "isReply": false
+  },
+  {
+    "discussionId": 3879,
+    "commentId": 430,
+    "clientRequestTime": 1743354327649,
+    "clientReceiveTime": 1743354327679,
+    "e2eLatency": 30,
+    "isReply": false
+  },
+  {
+    "discussionId": 3787,
+    "commentId": 431,
+    "clientRequestTime": 1743354327681,
+    "clientReceiveTime": 1743354327697,
+    "e2eLatency": 16,
+    "isReply": false
+  },
+  {
+    "discussionId": 3824,
+    "commentId": 432,
+    "clientRequestTime": 1743354327618,
+    "clientReceiveTime": 1743354327698,
+    "e2eLatency": 80,
+    "isReply": false
+  },
+  {
+    "discussionId": 3861,
+    "commentId": 433,
+    "clientRequestTime": 1743354327727,
+    "clientReceiveTime": 1743354327759,
+    "e2eLatency": 32,
+    "isReply": false
+  },
+  {
+    "discussionId": 3840,
+    "commentId": 434,
+    "clientRequestTime": 1743354327727,
+    "clientReceiveTime": 1743354327767,
+    "e2eLatency": 40,
+    "isReply": false
+  },
+  {
+    "discussionId": 3819,
+    "commentId": 435,
+    "clientRequestTime": 1743354327742,
+    "clientReceiveTime": 1743354327771,
+    "e2eLatency": 29,
+    "isReply": false
+  },
+  {
+    "discussionId": 3823,
+    "commentId": 436,
+    "clientRequestTime": 1743354327743,
+    "clientReceiveTime": 1743354327773,
+    "e2eLatency": 30,
+    "isReply": false
+  },
+  {
+    "discussionId": 3818,
+    "commentId": 437,
+    "clientRequestTime": 1743354327681,
+    "clientReceiveTime": 1743354327786,
+    "e2eLatency": 105,
+    "isReply": false
+  },
+  {
+    "discussionId": 3813,
+    "commentId": 438,
+    "clientRequestTime": 1743354327758,
+    "clientReceiveTime": 1743354327788,
+    "e2eLatency": 30,
+    "isReply": false
+  },
+  {
+    "discussionId": 3797,
+    "commentId": 439,
+    "clientRequestTime": 1743354327766,
+    "clientReceiveTime": 1743354327793,
+    "e2eLatency": 27,
+    "isReply": false
+  },
+  {
+    "discussionId": 3877,
+    "commentId": 440,
+    "clientRequestTime": 1743354327774,
+    "clientReceiveTime": 1743354327796,
+    "e2eLatency": 22,
+    "isReply": false
+  },
+  {
+    "discussionId": 3802,
+    "commentId": 441,
+    "clientRequestTime": 1743354327774,
+    "clientReceiveTime": 1743354327797,
+    "e2eLatency": 23,
+    "isReply": false
+  },
+  {
+    "discussionId": 3897,
+    "commentId": 442,
+    "clientRequestTime": 1743354327775,
+    "clientReceiveTime": 1743354327798,
+    "e2eLatency": 23,
+    "isReply": false
+  },
+  {
+    "discussionId": 3880,
+    "commentId": 443,
+    "clientRequestTime": 1743354327744,
+    "clientReceiveTime": 1743354327829,
+    "e2eLatency": 85,
+    "isReply": false
+  },
+  {
+    "discussionId": 3799,
+    "commentId": 444,
+    "clientRequestTime": 1743354327867,
+    "clientReceiveTime": 1743354327947,
+    "e2eLatency": 80,
+    "isReply": false
+  },
+  {
+    "discussionId": 3827,
+    "commentId": 445,
+    "clientRequestTime": 1743354327949,
+    "clientReceiveTime": 1743354327963,
+    "e2eLatency": 14,
+    "isReply": false
+  },
+  {
+    "discussionId": 3882,
+    "commentId": 446,
+    "clientRequestTime": 1743354327965,
+    "clientReceiveTime": 1743354327978,
+    "e2eLatency": 13,
+    "isReply": false
+  },
+  {
+    "discussionId": 3857,
+    "commentId": 448,
+    "clientRequestTime": 1743354328609,
+    "clientReceiveTime": 1743354328692,
+    "e2eLatency": 83,
+    "isReply": false
+  },
+  {
+    "discussionId": 3808,
+    "commentId": 447,
+    "clientRequestTime": 1743354328669,
+    "clientReceiveTime": 1743354328693,
+    "e2eLatency": 24,
+    "isReply": false
+  },
+  {
+    "discussionId": 3879,
+    "commentId": 449,
+    "clientRequestTime": 1743354328683,
+    "clientReceiveTime": 1743354328696,
+    "e2eLatency": 13,
+    "isReply": false
+  },
+  {
+    "discussionId": 3824,
+    "commentId": 450,
+    "clientRequestTime": 1743354328700,
+    "clientReceiveTime": 1743354328713,
+    "e2eLatency": 13,
+    "isReply": false
+  },
+  {
+    "discussionId": 3787,
+    "commentId": 451,
+    "clientRequestTime": 1743354328700,
+    "clientReceiveTime": 1743354328716,
+    "e2eLatency": 16,
+    "isReply": false
+  },
+  {
+    "discussionId": 3792,
+    "commentId": 452,
+    "clientRequestTime": 1743354328642,
+    "clientReceiveTime": 1743354328718,
+    "e2eLatency": 76,
+    "isReply": false
+  },
+  {
+    "discussionId": 3800,
+    "commentId": 453,
+    "clientRequestTime": 1743354328669,
+    "clientReceiveTime": 1743354328760,
+    "e2eLatency": 91,
+    "isReply": false
+  },
+  {
+    "discussionId": 3854,
+    "commentId": 454,
+    "clientRequestTime": 1743354328752,
+    "clientReceiveTime": 1743354328763,
+    "e2eLatency": 11,
+    "isReply": false
+  },
+  {
+    "discussionId": 3840,
+    "commentId": 455,
+    "clientRequestTime": 1743354328785,
+    "clientReceiveTime": 1743354328822,
+    "e2eLatency": 37,
+    "isReply": false
+  },
+  {
+    "discussionId": 3813,
+    "commentId": 458,
+    "clientRequestTime": 1743354328802,
+    "clientReceiveTime": 1743354328829,
+    "e2eLatency": 27,
+    "isReply": false
+  },
+  {
+    "discussionId": 3802,
+    "commentId": 456,
+    "clientRequestTime": 1743354328802,
+    "clientReceiveTime": 1743354328830,
+    "e2eLatency": 28,
+    "isReply": false
+  },
+  {
+    "discussionId": 3877,
+    "commentId": 457,
+    "clientRequestTime": 1743354328802,
+    "clientReceiveTime": 1743354328831,
+    "e2eLatency": 29,
+    "isReply": false
+  },
+  {
+    "discussionId": 3797,
+    "commentId": 460,
+    "clientRequestTime": 1743354328805,
+    "clientReceiveTime": 1743354328833,
+    "e2eLatency": 28,
+    "isReply": false
+  },
+  {
+    "discussionId": 3818,
+    "commentId": 459,
+    "clientRequestTime": 1743354328802,
+    "clientReceiveTime": 1743354328835,
+    "e2eLatency": 33,
+    "isReply": false
+  },
+  {
+    "discussionId": 3880,
+    "commentId": 461,
+    "clientRequestTime": 1743354328833,
+    "clientReceiveTime": 1743354328849,
+    "e2eLatency": 16,
+    "isReply": false
+  },
+  {
+    "discussionId": 3862,
+    "commentId": 462,
+    "clientRequestTime": 1743354328858,
+    "clientReceiveTime": 1743354328940,
+    "e2eLatency": 82,
+    "isReply": false
+  },
+  {
+    "discussionId": 3799,
+    "commentId": 463,
+    "clientRequestTime": 1743354328949,
+    "clientReceiveTime": 1743354328974,
+    "e2eLatency": 25,
+    "isReply": false
+  },
+  {
+    "discussionId": 3827,
+    "commentId": 464,
+    "clientRequestTime": 1743354328966,
+    "clientReceiveTime": 1743354328976,
+    "e2eLatency": 10,
+    "isReply": false
+  },
+  {
+    "discussionId": 3882,
+    "commentId": 465,
+    "clientRequestTime": 1743354329684,
+    "clientReceiveTime": 1743354329724,
+    "e2eLatency": 40,
+    "isReply": false
+  },
+  {
+    "discussionId": 3857,
+    "commentId": 467,
+    "clientRequestTime": 1743354329701,
+    "clientReceiveTime": 1743354329734,
+    "e2eLatency": 33,
+    "isReply": false
+  },
+  {
+    "discussionId": 3879,
+    "commentId": 466,
+    "clientRequestTime": 1743354329701,
+    "clientReceiveTime": 1743354329736,
+    "e2eLatency": 35,
+    "isReply": false
+  },
+  {
+    "discussionId": 3824,
+    "commentId": 470,
+    "clientRequestTime": 1743354329716,
+    "clientReceiveTime": 1743354329740,
+    "e2eLatency": 24,
+    "isReply": false
+  },
+  {
+    "discussionId": 3869,
+    "commentId": 469,
+    "clientRequestTime": 1743354329635,
+    "clientReceiveTime": 1743354329742,
+    "e2eLatency": 107,
+    "isReply": false
+  },
+  {
+    "discussionId": 3808,
+    "commentId": 468,
+    "clientRequestTime": 1743354329701,
+    "clientReceiveTime": 1743354329745,
+    "e2eLatency": 44,
+    "isReply": false
+  },
+  {
+    "discussionId": 3900,
+    "commentId": 471,
+    "clientRequestTime": 1743354329651,
+    "clientReceiveTime": 1743354329747,
+    "e2eLatency": 96,
+    "isReply": false
+  },
+  {
+    "discussionId": 3787,
+    "commentId": 472,
+    "clientRequestTime": 1743354329725,
+    "clientReceiveTime": 1743354329752,
+    "e2eLatency": 27,
+    "isReply": false
+  },
+  {
+    "discussionId": 3792,
+    "commentId": 473,
+    "clientRequestTime": 1743354329725,
+    "clientReceiveTime": 1743354329753,
+    "e2eLatency": 28,
+    "isReply": false
+  },
+  {
+    "discussionId": 3873,
+    "commentId": 474,
+    "clientRequestTime": 1743354329684,
+    "clientReceiveTime": 1743354329765,
+    "e2eLatency": 81,
+    "isReply": false
+  },
+  {
+    "discussionId": 3854,
+    "commentId": 475,
+    "clientRequestTime": 1743354329768,
+    "clientReceiveTime": 1743354329792,
+    "e2eLatency": 24,
+    "isReply": false
+  },
+  {
+    "discussionId": 3800,
+    "commentId": 476,
+    "clientRequestTime": 1743354329769,
+    "clientReceiveTime": 1743354329794,
+    "e2eLatency": 25,
+    "isReply": false
+  },
+  {
+    "discussionId": 3888,
+    "commentId": 477,
+    "clientRequestTime": 1743354329759,
+    "clientReceiveTime": 1743354329840,
+    "e2eLatency": 81,
+    "isReply": false
+  },
+  {
+    "discussionId": 3836,
+    "commentId": 478,
+    "clientRequestTime": 1743354329868,
+    "clientReceiveTime": 1743354329959,
+    "e2eLatency": 91,
+    "isReply": false
+  },
+  {
+    "discussionId": 3862,
+    "commentId": 479,
+    "clientRequestTime": 1743354329950,
+    "clientReceiveTime": 1743354329961,
+    "e2eLatency": 11,
+    "isReply": false
+  },
+  {
+    "discussionId": 3799,
+    "commentId": 480,
+    "clientRequestTime": 1743354329985,
+    "clientReceiveTime": 1743354330008,
+    "e2eLatency": 23,
+    "isReply": false
+  },
+  {
+    "discussionId": 3792,
+    "commentId": 481,
+    "clientRequestTime": 1743354330644,
+    "clientReceiveTime": 1743354330674,
+    "e2eLatency": 30,
+    "isReply": false
+  },
+  {
+    "discussionId": 3850,
+    "commentId": 482,
+    "clientRequestTime": 1743354330676,
+    "clientReceiveTime": 1743354330697,
+    "e2eLatency": 21,
+    "isReply": false
+  },
+  {
+    "discussionId": 3882,
+    "commentId": 483,
+    "clientRequestTime": 1743354330736,
+    "clientReceiveTime": 1743354330750,
+    "e2eLatency": 14,
+    "isReply": false
+  },
+  {
+    "discussionId": 3843,
+    "commentId": 484,
+    "clientRequestTime": 1743354330675,
+    "clientReceiveTime": 1743354330752,
+    "e2eLatency": 77,
+    "isReply": false
+  },
+  {
+    "discussionId": 3894,
+    "commentId": 485,
+    "clientRequestTime": 1743354330675,
+    "clientReceiveTime": 1743354330756,
+    "e2eLatency": 81,
+    "isReply": false
+  },
+  {
+    "discussionId": 3900,
+    "commentId": 486,
+    "clientRequestTime": 1743354330752,
+    "clientReceiveTime": 1743354330768,
+    "e2eLatency": 16,
+    "isReply": false
+  },
+  {
+    "discussionId": 3857,
+    "commentId": 487,
+    "clientRequestTime": 1743354330752,
+    "clientReceiveTime": 1743354330774,
+    "e2eLatency": 22,
+    "isReply": false
+  },
+  {
+    "discussionId": 3869,
+    "commentId": 488,
+    "clientRequestTime": 1743354330753,
+    "clientReceiveTime": 1743354330775,
+    "e2eLatency": 22,
+    "isReply": false
+  },
+  {
+    "discussionId": 3792,
+    "commentId": 489,
+    "clientRequestTime": 1743354330760,
+    "clientReceiveTime": 1743354330780,
+    "e2eLatency": 20,
+    "isReply": false
+  },
+  {
+    "discussionId": 3873,
+    "commentId": 490,
+    "clientRequestTime": 1743354330768,
+    "clientReceiveTime": 1743354330782,
+    "e2eLatency": 14,
+    "isReply": false
+  },
+  {
+    "discussionId": 3854,
+    "commentId": 491,
+    "clientRequestTime": 1743354330798,
+    "clientReceiveTime": 1743354330820,
+    "e2eLatency": 22,
+    "isReply": false
+  },
+  {
+    "discussionId": 3888,
+    "commentId": 493,
+    "clientRequestTime": 1743354330845,
+    "clientReceiveTime": 1743354330858,
+    "e2eLatency": 13,
+    "isReply": false
+  },
+  {
+    "discussionId": 3861,
+    "commentId": 492,
+    "clientRequestTime": 1743354330769,
+    "clientReceiveTime": 1743354330860,
+    "e2eLatency": 91,
+    "isReply": false
+  },
+  {
+    "discussionId": 3873,
+    "commentId": 494,
+    "clientRequestTime": 1743354330877,
+    "clientReceiveTime": 1743354330960,
+    "e2eLatency": 83,
+    "isReply": false
+  },
+  {
+    "discussionId": 3836,
+    "commentId": 495,
+    "clientRequestTime": 1743354330962,
+    "clientReceiveTime": 1743354330975,
+    "e2eLatency": 13,
+    "isReply": false
+  },
+  {
+    "discussionId": 3862,
+    "commentId": 496,
+    "clientRequestTime": 1743354330964,
+    "clientReceiveTime": 1743354330977,
+    "e2eLatency": 13,
+    "isReply": false
+  },
+  {
+    "discussionId": 3792,
+    "commentId": 497,
+    "clientRequestTime": 1743354331684,
+    "clientReceiveTime": 1743354331719,
+    "e2eLatency": 35,
+    "isReply": false
+  },
+  {
+    "discussionId": 3892,
+    "commentId": 499,
+    "clientRequestTime": 1743354331701,
+    "clientReceiveTime": 1743354331720,
+    "e2eLatency": 19,
+    "isReply": false
+  },
+  {
+    "discussionId": 3887,
+    "commentId": 498,
+    "clientRequestTime": 1743354331701,
+    "clientReceiveTime": 1743354331729,
+    "e2eLatency": 28,
+    "isReply": false
+  },
+  {
+    "discussionId": 3850,
+    "commentId": 500,
+    "clientRequestTime": 1743354331703,
+    "clientReceiveTime": 1743354331731,
+    "e2eLatency": 28,
+    "isReply": false
+  },
+  {
+    "discussionId": 3860,
+    "commentId": 501,
+    "clientRequestTime": 1743354331654,
+    "clientReceiveTime": 1743354331734,
+    "e2eLatency": 80,
+    "isReply": false
+  },
+  {
+    "discussionId": 3894,
+    "commentId": 502,
+    "clientRequestTime": 1743354331684,
+    "clientReceiveTime": 1743354331773,
+    "e2eLatency": 89,
+    "isReply": false
+  },
+  {
+    "discussionId": 3894,
+    "commentId": 503,
+    "clientRequestTime": 1743354331763,
+    "clientReceiveTime": 1743354331777,
+    "e2eLatency": 14,
+    "isReply": false
+  },
+  {
+    "discussionId": 3882,
+    "commentId": 504,
+    "clientRequestTime": 1743354331762,
+    "clientReceiveTime": 1743354331779,
+    "e2eLatency": 17,
+    "isReply": false
+  },
+  {
+    "discussionId": 3843,
+    "commentId": 505,
+    "clientRequestTime": 1743354331762,
+    "clientReceiveTime": 1743354331781,
+    "e2eLatency": 19,
+    "isReply": false
+  },
+  {
+    "discussionId": 3900,
+    "commentId": 506,
+    "clientRequestTime": 1743354331777,
+    "clientReceiveTime": 1743354331796,
+    "e2eLatency": 19,
+    "isReply": false
+  },
+  {
+    "discussionId": 3869,
+    "commentId": 507,
+    "clientRequestTime": 1743354331779,
+    "clientReceiveTime": 1743354331797,
+    "e2eLatency": 18,
+    "isReply": false
+  },
+  {
+    "discussionId": 3873,
+    "commentId": 508,
+    "clientRequestTime": 1743354331788,
+    "clientReceiveTime": 1743354331800,
+    "e2eLatency": 12,
+    "isReply": false
+  },
+  {
+    "discussionId": 3854,
+    "commentId": 509,
+    "clientRequestTime": 1743354331779,
+    "clientReceiveTime": 1743354331863,
+    "e2eLatency": 84,
+    "isReply": false
+  },
+  {
+    "discussionId": 3888,
+    "commentId": 510,
+    "clientRequestTime": 1743354331865,
+    "clientReceiveTime": 1743354331877,
+    "e2eLatency": 12,
+    "isReply": false
+  },
+  {
+    "discussionId": 3861,
+    "commentId": 511,
+    "clientRequestTime": 1743354331866,
+    "clientReceiveTime": 1743354331881,
+    "e2eLatency": 15,
+    "isReply": false
+  },
+  {
+    "discussionId": 3891,
+    "commentId": 512,
+    "clientRequestTime": 1743354331888,
+    "clientReceiveTime": 1743354331909,
+    "e2eLatency": 21,
+    "isReply": false
+  },
+  {
+    "discussionId": 3873,
+    "commentId": 513,
+    "clientRequestTime": 1743354331965,
+    "clientReceiveTime": 1743354331992,
+    "e2eLatency": 27,
+    "isReply": false
+  },
+  {
+    "discussionId": 3836,
+    "commentId": 514,
+    "clientRequestTime": 1743354331981,
+    "clientReceiveTime": 1743354331995,
+    "e2eLatency": 14,
+    "isReply": false
+  },
+  {
+    "discussionId": 3900,
+    "commentId": 515,
+    "clientRequestTime": 1743354332684,
+    "clientReceiveTime": 1743354332697,
+    "e2eLatency": 13,
+    "isReply": false
+  },
+  {
+    "discussionId": 3845,
+    "commentId": 516,
+    "clientRequestTime": 1743354332686,
+    "clientReceiveTime": 1743354332699,
+    "e2eLatency": 13,
+    "isReply": false
+  },
+  {
+    "discussionId": 3792,
+    "commentId": 517,
+    "clientRequestTime": 1743354332723,
+    "clientReceiveTime": 1743354332756,
+    "e2eLatency": 33,
+    "isReply": false
+  },
+  {
+    "discussionId": 3892,
+    "commentId": 519,
+    "clientRequestTime": 1743354332733,
+    "clientReceiveTime": 1743354332761,
+    "e2eLatency": 28,
+    "isReply": false
+  },
+  {
+    "discussionId": 3858,
+    "commentId": 520,
+    "clientRequestTime": 1743354332668,
+    "clientReceiveTime": 1743354332763,
+    "e2eLatency": 95,
+    "isReply": false
+  },
+  {
+    "discussionId": 3860,
+    "commentId": 521,
+    "clientRequestTime": 1743354332737,
+    "clientReceiveTime": 1743354332765,
+    "e2eLatency": 28,
+    "isReply": false
+  },
+  {
+    "discussionId": 3887,
+    "commentId": 518,
+    "clientRequestTime": 1743354332734,
+    "clientReceiveTime": 1743354332767,
+    "e2eLatency": 33,
+    "isReply": false
+  },
+  {
+    "discussionId": 3891,
+    "commentId": 522,
+    "clientRequestTime": 1743354332686,
+    "clientReceiveTime": 1743354332774,
+    "e2eLatency": 88,
+    "isReply": false
+  },
+  {
+    "discussionId": 3894,
+    "commentId": 523,
+    "clientRequestTime": 1743354332784,
+    "clientReceiveTime": 1743354332810,
+    "e2eLatency": 26,
+    "isReply": false
+  },
+  {
+    "discussionId": 3894,
+    "commentId": 524,
+    "clientRequestTime": 1743354332786,
+    "clientReceiveTime": 1743354332811,
+    "e2eLatency": 25,
+    "isReply": false
+  },
+  {
+    "discussionId": 3843,
+    "commentId": 525,
+    "clientRequestTime": 1743354332801,
+    "clientReceiveTime": 1743354332813,
+    "e2eLatency": 12,
+    "isReply": false
+  },
+  {
+    "discussionId": 3851,
+    "commentId": 526,
+    "clientRequestTime": 1743354332766,
+    "clientReceiveTime": 1743354332840,
+    "e2eLatency": 74,
+    "isReply": false
+  },
+  {
+    "discussionId": 3854,
+    "commentId": 527,
+    "clientRequestTime": 1743354332867,
+    "clientReceiveTime": 1743354332891,
+    "e2eLatency": 24,
+    "isReply": false
+  },
+  {
+    "discussionId": 3891,
+    "commentId": 528,
+    "clientRequestTime": 1743354332917,
+    "clientReceiveTime": 1743354332940,
+    "e2eLatency": 23,
+    "isReply": false
+  },
+  {
+    "discussionId": 3833,
+    "commentId": 529,
+    "clientRequestTime": 1743354332901,
+    "clientReceiveTime": 1743354332990,
+    "e2eLatency": 89,
+    "isReply": false
+  },
+  {
+    "discussionId": 3873,
+    "commentId": 530,
+    "clientRequestTime": 1743354333000,
+    "clientReceiveTime": 1743354333012,
+    "e2eLatency": 12,
+    "isReply": false
+  },
+  {
+    "discussionId": 3899,
+    "commentId": 531,
+    "clientRequestTime": 1743354332925,
+    "clientReceiveTime": 1743354333032,
+    "e2eLatency": 107,
+    "isReply": false
+  },
+  {
+    "discussionId": 3858,
+    "commentId": 532,
+    "clientRequestTime": 1743354333668,
+    "clientReceiveTime": 1743354333700,
+    "e2eLatency": 32,
+    "isReply": false
+  },
+  {
+    "discussionId": 3838,
+    "commentId": 533,
+    "clientRequestTime": 1743354333685,
+    "clientReceiveTime": 1743354333702,
+    "e2eLatency": 17,
+    "isReply": false
+  },
+  {
+    "discussionId": 3898,
+    "commentId": 534,
+    "clientRequestTime": 1743354333685,
+    "clientReceiveTime": 1743354333703,
+    "e2eLatency": 18,
+    "isReply": false
+  },
+  {
+    "discussionId": 3900,
+    "commentId": 535,
+    "clientRequestTime": 1743354333703,
+    "clientReceiveTime": 1743354333716,
+    "e2eLatency": 13,
+    "isReply": false
+  },
+  {
+    "discussionId": 3845,
+    "commentId": 536,
+    "clientRequestTime": 1743354333706,
+    "clientReceiveTime": 1743354333718,
+    "e2eLatency": 12,
+    "isReply": false
+  },
+  {
+    "discussionId": 3892,
+    "commentId": 538,
+    "clientRequestTime": 1743354333768,
+    "clientReceiveTime": 1743354333787,
+    "e2eLatency": 19,
+    "isReply": false
+  },
+  {
+    "discussionId": 3858,
+    "commentId": 539,
+    "clientRequestTime": 1743354333768,
+    "clientReceiveTime": 1743354333790,
+    "e2eLatency": 22,
+    "isReply": false
+  },
+  {
+    "discussionId": 3817,
+    "commentId": 540,
+    "clientRequestTime": 1743354333770,
+    "clientReceiveTime": 1743354333791,
+    "e2eLatency": 21,
+    "isReply": false
+  },
+  {
+    "discussionId": 3801,
+    "commentId": 537,
+    "clientRequestTime": 1743354333685,
+    "clientReceiveTime": 1743354333792,
+    "e2eLatency": 107,
+    "isReply": false
+  },
+  {
+    "discussionId": 3860,
+    "commentId": 541,
+    "clientRequestTime": 1743354333785,
+    "clientReceiveTime": 1743354333800,
+    "e2eLatency": 15,
+    "isReply": false
+  },
+  {
+    "discussionId": 3891,
+    "commentId": 542,
+    "clientRequestTime": 1743354333785,
+    "clientReceiveTime": 1743354333802,
+    "e2eLatency": 17,
+    "isReply": false
+  },
+  {
+    "discussionId": 3894,
+    "commentId": 543,
+    "clientRequestTime": 1743354333818,
+    "clientReceiveTime": 1743354333840,
+    "e2eLatency": 22,
+    "isReply": false
+  },
+  {
+    "discussionId": 3851,
+    "commentId": 544,
+    "clientRequestTime": 1743354333851,
+    "clientReceiveTime": 1743354333874,
+    "e2eLatency": 23,
+    "isReply": false
+  },
+  {
+    "discussionId": 3854,
+    "commentId": 545,
+    "clientRequestTime": 1743354333900,
+    "clientReceiveTime": 1743354333911,
+    "e2eLatency": 11,
+    "isReply": false
+  },
+  {
+    "discussionId": 3897,
+    "commentId": 546,
+    "clientRequestTime": 1743354333901,
+    "clientReceiveTime": 1743354333913,
+    "e2eLatency": 12,
+    "isReply": false
+  },
+  {
+    "discussionId": 3891,
+    "commentId": 547,
+    "clientRequestTime": 1743354333943,
+    "clientReceiveTime": 1743354333963,
+    "e2eLatency": 20,
+    "isReply": false
+  },
+  {
+    "discussionId": 3833,
+    "commentId": 548,
+    "clientRequestTime": 1743354334001,
+    "clientReceiveTime": 1743354334021,
+    "e2eLatency": 20,
+    "isReply": false
+  },
+  {
+    "discussionId": 3854,
+    "commentId": 549,
+    "clientRequestTime": 1743354333935,
+    "clientReceiveTime": 1743354334023,
+    "e2eLatency": 88,
+    "isReply": false
+  },
+  {
+    "discussionId": 3899,
+    "commentId": 550,
+    "clientRequestTime": 1743354334040,
+    "clientReceiveTime": 1743354334059,
+    "e2eLatency": 19,
+    "isReply": false
+  },
+  {
+    "discussionId": 3836,
+    "commentId": 551,
+    "clientRequestTime": 1743354334668,
+    "clientReceiveTime": 1743354334700,
+    "e2eLatency": 32,
+    "isReply": false
+  },
+  {
+    "discussionId": 3898,
+    "commentId": 553,
+    "clientRequestTime": 1743354334702,
+    "clientReceiveTime": 1743354334720,
+    "e2eLatency": 18,
+    "isReply": false
+  },
+  {
+    "discussionId": 3858,
+    "commentId": 554,
+    "clientRequestTime": 1743354334705,
+    "clientReceiveTime": 1743354334724,
+    "e2eLatency": 19,
+    "isReply": false
+  },
+  {
+    "discussionId": 3802,
+    "commentId": 552,
+    "clientRequestTime": 1743354334699,
+    "clientReceiveTime": 1743354334727,
+    "e2eLatency": 28,
+    "isReply": false
+  },
+  {
+    "discussionId": 3838,
+    "commentId": 555,
+    "clientRequestTime": 1743354334714,
+    "clientReceiveTime": 1743354334734,
+    "e2eLatency": 20,
+    "isReply": false
+  },
+  {
+    "discussionId": 3900,
+    "commentId": 556,
+    "clientRequestTime": 1743354334723,
+    "clientReceiveTime": 1743354334738,
+    "e2eLatency": 15,
+    "isReply": false
+  },
+  {
+    "discussionId": 3845,
+    "commentId": 557,
+    "clientRequestTime": 1743354334729,
+    "clientReceiveTime": 1743354334740,
+    "e2eLatency": 11,
+    "isReply": false
+  },
+  {
+    "discussionId": 3793,
+    "commentId": 558,
+    "clientRequestTime": 1743354334699,
+    "clientReceiveTime": 1743354334789,
+    "e2eLatency": 90,
+    "isReply": false
+  },
+  {
+    "discussionId": 3817,
+    "commentId": 559,
+    "clientRequestTime": 1743354334699,
+    "clientReceiveTime": 1743354334792,
+    "e2eLatency": 93,
+    "isReply": false
+  },
+  {
+    "discussionId": 3817,
+    "commentId": 560,
+    "clientRequestTime": 1743354334795,
+    "clientReceiveTime": 1743354334831,
+    "e2eLatency": 36,
+    "isReply": false
+  },
+  {
+    "discussionId": 3791,
+    "commentId": 561,
+    "clientRequestTime": 1743354334793,
+    "clientReceiveTime": 1743354334833,
+    "e2eLatency": 40,
+    "isReply": false
+  },
+  {
+    "discussionId": 3858,
+    "commentId": 562,
+    "clientRequestTime": 1743354334807,
+    "clientReceiveTime": 1743354334836,
+    "e2eLatency": 29,
+    "isReply": false
+  },
+  {
+    "discussionId": 3891,
+    "commentId": 563,
+    "clientRequestTime": 1743354334807,
+    "clientReceiveTime": 1743354334838,
+    "e2eLatency": 31,
+    "isReply": false
+  },
+  {
+    "discussionId": 3801,
+    "commentId": 564,
+    "clientRequestTime": 1743354334807,
+    "clientReceiveTime": 1743354334841,
+    "e2eLatency": 34,
+    "isReply": false
+  },
+  {
+    "discussionId": 3851,
+    "commentId": 565,
+    "clientRequestTime": 1743354334884,
+    "clientReceiveTime": 1743354334906,
+    "e2eLatency": 22,
+    "isReply": false
+  },
+  {
+    "discussionId": 3897,
+    "commentId": 566,
+    "clientRequestTime": 1743354334915,
+    "clientReceiveTime": 1743354334937,
+    "e2eLatency": 22,
+    "isReply": false
+  },
+  {
+    "discussionId": 3850,
+    "commentId": 567,
+    "clientRequestTime": 1743354334900,
+    "clientReceiveTime": 1743354334982,
+    "e2eLatency": 82,
+    "isReply": false
+  },
+  {
+    "discussionId": 3812,
+    "commentId": 568,
+    "clientRequestTime": 1743354334947,
+    "clientReceiveTime": 1743354335033,
+    "e2eLatency": 86,
+    "isReply": false
+  },
+  {
+    "discussionId": 3833,
+    "commentId": 569,
+    "clientRequestTime": 1743354335024,
+    "clientReceiveTime": 1743354335036,
+    "e2eLatency": 12,
+    "isReply": false
+  },
+  {
+    "discussionId": 3854,
+    "commentId": 570,
+    "clientRequestTime": 1743354335036,
+    "clientReceiveTime": 1743354335061,
+    "e2eLatency": 25,
+    "isReply": false
+  },
+  {
+    "discussionId": 3863,
+    "commentId": 571,
+    "clientRequestTime": 1743354335679,
+    "clientReceiveTime": 1743354335710,
+    "e2eLatency": 31,
+    "isReply": false
+  },
+  {
+    "discussionId": 3836,
+    "commentId": 572,
+    "clientRequestTime": 1743354335709,
+    "clientReceiveTime": 1743354335735,
+    "e2eLatency": 26,
+    "isReply": false
+  },
+  {
+    "discussionId": 3898,
+    "commentId": 573,
+    "clientRequestTime": 1743354335725,
+    "clientReceiveTime": 1743354335738,
+    "e2eLatency": 13,
+    "isReply": false
+  },
+  {
+    "discussionId": 3887,
+    "commentId": 574,
+    "clientRequestTime": 1743354335725,
+    "clientReceiveTime": 1743354335740,
+    "e2eLatency": 15,
+    "isReply": false
+  },
+  {
+    "discussionId": 3838,
+    "commentId": 575,
+    "clientRequestTime": 1743354335741,
+    "clientReceiveTime": 1743354335751,
+    "e2eLatency": 10,
+    "isReply": false
+  },
+  {
+    "discussionId": 3802,
+    "commentId": 576,
+    "clientRequestTime": 1743354335740,
+    "clientReceiveTime": 1743354335758,
+    "e2eLatency": 18,
+    "isReply": false
+  },
+  {
+    "discussionId": 3794,
+    "commentId": 577,
+    "clientRequestTime": 1743354335710,
+    "clientReceiveTime": 1743354335801,
+    "e2eLatency": 91,
+    "isReply": false
+  },
+  {
+    "discussionId": 3793,
+    "commentId": 578,
+    "clientRequestTime": 1743354335793,
+    "clientReceiveTime": 1743354335808,
+    "e2eLatency": 15,
+    "isReply": false
+  },
+  {
+    "discussionId": 3894,
+    "commentId": 579,
+    "clientRequestTime": 1743354335726,
+    "clientReceiveTime": 1743354335810,
+    "e2eLatency": 84,
+    "isReply": false
+  },
+  {
+    "discussionId": 3817,
+    "commentId": 580,
+    "clientRequestTime": 1743354335803,
+    "clientReceiveTime": 1743354335814,
+    "e2eLatency": 11,
+    "isReply": false
+  },
+  {
+    "discussionId": 3817,
+    "commentId": 581,
+    "clientRequestTime": 1743354335851,
+    "clientReceiveTime": 1743354335877,
+    "e2eLatency": 26,
+    "isReply": false
+  },
+  {
+    "discussionId": 3791,
+    "commentId": 582,
+    "clientRequestTime": 1743354335853,
+    "clientReceiveTime": 1743354335879,
+    "e2eLatency": 26,
+    "isReply": false
+  },
+  {
+    "discussionId": 3857,
+    "commentId": 583,
+    "clientRequestTime": 1743354335804,
+    "clientReceiveTime": 1743354335881,
+    "e2eLatency": 77,
+    "isReply": false
+  },
+  {
+    "discussionId": 3897,
+    "commentId": 584,
+    "clientRequestTime": 1743354335945,
+    "clientReceiveTime": 1743354335968,
+    "e2eLatency": 23,
+    "isReply": false
+  },
+  {
+    "discussionId": 3843,
+    "commentId": 585,
+    "clientRequestTime": 1743354335915,
+    "clientReceiveTime": 1743354336001,
+    "e2eLatency": 86,
+    "isReply": false
+  },
+  {
+    "discussionId": 3850,
+    "commentId": 586,
+    "clientRequestTime": 1743354335993,
+    "clientReceiveTime": 1743354336005,
+    "e2eLatency": 12,
+    "isReply": false
+  },
+  {
+    "discussionId": 3807,
+    "commentId": 587,
+    "clientRequestTime": 1743354335963,
+    "clientReceiveTime": 1743354336051,
+    "e2eLatency": 88,
+    "isReply": false
+  },
+  {
+    "discussionId": 3812,
+    "commentId": 588,
+    "clientRequestTime": 1743354336040,
+    "clientReceiveTime": 1743354336053,
+    "e2eLatency": 13,
+    "isReply": false
+  },
+  {
+    "discussionId": 3854,
+    "commentId": 589,
+    "clientRequestTime": 1743354336071,
+    "clientReceiveTime": 1743354336092,
+    "e2eLatency": 21,
+    "isReply": false
+  },
+  {
+    "discussionId": 3899,
+    "commentId": 590,
+    "clientRequestTime": 1743354336694,
+    "clientReceiveTime": 1743354336723,
+    "e2eLatency": 29,
+    "isReply": false
+  },
+  {
+    "discussionId": 3863,
+    "commentId": 591,
+    "clientRequestTime": 1743354336723,
+    "clientReceiveTime": 1743354336749,
+    "e2eLatency": 26,
+    "isReply": false
+  },
+  {
+    "discussionId": 3812,
+    "commentId": 592,
+    "clientRequestTime": 1743354336724,
+    "clientReceiveTime": 1743354336751,
+    "e2eLatency": 27,
+    "isReply": false
+  },
+  {
+    "discussionId": 3836,
+    "commentId": 593,
+    "clientRequestTime": 1743354336739,
+    "clientReceiveTime": 1743354336753,
+    "e2eLatency": 14,
+    "isReply": false
+  },
+  {
+    "discussionId": 3887,
+    "commentId": 594,
+    "clientRequestTime": 1743354336755,
+    "clientReceiveTime": 1743354336775,
+    "e2eLatency": 20,
+    "isReply": false
+  },
+  {
+    "discussionId": 3818,
+    "commentId": 595,
+    "clientRequestTime": 1743354336739,
+    "clientReceiveTime": 1743354336823,
+    "e2eLatency": 84,
+    "isReply": false
+  },
+  {
+    "discussionId": 3862,
+    "commentId": 596,
+    "clientRequestTime": 1743354336739,
+    "clientReceiveTime": 1743354336827,
+    "e2eLatency": 88,
+    "isReply": false
+  },
+  {
+    "discussionId": 3817,
+    "commentId": 597,
+    "clientRequestTime": 1743354336817,
+    "clientReceiveTime": 1743354336840,
+    "e2eLatency": 23,
+    "isReply": false
+  },
+  {
+    "discussionId": 3793,
+    "commentId": 598,
+    "clientRequestTime": 1743354336817,
+    "clientReceiveTime": 1743354336841,
+    "e2eLatency": 24,
+    "isReply": false
+  },
+  {
+    "discussionId": 3894,
+    "commentId": 600,
+    "clientRequestTime": 1743354336818,
+    "clientReceiveTime": 1743354336843,
+    "e2eLatency": 25,
+    "isReply": false
+  },
+  {
+    "discussionId": 3794,
+    "commentId": 599,
+    "clientRequestTime": 1743354336817,
+    "clientReceiveTime": 1743354336844,
+    "e2eLatency": 27,
+    "isReply": false
+  },
+  {
+    "discussionId": 3791,
+    "commentId": 601,
+    "clientRequestTime": 1743354336887,
+    "clientReceiveTime": 1743354336902,
+    "e2eLatency": 15,
+    "isReply": false
+  },
+  {
+    "discussionId": 3854,
+    "commentId": 602,
+    "clientRequestTime": 1743354336817,
+    "clientReceiveTime": 1743354336904,
+    "e2eLatency": 87,
+    "isReply": false
+  },
+  {
+    "discussionId": 3857,
+    "commentId": 603,
+    "clientRequestTime": 1743354336888,
+    "clientReceiveTime": 1743354336906,
+    "e2eLatency": 18,
+    "isReply": false
+  },
+  {
+    "discussionId": 3807,
+    "commentId": 604,
+    "clientRequestTime": 1743354336927,
+    "clientReceiveTime": 1743354337013,
+    "e2eLatency": 86,
+    "isReply": false
+  },
+  {
+    "discussionId": 3843,
+    "commentId": 605,
+    "clientRequestTime": 1743354337004,
+    "clientReceiveTime": 1743354337018,
+    "e2eLatency": 14,
+    "isReply": false
+  },
+  {
+    "discussionId": 3850,
+    "commentId": 606,
+    "clientRequestTime": 1743354337013,
+    "clientReceiveTime": 1743354337024,
+    "e2eLatency": 11,
+    "isReply": false
+  },
+  {
+    "discussionId": 3797,
+    "commentId": 607,
+    "clientRequestTime": 1743354336973,
+    "clientReceiveTime": 1743354337057,
+    "e2eLatency": 84,
+    "isReply": false
+  },
+  {
+    "discussionId": 3812,
+    "commentId": 609,
+    "clientRequestTime": 1743354337062,
+    "clientReceiveTime": 1743354337075,
+    "e2eLatency": 13,
+    "isReply": false
+  },
+  {
+    "discussionId": 3807,
+    "commentId": 608,
+    "clientRequestTime": 1743354337059,
+    "clientReceiveTime": 1743354337077,
+    "e2eLatency": 18,
+    "isReply": false
+  },
+  {
+    "discussionId": 3868,
+    "commentId": 610,
+    "clientRequestTime": 1743354337705,
+    "clientReceiveTime": 1743354337734,
+    "e2eLatency": 29,
+    "isReply": false
+  },
+  {
+    "discussionId": 3892,
+    "commentId": 611,
+    "clientRequestTime": 1743354337721,
+    "clientReceiveTime": 1743354337736,
+    "e2eLatency": 15,
+    "isReply": false
+  },
+  {
+    "discussionId": 3899,
+    "commentId": 612,
+    "clientRequestTime": 1743354337734,
+    "clientReceiveTime": 1743354337746,
+    "e2eLatency": 12,
+    "isReply": false
+  },
+  {
+    "discussionId": 3863,
+    "commentId": 613,
+    "clientRequestTime": 1743354337765,
+    "clientReceiveTime": 1743354337791,
+    "e2eLatency": 26,
+    "isReply": false
+  },
+  {
+    "discussionId": 3887,
+    "commentId": 615,
+    "clientRequestTime": 1743354337780,
+    "clientReceiveTime": 1743354337794,
+    "e2eLatency": 14,
+    "isReply": false
+  },
+  {
+    "discussionId": 3812,
+    "commentId": 614,
+    "clientRequestTime": 1743354337766,
+    "clientReceiveTime": 1743354337796,
+    "e2eLatency": 30,
+    "isReply": false
+  },
+  {
+    "discussionId": 3856,
+    "commentId": 616,
+    "clientRequestTime": 1743354337735,
+    "clientReceiveTime": 1743354337818,
+    "e2eLatency": 83,
+    "isReply": false
+  },
+  {
+    "discussionId": 3880,
+    "commentId": 617,
+    "clientRequestTime": 1743354337735,
+    "clientReceiveTime": 1743354337819,
+    "e2eLatency": 84,
+    "isReply": false
+  },
+  {
+    "discussionId": 3862,
+    "commentId": 618,
+    "clientRequestTime": 1743354337844,
+    "clientReceiveTime": 1743354337866,
+    "e2eLatency": 22,
+    "isReply": false
+  },
+  {
+    "discussionId": 3894,
+    "commentId": 620,
+    "clientRequestTime": 1743354337845,
+    "clientReceiveTime": 1743354337868,
+    "e2eLatency": 23,
+    "isReply": false
+  },
+  {
+    "discussionId": 3818,
+    "commentId": 619,
+    "clientRequestTime": 1743354337844,
+    "clientReceiveTime": 1743354337869,
+    "e2eLatency": 25,
+    "isReply": false
+  },
+  {
+    "discussionId": 3797,
+    "commentId": 621,
+    "clientRequestTime": 1743354337829,
+    "clientReceiveTime": 1743354337910,
+    "e2eLatency": 81,
+    "isReply": false
+  },
+  {
+    "discussionId": 3857,
+    "commentId": 622,
+    "clientRequestTime": 1743354337912,
+    "clientReceiveTime": 1743354337926,
+    "e2eLatency": 14,
+    "isReply": false
+  },
+  {
+    "discussionId": 3854,
+    "commentId": 623,
+    "clientRequestTime": 1743354337912,
+    "clientReceiveTime": 1743354337928,
+    "e2eLatency": 16,
+    "isReply": false
+  },
+  {
+    "discussionId": 3809,
+    "commentId": 624,
+    "clientRequestTime": 1743354337981,
+    "clientReceiveTime": 1743354338002,
+    "e2eLatency": 21,
+    "isReply": false
+  },
+  {
+    "discussionId": 3826,
+    "commentId": 625,
+    "clientRequestTime": 1743354337920,
+    "clientReceiveTime": 1743354338004,
+    "e2eLatency": 84,
+    "isReply": false
+  },
+  {
+    "discussionId": 3807,
+    "commentId": 626,
+    "clientRequestTime": 1743354338028,
+    "clientReceiveTime": 1743354338041,
+    "e2eLatency": 13,
+    "isReply": false
+  },
+  {
+    "discussionId": 3843,
+    "commentId": 627,
+    "clientRequestTime": 1743354338030,
+    "clientReceiveTime": 1743354338044,
+    "e2eLatency": 14,
+    "isReply": false
+  },
+  {
+    "discussionId": 3797,
+    "commentId": 628,
+    "clientRequestTime": 1743354338075,
+    "clientReceiveTime": 1743354338095,
+    "e2eLatency": 20,
+    "isReply": false
+  },
+  {
+    "discussionId": 3868,
+    "commentId": 632,
+    "clientRequestTime": 1743354338741,
+    "clientReceiveTime": 1743354338774,
+    "e2eLatency": 33,
+    "isReply": false
+  },
+  {
+    "discussionId": 3818,
+    "commentId": 629,
+    "clientRequestTime": 1743354338734,
+    "clientReceiveTime": 1743354338776,
+    "e2eLatency": 42,
+    "isReply": false
+  },
+  {
+    "discussionId": 3786,
+    "commentId": 630,
+    "clientRequestTime": 1743354338741,
+    "clientReceiveTime": 1743354338778,
+    "e2eLatency": 37,
+    "isReply": false
+  },
+  {
+    "discussionId": 3892,
+    "commentId": 631,
+    "clientRequestTime": 1743354338742,
+    "clientReceiveTime": 1743354338779,
+    "e2eLatency": 37,
+    "isReply": false
+  },
+  {
+    "discussionId": 3899,
+    "commentId": 633,
+    "clientRequestTime": 1743354338758,
+    "clientReceiveTime": 1743354338781,
+    "e2eLatency": 23,
+    "isReply": false
+  },
+  {
+    "discussionId": 3816,
+    "commentId": 634,
+    "clientRequestTime": 1743354338717,
+    "clientReceiveTime": 1743354338813,
+    "e2eLatency": 96,
+    "isReply": false
+  },
+  {
+    "discussionId": 3830,
+    "commentId": 635,
+    "clientRequestTime": 1743354338741,
+    "clientReceiveTime": 1743354338819,
+    "e2eLatency": 78,
+    "isReply": false
+  },
+  {
+    "discussionId": 3880,
+    "commentId": 636,
+    "clientRequestTime": 1743354338822,
+    "clientReceiveTime": 1743354338842,
+    "e2eLatency": 20,
+    "isReply": false
+  },
+  {
+    "discussionId": 3856,
+    "commentId": 637,
+    "clientRequestTime": 1743354338833,
+    "clientReceiveTime": 1743354338846,
+    "e2eLatency": 13,
+    "isReply": false
+  },
+  {
+    "discussionId": 3856,
+    "commentId": 638,
+    "clientRequestTime": 1743354338834,
+    "clientReceiveTime": 1743354338848,
+    "e2eLatency": 14,
+    "isReply": false
+  },
+  {
+    "discussionId": 3818,
+    "commentId": 639,
+    "clientRequestTime": 1743354338885,
+    "clientReceiveTime": 1743354338910,
+    "e2eLatency": 25,
+    "isReply": false
+  },
+  {
+    "discussionId": 3862,
+    "commentId": 640,
+    "clientRequestTime": 1743354338884,
+    "clientReceiveTime": 1743354338913,
+    "e2eLatency": 29,
+    "isReply": false
+  },
+  {
+    "discussionId": 3797,
+    "commentId": 641,
+    "clientRequestTime": 1743354338917,
+    "clientReceiveTime": 1743354338944,
+    "e2eLatency": 27,
+    "isReply": false
+  },
+  {
+    "discussionId": 3854,
+    "commentId": 642,
+    "clientRequestTime": 1743354338934,
+    "clientReceiveTime": 1743354338946,
+    "e2eLatency": 12,
+    "isReply": false
+  },
+  {
+    "discussionId": 3810,
+    "commentId": 643,
+    "clientRequestTime": 1743354338935,
+    "clientReceiveTime": 1743354339026,
+    "e2eLatency": 91,
+    "isReply": false
+  },
+  {
+    "discussionId": 3826,
+    "commentId": 644,
+    "clientRequestTime": 1743354339016,
+    "clientReceiveTime": 1743354339029,
+    "e2eLatency": 13,
+    "isReply": false
+  },
+  {
+    "discussionId": 3809,
+    "commentId": 645,
+    "clientRequestTime": 1743354339016,
+    "clientReceiveTime": 1743354339031,
+    "e2eLatency": 15,
+    "isReply": false
+  },
+  {
+    "discussionId": 3812,
+    "commentId": 646,
+    "clientRequestTime": 1743354338969,
+    "clientReceiveTime": 1743354339059,
+    "e2eLatency": 90,
+    "isReply": false
+  },
+  {
+    "discussionId": 3807,
+    "commentId": 647,
+    "clientRequestTime": 1743354339051,
+    "clientReceiveTime": 1743354339062,
+    "e2eLatency": 11,
+    "isReply": false
+  },
+  {
+    "discussionId": 3797,
+    "commentId": 648,
+    "clientRequestTime": 1743354339100,
+    "clientReceiveTime": 1743354339113,
+    "e2eLatency": 13,
+    "isReply": false
+  },
+  {
+    "discussionId": 3854,
+    "commentId": 649,
+    "clientRequestTime": 1743354339719,
+    "clientReceiveTime": 1743354339748,
+    "e2eLatency": 29,
+    "isReply": false
+  },
+  {
+    "discussionId": 3818,
+    "commentId": 650,
+    "clientRequestTime": 1743354339785,
+    "clientReceiveTime": 1743354339797,
+    "e2eLatency": 12,
+    "isReply": false
+  },
+  {
+    "discussionId": 3786,
+    "commentId": 651,
+    "clientRequestTime": 1743354339785,
+    "clientReceiveTime": 1743354339799,
+    "e2eLatency": 14,
+    "isReply": false
+  },
+  {
+    "discussionId": 3877,
+    "commentId": 652,
+    "clientRequestTime": 1743354339750,
+    "clientReceiveTime": 1743354339834,
+    "e2eLatency": 84,
+    "isReply": false
+  },
+  {
+    "discussionId": 3816,
+    "commentId": 653,
+    "clientRequestTime": 1743354339818,
+    "clientReceiveTime": 1743354339836,
+    "e2eLatency": 18,
+    "isReply": false
+  },
+  {
+    "discussionId": 3879,
+    "commentId": 654,
+    "clientRequestTime": 1743354339752,
+    "clientReceiveTime": 1743354339838,
+    "e2eLatency": 86,
+    "isReply": false
+  },
+  {
+    "discussionId": 3879,
+    "commentId": 655,
+    "clientRequestTime": 1743354339752,
+    "clientReceiveTime": 1743354339840,
+    "e2eLatency": 88,
+    "isReply": false
+  },
+  {
+    "discussionId": 3830,
+    "commentId": 656,
+    "clientRequestTime": 1743354339835,
+    "clientReceiveTime": 1743354339845,
+    "e2eLatency": 10,
+    "isReply": false
+  },
+  {
+    "discussionId": 3880,
+    "commentId": 657,
+    "clientRequestTime": 1743354339848,
+    "clientReceiveTime": 1743354339861,
+    "e2eLatency": 13,
+    "isReply": false
+  },
+  {
+    "discussionId": 3856,
+    "commentId": 658,
+    "clientRequestTime": 1743354339852,
+    "clientReceiveTime": 1743354339864,
+    "e2eLatency": 12,
+    "isReply": false
+  },
+  {
+    "discussionId": 3856,
+    "commentId": 659,
+    "clientRequestTime": 1743354339852,
+    "clientReceiveTime": 1743354339865,
+    "e2eLatency": 13,
+    "isReply": false
+  },
+  {
+    "discussionId": 3819,
+    "commentId": 660,
+    "clientRequestTime": 1743354339820,
+    "clientReceiveTime": 1743354339905,
+    "e2eLatency": 85,
+    "isReply": false
+  },
+  {
+    "discussionId": 3797,
+    "commentId": 661,
+    "clientRequestTime": 1743354339950,
+    "clientReceiveTime": 1743354339970,
+    "e2eLatency": 20,
+    "isReply": false
+  },
+  {
+    "discussionId": 3867,
+    "commentId": 662,
+    "clientRequestTime": 1743354339950,
+    "clientReceiveTime": 1743354340041,
+    "e2eLatency": 91,
+    "isReply": false
+  },
+  {
+    "discussionId": 3812,
+    "commentId": 663,
+    "clientRequestTime": 1743354339969,
+    "clientReceiveTime": 1743354340046,
+    "e2eLatency": 77,
+    "isReply": false
+  },
+  {
+    "discussionId": 3810,
+    "commentId": 664,
+    "clientRequestTime": 1743354340034,
+    "clientReceiveTime": 1743354340049,
+    "e2eLatency": 15,
+    "isReply": false
+  },
+  {
+    "discussionId": 3826,
+    "commentId": 665,
+    "clientRequestTime": 1743354340036,
+    "clientReceiveTime": 1743354340051,
+    "e2eLatency": 15,
+    "isReply": false
+  },
+  {
+    "discussionId": 3809,
+    "commentId": 666,
+    "clientRequestTime": 1743354340050,
+    "clientReceiveTime": 1743354340062,
+    "e2eLatency": 12,
+    "isReply": false
+  },
+  {
+    "discussionId": 3812,
+    "commentId": 667,
+    "clientRequestTime": 1743354340065,
+    "clientReceiveTime": 1743354340091,
+    "e2eLatency": 26,
+    "isReply": false
+  },
+  {
+    "discussionId": 3882,
+    "commentId": 668,
+    "clientRequestTime": 1743354340736,
+    "clientReceiveTime": 1743354340775,
+    "e2eLatency": 39,
+    "isReply": false
+  },
+  {
+    "discussionId": 3854,
+    "commentId": 669,
+    "clientRequestTime": 1743354340751,
+    "clientReceiveTime": 1743354340777,
+    "e2eLatency": 26,
+    "isReply": false
+  },
+  {
+    "discussionId": 3848,
+    "commentId": 670,
+    "clientRequestTime": 1743354340752,
+    "clientReceiveTime": 1743354340779,
+    "e2eLatency": 27,
+    "isReply": false
+  },
+  {
+    "discussionId": 3855,
+    "commentId": 671,
+    "clientRequestTime": 1743354340768,
+    "clientReceiveTime": 1743354340781,
+    "e2eLatency": 13,
+    "isReply": false
+  },
+  {
+    "discussionId": 3873,
+    "commentId": 672,
+    "clientRequestTime": 1743354340768,
+    "clientReceiveTime": 1743354340856,
+    "e2eLatency": 88,
+    "isReply": false
+  },
+  {
+    "discussionId": 3879,
+    "commentId": 673,
+    "clientRequestTime": 1743354340843,
+    "clientReceiveTime": 1743354340859,
+    "e2eLatency": 16,
+    "isReply": false
+  },
+  {
+    "discussionId": 3816,
+    "commentId": 674,
+    "clientRequestTime": 1743354340843,
+    "clientReceiveTime": 1743354340861,
+    "e2eLatency": 18,
+    "isReply": false
+  },
+  {
+    "discussionId": 3877,
+    "commentId": 675,
+    "clientRequestTime": 1743354340843,
+    "clientReceiveTime": 1743354340864,
+    "e2eLatency": 21,
+    "isReply": false
+  },
+  {
+    "discussionId": 3830,
+    "commentId": 676,
+    "clientRequestTime": 1743354340859,
+    "clientReceiveTime": 1743354340879,
+    "e2eLatency": 20,
+    "isReply": false
+  },
+  {
+    "discussionId": 3879,
+    "commentId": 677,
+    "clientRequestTime": 1743354340859,
+    "clientReceiveTime": 1743354340882,
+    "e2eLatency": 23,
+    "isReply": false
+  },
+  {
+    "discussionId": 3856,
+    "commentId": 678,
+    "clientRequestTime": 1743354340875,
+    "clientReceiveTime": 1743354340890,
+    "e2eLatency": 15,
+    "isReply": false
+  },
+  {
+    "discussionId": 3819,
+    "commentId": 679,
+    "clientRequestTime": 1743354340920,
+    "clientReceiveTime": 1743354340930,
+    "e2eLatency": 10,
+    "isReply": false
+  },
+  {
+    "discussionId": 3816,
+    "commentId": 680,
+    "clientRequestTime": 1743354340844,
+    "clientReceiveTime": 1743354340932,
+    "e2eLatency": 88,
+    "isReply": false
+  },
+  {
+    "discussionId": 3881,
+    "commentId": 681,
+    "clientRequestTime": 1743354340952,
+    "clientReceiveTime": 1743354341034,
+    "e2eLatency": 82,
+    "isReply": false
+  },
+  {
+    "discussionId": 3867,
+    "commentId": 682,
+    "clientRequestTime": 1743354341060,
+    "clientReceiveTime": 1743354341074,
+    "e2eLatency": 14,
+    "isReply": false
+  },
+  {
+    "discussionId": 3812,
+    "commentId": 683,
+    "clientRequestTime": 1743354341060,
+    "clientReceiveTime": 1743354341076,
+    "e2eLatency": 16,
+    "isReply": false
+  },
+  {
+    "discussionId": 3810,
+    "commentId": 684,
+    "clientRequestTime": 1743354341061,
+    "clientReceiveTime": 1743354341078,
+    "e2eLatency": 17,
+    "isReply": false
+  },
+  {
+    "discussionId": 3833,
+    "commentId": 685,
+    "clientRequestTime": 1743354341000,
+    "clientReceiveTime": 1743354341080,
+    "e2eLatency": 80,
+    "isReply": false
+  },
+  {
+    "discussionId": 3812,
+    "commentId": 686,
+    "clientRequestTime": 1743354341106,
+    "clientReceiveTime": 1743354341124,
+    "e2eLatency": 18,
+    "isReply": false
+  },
+  {
+    "discussionId": 3867,
+    "commentId": 687,
+    "clientRequestTime": 1743354341019,
+    "clientReceiveTime": 1743354341126,
+    "e2eLatency": 107,
+    "isReply": false
+  },
+  {
+    "discussionId": 3859,
+    "commentId": 688,
+    "clientRequestTime": 1743354341776,
+    "clientReceiveTime": 1743354341805,
+    "e2eLatency": 29,
+    "isReply": false
+  },
+  {
+    "discussionId": 3848,
+    "commentId": 689,
+    "clientRequestTime": 1743354341792,
+    "clientReceiveTime": 1743354341810,
+    "e2eLatency": 18,
+    "isReply": false
+  },
+  {
+    "discussionId": 3855,
+    "commentId": 690,
+    "clientRequestTime": 1743354341792,
+    "clientReceiveTime": 1743354341812,
+    "e2eLatency": 20,
+    "isReply": false
+  },
+  {
+    "discussionId": 3882,
+    "commentId": 691,
+    "clientRequestTime": 1743354341792,
+    "clientReceiveTime": 1743354341814,
+    "e2eLatency": 22,
+    "isReply": false
+  },
+  {
+    "discussionId": 3854,
+    "commentId": 692,
+    "clientRequestTime": 1743354341793,
+    "clientReceiveTime": 1743354341815,
+    "e2eLatency": 22,
+    "isReply": false
+  },
+  {
+    "discussionId": 3885,
+    "commentId": 693,
+    "clientRequestTime": 1743354341745,
+    "clientReceiveTime": 1743354341830,
+    "e2eLatency": 85,
+    "isReply": false
+  },
+  {
+    "discussionId": 3827,
+    "commentId": 694,
+    "clientRequestTime": 1743354341760,
+    "clientReceiveTime": 1743354341836,
+    "e2eLatency": 76,
+    "isReply": false
+  },
+  {
+    "discussionId": 3793,
+    "commentId": 695,
+    "clientRequestTime": 1743354341777,
+    "clientReceiveTime": 1743354341867,
+    "e2eLatency": 90,
+    "isReply": false
+  },
+  {
+    "discussionId": 3880,
+    "commentId": 696,
+    "clientRequestTime": 1743354341856,
+    "clientReceiveTime": 1743354341869,
+    "e2eLatency": 13,
+    "isReply": false
+  },
+  {
+    "discussionId": 3877,
+    "commentId": 697,
+    "clientRequestTime": 1743354341871,
+    "clientReceiveTime": 1743354341897,
+    "e2eLatency": 26,
+    "isReply": false
+  },
+  {
+    "discussionId": 3879,
+    "commentId": 699,
+    "clientRequestTime": 1743354341872,
+    "clientReceiveTime": 1743354341900,
+    "e2eLatency": 28,
+    "isReply": false
+  },
+  {
+    "discussionId": 3873,
+    "commentId": 698,
+    "clientRequestTime": 1743354341871,
+    "clientReceiveTime": 1743354341902,
+    "e2eLatency": 31,
+    "isReply": false
+  },
+  {
+    "discussionId": 3879,
+    "commentId": 700,
+    "clientRequestTime": 1743354341887,
+    "clientReceiveTime": 1743354341904,
+    "e2eLatency": 17,
+    "isReply": false
+  },
+  {
+    "discussionId": 3816,
+    "commentId": 702,
+    "clientRequestTime": 1743354341936,
+    "clientReceiveTime": 1743354341960,
+    "e2eLatency": 24,
+    "isReply": false
+  },
+  {
+    "discussionId": 3819,
+    "commentId": 701,
+    "clientRequestTime": 1743354341935,
+    "clientReceiveTime": 1743354341962,
+    "e2eLatency": 27,
+    "isReply": false
+  },
+  {
+    "discussionId": 3837,
+    "commentId": 703,
+    "clientRequestTime": 1743354342013,
+    "clientReceiveTime": 1743354342035,
+    "e2eLatency": 22,
+    "isReply": false
+  },
+  {
+    "discussionId": 3900,
+    "commentId": 704,
+    "clientRequestTime": 1743354341966,
+    "clientReceiveTime": 1743354342040,
+    "e2eLatency": 74,
+    "isReply": false
+  },
+  {
+    "discussionId": 3881,
+    "commentId": 705,
+    "clientRequestTime": 1743354342043,
+    "clientReceiveTime": 1743354342062,
+    "e2eLatency": 19,
+    "isReply": false
+  },
+  {
+    "discussionId": 3812,
+    "commentId": 707,
+    "clientRequestTime": 1743354342089,
+    "clientReceiveTime": 1743354342103,
+    "e2eLatency": 14,
+    "isReply": false
+  },
+  {
+    "discussionId": 3867,
+    "commentId": 708,
+    "clientRequestTime": 1743354342089,
+    "clientReceiveTime": 1743354342105,
+    "e2eLatency": 16,
+    "isReply": false
+  },
+  {
+    "discussionId": 3833,
+    "commentId": 709,
+    "clientRequestTime": 1743354342090,
+    "clientReceiveTime": 1743354342107,
+    "e2eLatency": 17,
+    "isReply": false
+  },
+  {
+    "discussionId": 3895,
+    "commentId": 706,
+    "clientRequestTime": 1743354342014,
+    "clientReceiveTime": 1743354342109,
+    "e2eLatency": 95,
+    "isReply": false
+  },
+  {
+    "discussionId": 3867,
+    "commentId": 710,
+    "clientRequestTime": 1743354342136,
+    "clientReceiveTime": 1743354342156,
+    "e2eLatency": 20,
+    "isReply": false
+  },
+  {
+    "discussionId": 3897,
+    "commentId": 711,
+    "clientRequestTime": 1743354342745,
+    "clientReceiveTime": 1743354342771,
+    "e2eLatency": 26,
+    "isReply": false
+  },
+  {
+    "discussionId": 3824,
+    "commentId": 712,
+    "clientRequestTime": 1743354342735,
+    "clientReceiveTime": 1743354342842,
+    "e2eLatency": 107,
+    "isReply": false
+  },
+  {
+    "discussionId": 3848,
+    "commentId": 714,
+    "clientRequestTime": 1743354342823,
+    "clientReceiveTime": 1743354342848,
+    "e2eLatency": 25,
+    "isReply": false
+  },
+  {
+    "discussionId": 3855,
+    "commentId": 713,
+    "clientRequestTime": 1743354342823,
+    "clientReceiveTime": 1743354342850,
+    "e2eLatency": 27,
+    "isReply": false
+  },
+  {
+    "discussionId": 3859,
+    "commentId": 716,
+    "clientRequestTime": 1743354342823,
+    "clientReceiveTime": 1743354342853,
+    "e2eLatency": 30,
+    "isReply": false
+  },
+  {
+    "discussionId": 3882,
+    "commentId": 715,
+    "clientRequestTime": 1743354342823,
+    "clientReceiveTime": 1743354342854,
+    "e2eLatency": 31,
+    "isReply": false
+  },
+  {
+    "discussionId": 3885,
+    "commentId": 717,
+    "clientRequestTime": 1743354342834,
+    "clientReceiveTime": 1743354342865,
+    "e2eLatency": 31,
+    "isReply": false
+  },
+  {
+    "discussionId": 3833,
+    "commentId": 718,
+    "clientRequestTime": 1743354342775,
+    "clientReceiveTime": 1743354342867,
+    "e2eLatency": 92,
+    "isReply": false
+  },
+  {
+    "discussionId": 3888,
+    "commentId": 719,
+    "clientRequestTime": 1743354342775,
+    "clientReceiveTime": 1743354342869,
+    "e2eLatency": 94,
+    "isReply": false
+  },
+  {
+    "discussionId": 3827,
+    "commentId": 720,
+    "clientRequestTime": 1743354342851,
+    "clientReceiveTime": 1743354342871,
+    "e2eLatency": 20,
+    "isReply": false
+  },
+  {
+    "discussionId": 3880,
+    "commentId": 722,
+    "clientRequestTime": 1743354342876,
+    "clientReceiveTime": 1743354342885,
+    "e2eLatency": 9,
+    "isReply": false
+  },
+  {
+    "discussionId": 3793,
+    "commentId": 721,
+    "clientRequestTime": 1743354342872,
+    "clientReceiveTime": 1743354342888,
+    "e2eLatency": 16,
+    "isReply": false
+  },
+  {
+    "discussionId": 3873,
+    "commentId": 723,
+    "clientRequestTime": 1743354342906,
+    "clientReceiveTime": 1743354342927,
+    "e2eLatency": 21,
+    "isReply": false
+  },
+  {
+    "discussionId": 3840,
+    "commentId": 724,
+    "clientRequestTime": 1743354342853,
+    "clientReceiveTime": 1743354342933,
+    "e2eLatency": 80,
+    "isReply": false
+  },
+  {
+    "discussionId": 3816,
+    "commentId": 725,
+    "clientRequestTime": 1743354342967,
+    "clientReceiveTime": 1743354342989,
+    "e2eLatency": 22,
+    "isReply": false
+  },
+  {
+    "discussionId": 3832,
+    "commentId": 726,
+    "clientRequestTime": 1743354342953,
+    "clientReceiveTime": 1743354343036,
+    "e2eLatency": 83,
+    "isReply": false
+  },
+  {
+    "discussionId": 3837,
+    "commentId": 727,
+    "clientRequestTime": 1743354343040,
+    "clientReceiveTime": 1743354343062,
+    "e2eLatency": 22,
+    "isReply": false
+  },
+  {
+    "discussionId": 3900,
+    "commentId": 728,
+    "clientRequestTime": 1743354343056,
+    "clientReceiveTime": 1743354343066,
+    "e2eLatency": 10,
+    "isReply": false
+  },
+  {
+    "discussionId": 3881,
+    "commentId": 729,
+    "clientRequestTime": 1743354343069,
+    "clientReceiveTime": 1743354343080,
+    "e2eLatency": 11,
+    "isReply": false
+  },
+  {
+    "discussionId": 3882,
+    "commentId": 730,
+    "clientRequestTime": 1743354343009,
+    "clientReceiveTime": 1743354343083,
+    "e2eLatency": 74,
+    "isReply": false
+  },
+  {
+    "discussionId": 3799,
+    "commentId": 731,
+    "clientRequestTime": 1743354343026,
+    "clientReceiveTime": 1743354343106,
+    "e2eLatency": 80,
+    "isReply": false
+  },
+  {
+    "discussionId": 3833,
+    "commentId": 732,
+    "clientRequestTime": 1743354343119,
+    "clientReceiveTime": 1743354343128,
+    "e2eLatency": 9,
+    "isReply": false
+  },
+  {
+    "discussionId": 3895,
+    "commentId": 733,
+    "clientRequestTime": 1743354343119,
+    "clientReceiveTime": 1743354343131,
+    "e2eLatency": 12,
+    "isReply": false
+  },
+  {
+    "discussionId": 3867,
+    "commentId": 734,
+    "clientRequestTime": 1743354343168,
+    "clientReceiveTime": 1743354343181,
+    "e2eLatency": 13,
+    "isReply": false
+  },
+  {
+    "discussionId": 3843,
+    "commentId": 735,
+    "clientRequestTime": 1743354343735,
+    "clientReceiveTime": 1743354343765,
+    "e2eLatency": 30,
+    "isReply": false
+  },
+  {
+    "discussionId": 3897,
+    "commentId": 736,
+    "clientRequestTime": 1743354343784,
+    "clientReceiveTime": 1743354343809,
+    "e2eLatency": 25,
+    "isReply": false
+  },
+  {
+    "discussionId": 3864,
+    "commentId": 737,
+    "clientRequestTime": 1743354343767,
+    "clientReceiveTime": 1743354343867,
+    "e2eLatency": 100,
+    "isReply": false
+  },
+  {
+    "discussionId": 3824,
+    "commentId": 738,
+    "clientRequestTime": 1743354343850,
+    "clientReceiveTime": 1743354343870,
+    "e2eLatency": 20,
+    "isReply": false
+  },
+  {
+    "discussionId": 3809,
+    "commentId": 739,
+    "clientRequestTime": 1743354343786,
+    "clientReceiveTime": 1743354343881,
+    "e2eLatency": 95,
+    "isReply": false
+  },
+  {
+    "discussionId": 3859,
+    "commentId": 741,
+    "clientRequestTime": 1743354343866,
+    "clientReceiveTime": 1743354343892,
+    "e2eLatency": 26,
+    "isReply": false
+  },
+  {
+    "discussionId": 3885,
+    "commentId": 742,
+    "clientRequestTime": 1743354343869,
+    "clientReceiveTime": 1743354343894,
+    "e2eLatency": 25,
+    "isReply": false
+  },
+  {
+    "discussionId": 3872,
+    "commentId": 740,
+    "clientRequestTime": 1743354343787,
+    "clientReceiveTime": 1743354343896,
+    "e2eLatency": 109,
+    "isReply": false
+  },
+  {
+    "discussionId": 3827,
+    "commentId": 743,
+    "clientRequestTime": 1743354343876,
+    "clientReceiveTime": 1743354343899,
+    "e2eLatency": 23,
+    "isReply": false
+  },
+  {
+    "discussionId": 3833,
+    "commentId": 744,
+    "clientRequestTime": 1743354343885,
+    "clientReceiveTime": 1743354343905,
+    "e2eLatency": 20,
+    "isReply": false
+  },
+  {
+    "discussionId": 3888,
+    "commentId": 745,
+    "clientRequestTime": 1743354343885,
+    "clientReceiveTime": 1743354343907,
+    "e2eLatency": 22,
+    "isReply": false
+  },
+  {
+    "discussionId": 3880,
+    "commentId": 746,
+    "clientRequestTime": 1743354343900,
+    "clientReceiveTime": 1743354343912,
+    "e2eLatency": 12,
+    "isReply": false
+  },
+  {
+    "discussionId": 3835,
+    "commentId": 747,
+    "clientRequestTime": 1743354343852,
+    "clientReceiveTime": 1743354343939,
+    "e2eLatency": 87,
+    "isReply": false
+  },
+  {
+    "discussionId": 3840,
+    "commentId": 748,
+    "clientRequestTime": 1743354343942,
+    "clientReceiveTime": 1743354343961,
+    "e2eLatency": 19,
+    "isReply": false
+  },
+  {
+    "discussionId": 3851,
+    "commentId": 749,
+    "clientRequestTime": 1743354344002,
+    "clientReceiveTime": 1743354344020,
+    "e2eLatency": 18,
+    "isReply": false
+  },
+  {
+    "discussionId": 3896,
+    "commentId": 750,
+    "clientRequestTime": 1743354343972,
+    "clientReceiveTime": 1743354344059,
+    "e2eLatency": 87,
+    "isReply": false
+  },
+  {
+    "discussionId": 3832,
+    "commentId": 751,
+    "clientRequestTime": 1743354344051,
+    "clientReceiveTime": 1743354344062,
+    "e2eLatency": 11,
+    "isReply": false
+  },
+  {
+    "discussionId": 3837,
+    "commentId": 752,
+    "clientRequestTime": 1743354344067,
+    "clientReceiveTime": 1743354344089,
+    "e2eLatency": 22,
+    "isReply": false
+  },
+  {
+    "discussionId": 3900,
+    "commentId": 753,
+    "clientRequestTime": 1743354344069,
+    "clientReceiveTime": 1743354344091,
+    "e2eLatency": 22,
+    "isReply": false
+  },
+  {
+    "discussionId": 3882,
+    "commentId": 754,
+    "clientRequestTime": 1743354344092,
+    "clientReceiveTime": 1743354344104,
+    "e2eLatency": 12,
+    "isReply": false
+  },
+  {
+    "discussionId": 3799,
+    "commentId": 755,
+    "clientRequestTime": 1743354344109,
+    "clientReceiveTime": 1743354344123,
+    "e2eLatency": 14,
+    "isReply": false
+  },
+  {
+    "discussionId": 3872,
+    "commentId": 756,
+    "clientRequestTime": 1743354344052,
+    "clientReceiveTime": 1743354344129,
+    "e2eLatency": 77,
+    "isReply": false
+  },
+  {
+    "discussionId": 3788,
+    "commentId": 757,
+    "clientRequestTime": 1743354344737,
+    "clientReceiveTime": 1743354344761,
+    "e2eLatency": 24,
+    "isReply": false
+  },
+  {
+    "discussionId": 3796,
+    "commentId": 758,
+    "clientRequestTime": 1743354344753,
+    "clientReceiveTime": 1743354344765,
+    "e2eLatency": 12,
+    "isReply": false
+  },
+  {
+    "discussionId": 3843,
+    "commentId": 759,
+    "clientRequestTime": 1743354344781,
+    "clientReceiveTime": 1743354344810,
+    "e2eLatency": 29,
+    "isReply": false
+  },
+  {
+    "discussionId": 3878,
+    "commentId": 760,
+    "clientRequestTime": 1743354344799,
+    "clientReceiveTime": 1743354344813,
+    "e2eLatency": 14,
+    "isReply": false
+  },
+  {
+    "discussionId": 3836,
+    "commentId": 761,
+    "clientRequestTime": 1743354344799,
+    "clientReceiveTime": 1743354344882,
+    "e2eLatency": 83,
+    "isReply": false
+  },
+  {
+    "discussionId": 3864,
+    "commentId": 762,
+    "clientRequestTime": 1743354344890,
+    "clientReceiveTime": 1743354344915,
+    "e2eLatency": 25,
+    "isReply": false
+  },
+  {
+    "discussionId": 3824,
+    "commentId": 764,
+    "clientRequestTime": 1743354344890,
+    "clientReceiveTime": 1743354344917,
+    "e2eLatency": 27,
+    "isReply": false
+  },
+  {
+    "discussionId": 3809,
+    "commentId": 763,
+    "clientRequestTime": 1743354344890,
+    "clientReceiveTime": 1743354344920,
+    "e2eLatency": 30,
+    "isReply": false
+  },
+  {
+    "discussionId": 3872,
+    "commentId": 765,
+    "clientRequestTime": 1743354344906,
+    "clientReceiveTime": 1743354344926,
+    "e2eLatency": 20,
+    "isReply": false
+  },
+  {
+    "discussionId": 3888,
+    "commentId": 766,
+    "clientRequestTime": 1743354344920,
+    "clientReceiveTime": 1743354344932,
+    "e2eLatency": 12,
+    "isReply": false
+  },
+  {
+    "discussionId": 3833,
+    "commentId": 767,
+    "clientRequestTime": 1743354344921,
+    "clientReceiveTime": 1743354344934,
+    "e2eLatency": 13,
+    "isReply": false
+  },
+  {
+    "discussionId": 3818,
+    "commentId": 768,
+    "clientRequestTime": 1743354344876,
+    "clientReceiveTime": 1743354344960,
+    "e2eLatency": 84,
+    "isReply": false
+  },
+  {
+    "discussionId": 3835,
+    "commentId": 769,
+    "clientRequestTime": 1743354344953,
+    "clientReceiveTime": 1743354344962,
+    "e2eLatency": 9,
+    "isReply": false
+  },
+  {
+    "discussionId": 3840,
+    "commentId": 770,
+    "clientRequestTime": 1743354344965,
+    "clientReceiveTime": 1743354344992,
+    "e2eLatency": 27,
+    "isReply": false
+  },
+  {
+    "discussionId": 3851,
+    "commentId": 772,
+    "clientRequestTime": 1743354345033,
+    "clientReceiveTime": 1743354345053,
+    "e2eLatency": 20,
+    "isReply": false
+  },
+  {
+    "discussionId": 3861,
+    "commentId": 771,
+    "clientRequestTime": 1743354345032,
+    "clientReceiveTime": 1743354345056,
+    "e2eLatency": 24,
+    "isReply": false
+  },
+  {
+    "discussionId": 3843,
+    "commentId": 773,
+    "clientRequestTime": 1743354344985,
+    "clientReceiveTime": 1743354345061,
+    "e2eLatency": 76,
+    "isReply": false
+  },
+  {
+    "discussionId": 3896,
+    "commentId": 774,
+    "clientRequestTime": 1743354345061,
+    "clientReceiveTime": 1743354345083,
+    "e2eLatency": 22,
+    "isReply": false
+  },
+  {
+    "discussionId": 3882,
+    "commentId": 775,
+    "clientRequestTime": 1743354345107,
+    "clientReceiveTime": 1743354345119,
+    "e2eLatency": 12,
+    "isReply": false
+  },
+  {
+    "discussionId": 3885,
+    "commentId": 776,
+    "clientRequestTime": 1743354345048,
+    "clientReceiveTime": 1743354345125,
+    "e2eLatency": 77,
+    "isReply": false
+  },
+  {
+    "discussionId": 3799,
+    "commentId": 777,
+    "clientRequestTime": 1743354345128,
+    "clientReceiveTime": 1743354345144,
+    "e2eLatency": 16,
+    "isReply": false
+  },
+  {
+    "discussionId": 3872,
+    "commentId": 778,
+    "clientRequestTime": 1743354345138,
+    "clientReceiveTime": 1743354345149,
+    "e2eLatency": 11,
+    "isReply": false
+  },
+  {
+    "discussionId": 3796,
+    "commentId": 779,
+    "clientRequestTime": 1743354345775,
+    "clientReceiveTime": 1743354345806,
+    "e2eLatency": 31,
+    "isReply": false
+  },
+  {
+    "discussionId": 3788,
+    "commentId": 780,
+    "clientRequestTime": 1743354345775,
+    "clientReceiveTime": 1743354345809,
+    "e2eLatency": 34,
+    "isReply": false
+  },
+  {
+    "discussionId": 3843,
+    "commentId": 781,
+    "clientRequestTime": 1743354345823,
+    "clientReceiveTime": 1743354345831,
+    "e2eLatency": 8,
+    "isReply": false
+  },
+  {
+    "discussionId": 3878,
+    "commentId": 782,
+    "clientRequestTime": 1743354345823,
+    "clientReceiveTime": 1743354345834,
+    "e2eLatency": 11,
+    "isReply": false
+  },
+  {
+    "discussionId": 3836,
+    "commentId": 783,
+    "clientRequestTime": 1743354345887,
+    "clientReceiveTime": 1743354345911,
+    "e2eLatency": 24,
+    "isReply": false
+  },
+  {
+    "discussionId": 3809,
+    "commentId": 784,
+    "clientRequestTime": 1743354345931,
+    "clientReceiveTime": 1743354345954,
+    "e2eLatency": 23,
+    "isReply": false
+  },
+  {
+    "discussionId": 3864,
+    "commentId": 785,
+    "clientRequestTime": 1743354345931,
+    "clientReceiveTime": 1743354345958,
+    "e2eLatency": 27,
+    "isReply": false
+  },
+  {
+    "discussionId": 3818,
+    "commentId": 786,
+    "clientRequestTime": 1743354345977,
+    "clientReceiveTime": 1743354345997,
+    "e2eLatency": 20,
+    "isReply": false
+  },
+  {
+    "discussionId": 3835,
+    "commentId": 787,
+    "clientRequestTime": 1743354345978,
+    "clientReceiveTime": 1743354346000,
+    "e2eLatency": 22,
+    "isReply": false
+  },
+  {
+    "discussionId": 3851,
+    "commentId": 788,
+    "clientRequestTime": 1743354346071,
+    "clientReceiveTime": 1743354346097,
+    "e2eLatency": 26,
+    "isReply": false
+  },
+  {
+    "discussionId": 3843,
+    "commentId": 790,
+    "clientRequestTime": 1743354346071,
+    "clientReceiveTime": 1743354346102,
+    "e2eLatency": 31,
+    "isReply": false
+  },
+  {
+    "discussionId": 3861,
+    "commentId": 789,
+    "clientRequestTime": 1743354346073,
+    "clientReceiveTime": 1743354346104,
+    "e2eLatency": 31,
+    "isReply": false
+  },
+  {
+    "discussionId": 3896,
+    "commentId": 791,
+    "clientRequestTime": 1743354346087,
+    "clientReceiveTime": 1743354346106,
+    "e2eLatency": 19,
+    "isReply": false
+  },
+  {
+    "discussionId": 3885,
+    "commentId": 792,
+    "clientRequestTime": 1743354346134,
+    "clientReceiveTime": 1743354346154,
+    "e2eLatency": 20,
+    "isReply": false
+  },
+  {
+    "discussionId": 3872,
+    "commentId": 793,
+    "clientRequestTime": 1743354346157,
+    "clientReceiveTime": 1743354346169,
+    "e2eLatency": 12,
+    "isReply": false
+  },
+  {
+    "discussionId": 3788,
+    "commentId": 794,
+    "clientRequestTime": 1743354346813,
+    "clientReceiveTime": 1743354346843,
+    "e2eLatency": 30,
+    "isReply": false
+  },
+  {
+    "discussionId": 3796,
+    "commentId": 795,
+    "clientRequestTime": 1743354346813,
+    "clientReceiveTime": 1743354346845,
+    "e2eLatency": 32,
+    "isReply": false
+  },
+  {
+    "discussionId": 3878,
+    "commentId": 796,
+    "clientRequestTime": 1743354346845,
+    "clientReceiveTime": 1743354346865,
+    "e2eLatency": 20,
+    "isReply": false
+  },
+  {
+    "discussionId": 3818,
+    "commentId": 797,
+    "clientRequestTime": 1743354347000,
+    "clientReceiveTime": 1743354347021,
+    "e2eLatency": 21,
+    "isReply": false
+  },
+  {
+    "discussionId": 3843,
+    "commentId": 798,
+    "clientRequestTime": 1743354347106,
+    "clientReceiveTime": 1743354347118,
+    "e2eLatency": 12,
+    "isReply": false
+  },
+  {
+    "discussionId": 3861,
+    "commentId": 799,
+    "clientRequestTime": 1743354347106,
+    "clientReceiveTime": 1743354347121,
+    "e2eLatency": 15,
+    "isReply": false
+  },
+  {
+    "discussionId": 3885,
+    "commentId": 800,
+    "clientRequestTime": 1743354347167,
+    "clientReceiveTime": 1743354347188,
+    "e2eLatency": 21,
+    "isReply": false
+  }
+]

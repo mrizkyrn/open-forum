@@ -1,4 +1,3 @@
----
 #----------------------------------------------------------------------
 # Comment Notification Performance Test - Author-Specific
 #----------------------------------------------------------------------
@@ -30,6 +29,7 @@ config:
 
   variables:
     targetAuthorId: 39
+
   thresholds:
     http.response_time.median: 300
     http.response_time.p95: 800
