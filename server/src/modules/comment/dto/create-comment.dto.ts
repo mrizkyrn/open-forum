@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
-import { IsNumber, IsOptional, IsString, MaxLength } from 'class-validator';
+import { IsArray, IsNumber, IsOptional, IsString, MaxLength } from 'class-validator';
 
 export class CreateCommentDto {
   @ApiProperty({
@@ -20,6 +20,22 @@ export class CreateCommentDto {
   @IsNumber()
   @Transform(({ value }) => (value ? parseInt(value, 10) : null))
   parentId?: number;
+
+  @ApiProperty({
+    description: 'IDs of mentioned users',
+    example: [1, 5, 8],
+    required: false,
+    type: [Number],
+  })
+  @IsOptional()
+  @Transform(({ value }) => {
+    if (typeof value === 'string') {
+      return value.split(',').map((id) => parseInt(id, 10));
+    }
+    return value;
+  })
+  @IsArray()
+  mentionedUserIds?: number[];
 
   @IsOptional()
   @IsNumber()

@@ -32,66 +32,81 @@ export class NotificationService implements OnModuleInit {
   }
 
   private subscribeToRedisEvents() {
-    this.redisService.subscribe(RedisChannels.COMMENT_CREATED, async (message) => {
-      try {
-        const data = JSON.parse(message);
+    // Add subscription for comment events
+    this.redisService
+      .subscribe(RedisChannels.COMMENT_CREATED, async (message) => {
+        try {
+          const data = JSON.parse(message);
 
-        // Get necessary data
+          const baseNotificationData = {
+            discussionId: data.discussionId,
+            commentId: data.commentId,
+            content: data.content,
+            spaceId: data.spaceId,
+          };
 
-        // Process notifications
-        // Prepare common notification data
-        const baseNotificationData = {
-          discussionId: data.discussionId,
-          commentId: data.commentId,
-          content: data.content,
-          spaceId: data.spaceId,
-        };
+          if (data.parentId) {
+            // This is a reply to another comment
+            const parentComment = await this.commentService.getCommentEntity(data.parentId);
 
-        if (data.parentId) {
-          // This is a reply to another comment
-          const parentComment = await this.commentService.getCommentEntity(data.parentId);
-
-          if (parentComment && parentComment.authorId !== data.authorId) {
-            // Only notify if the parent author is different from current user
-            await this.createNotificationIfNotExists(
-              {
-                recipientId: parentComment.authorId,
-                actorId: data.authorId,
-                type: NotificationType.NEW_REPLY,
-                entityType: NotificationEntityType.COMMENT,
-                entityId: data.commentId,
-                data: {
-                  ...baseNotificationData,
-                  parentId: parentComment.authorId,
+            if (parentComment && parentComment.authorId !== data.authorId) {
+              // Only notify if the parent author is different from current user
+              await this.createNotificationIfNotExists(
+                {
+                  recipientId: parentComment.authorId,
+                  actorId: data.authorId,
+                  type: NotificationType.NEW_REPLY,
+                  entityType: NotificationEntityType.COMMENT,
+                  entityId: data.commentId,
+                  data: {
+                    ...baseNotificationData,
+                    parentId: parentComment.authorId,
+                  },
                 },
-              },
-              5,
-            );
-          }
-        } else {
-          const discussion = await this.discussionService.getDiscussionEntity(data.discussionId);
+                5,
+              );
+            }
+          } else {
+            const discussion = await this.discussionService.getDiscussionEntity(data.discussionId);
 
-          // This is a comment on a discussion
-          if (discussion.authorId !== data.authorId) {
-            await this.createNotificationIfNotExists(
-              {
-                recipientId: discussion.authorId,
-                actorId: data.authorId,
-                type: NotificationType.NEW_COMMENT,
-                entityType: NotificationEntityType.COMMENT,
-                entityId: data.commentId,
-                data: baseNotificationData,
-              },
-              5,
-            );
+            // This is a comment on a discussion
+            if (discussion.authorId !== data.authorId) {
+              await this.createNotificationIfNotExists(
+                {
+                  recipientId: discussion.authorId,
+                  actorId: data.authorId,
+                  type: NotificationType.NEW_COMMENT,
+                  entityType: NotificationEntityType.COMMENT,
+                  entityId: data.commentId,
+                  data: baseNotificationData,
+                },
+                5,
+              );
+            }
           }
+
+          const mentionedUserIds = data.mentionedUserIds.filter((userId) => userId !== data.authorId);
+
+          if (mentionedUserIds.length) {
+            await this.commentService.processMentions(data.commentId, mentionedUserIds);
+            await this.createBatchNotifications({
+              recipientIds: mentionedUserIds,
+              actorId: data.authorId,
+              type: NotificationType.MENTION,
+              entityType: NotificationEntityType.COMMENT,
+              entityId: data.commentId,
+              data: baseNotificationData,
+            });
+          }
+
+          this.logger.log(`Notifications processed for comment ID ${data.commentId}`);
+        } catch (error) {
+          this.logger.error(`Error processing notifications for comment: ${error.message}`, error.stack);
         }
-
-        this.logger.log(`Notifications processed for comment ID ${data.commentId}`);
-      } catch (error) {
-        this.logger.error(`Error processing notifications for comment: ${error.message}`, error.stack);
-      }
-    });
+      })
+      .catch((error) => {
+        this.logger.error(`Failed to subscribe to comment events: ${error.message}`);
+      });
 
     // Add subscription for vote events
     this.redisService

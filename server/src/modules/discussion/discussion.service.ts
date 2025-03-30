@@ -118,7 +118,7 @@ export class DiscussionService {
           hasTags: (discussion.tags?.length || 0) > 0,
           hasAttachments: files && files.length > 0,
           content: this.truncateContent(savedDiscussion.content, 100),
-          clientRequestTime,
+          clientRequestTime: clientRequestTime || Date.now(),
         });
 
         const createdDiscussion = await this.getDiscussionById(savedDiscussion.id);

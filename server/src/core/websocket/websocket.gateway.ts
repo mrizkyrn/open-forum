@@ -269,7 +269,7 @@ export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection, OnG
       clientRequestTime,
     };
 
-    this.server.emit('newComment', payload);
+    this.server.emit('newComment', payload); // TODO: Emit to specific discussion room instead of all clients
     return true;
   }
 }

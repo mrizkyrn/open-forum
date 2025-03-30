@@ -3,6 +3,7 @@ import { BaseEntity } from '../../../core/database/entities/base.entity';
 import { Attachment } from '../../attachment/entities/attachment.entity';
 import { Discussion } from '../../discussion/entities/discussion.entity';
 import { User } from '../../user/entities/user.entity';
+import { CommentMention } from './comment-mention.entity';
 
 @Entity('comments')
 export class Comment extends BaseEntity {
@@ -45,6 +46,9 @@ export class Comment extends BaseEntity {
 
   @Column({ name: 'reply_count', type: 'integer', default: 0 })
   replyCount: number;
+
+  @OneToMany(() => CommentMention, (mention) => mention.comment)
+  mentions: CommentMention[];
 
   attachments: Attachment[];
 }

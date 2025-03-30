@@ -7,10 +7,11 @@ import { VoteModule } from '../vote/vote.module';
 import { CommentController } from './comment.controller';
 import { CommentService } from './comment.service';
 import { Comment } from './entities/comment.entity';
+import { CommentMention } from './entities/comment-mention.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Comment]),
+    TypeOrmModule.forFeature([Comment, CommentMention]),
     forwardRef(() => DiscussionModule),
     AttachmentModule,
     forwardRef(() => VoteModule),

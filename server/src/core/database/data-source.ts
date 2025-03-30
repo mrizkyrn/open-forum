@@ -2,6 +2,7 @@ import 'dotenv/config';
 import { DataSource } from 'typeorm';
 import { UserActivity } from '../../modules/analytic/entities/user-activity.entity';
 import { Attachment } from '../../modules/attachment/entities/attachment.entity';
+import { CommentMention } from '../../modules/comment/entities/comment-mention.entity';
 import { Comment } from '../../modules/comment/entities/comment.entity';
 import { Bookmark } from '../../modules/discussion/entities/bookmark.entity';
 import { DiscussionSpace } from '../../modules/discussion/entities/discussion-space.entity';
@@ -27,6 +28,7 @@ export default new DataSource({
     Bookmark,
     Attachment,
     Comment,
+    CommentMention,
     Vote,
     DiscussionSpace,
     Report,

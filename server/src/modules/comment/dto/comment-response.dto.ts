@@ -92,6 +92,13 @@ export class CommentResponseDto {
   })
   voteStatus?: number | null;
 
+  @ApiProperty({
+    description: 'List of user IDs mentioned in the comment',
+    type: [Number],
+    nullable: true,
+  })
+  mentionedUsers?: UserResponseDto[];
+
   static fromEntity(comment: Comment, voteStatus?: number | null): CommentResponseDto {
     const dto = new CommentResponseDto();
 
@@ -116,6 +123,13 @@ export class CommentResponseDto {
       dto.attachments = [...comment.attachments].sort((a, b) => a.displayOrder - b.displayOrder);
     } else {
       dto.attachments = [];
+    }
+
+    // Hdandle mentions
+    if (comment.mentions && comment.mentions.length > 0) {
+      dto.mentionedUsers = comment.mentions.map((mention) => UserResponseDto.fromEntity(mention.user));
+    } else {
+      dto.mentionedUsers = [];
     }
 
     // Handle replies if present
