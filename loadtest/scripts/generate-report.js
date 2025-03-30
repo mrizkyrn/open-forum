@@ -54,7 +54,7 @@ class TestReportGenerator {
 
   loadReportData() {
     try {
-      const reportPrefix = this.phaseName !== 'all' ? `${this.phaseName}-report` : 'report';
+      const reportPrefix = this.phaseName !== 'all' ? this.phaseName : '';
       const reportFile = this.findLatestFile(this.paths.reports, reportPrefix);
 
       if (!reportFile) {
@@ -110,10 +110,6 @@ class TestReportGenerator {
         console.log('No e2e-latency directory found, end-to-end latency will not be included');
         return false;
       }
-
-      // List all files for debugging
-      const allFiles = fs.readdirSync(latencyDir);
-      console.log(`DEBUG: Found ${allFiles.length} files in latency dir:`, allFiles);
 
       // Use the phase name as the file prefix instead of "e2e-latency-"
       const phasePrefix = this.phaseName !== 'all' ? this.phaseName : '';

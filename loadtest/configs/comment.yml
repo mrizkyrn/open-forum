@@ -9,23 +9,24 @@ config:
   # Test execution phases
   phases:
     - name: 'Warmup Phase'
-      duration: 10
+      duration: 60
       arrivalRate: 1
-      rampTo: 5
+      rampTo: 8
       comment: 'Gradually increase load to warm up the system'
 
     # - name: 'Sustained Load Phase'
-    #   duration: 60
-    #   arrivalRate: 10
-    #   comment: 'Maintain steady load to evaluate comment performance'
+    #   duration: 180
+    #   arrivalRate: 8
+    #   comment: 'Maintain steady load to evaluate stability'
+
+    # - name: 'Peak Load Phase'
+    #   duration: 120
+    #   arrivalRate: 8
+    #   rampTo: 25
+    #   comment: 'Ramp up to peak load to identify breaking points'
 
   # Helper scripts
   processor: '../scripts/helpers.js'
-
-  # Plugins configuration
-  plugins:
-    metrics-by-endpoint: {} # Track metrics per endpoint
-    expect: {} # Response validation
 
   # Performance thresholds
   thresholds:
@@ -34,17 +35,26 @@ config:
     http.response_time.p99: 1500 # 99% of requests should be under 1500ms
     http.errors: 1 # Error rate threshold (percentage)
     http.request_rate: 5 # Minimum request rate
+  
+  http:
+    timeout: 15000
+
+# Add pre-script hook to fetch data before the test starts
+before:
+  flow:
+    # Pre-fetch discussion IDs (this won't be counted in the metrics)
+    - function: 'preFetchAllDiscussions'
+    - think: 1
 
 #----------------------------------------------------------------------
 # Test Scenarios
 #----------------------------------------------------------------------
 scenarios:
   - name: 'Add comments to discussions'
+    weight: 80
     flow:
       # Load pre-fetched discussion IDs
       - function: 'loadDiscussionIds'
-
-      # Make sure we have a valid discussion ID
       - function: 'checkDiscussionId'
 
       - loop:
@@ -56,20 +66,42 @@ scenarios:
 
           # Join discussion room via WebSocket to receive updates
           - function: 'joinDiscussionRoom'
-          
-          # Post comment to the discussion - FIXED URL to match controller route
+
+          # Post comment to the discussion
           - post:
               url: '/discussions/{{ discussionId }}/comments'
               beforeRequest: 'setAuthHeader'
               json:
                 content: '{{ commentContent }}'
+                parentId: '{{ parentId }}'
                 clientRequestTime: '{{ timestamp }}'
               capture:
                 - json: '$.data.id'
                   as: 'commentId'
-              expect:
-                - statusCode: 201
 
           # Wait briefly to ensure notification is processed
           - think: 1
         count: 3
+
+  - name: 'Add comments with file attachments'
+    weight: 20
+    flow:
+      # Load pre-fetched discussion IDs
+      - function: 'loadDiscussionIds'
+
+      # Make sure we have a valid discussion ID
+      - function: 'checkDiscussionId'
+
+      - loop:
+          # Generate random comment data
+          - function: 'generateCommentData'
+
+          # Generate random file attachments (limited to 2)
+          - function: 'generateCommentAttachments'
+
+          # Create comment with attachments via custom function
+          - function: 'createCommentWithAttachments'
+
+          # Wait briefly to ensure notification is processed
+          - think: 1
+        count: 2

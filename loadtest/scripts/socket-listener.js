@@ -12,7 +12,7 @@ const phaseName = args[1] || 'all';
 const CONFIG = {
   socketUrl: 'http://localhost:3000/events',
   auth: {
-    username: '2110511091',
+    username: '2110511037',
     password: 'password123',
   },
   outputDir: path.join(__dirname, '..', 'results', 'e2e-latency', testName),
@@ -91,8 +91,9 @@ async function connectSocket() {
     });
 
     // Set up listener for new discussion events
-    socket.on('newDiscussion', handleNewDiscussionEvent);
-    socket.on('newComment', handleNewCommentEvent);
+    // socket.on('newDiscussion', handleNewDiscussionEvent);
+    // socket.on('newComment', handleNewCommentEvent);
+    socket.on('newNotification', handleNewNotificationEvent);
 
     return socket;
   } catch (error) {
@@ -134,13 +135,7 @@ function handleNewDiscussionEvent(data) {
     }
 
     // Look for client request timestamp in the event data
-    let clientRequestTime = null;
-
-    if (data.clientRequestTime !== undefined) {
-      clientRequestTime = data.clientRequestTime;
-    } else if (data.meta && data.meta.clientRequestTime !== undefined) {
-      clientRequestTime = data.meta.clientRequestTime;
-    }
+    const clientRequestTime = data.clientRequestTime;
 
     if (!clientRequestTime) {
       console.warn(`❌ No client request timestamp in event for discussion #${discussionId}`, data);
@@ -231,6 +226,68 @@ function handleNewCommentEvent(data) {
     saveLatencyResults();
   } catch (error) {
     console.error(`Error handling comment event: ${error.message}`, error);
+  }
+}
+
+function handleNewNotificationEvent(data) {
+  try {
+    const clientReceiveTime = Date.now();
+    console.log(`📨 Received notification event:`, data.type, data.actorId);
+
+    // Extract discussion ID and notification ID
+    let discussionId = data.entityId;
+    let notificationId = data.id;
+
+    if (!discussionId || !notificationId) {
+      console.warn(`❓ Missing IDs in notification event data:`, data);
+      return;
+    }
+
+    // Ensure numeric format
+    if (!isNaN(discussionId)) discussionId = Number(discussionId);
+    if (!isNaN(notificationId)) notificationId = Number(notificationId);
+
+    // Look for client request timestamp
+    let clientRequestTime = null;
+
+    if (data.clientRequestTime !== undefined) {
+      clientRequestTime = data.clientRequestTime;
+    } else if (data.meta && data.meta.clientRequestTime !== undefined) {
+      clientRequestTime = data.meta.clientRequestTime;
+    }
+
+    if (!clientRequestTime) {
+      console.warn(`❌ No client request timestamp in notification event:`, data);
+      return;
+    }
+
+    // Convert to number if string
+    if (typeof clientRequestTime === 'string') {
+      clientRequestTime = parseInt(clientRequestTime, 10);
+    }
+
+    // Calculate end-to-end latency
+    const e2eLatency = clientReceiveTime - clientRequestTime;
+
+    console.log(`⏱️ NOTIFICATION E2E LATENCY: ${e2eLatency}ms for notification #${notificationId} on discussion #${discussionId}`);
+
+    // Create a unique key using both IDs
+    const resultKey = `notification-${notificationId}`;
+
+    // Store latency result
+    latencyResults.set(resultKey, {
+      discussionId,
+      notificationId,
+      clientRequestTime,
+      clientReceiveTime,
+      e2eLatency,
+      isReply: data.isReply || false,
+    });
+
+    // Save updated results
+    saveLatencyResults();
+  } catch (error) {
+    console.error(`Error handling notification event: ${error.message}`, error);
   }
 }
 

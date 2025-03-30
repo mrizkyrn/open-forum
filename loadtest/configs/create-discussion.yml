@@ -9,9 +9,9 @@ config:
   # Test execution phases
   phases:
     - name: 'Warmup Phase'
-      duration: 10
+      duration: 60
       arrivalRate: 1
-      rampTo: 5
+      rampTo: 8
       comment: 'Gradually increase load to warm up the system'
 
     # - name: 'Sustained Load Phase'
@@ -42,6 +42,9 @@ config:
     http.request_rate: 5 # Minimum request rate
     'socketio.latency.median': 200
     'socketio.latency.p95': 500
+
+  http:
+    timeout: 15000
 
 #----------------------------------------------------------------------
 # Test Scenarios

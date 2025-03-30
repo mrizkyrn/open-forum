@@ -1,0 +1,4580 @@
+[
+  {
+    "discussionId": 1513,
+    "clientRequestTime": 1743341416087,
+    "clientReceiveTime": 1743341416199,
+    "e2eLatency": 112
+  },
+  {
+    "discussionId": 1514,
+    "clientRequestTime": 1743341416242,
+    "clientReceiveTime": 1743341416248,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 1515,
+    "clientRequestTime": 1743341416251,
+    "clientReceiveTime": 1743341416257,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 1516,
+    "clientRequestTime": 1743341417097,
+    "clientReceiveTime": 1743341417177,
+    "e2eLatency": 80
+  },
+  {
+    "discussionId": 1517,
+    "clientRequestTime": 1743341417181,
+    "clientReceiveTime": 1743341417186,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1518,
+    "clientRequestTime": 1743341417189,
+    "clientReceiveTime": 1743341417194,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1519,
+    "clientRequestTime": 1743341418111,
+    "clientReceiveTime": 1743341418192,
+    "e2eLatency": 81
+  },
+  {
+    "discussionId": 1520,
+    "clientRequestTime": 1743341418195,
+    "clientReceiveTime": 1743341418200,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1521,
+    "clientRequestTime": 1743341418203,
+    "clientReceiveTime": 1743341418208,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1522,
+    "clientRequestTime": 1743341419099,
+    "clientReceiveTime": 1743341419177,
+    "e2eLatency": 78
+  },
+  {
+    "discussionId": 1523,
+    "clientRequestTime": 1743341419181,
+    "clientReceiveTime": 1743341419186,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1524,
+    "clientRequestTime": 1743341419189,
+    "clientReceiveTime": 1743341419193,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1525,
+    "clientRequestTime": 1743341420113,
+    "clientReceiveTime": 1743341420194,
+    "e2eLatency": 81
+  },
+  {
+    "discussionId": 1526,
+    "clientRequestTime": 1743341420198,
+    "clientReceiveTime": 1743341420202,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1527,
+    "clientRequestTime": 1743341420205,
+    "clientReceiveTime": 1743341420209,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1528,
+    "clientRequestTime": 1743341421119,
+    "clientReceiveTime": 1743341421190,
+    "e2eLatency": 71
+  },
+  {
+    "discussionId": 1529,
+    "clientRequestTime": 1743341421193,
+    "clientReceiveTime": 1743341421201,
+    "e2eLatency": 8
+  },
+  {
+    "discussionId": 1530,
+    "clientRequestTime": 1743341421206,
+    "clientReceiveTime": 1743341421211,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1531,
+    "clientRequestTime": 1743341421170,
+    "clientReceiveTime": 1743341421266,
+    "e2eLatency": 96
+  },
+  {
+    "discussionId": 1532,
+    "clientRequestTime": 1743341421274,
+    "clientReceiveTime": 1743341421281,
+    "e2eLatency": 7
+  },
+  {
+    "discussionId": 1533,
+    "clientRequestTime": 1743341421285,
+    "clientReceiveTime": 1743341421290,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1534,
+    "clientRequestTime": 1743341422112,
+    "clientReceiveTime": 1743341422194,
+    "e2eLatency": 82
+  },
+  {
+    "discussionId": 1535,
+    "clientRequestTime": 1743341422199,
+    "clientReceiveTime": 1743341422204,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1536,
+    "clientRequestTime": 1743341422207,
+    "clientReceiveTime": 1743341422212,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1537,
+    "clientRequestTime": 1743341422189,
+    "clientReceiveTime": 1743341422261,
+    "e2eLatency": 72
+  },
+  {
+    "discussionId": 1538,
+    "clientRequestTime": 1743341422265,
+    "clientReceiveTime": 1743341422271,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 1539,
+    "clientRequestTime": 1743341422276,
+    "clientReceiveTime": 1743341422281,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1540,
+    "clientRequestTime": 1743341423133,
+    "clientReceiveTime": 1743341423156,
+    "e2eLatency": 23
+  },
+  {
+    "discussionId": 1541,
+    "clientRequestTime": 1743341423191,
+    "clientReceiveTime": 1743341423263,
+    "e2eLatency": 72
+  },
+  {
+    "discussionId": 1542,
+    "clientRequestTime": 1743341424116,
+    "clientReceiveTime": 1743341424137,
+    "e2eLatency": 21
+  },
+  {
+    "discussionId": 1543,
+    "clientRequestTime": 1743341424182,
+    "clientReceiveTime": 1743341424194,
+    "e2eLatency": 12
+  },
+  {
+    "discussionId": 1544,
+    "clientRequestTime": 1743341425171,
+    "clientReceiveTime": 1743341425184,
+    "e2eLatency": 13
+  },
+  {
+    "discussionId": 1545,
+    "clientRequestTime": 1743341425140,
+    "clientReceiveTime": 1743341425210,
+    "e2eLatency": 70
+  },
+  {
+    "discussionId": 1546,
+    "clientRequestTime": 1743341425214,
+    "clientReceiveTime": 1743341425218,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1547,
+    "clientRequestTime": 1743341425221,
+    "clientReceiveTime": 1743341425225,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1548,
+    "clientRequestTime": 1743341425203,
+    "clientReceiveTime": 1743341425274,
+    "e2eLatency": 71
+  },
+  {
+    "discussionId": 1549,
+    "clientRequestTime": 1743341425268,
+    "clientReceiveTime": 1743341425277,
+    "e2eLatency": 9
+  },
+  {
+    "discussionId": 1550,
+    "clientRequestTime": 1743341425278,
+    "clientReceiveTime": 1743341425286,
+    "e2eLatency": 8
+  },
+  {
+    "discussionId": 1551,
+    "clientRequestTime": 1743341425290,
+    "clientReceiveTime": 1743341425295,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1552,
+    "clientRequestTime": 1743341426156,
+    "clientReceiveTime": 1743341426174,
+    "e2eLatency": 18
+  },
+  {
+    "discussionId": 1554,
+    "clientRequestTime": 1743341426140,
+    "clientReceiveTime": 1743341426214,
+    "e2eLatency": 74
+  },
+  {
+    "discussionId": 1553,
+    "clientRequestTime": 1743341426203,
+    "clientReceiveTime": 1743341426219,
+    "e2eLatency": 16
+  },
+  {
+    "discussionId": 1555,
+    "clientRequestTime": 1743341426218,
+    "clientReceiveTime": 1743341426225,
+    "e2eLatency": 7
+  },
+  {
+    "discussionId": 1556,
+    "clientRequestTime": 1743341426228,
+    "clientReceiveTime": 1743341426234,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 1557,
+    "clientRequestTime": 1743341426202,
+    "clientReceiveTime": 1743341426275,
+    "e2eLatency": 73
+  },
+  {
+    "discussionId": 1558,
+    "clientRequestTime": 1743341426278,
+    "clientReceiveTime": 1743341426283,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1559,
+    "clientRequestTime": 1743341426287,
+    "clientReceiveTime": 1743341426291,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1560,
+    "clientRequestTime": 1743341427150,
+    "clientReceiveTime": 1743341427230,
+    "e2eLatency": 80
+  },
+  {
+    "discussionId": 1561,
+    "clientRequestTime": 1743341427228,
+    "clientReceiveTime": 1743341427297,
+    "e2eLatency": 69
+  },
+  {
+    "discussionId": 1562,
+    "clientRequestTime": 1743341427300,
+    "clientReceiveTime": 1743341427304,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1563,
+    "clientRequestTime": 1743341427307,
+    "clientReceiveTime": 1743341427312,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1564,
+    "clientRequestTime": 1743341428149,
+    "clientReceiveTime": 1743341428228,
+    "e2eLatency": 79
+  },
+  {
+    "discussionId": 1565,
+    "clientRequestTime": 1743341428233,
+    "clientReceiveTime": 1743341428237,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1566,
+    "clientRequestTime": 1743341428240,
+    "clientReceiveTime": 1743341428245,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1567,
+    "clientRequestTime": 1743341428228,
+    "clientReceiveTime": 1743341428296,
+    "e2eLatency": 68
+  },
+  {
+    "discussionId": 1568,
+    "clientRequestTime": 1743341428299,
+    "clientReceiveTime": 1743341428304,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1569,
+    "clientRequestTime": 1743341428307,
+    "clientReceiveTime": 1743341428311,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1570,
+    "clientRequestTime": 1743341429152,
+    "clientReceiveTime": 1743341429167,
+    "e2eLatency": 15
+  },
+  {
+    "discussionId": 1571,
+    "clientRequestTime": 1743341429171,
+    "clientReceiveTime": 1743341429176,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1572,
+    "clientRequestTime": 1743341429179,
+    "clientReceiveTime": 1743341429184,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1573,
+    "clientRequestTime": 1743341429232,
+    "clientReceiveTime": 1743341429245,
+    "e2eLatency": 13
+  },
+  {
+    "discussionId": 1574,
+    "clientRequestTime": 1743341429246,
+    "clientReceiveTime": 1743341429258,
+    "e2eLatency": 12
+  },
+  {
+    "discussionId": 1575,
+    "clientRequestTime": 1743341429318,
+    "clientReceiveTime": 1743341429419,
+    "e2eLatency": 101
+  },
+  {
+    "discussionId": 1576,
+    "clientRequestTime": 1743341429427,
+    "clientReceiveTime": 1743341429433,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 1577,
+    "clientRequestTime": 1743341429437,
+    "clientReceiveTime": 1743341429441,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1578,
+    "clientRequestTime": 1743341430164,
+    "clientReceiveTime": 1743341430244,
+    "e2eLatency": 80
+  },
+  {
+    "discussionId": 1579,
+    "clientRequestTime": 1743341430248,
+    "clientReceiveTime": 1743341430252,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1580,
+    "clientRequestTime": 1743341430255,
+    "clientReceiveTime": 1743341430259,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1581,
+    "clientRequestTime": 1743341430218,
+    "clientReceiveTime": 1743341430285,
+    "e2eLatency": 67
+  },
+  {
+    "discussionId": 1582,
+    "clientRequestTime": 1743341430288,
+    "clientReceiveTime": 1743341430293,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1583,
+    "clientRequestTime": 1743341430296,
+    "clientReceiveTime": 1743341430301,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1584,
+    "clientRequestTime": 1743341430328,
+    "clientReceiveTime": 1743341430402,
+    "e2eLatency": 74
+  },
+  {
+    "discussionId": 1585,
+    "clientRequestTime": 1743341430405,
+    "clientReceiveTime": 1743341430411,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 1586,
+    "clientRequestTime": 1743341430414,
+    "clientReceiveTime": 1743341430419,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1587,
+    "clientRequestTime": 1743341431170,
+    "clientReceiveTime": 1743341431187,
+    "e2eLatency": 17
+  },
+  {
+    "discussionId": 1588,
+    "clientRequestTime": 1743341431190,
+    "clientReceiveTime": 1743341431194,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1589,
+    "clientRequestTime": 1743341431197,
+    "clientReceiveTime": 1743341431202,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1590,
+    "clientRequestTime": 1743341431265,
+    "clientReceiveTime": 1743341431275,
+    "e2eLatency": 10
+  },
+  {
+    "discussionId": 1591,
+    "clientRequestTime": 1743341431234,
+    "clientReceiveTime": 1743341431302,
+    "e2eLatency": 68
+  },
+  {
+    "discussionId": 1592,
+    "clientRequestTime": 1743341431305,
+    "clientReceiveTime": 1743341431310,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1593,
+    "clientRequestTime": 1743341431313,
+    "clientReceiveTime": 1743341431317,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1594,
+    "clientRequestTime": 1743341431328,
+    "clientReceiveTime": 1743341431397,
+    "e2eLatency": 69
+  },
+  {
+    "discussionId": 1595,
+    "clientRequestTime": 1743341431401,
+    "clientReceiveTime": 1743341431406,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1596,
+    "clientRequestTime": 1743341431409,
+    "clientReceiveTime": 1743341431415,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 1597,
+    "clientRequestTime": 1743341432166,
+    "clientReceiveTime": 1743341432245,
+    "e2eLatency": 79
+  },
+  {
+    "discussionId": 1598,
+    "clientRequestTime": 1743341432248,
+    "clientReceiveTime": 1743341432252,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1599,
+    "clientRequestTime": 1743341432255,
+    "clientReceiveTime": 1743341432259,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1600,
+    "clientRequestTime": 1743341432260,
+    "clientReceiveTime": 1743341432331,
+    "e2eLatency": 71
+  },
+  {
+    "discussionId": 1601,
+    "clientRequestTime": 1743341432314,
+    "clientReceiveTime": 1743341432382,
+    "e2eLatency": 68
+  },
+  {
+    "discussionId": 1602,
+    "clientRequestTime": 1743341432386,
+    "clientReceiveTime": 1743341432390,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1603,
+    "clientRequestTime": 1743341432394,
+    "clientReceiveTime": 1743341432399,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1604,
+    "clientRequestTime": 1743341433197,
+    "clientReceiveTime": 1743341433271,
+    "e2eLatency": 74
+  },
+  {
+    "discussionId": 1605,
+    "clientRequestTime": 1743341433274,
+    "clientReceiveTime": 1743341433279,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1606,
+    "clientRequestTime": 1743341433282,
+    "clientReceiveTime": 1743341433286,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1607,
+    "clientRequestTime": 1743341433263,
+    "clientReceiveTime": 1743341433333,
+    "e2eLatency": 70
+  },
+  {
+    "discussionId": 1608,
+    "clientRequestTime": 1743341433337,
+    "clientReceiveTime": 1743341433341,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1609,
+    "clientRequestTime": 1743341433344,
+    "clientReceiveTime": 1743341433348,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1610,
+    "clientRequestTime": 1743341433330,
+    "clientReceiveTime": 1743341433398,
+    "e2eLatency": 68
+  },
+  {
+    "discussionId": 1611,
+    "clientRequestTime": 1743341433401,
+    "clientReceiveTime": 1743341433406,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1612,
+    "clientRequestTime": 1743341433408,
+    "clientReceiveTime": 1743341433413,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1613,
+    "clientRequestTime": 1743341434197,
+    "clientReceiveTime": 1743341434276,
+    "e2eLatency": 79
+  },
+  {
+    "discussionId": 1614,
+    "clientRequestTime": 1743341434279,
+    "clientReceiveTime": 1743341434284,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1615,
+    "clientRequestTime": 1743341434288,
+    "clientReceiveTime": 1743341434292,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1616,
+    "clientRequestTime": 1743341434263,
+    "clientReceiveTime": 1743341434337,
+    "e2eLatency": 74
+  },
+  {
+    "discussionId": 1617,
+    "clientRequestTime": 1743341434340,
+    "clientReceiveTime": 1743341434351,
+    "e2eLatency": 11
+  },
+  {
+    "discussionId": 1618,
+    "clientRequestTime": 1743341434329,
+    "clientReceiveTime": 1743341434396,
+    "e2eLatency": 67
+  },
+  {
+    "discussionId": 1619,
+    "clientRequestTime": 1743341434400,
+    "clientReceiveTime": 1743341434404,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1620,
+    "clientRequestTime": 1743341434407,
+    "clientReceiveTime": 1743341434412,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1621,
+    "clientRequestTime": 1743341435198,
+    "clientReceiveTime": 1743341435269,
+    "e2eLatency": 71
+  },
+  {
+    "discussionId": 1622,
+    "clientRequestTime": 1743341435273,
+    "clientReceiveTime": 1743341435277,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1623,
+    "clientRequestTime": 1743341435280,
+    "clientReceiveTime": 1743341435284,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1624,
+    "clientRequestTime": 1743341435291,
+    "clientReceiveTime": 1743341435359,
+    "e2eLatency": 68
+  },
+  {
+    "discussionId": 1625,
+    "clientRequestTime": 1743341435362,
+    "clientReceiveTime": 1743341435367,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1626,
+    "clientRequestTime": 1743341435369,
+    "clientReceiveTime": 1743341435374,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1627,
+    "clientRequestTime": 1743341435356,
+    "clientReceiveTime": 1743341435426,
+    "e2eLatency": 70
+  },
+  {
+    "discussionId": 1628,
+    "clientRequestTime": 1743341436185,
+    "clientReceiveTime": 1743341436262,
+    "e2eLatency": 77
+  },
+  {
+    "discussionId": 1629,
+    "clientRequestTime": 1743341436266,
+    "clientReceiveTime": 1743341436270,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1630,
+    "clientRequestTime": 1743341436273,
+    "clientReceiveTime": 1743341436277,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1632,
+    "clientRequestTime": 1743341436293,
+    "clientReceiveTime": 1743341436361,
+    "e2eLatency": 68
+  },
+  {
+    "discussionId": 1631,
+    "clientRequestTime": 1743341436347,
+    "clientReceiveTime": 1743341436364,
+    "e2eLatency": 17
+  },
+  {
+    "discussionId": 1633,
+    "clientRequestTime": 1743341436364,
+    "clientReceiveTime": 1743341436369,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1634,
+    "clientRequestTime": 1743341436372,
+    "clientReceiveTime": 1743341436376,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1635,
+    "clientRequestTime": 1743341436348,
+    "clientReceiveTime": 1743341436420,
+    "e2eLatency": 72
+  },
+  {
+    "discussionId": 1636,
+    "clientRequestTime": 1743341436423,
+    "clientReceiveTime": 1743341436428,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1637,
+    "clientRequestTime": 1743341436432,
+    "clientReceiveTime": 1743341436436,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1638,
+    "clientRequestTime": 1743341437197,
+    "clientReceiveTime": 1743341437213,
+    "e2eLatency": 16
+  },
+  {
+    "discussionId": 1639,
+    "clientRequestTime": 1743341437217,
+    "clientReceiveTime": 1743341437223,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 1640,
+    "clientRequestTime": 1743341437226,
+    "clientReceiveTime": 1743341437231,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1641,
+    "clientRequestTime": 1743341437297,
+    "clientReceiveTime": 1743341437368,
+    "e2eLatency": 71
+  },
+  {
+    "discussionId": 1642,
+    "clientRequestTime": 1743341437371,
+    "clientReceiveTime": 1743341437375,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1643,
+    "clientRequestTime": 1743341437378,
+    "clientReceiveTime": 1743341437383,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1644,
+    "clientRequestTime": 1743341437363,
+    "clientReceiveTime": 1743341437437,
+    "e2eLatency": 74
+  },
+  {
+    "discussionId": 1645,
+    "clientRequestTime": 1743341437435,
+    "clientReceiveTime": 1743341437447,
+    "e2eLatency": 12
+  },
+  {
+    "discussionId": 1646,
+    "clientRequestTime": 1743341438213,
+    "clientReceiveTime": 1743341438230,
+    "e2eLatency": 17
+  },
+  {
+    "discussionId": 1647,
+    "clientRequestTime": 1743341438234,
+    "clientReceiveTime": 1743341438240,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 1648,
+    "clientRequestTime": 1743341438244,
+    "clientReceiveTime": 1743341438248,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1649,
+    "clientRequestTime": 1743341438296,
+    "clientReceiveTime": 1743341438368,
+    "e2eLatency": 72
+  },
+  {
+    "discussionId": 1650,
+    "clientRequestTime": 1743341438371,
+    "clientReceiveTime": 1743341438376,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1651,
+    "clientRequestTime": 1743341438379,
+    "clientReceiveTime": 1743341438384,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1652,
+    "clientRequestTime": 1743341438389,
+    "clientReceiveTime": 1743341438462,
+    "e2eLatency": 73
+  },
+  {
+    "discussionId": 1653,
+    "clientRequestTime": 1743341438438,
+    "clientReceiveTime": 1743341438536,
+    "e2eLatency": 98
+  },
+  {
+    "discussionId": 1654,
+    "clientRequestTime": 1743341438544,
+    "clientReceiveTime": 1743341438551,
+    "e2eLatency": 7
+  },
+  {
+    "discussionId": 1655,
+    "clientRequestTime": 1743341438555,
+    "clientReceiveTime": 1743341438560,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1656,
+    "clientRequestTime": 1743341439212,
+    "clientReceiveTime": 1743341439228,
+    "e2eLatency": 16
+  },
+  {
+    "discussionId": 1657,
+    "clientRequestTime": 1743341439233,
+    "clientReceiveTime": 1743341439238,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1658,
+    "clientRequestTime": 1743341439241,
+    "clientReceiveTime": 1743341439246,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1659,
+    "clientRequestTime": 1743341439304,
+    "clientReceiveTime": 1743341439375,
+    "e2eLatency": 71
+  },
+  {
+    "discussionId": 1660,
+    "clientRequestTime": 1743341439379,
+    "clientReceiveTime": 1743341439383,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1661,
+    "clientRequestTime": 1743341439386,
+    "clientReceiveTime": 1743341439390,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1662,
+    "clientRequestTime": 1743341439398,
+    "clientReceiveTime": 1743341439403,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1663,
+    "clientRequestTime": 1743341439406,
+    "clientReceiveTime": 1743341439410,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1664,
+    "clientRequestTime": 1743341439414,
+    "clientReceiveTime": 1743341439418,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1665,
+    "clientRequestTime": 1743341439444,
+    "clientReceiveTime": 1743341439456,
+    "e2eLatency": 12
+  },
+  {
+    "discussionId": 1666,
+    "clientRequestTime": 1743341439445,
+    "clientReceiveTime": 1743341439525,
+    "e2eLatency": 80
+  },
+  {
+    "discussionId": 1667,
+    "clientRequestTime": 1743341440223,
+    "clientReceiveTime": 1743341440299,
+    "e2eLatency": 76
+  },
+  {
+    "discussionId": 1668,
+    "clientRequestTime": 1743341440303,
+    "clientReceiveTime": 1743341440307,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1669,
+    "clientRequestTime": 1743341440310,
+    "clientReceiveTime": 1743341440314,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1670,
+    "clientRequestTime": 1743341440317,
+    "clientReceiveTime": 1743341440383,
+    "e2eLatency": 66
+  },
+  {
+    "discussionId": 1671,
+    "clientRequestTime": 1743341440386,
+    "clientReceiveTime": 1743341440390,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1672,
+    "clientRequestTime": 1743341440393,
+    "clientReceiveTime": 1743341440398,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1674,
+    "clientRequestTime": 1743341440411,
+    "clientReceiveTime": 1743341440482,
+    "e2eLatency": 71
+  },
+  {
+    "discussionId": 1673,
+    "clientRequestTime": 1743341440474,
+    "clientReceiveTime": 1743341440490,
+    "e2eLatency": 16
+  },
+  {
+    "discussionId": 1675,
+    "clientRequestTime": 1743341440486,
+    "clientReceiveTime": 1743341440492,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 1676,
+    "clientRequestTime": 1743341440457,
+    "clientReceiveTime": 1743341440534,
+    "e2eLatency": 77
+  },
+  {
+    "discussionId": 1677,
+    "clientRequestTime": 1743341440535,
+    "clientReceiveTime": 1743341440543,
+    "e2eLatency": 8
+  },
+  {
+    "discussionId": 1678,
+    "clientRequestTime": 1743341441237,
+    "clientReceiveTime": 1743341441253,
+    "e2eLatency": 16
+  },
+  {
+    "discussionId": 1679,
+    "clientRequestTime": 1743341441257,
+    "clientReceiveTime": 1743341441265,
+    "e2eLatency": 8
+  },
+  {
+    "discussionId": 1680,
+    "clientRequestTime": 1743341441269,
+    "clientReceiveTime": 1743341441274,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1681,
+    "clientRequestTime": 1743341441328,
+    "clientReceiveTime": 1743341441396,
+    "e2eLatency": 68
+  },
+  {
+    "discussionId": 1682,
+    "clientRequestTime": 1743341441400,
+    "clientReceiveTime": 1743341441404,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1683,
+    "clientRequestTime": 1743341441407,
+    "clientReceiveTime": 1743341441412,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1684,
+    "clientRequestTime": 1743341441422,
+    "clientReceiveTime": 1743341441488,
+    "e2eLatency": 66
+  },
+  {
+    "discussionId": 1685,
+    "clientRequestTime": 1743341441491,
+    "clientReceiveTime": 1743341441496,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1686,
+    "clientRequestTime": 1743341441499,
+    "clientReceiveTime": 1743341441503,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1688,
+    "clientRequestTime": 1743341441469,
+    "clientReceiveTime": 1743341441542,
+    "e2eLatency": 73
+  },
+  {
+    "discussionId": 1687,
+    "clientRequestTime": 1743341441530,
+    "clientReceiveTime": 1743341441546,
+    "e2eLatency": 16
+  },
+  {
+    "discussionId": 1689,
+    "clientRequestTime": 1743341441546,
+    "clientReceiveTime": 1743341441552,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 1690,
+    "clientRequestTime": 1743341441557,
+    "clientReceiveTime": 1743341441562,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1691,
+    "clientRequestTime": 1743341442249,
+    "clientReceiveTime": 1743341442327,
+    "e2eLatency": 78
+  },
+  {
+    "discussionId": 1692,
+    "clientRequestTime": 1743341442330,
+    "clientReceiveTime": 1743341442334,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1693,
+    "clientRequestTime": 1743341442337,
+    "clientReceiveTime": 1743341442341,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1694,
+    "clientRequestTime": 1743341442341,
+    "clientReceiveTime": 1743341442347,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 1695,
+    "clientRequestTime": 1743341442350,
+    "clientReceiveTime": 1743341442355,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1696,
+    "clientRequestTime": 1743341442358,
+    "clientReceiveTime": 1743341442362,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1697,
+    "clientRequestTime": 1743341442434,
+    "clientReceiveTime": 1743341442504,
+    "e2eLatency": 70
+  },
+  {
+    "discussionId": 1698,
+    "clientRequestTime": 1743341442507,
+    "clientReceiveTime": 1743341442511,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1699,
+    "clientRequestTime": 1743341442515,
+    "clientReceiveTime": 1743341442519,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1701,
+    "clientRequestTime": 1743341442482,
+    "clientReceiveTime": 1743341442555,
+    "e2eLatency": 73
+  },
+  {
+    "discussionId": 1700,
+    "clientRequestTime": 1743341442547,
+    "clientReceiveTime": 1743341442564,
+    "e2eLatency": 17
+  },
+  {
+    "discussionId": 1702,
+    "clientRequestTime": 1743341442558,
+    "clientReceiveTime": 1743341442565,
+    "e2eLatency": 7
+  },
+  {
+    "discussionId": 1703,
+    "clientRequestTime": 1743341442570,
+    "clientReceiveTime": 1743341442575,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1704,
+    "clientRequestTime": 1743341443248,
+    "clientReceiveTime": 1743341443327,
+    "e2eLatency": 79
+  },
+  {
+    "discussionId": 1705,
+    "clientRequestTime": 1743341443331,
+    "clientReceiveTime": 1743341443335,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1706,
+    "clientRequestTime": 1743341443338,
+    "clientReceiveTime": 1743341443342,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1707,
+    "clientRequestTime": 1743341443342,
+    "clientReceiveTime": 1743341443348,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 1708,
+    "clientRequestTime": 1743341443351,
+    "clientReceiveTime": 1743341443355,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1709,
+    "clientRequestTime": 1743341443358,
+    "clientReceiveTime": 1743341443362,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1710,
+    "clientRequestTime": 1743341443435,
+    "clientReceiveTime": 1743341443506,
+    "e2eLatency": 71
+  },
+  {
+    "discussionId": 1711,
+    "clientRequestTime": 1743341443509,
+    "clientReceiveTime": 1743341443514,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1712,
+    "clientRequestTime": 1743341443517,
+    "clientReceiveTime": 1743341443523,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 1713,
+    "clientRequestTime": 1743341443481,
+    "clientReceiveTime": 1743341443549,
+    "e2eLatency": 68
+  },
+  {
+    "discussionId": 1714,
+    "clientRequestTime": 1743341443552,
+    "clientReceiveTime": 1743341443557,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1715,
+    "clientRequestTime": 1743341443560,
+    "clientReceiveTime": 1743341443564,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1716,
+    "clientRequestTime": 1743341444257,
+    "clientReceiveTime": 1743341444265,
+    "e2eLatency": 8
+  },
+  {
+    "discussionId": 1717,
+    "clientRequestTime": 1743341444269,
+    "clientReceiveTime": 1743341444273,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1718,
+    "clientRequestTime": 1743341444276,
+    "clientReceiveTime": 1743341444281,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1719,
+    "clientRequestTime": 1743341444347,
+    "clientReceiveTime": 1743341444355,
+    "e2eLatency": 8
+  },
+  {
+    "discussionId": 1720,
+    "clientRequestTime": 1743341444358,
+    "clientReceiveTime": 1743341444364,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 1721,
+    "clientRequestTime": 1743341444367,
+    "clientReceiveTime": 1743341444371,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1722,
+    "clientRequestTime": 1743341444430,
+    "clientReceiveTime": 1743341444501,
+    "e2eLatency": 71
+  },
+  {
+    "discussionId": 1723,
+    "clientRequestTime": 1743341444504,
+    "clientReceiveTime": 1743341444509,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1724,
+    "clientRequestTime": 1743341444512,
+    "clientReceiveTime": 1743341444517,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1725,
+    "clientRequestTime": 1743341444480,
+    "clientReceiveTime": 1743341444548,
+    "e2eLatency": 68
+  },
+  {
+    "discussionId": 1726,
+    "clientRequestTime": 1743341444551,
+    "clientReceiveTime": 1743341444555,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1727,
+    "clientRequestTime": 1743341444558,
+    "clientReceiveTime": 1743341444563,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1728,
+    "clientRequestTime": 1743341445246,
+    "clientReceiveTime": 1743341445327,
+    "e2eLatency": 81
+  },
+  {
+    "discussionId": 1729,
+    "clientRequestTime": 1743341445330,
+    "clientReceiveTime": 1743341445334,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1730,
+    "clientRequestTime": 1743341445337,
+    "clientReceiveTime": 1743341445341,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1731,
+    "clientRequestTime": 1743341445350,
+    "clientReceiveTime": 1743341445418,
+    "e2eLatency": 68
+  },
+  {
+    "discussionId": 1732,
+    "clientRequestTime": 1743341445421,
+    "clientReceiveTime": 1743341445425,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1733,
+    "clientRequestTime": 1743341445428,
+    "clientReceiveTime": 1743341445432,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1734,
+    "clientRequestTime": 1743341445435,
+    "clientReceiveTime": 1743341445442,
+    "e2eLatency": 7
+  },
+  {
+    "discussionId": 1735,
+    "clientRequestTime": 1743341445497,
+    "clientReceiveTime": 1743341445568,
+    "e2eLatency": 71
+  },
+  {
+    "discussionId": 1736,
+    "clientRequestTime": 1743341445571,
+    "clientReceiveTime": 1743341445575,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1737,
+    "clientRequestTime": 1743341445578,
+    "clientReceiveTime": 1743341445582,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1738,
+    "clientRequestTime": 1743341446247,
+    "clientReceiveTime": 1743341446327,
+    "e2eLatency": 80
+  },
+  {
+    "discussionId": 1739,
+    "clientRequestTime": 1743341446330,
+    "clientReceiveTime": 1743341446334,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1740,
+    "clientRequestTime": 1743341446337,
+    "clientReceiveTime": 1743341446342,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1741,
+    "clientRequestTime": 1743341446357,
+    "clientReceiveTime": 1743341446428,
+    "e2eLatency": 71
+  },
+  {
+    "discussionId": 1742,
+    "clientRequestTime": 1743341446450,
+    "clientReceiveTime": 1743341446518,
+    "e2eLatency": 68
+  },
+  {
+    "discussionId": 1743,
+    "clientRequestTime": 1743341446522,
+    "clientReceiveTime": 1743341446526,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1744,
+    "clientRequestTime": 1743341446529,
+    "clientReceiveTime": 1743341446533,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1745,
+    "clientRequestTime": 1743341446497,
+    "clientReceiveTime": 1743341446565,
+    "e2eLatency": 68
+  },
+  {
+    "discussionId": 1746,
+    "clientRequestTime": 1743341446568,
+    "clientReceiveTime": 1743341446573,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1747,
+    "clientRequestTime": 1743341446576,
+    "clientReceiveTime": 1743341446582,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 1748,
+    "clientRequestTime": 1743341446562,
+    "clientReceiveTime": 1743341446660,
+    "e2eLatency": 98
+  },
+  {
+    "discussionId": 1749,
+    "clientRequestTime": 1743341446668,
+    "clientReceiveTime": 1743341446675,
+    "e2eLatency": 7
+  },
+  {
+    "discussionId": 1750,
+    "clientRequestTime": 1743341446678,
+    "clientReceiveTime": 1743341446684,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 1751,
+    "clientRequestTime": 1743341447248,
+    "clientReceiveTime": 1743341447334,
+    "e2eLatency": 86
+  },
+  {
+    "discussionId": 1752,
+    "clientRequestTime": 1743341447372,
+    "clientReceiveTime": 1743341447442,
+    "e2eLatency": 70
+  },
+  {
+    "discussionId": 1753,
+    "clientRequestTime": 1743341447445,
+    "clientReceiveTime": 1743341447453,
+    "e2eLatency": 8
+  },
+  {
+    "discussionId": 1755,
+    "clientRequestTime": 1743341447457,
+    "clientReceiveTime": 1743341447461,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1754,
+    "clientRequestTime": 1743341447448,
+    "clientReceiveTime": 1743341447466,
+    "e2eLatency": 18
+  },
+  {
+    "discussionId": 1756,
+    "clientRequestTime": 1743341447511,
+    "clientReceiveTime": 1743341447519,
+    "e2eLatency": 8
+  },
+  {
+    "discussionId": 1757,
+    "clientRequestTime": 1743341447451,
+    "clientReceiveTime": 1743341447520,
+    "e2eLatency": 69
+  },
+  {
+    "discussionId": 1758,
+    "clientRequestTime": 1743341447524,
+    "clientReceiveTime": 1743341447529,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1759,
+    "clientRequestTime": 1743341447524,
+    "clientReceiveTime": 1743341447530,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 1760,
+    "clientRequestTime": 1743341447533,
+    "clientReceiveTime": 1743341447538,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1761,
+    "clientRequestTime": 1743341447533,
+    "clientReceiveTime": 1743341447540,
+    "e2eLatency": 7
+  },
+  {
+    "discussionId": 1762,
+    "clientRequestTime": 1743341447573,
+    "clientReceiveTime": 1743341447643,
+    "e2eLatency": 70
+  },
+  {
+    "discussionId": 1763,
+    "clientRequestTime": 1743341447647,
+    "clientReceiveTime": 1743341447652,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1764,
+    "clientRequestTime": 1743341447655,
+    "clientReceiveTime": 1743341447660,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1765,
+    "clientRequestTime": 1743341448276,
+    "clientReceiveTime": 1743341448284,
+    "e2eLatency": 8
+  },
+  {
+    "discussionId": 1766,
+    "clientRequestTime": 1743341448288,
+    "clientReceiveTime": 1743341448292,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1767,
+    "clientRequestTime": 1743341448295,
+    "clientReceiveTime": 1743341448300,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1768,
+    "clientRequestTime": 1743341448432,
+    "clientReceiveTime": 1743341448443,
+    "e2eLatency": 11
+  },
+  {
+    "discussionId": 1769,
+    "clientRequestTime": 1743341448386,
+    "clientReceiveTime": 1743341448453,
+    "e2eLatency": 67
+  },
+  {
+    "discussionId": 1770,
+    "clientRequestTime": 1743341448456,
+    "clientReceiveTime": 1743341448461,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1771,
+    "clientRequestTime": 1743341448464,
+    "clientReceiveTime": 1743341448470,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 1772,
+    "clientRequestTime": 1743341448463,
+    "clientReceiveTime": 1743341448472,
+    "e2eLatency": 9
+  },
+  {
+    "discussionId": 1773,
+    "clientRequestTime": 1743341448475,
+    "clientReceiveTime": 1743341448479,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1774,
+    "clientRequestTime": 1743341448484,
+    "clientReceiveTime": 1743341448488,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1775,
+    "clientRequestTime": 1743341448511,
+    "clientReceiveTime": 1743341448578,
+    "e2eLatency": 67
+  },
+  {
+    "discussionId": 1776,
+    "clientRequestTime": 1743341448581,
+    "clientReceiveTime": 1743341448585,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1777,
+    "clientRequestTime": 1743341448589,
+    "clientReceiveTime": 1743341448593,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1778,
+    "clientRequestTime": 1743341448572,
+    "clientReceiveTime": 1743341448642,
+    "e2eLatency": 70
+  },
+  {
+    "discussionId": 1779,
+    "clientRequestTime": 1743341448645,
+    "clientReceiveTime": 1743341448651,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 1780,
+    "clientRequestTime": 1743341448654,
+    "clientReceiveTime": 1743341448659,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1781,
+    "clientRequestTime": 1743341449350,
+    "clientReceiveTime": 1743341449369,
+    "e2eLatency": 19
+  },
+  {
+    "discussionId": 1782,
+    "clientRequestTime": 1743341449289,
+    "clientReceiveTime": 1743341449373,
+    "e2eLatency": 84
+  },
+  {
+    "discussionId": 1783,
+    "clientRequestTime": 1743341449381,
+    "clientReceiveTime": 1743341449449,
+    "e2eLatency": 68
+  },
+  {
+    "discussionId": 1784,
+    "clientRequestTime": 1743341449452,
+    "clientReceiveTime": 1743341449458,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 1785,
+    "clientRequestTime": 1743341449465,
+    "clientReceiveTime": 1743341449470,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1786,
+    "clientRequestTime": 1743341449491,
+    "clientReceiveTime": 1743341449557,
+    "e2eLatency": 66
+  },
+  {
+    "discussionId": 1787,
+    "clientRequestTime": 1743341449561,
+    "clientReceiveTime": 1743341449565,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1788,
+    "clientRequestTime": 1743341449568,
+    "clientReceiveTime": 1743341449572,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1789,
+    "clientRequestTime": 1743341449522,
+    "clientReceiveTime": 1743341449589,
+    "e2eLatency": 67
+  },
+  {
+    "discussionId": 1790,
+    "clientRequestTime": 1743341449592,
+    "clientReceiveTime": 1743341449596,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1791,
+    "clientRequestTime": 1743341449599,
+    "clientReceiveTime": 1743341449604,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1792,
+    "clientRequestTime": 1743341449586,
+    "clientReceiveTime": 1743341449654,
+    "e2eLatency": 68
+  },
+  {
+    "discussionId": 1793,
+    "clientRequestTime": 1743341449657,
+    "clientReceiveTime": 1743341449661,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1794,
+    "clientRequestTime": 1743341449665,
+    "clientReceiveTime": 1743341449669,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1795,
+    "clientRequestTime": 1743341450303,
+    "clientReceiveTime": 1743341450325,
+    "e2eLatency": 22
+  },
+  {
+    "discussionId": 1796,
+    "clientRequestTime": 1743341450410,
+    "clientReceiveTime": 1743341450481,
+    "e2eLatency": 71
+  },
+  {
+    "discussionId": 1797,
+    "clientRequestTime": 1743341450484,
+    "clientReceiveTime": 1743341450488,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1798,
+    "clientRequestTime": 1743341450491,
+    "clientReceiveTime": 1743341450496,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1799,
+    "clientRequestTime": 1743341450504,
+    "clientReceiveTime": 1743341450570,
+    "e2eLatency": 66
+  },
+  {
+    "discussionId": 1800,
+    "clientRequestTime": 1743341450573,
+    "clientReceiveTime": 1743341450577,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1801,
+    "clientRequestTime": 1743341450581,
+    "clientReceiveTime": 1743341450586,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1802,
+    "clientRequestTime": 1743341450536,
+    "clientReceiveTime": 1743341450604,
+    "e2eLatency": 68
+  },
+  {
+    "discussionId": 1803,
+    "clientRequestTime": 1743341450597,
+    "clientReceiveTime": 1743341450666,
+    "e2eLatency": 69
+  },
+  {
+    "discussionId": 1804,
+    "clientRequestTime": 1743341450669,
+    "clientReceiveTime": 1743341450673,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1805,
+    "clientRequestTime": 1743341450676,
+    "clientReceiveTime": 1743341450680,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1807,
+    "clientRequestTime": 1743341451317,
+    "clientReceiveTime": 1743341451395,
+    "e2eLatency": 78
+  },
+  {
+    "discussionId": 1808,
+    "clientRequestTime": 1743341451399,
+    "clientReceiveTime": 1743341451405,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 1806,
+    "clientRequestTime": 1743341451380,
+    "clientReceiveTime": 1743341451406,
+    "e2eLatency": 26
+  },
+  {
+    "discussionId": 1809,
+    "clientRequestTime": 1743341451408,
+    "clientReceiveTime": 1743341451413,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1810,
+    "clientRequestTime": 1743341451410,
+    "clientReceiveTime": 1743341451477,
+    "e2eLatency": 67
+  },
+  {
+    "discussionId": 1811,
+    "clientRequestTime": 1743341451480,
+    "clientReceiveTime": 1743341451484,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1812,
+    "clientRequestTime": 1743341451487,
+    "clientReceiveTime": 1743341451491,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1813,
+    "clientRequestTime": 1743341451505,
+    "clientReceiveTime": 1743341451571,
+    "e2eLatency": 66
+  },
+  {
+    "discussionId": 1814,
+    "clientRequestTime": 1743341451574,
+    "clientReceiveTime": 1743341451578,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1815,
+    "clientRequestTime": 1743341451581,
+    "clientReceiveTime": 1743341451585,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1816,
+    "clientRequestTime": 1743341451536,
+    "clientReceiveTime": 1743341451603,
+    "e2eLatency": 67
+  },
+  {
+    "discussionId": 1817,
+    "clientRequestTime": 1743341451606,
+    "clientReceiveTime": 1743341451610,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1818,
+    "clientRequestTime": 1743341451614,
+    "clientReceiveTime": 1743341451618,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1819,
+    "clientRequestTime": 1743341451599,
+    "clientReceiveTime": 1743341451667,
+    "e2eLatency": 68
+  },
+  {
+    "discussionId": 1820,
+    "clientRequestTime": 1743341451670,
+    "clientReceiveTime": 1743341451674,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1821,
+    "clientRequestTime": 1743341451677,
+    "clientReceiveTime": 1743341451681,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1822,
+    "clientRequestTime": 1743341452313,
+    "clientReceiveTime": 1743341452321,
+    "e2eLatency": 8
+  },
+  {
+    "discussionId": 1823,
+    "clientRequestTime": 1743341452325,
+    "clientReceiveTime": 1743341452332,
+    "e2eLatency": 7
+  },
+  {
+    "discussionId": 1825,
+    "clientRequestTime": 1743341452336,
+    "clientReceiveTime": 1743341452342,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 1824,
+    "clientRequestTime": 1743341452328,
+    "clientReceiveTime": 1743341452345,
+    "e2eLatency": 17
+  },
+  {
+    "discussionId": 1826,
+    "clientRequestTime": 1743341452413,
+    "clientReceiveTime": 1743341452421,
+    "e2eLatency": 8
+  },
+  {
+    "discussionId": 1827,
+    "clientRequestTime": 1743341452425,
+    "clientReceiveTime": 1743341452431,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 1828,
+    "clientRequestTime": 1743341452434,
+    "clientReceiveTime": 1743341452438,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1829,
+    "clientRequestTime": 1743341452514,
+    "clientReceiveTime": 1743341452584,
+    "e2eLatency": 70
+  },
+  {
+    "discussionId": 1830,
+    "clientRequestTime": 1743341452587,
+    "clientReceiveTime": 1743341452595,
+    "e2eLatency": 8
+  },
+  {
+    "discussionId": 1831,
+    "clientRequestTime": 1743341452529,
+    "clientReceiveTime": 1743341452599,
+    "e2eLatency": 70
+  },
+  {
+    "discussionId": 1832,
+    "clientRequestTime": 1743341452601,
+    "clientReceiveTime": 1743341452606,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1833,
+    "clientRequestTime": 1743341452603,
+    "clientReceiveTime": 1743341452608,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1834,
+    "clientRequestTime": 1743341452611,
+    "clientReceiveTime": 1743341452617,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 1835,
+    "clientRequestTime": 1743341452612,
+    "clientReceiveTime": 1743341452620,
+    "e2eLatency": 8
+  },
+  {
+    "discussionId": 1836,
+    "clientRequestTime": 1743341452594,
+    "clientReceiveTime": 1743341452664,
+    "e2eLatency": 70
+  },
+  {
+    "discussionId": 1837,
+    "clientRequestTime": 1743341452667,
+    "clientReceiveTime": 1743341452671,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1838,
+    "clientRequestTime": 1743341452674,
+    "clientReceiveTime": 1743341452679,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1839,
+    "clientRequestTime": 1743341453314,
+    "clientReceiveTime": 1743341453393,
+    "e2eLatency": 79
+  },
+  {
+    "discussionId": 1840,
+    "clientRequestTime": 1743341453396,
+    "clientReceiveTime": 1743341453401,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1841,
+    "clientRequestTime": 1743341453404,
+    "clientReceiveTime": 1743341453410,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 1842,
+    "clientRequestTime": 1743341453405,
+    "clientReceiveTime": 1743341453411,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 1843,
+    "clientRequestTime": 1743341453413,
+    "clientReceiveTime": 1743341453418,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1844,
+    "clientRequestTime": 1743341453421,
+    "clientReceiveTime": 1743341453424,
+    "e2eLatency": 3
+  },
+  {
+    "discussionId": 1845,
+    "clientRequestTime": 1743341453529,
+    "clientReceiveTime": 1743341453539,
+    "e2eLatency": 10
+  },
+  {
+    "discussionId": 1846,
+    "clientRequestTime": 1743341453530,
+    "clientReceiveTime": 1743341453540,
+    "e2eLatency": 10
+  },
+  {
+    "discussionId": 1847,
+    "clientRequestTime": 1743341453543,
+    "clientReceiveTime": 1743341453549,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 1848,
+    "clientRequestTime": 1743341453543,
+    "clientReceiveTime": 1743341453551,
+    "e2eLatency": 8
+  },
+  {
+    "discussionId": 1849,
+    "clientRequestTime": 1743341453553,
+    "clientReceiveTime": 1743341453558,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1850,
+    "clientRequestTime": 1743341453553,
+    "clientReceiveTime": 1743341453560,
+    "e2eLatency": 7
+  },
+  {
+    "discussionId": 1851,
+    "clientRequestTime": 1743341453598,
+    "clientReceiveTime": 1743341453671,
+    "e2eLatency": 73
+  },
+  {
+    "discussionId": 1852,
+    "clientRequestTime": 1743341453674,
+    "clientReceiveTime": 1743341453678,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1853,
+    "clientRequestTime": 1743341453681,
+    "clientReceiveTime": 1743341453686,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1854,
+    "clientRequestTime": 1743341454329,
+    "clientReceiveTime": 1743341454402,
+    "e2eLatency": 73
+  },
+  {
+    "discussionId": 1855,
+    "clientRequestTime": 1743341454408,
+    "clientReceiveTime": 1743341454412,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1856,
+    "clientRequestTime": 1743341454415,
+    "clientReceiveTime": 1743341454419,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1857,
+    "clientRequestTime": 1743341454420,
+    "clientReceiveTime": 1743341454486,
+    "e2eLatency": 66
+  },
+  {
+    "discussionId": 1858,
+    "clientRequestTime": 1743341454489,
+    "clientReceiveTime": 1743341454494,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1859,
+    "clientRequestTime": 1743341454499,
+    "clientReceiveTime": 1743341454504,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1860,
+    "clientRequestTime": 1743341454529,
+    "clientReceiveTime": 1743341454596,
+    "e2eLatency": 67
+  },
+  {
+    "discussionId": 1861,
+    "clientRequestTime": 1743341454599,
+    "clientReceiveTime": 1743341454605,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 1863,
+    "clientRequestTime": 1743341454609,
+    "clientReceiveTime": 1743341454614,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1862,
+    "clientRequestTime": 1743341454544,
+    "clientReceiveTime": 1743341454616,
+    "e2eLatency": 72
+  },
+  {
+    "discussionId": 1864,
+    "clientRequestTime": 1743341454621,
+    "clientReceiveTime": 1743341454690,
+    "e2eLatency": 69
+  },
+  {
+    "discussionId": 1865,
+    "clientRequestTime": 1743341454692,
+    "clientReceiveTime": 1743341454698,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 1866,
+    "clientRequestTime": 1743341454701,
+    "clientReceiveTime": 1743341454705,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1867,
+    "clientRequestTime": 1743341454671,
+    "clientReceiveTime": 1743341454766,
+    "e2eLatency": 95
+  },
+  {
+    "discussionId": 1868,
+    "clientRequestTime": 1743341454775,
+    "clientReceiveTime": 1743341454781,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 1869,
+    "clientRequestTime": 1743341454784,
+    "clientReceiveTime": 1743341454789,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1870,
+    "clientRequestTime": 1743341455350,
+    "clientReceiveTime": 1743341455429,
+    "e2eLatency": 79
+  },
+  {
+    "discussionId": 1871,
+    "clientRequestTime": 1743341455432,
+    "clientReceiveTime": 1743341455436,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1872,
+    "clientRequestTime": 1743341455439,
+    "clientReceiveTime": 1743341455444,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1873,
+    "clientRequestTime": 1743341455429,
+    "clientReceiveTime": 1743341455499,
+    "e2eLatency": 70
+  },
+  {
+    "discussionId": 1874,
+    "clientRequestTime": 1743341455535,
+    "clientReceiveTime": 1743341455605,
+    "e2eLatency": 70
+  },
+  {
+    "discussionId": 1875,
+    "clientRequestTime": 1743341455608,
+    "clientReceiveTime": 1743341455616,
+    "e2eLatency": 8
+  },
+  {
+    "discussionId": 1876,
+    "clientRequestTime": 1743341455551,
+    "clientReceiveTime": 1743341455620,
+    "e2eLatency": 69
+  },
+  {
+    "discussionId": 1877,
+    "clientRequestTime": 1743341455620,
+    "clientReceiveTime": 1743341455627,
+    "e2eLatency": 7
+  },
+  {
+    "discussionId": 1878,
+    "clientRequestTime": 1743341455624,
+    "clientReceiveTime": 1743341455630,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 1879,
+    "clientRequestTime": 1743341455634,
+    "clientReceiveTime": 1743341455638,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1880,
+    "clientRequestTime": 1743341455612,
+    "clientReceiveTime": 1743341455680,
+    "e2eLatency": 68
+  },
+  {
+    "discussionId": 1881,
+    "clientRequestTime": 1743341455682,
+    "clientReceiveTime": 1743341455687,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1882,
+    "clientRequestTime": 1743341455690,
+    "clientReceiveTime": 1743341455694,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1883,
+    "clientRequestTime": 1743341455674,
+    "clientReceiveTime": 1743341455743,
+    "e2eLatency": 69
+  },
+  {
+    "discussionId": 1884,
+    "clientRequestTime": 1743341455747,
+    "clientReceiveTime": 1743341455752,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1885,
+    "clientRequestTime": 1743341455756,
+    "clientReceiveTime": 1743341455760,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1886,
+    "clientRequestTime": 1743341456347,
+    "clientReceiveTime": 1743341456383,
+    "e2eLatency": 36
+  },
+  {
+    "discussionId": 1887,
+    "clientRequestTime": 1743341456430,
+    "clientReceiveTime": 1743341456439,
+    "e2eLatency": 9
+  },
+  {
+    "discussionId": 1888,
+    "clientRequestTime": 1743341456529,
+    "clientReceiveTime": 1743341456536,
+    "e2eLatency": 7
+  },
+  {
+    "discussionId": 1889,
+    "clientRequestTime": 1743341456539,
+    "clientReceiveTime": 1743341456543,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1890,
+    "clientRequestTime": 1743341456547,
+    "clientReceiveTime": 1743341456554,
+    "e2eLatency": 7
+  },
+  {
+    "discussionId": 1891,
+    "clientRequestTime": 1743341456540,
+    "clientReceiveTime": 1743341456614,
+    "e2eLatency": 74
+  },
+  {
+    "discussionId": 1892,
+    "clientRequestTime": 1743341456617,
+    "clientReceiveTime": 1743341456621,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1893,
+    "clientRequestTime": 1743341456624,
+    "clientReceiveTime": 1743341456635,
+    "e2eLatency": 11
+  },
+  {
+    "discussionId": 1894,
+    "clientRequestTime": 1743341456625,
+    "clientReceiveTime": 1743341456645,
+    "e2eLatency": 20
+  },
+  {
+    "discussionId": 1895,
+    "clientRequestTime": 1743341456630,
+    "clientReceiveTime": 1743341456714,
+    "e2eLatency": 84
+  },
+  {
+    "discussionId": 1896,
+    "clientRequestTime": 1743341456680,
+    "clientReceiveTime": 1743341456749,
+    "e2eLatency": 69
+  },
+  {
+    "discussionId": 1897,
+    "clientRequestTime": 1743341456753,
+    "clientReceiveTime": 1743341456757,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1898,
+    "clientRequestTime": 1743341456761,
+    "clientReceiveTime": 1743341456766,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1899,
+    "clientRequestTime": 1743341457346,
+    "clientReceiveTime": 1743341457363,
+    "e2eLatency": 17
+  },
+  {
+    "discussionId": 1900,
+    "clientRequestTime": 1743341457367,
+    "clientReceiveTime": 1743341457372,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1901,
+    "clientRequestTime": 1743341457375,
+    "clientReceiveTime": 1743341457380,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1902,
+    "clientRequestTime": 1743341457430,
+    "clientReceiveTime": 1743341457436,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 1903,
+    "clientRequestTime": 1743341457442,
+    "clientReceiveTime": 1743341457446,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1904,
+    "clientRequestTime": 1743341457449,
+    "clientReceiveTime": 1743341457453,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1905,
+    "clientRequestTime": 1743341457513,
+    "clientReceiveTime": 1743341457523,
+    "e2eLatency": 10
+  },
+  {
+    "discussionId": 1906,
+    "clientRequestTime": 1743341457534,
+    "clientReceiveTime": 1743341457602,
+    "e2eLatency": 68
+  },
+  {
+    "discussionId": 1907,
+    "clientRequestTime": 1743341457605,
+    "clientReceiveTime": 1743341457611,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 1908,
+    "clientRequestTime": 1743341457547,
+    "clientReceiveTime": 1743341457615,
+    "e2eLatency": 68
+  },
+  {
+    "discussionId": 1909,
+    "clientRequestTime": 1743341457615,
+    "clientReceiveTime": 1743341457623,
+    "e2eLatency": 8
+  },
+  {
+    "discussionId": 1910,
+    "clientRequestTime": 1743341457619,
+    "clientReceiveTime": 1743341457625,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 1911,
+    "clientRequestTime": 1743341457628,
+    "clientReceiveTime": 1743341457633,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1912,
+    "clientRequestTime": 1743341457620,
+    "clientReceiveTime": 1743341457687,
+    "e2eLatency": 67
+  },
+  {
+    "discussionId": 1913,
+    "clientRequestTime": 1743341457690,
+    "clientReceiveTime": 1743341457694,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1914,
+    "clientRequestTime": 1743341457698,
+    "clientReceiveTime": 1743341457702,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1915,
+    "clientRequestTime": 1743341457679,
+    "clientReceiveTime": 1743341457756,
+    "e2eLatency": 77
+  },
+  {
+    "discussionId": 1916,
+    "clientRequestTime": 1743341457759,
+    "clientReceiveTime": 1743341457769,
+    "e2eLatency": 10
+  },
+  {
+    "discussionId": 1917,
+    "clientRequestTime": 1743341457772,
+    "clientReceiveTime": 1743341457778,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 1918,
+    "clientRequestTime": 1743341458363,
+    "clientReceiveTime": 1743341458379,
+    "e2eLatency": 16
+  },
+  {
+    "discussionId": 1919,
+    "clientRequestTime": 1743341458383,
+    "clientReceiveTime": 1743341458388,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1920,
+    "clientRequestTime": 1743341458392,
+    "clientReceiveTime": 1743341458398,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 1921,
+    "clientRequestTime": 1743341458393,
+    "clientReceiveTime": 1743341458401,
+    "e2eLatency": 8
+  },
+  {
+    "discussionId": 1922,
+    "clientRequestTime": 1743341458442,
+    "clientReceiveTime": 1743341458456,
+    "e2eLatency": 14
+  },
+  {
+    "discussionId": 1923,
+    "clientRequestTime": 1743341458457,
+    "clientReceiveTime": 1743341458465,
+    "e2eLatency": 8
+  },
+  {
+    "discussionId": 1924,
+    "clientRequestTime": 1743341458549,
+    "clientReceiveTime": 1743341458556,
+    "e2eLatency": 7
+  },
+  {
+    "discussionId": 1925,
+    "clientRequestTime": 1743341458560,
+    "clientReceiveTime": 1743341458568,
+    "e2eLatency": 8
+  },
+  {
+    "discussionId": 1926,
+    "clientRequestTime": 1743341458564,
+    "clientReceiveTime": 1743341458570,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 1927,
+    "clientRequestTime": 1743341458572,
+    "clientReceiveTime": 1743341458577,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1928,
+    "clientRequestTime": 1743341458576,
+    "clientReceiveTime": 1743341458582,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 1929,
+    "clientRequestTime": 1743341458585,
+    "clientReceiveTime": 1743341458589,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1930,
+    "clientRequestTime": 1743341458690,
+    "clientReceiveTime": 1743341458696,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 1931,
+    "clientRequestTime": 1743341458699,
+    "clientReceiveTime": 1743341458703,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1932,
+    "clientRequestTime": 1743341458641,
+    "clientReceiveTime": 1743341458713,
+    "e2eLatency": 72
+  },
+  {
+    "discussionId": 1933,
+    "clientRequestTime": 1743341458708,
+    "clientReceiveTime": 1743341458715,
+    "e2eLatency": 7
+  },
+  {
+    "discussionId": 1934,
+    "clientRequestTime": 1743341458716,
+    "clientReceiveTime": 1743341458721,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1936,
+    "clientRequestTime": 1743341458726,
+    "clientReceiveTime": 1743341458731,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1935,
+    "clientRequestTime": 1743341458721,
+    "clientReceiveTime": 1743341458737,
+    "e2eLatency": 16
+  },
+  {
+    "discussionId": 1937,
+    "clientRequestTime": 1743341459376,
+    "clientReceiveTime": 1743341459392,
+    "e2eLatency": 16
+  },
+  {
+    "discussionId": 1938,
+    "clientRequestTime": 1743341459396,
+    "clientReceiveTime": 1743341459401,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1939,
+    "clientRequestTime": 1743341459405,
+    "clientReceiveTime": 1743341459409,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1940,
+    "clientRequestTime": 1743341459453,
+    "clientReceiveTime": 1743341459523,
+    "e2eLatency": 70
+  },
+  {
+    "discussionId": 1941,
+    "clientRequestTime": 1743341459526,
+    "clientReceiveTime": 1743341459530,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1942,
+    "clientRequestTime": 1743341459533,
+    "clientReceiveTime": 1743341459537,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1943,
+    "clientRequestTime": 1743341459563,
+    "clientReceiveTime": 1743341459574,
+    "e2eLatency": 11
+  },
+  {
+    "discussionId": 1944,
+    "clientRequestTime": 1743341459578,
+    "clientReceiveTime": 1743341459583,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1945,
+    "clientRequestTime": 1743341459586,
+    "clientReceiveTime": 1743341459590,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1946,
+    "clientRequestTime": 1743341459593,
+    "clientReceiveTime": 1743341459597,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1947,
+    "clientRequestTime": 1743341459655,
+    "clientReceiveTime": 1743341459662,
+    "e2eLatency": 7
+  },
+  {
+    "discussionId": 1948,
+    "clientRequestTime": 1743341459666,
+    "clientReceiveTime": 1743341459671,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1949,
+    "clientRequestTime": 1743341459674,
+    "clientReceiveTime": 1743341459678,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1950,
+    "clientRequestTime": 1743341459701,
+    "clientReceiveTime": 1743341459770,
+    "e2eLatency": 69
+  },
+  {
+    "discussionId": 1951,
+    "clientRequestTime": 1743341459773,
+    "clientReceiveTime": 1743341459777,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1952,
+    "clientRequestTime": 1743341459781,
+    "clientReceiveTime": 1743341459785,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1953,
+    "clientRequestTime": 1743341460364,
+    "clientReceiveTime": 1743341460447,
+    "e2eLatency": 83
+  },
+  {
+    "discussionId": 1955,
+    "clientRequestTime": 1743341460462,
+    "clientReceiveTime": 1743341460473,
+    "e2eLatency": 11
+  },
+  {
+    "discussionId": 1954,
+    "clientRequestTime": 1743341460464,
+    "clientReceiveTime": 1743341460480,
+    "e2eLatency": 16
+  },
+  {
+    "discussionId": 1956,
+    "clientRequestTime": 1743341460476,
+    "clientReceiveTime": 1743341460482,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 1957,
+    "clientRequestTime": 1743341460486,
+    "clientReceiveTime": 1743341460490,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1958,
+    "clientRequestTime": 1743341460548,
+    "clientReceiveTime": 1743341460618,
+    "e2eLatency": 70
+  },
+  {
+    "discussionId": 1959,
+    "clientRequestTime": 1743341460621,
+    "clientReceiveTime": 1743341460625,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1960,
+    "clientRequestTime": 1743341460628,
+    "clientReceiveTime": 1743341460633,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1961,
+    "clientRequestTime": 1743341460579,
+    "clientReceiveTime": 1743341460649,
+    "e2eLatency": 70
+  },
+  {
+    "discussionId": 1962,
+    "clientRequestTime": 1743341460647,
+    "clientReceiveTime": 1743341460715,
+    "e2eLatency": 68
+  },
+  {
+    "discussionId": 1963,
+    "clientRequestTime": 1743341460718,
+    "clientReceiveTime": 1743341460722,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1964,
+    "clientRequestTime": 1743341460725,
+    "clientReceiveTime": 1743341460729,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1965,
+    "clientRequestTime": 1743341460713,
+    "clientReceiveTime": 1743341460789,
+    "e2eLatency": 76
+  },
+  {
+    "discussionId": 1966,
+    "clientRequestTime": 1743341461369,
+    "clientReceiveTime": 1743341461384,
+    "e2eLatency": 15
+  },
+  {
+    "discussionId": 1967,
+    "clientRequestTime": 1743341461387,
+    "clientReceiveTime": 1743341461391,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1968,
+    "clientRequestTime": 1743341461394,
+    "clientReceiveTime": 1743341461398,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1969,
+    "clientRequestTime": 1743341461463,
+    "clientReceiveTime": 1743341461539,
+    "e2eLatency": 76
+  },
+  {
+    "discussionId": 1970,
+    "clientRequestTime": 1743341461580,
+    "clientReceiveTime": 1743341461588,
+    "e2eLatency": 8
+  },
+  {
+    "discussionId": 1971,
+    "clientRequestTime": 1743341461563,
+    "clientReceiveTime": 1743341461637,
+    "e2eLatency": 74
+  },
+  {
+    "discussionId": 1972,
+    "clientRequestTime": 1743341461563,
+    "clientReceiveTime": 1743341461638,
+    "e2eLatency": 75
+  },
+  {
+    "discussionId": 1973,
+    "clientRequestTime": 1743341461641,
+    "clientReceiveTime": 1743341461647,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 1974,
+    "clientRequestTime": 1743341461641,
+    "clientReceiveTime": 1743341461648,
+    "e2eLatency": 7
+  },
+  {
+    "discussionId": 1975,
+    "clientRequestTime": 1743341461650,
+    "clientReceiveTime": 1743341461656,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 1976,
+    "clientRequestTime": 1743341461650,
+    "clientReceiveTime": 1743341461657,
+    "e2eLatency": 7
+  },
+  {
+    "discussionId": 1977,
+    "clientRequestTime": 1743341461660,
+    "clientReceiveTime": 1743341461726,
+    "e2eLatency": 66
+  },
+  {
+    "discussionId": 1978,
+    "clientRequestTime": 1743341461729,
+    "clientReceiveTime": 1743341461734,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1979,
+    "clientRequestTime": 1743341461737,
+    "clientReceiveTime": 1743341461741,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1980,
+    "clientRequestTime": 1743341461697,
+    "clientReceiveTime": 1743341461769,
+    "e2eLatency": 72
+  },
+  {
+    "discussionId": 1981,
+    "clientRequestTime": 1743341462390,
+    "clientReceiveTime": 1743341462398,
+    "e2eLatency": 8
+  },
+  {
+    "discussionId": 1982,
+    "clientRequestTime": 1743341462402,
+    "clientReceiveTime": 1743341462407,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1983,
+    "clientRequestTime": 1743341462410,
+    "clientReceiveTime": 1743341462414,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1984,
+    "clientRequestTime": 1743341462452,
+    "clientReceiveTime": 1743341462464,
+    "e2eLatency": 12
+  },
+  {
+    "discussionId": 1985,
+    "clientRequestTime": 1743341462467,
+    "clientReceiveTime": 1743341462484,
+    "e2eLatency": 17
+  },
+  {
+    "discussionId": 1986,
+    "clientRequestTime": 1743341462577,
+    "clientReceiveTime": 1743341462585,
+    "e2eLatency": 8
+  },
+  {
+    "discussionId": 1988,
+    "clientRequestTime": 1743341462654,
+    "clientReceiveTime": 1743341462664,
+    "e2eLatency": 10
+  },
+  {
+    "discussionId": 1989,
+    "clientRequestTime": 1743341462591,
+    "clientReceiveTime": 1743341462666,
+    "e2eLatency": 75
+  },
+  {
+    "discussionId": 1987,
+    "clientRequestTime": 1743341462655,
+    "clientReceiveTime": 1743341462673,
+    "e2eLatency": 18
+  },
+  {
+    "discussionId": 1990,
+    "clientRequestTime": 1743341462669,
+    "clientReceiveTime": 1743341462679,
+    "e2eLatency": 10
+  },
+  {
+    "discussionId": 1991,
+    "clientRequestTime": 1743341462669,
+    "clientReceiveTime": 1743341462680,
+    "e2eLatency": 11
+  },
+  {
+    "discussionId": 1992,
+    "clientRequestTime": 1743341462683,
+    "clientReceiveTime": 1743341462689,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 1993,
+    "clientRequestTime": 1743341462683,
+    "clientReceiveTime": 1743341462690,
+    "e2eLatency": 7
+  },
+  {
+    "discussionId": 1994,
+    "clientRequestTime": 1743341462716,
+    "clientReceiveTime": 1743341462724,
+    "e2eLatency": 8
+  },
+  {
+    "discussionId": 1995,
+    "clientRequestTime": 1743341462727,
+    "clientReceiveTime": 1743341462732,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 1996,
+    "clientRequestTime": 1743341462735,
+    "clientReceiveTime": 1743341462739,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 1997,
+    "clientRequestTime": 1743341462794,
+    "clientReceiveTime": 1743341462812,
+    "e2eLatency": 18
+  },
+  {
+    "discussionId": 1998,
+    "clientRequestTime": 1743341463402,
+    "clientReceiveTime": 1743341463478,
+    "e2eLatency": 76
+  },
+  {
+    "discussionId": 1999,
+    "clientRequestTime": 1743341463480,
+    "clientReceiveTime": 1743341463486,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 2000,
+    "clientRequestTime": 1743341463482,
+    "clientReceiveTime": 1743341463487,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 2001,
+    "clientRequestTime": 1743341463489,
+    "clientReceiveTime": 1743341463496,
+    "e2eLatency": 7
+  },
+  {
+    "discussionId": 2002,
+    "clientRequestTime": 1743341463490,
+    "clientReceiveTime": 1743341463497,
+    "e2eLatency": 7
+  },
+  {
+    "discussionId": 2003,
+    "clientRequestTime": 1743341463499,
+    "clientReceiveTime": 1743341463504,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 2004,
+    "clientRequestTime": 1743341463544,
+    "clientReceiveTime": 1743341463557,
+    "e2eLatency": 13
+  },
+  {
+    "discussionId": 2006,
+    "clientRequestTime": 1743341463606,
+    "clientReceiveTime": 1743341463678,
+    "e2eLatency": 72
+  },
+  {
+    "discussionId": 2005,
+    "clientRequestTime": 1743341463606,
+    "clientReceiveTime": 1743341463680,
+    "e2eLatency": 74
+  },
+  {
+    "discussionId": 2007,
+    "clientRequestTime": 1743341463682,
+    "clientReceiveTime": 1743341463687,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 2008,
+    "clientRequestTime": 1743341463690,
+    "clientReceiveTime": 1743341463694,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 2009,
+    "clientRequestTime": 1743341463684,
+    "clientReceiveTime": 1743341463750,
+    "e2eLatency": 66
+  },
+  {
+    "discussionId": 2010,
+    "clientRequestTime": 1743341463753,
+    "clientReceiveTime": 1743341463757,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 2011,
+    "clientRequestTime": 1743341463760,
+    "clientReceiveTime": 1743341463765,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 2013,
+    "clientRequestTime": 1743341463730,
+    "clientReceiveTime": 1743341463797,
+    "e2eLatency": 67
+  },
+  {
+    "discussionId": 2012,
+    "clientRequestTime": 1743341463777,
+    "clientReceiveTime": 1743341463806,
+    "e2eLatency": 29
+  },
+  {
+    "discussionId": 2014,
+    "clientRequestTime": 1743341463801,
+    "clientReceiveTime": 1743341463807,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 2015,
+    "clientRequestTime": 1743341463810,
+    "clientReceiveTime": 1743341463815,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 2016,
+    "clientRequestTime": 1743341463765,
+    "clientReceiveTime": 1743341463864,
+    "e2eLatency": 99
+  },
+  {
+    "discussionId": 2017,
+    "clientRequestTime": 1743341463873,
+    "clientReceiveTime": 1743341463879,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 2018,
+    "clientRequestTime": 1743341463883,
+    "clientReceiveTime": 1743341463888,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 2019,
+    "clientRequestTime": 1743341464389,
+    "clientReceiveTime": 1743341464408,
+    "e2eLatency": 19
+  },
+  {
+    "discussionId": 2020,
+    "clientRequestTime": 1743341464482,
+    "clientReceiveTime": 1743341464487,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 2021,
+    "clientRequestTime": 1743341464490,
+    "clientReceiveTime": 1743341464497,
+    "e2eLatency": 7
+  },
+  {
+    "discussionId": 2022,
+    "clientRequestTime": 1743341464491,
+    "clientReceiveTime": 1743341464501,
+    "e2eLatency": 10
+  },
+  {
+    "discussionId": 2023,
+    "clientRequestTime": 1743341464501,
+    "clientReceiveTime": 1743341464506,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 2025,
+    "clientRequestTime": 1743341464593,
+    "clientReceiveTime": 1743341464601,
+    "e2eLatency": 8
+  },
+  {
+    "discussionId": 2024,
+    "clientRequestTime": 1743341464590,
+    "clientReceiveTime": 1743341464606,
+    "e2eLatency": 16
+  },
+  {
+    "discussionId": 2026,
+    "clientRequestTime": 1743341464605,
+    "clientReceiveTime": 1743341464611,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 2027,
+    "clientRequestTime": 1743341464614,
+    "clientReceiveTime": 1743341464618,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 2028,
+    "clientRequestTime": 1743341464605,
+    "clientReceiveTime": 1743341464674,
+    "e2eLatency": 69
+  },
+  {
+    "discussionId": 2029,
+    "clientRequestTime": 1743341464678,
+    "clientReceiveTime": 1743341464683,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 2030,
+    "clientRequestTime": 1743341464686,
+    "clientReceiveTime": 1743341464690,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 2031,
+    "clientRequestTime": 1743341464698,
+    "clientReceiveTime": 1743341464704,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 2032,
+    "clientRequestTime": 1743341464708,
+    "clientReceiveTime": 1743341464712,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 2033,
+    "clientRequestTime": 1743341464715,
+    "clientReceiveTime": 1743341464719,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 2034,
+    "clientRequestTime": 1743341464729,
+    "clientReceiveTime": 1743341464796,
+    "e2eLatency": 67
+  },
+  {
+    "discussionId": 2035,
+    "clientRequestTime": 1743341464799,
+    "clientReceiveTime": 1743341464804,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 2036,
+    "clientRequestTime": 1743341464807,
+    "clientReceiveTime": 1743341464811,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 2037,
+    "clientRequestTime": 1743341464777,
+    "clientReceiveTime": 1743341464845,
+    "e2eLatency": 68
+  },
+  {
+    "discussionId": 2038,
+    "clientRequestTime": 1743341464849,
+    "clientReceiveTime": 1743341464854,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 2039,
+    "clientRequestTime": 1743341464858,
+    "clientReceiveTime": 1743341464864,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 2040,
+    "clientRequestTime": 1743341465415,
+    "clientReceiveTime": 1743341465499,
+    "e2eLatency": 84
+  },
+  {
+    "discussionId": 2041,
+    "clientRequestTime": 1743341465493,
+    "clientReceiveTime": 1743341465500,
+    "e2eLatency": 7
+  },
+  {
+    "discussionId": 2042,
+    "clientRequestTime": 1743341465503,
+    "clientReceiveTime": 1743341465507,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 2043,
+    "clientRequestTime": 1743341465510,
+    "clientReceiveTime": 1743341465515,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 2044,
+    "clientRequestTime": 1743341465618,
+    "clientReceiveTime": 1743341465624,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 2045,
+    "clientRequestTime": 1743341465626,
+    "clientReceiveTime": 1743341465631,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 2046,
+    "clientRequestTime": 1743341465634,
+    "clientReceiveTime": 1743341465638,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 2047,
+    "clientRequestTime": 1743341465618,
+    "clientReceiveTime": 1743341465687,
+    "e2eLatency": 69
+  },
+  {
+    "discussionId": 2048,
+    "clientRequestTime": 1743341465690,
+    "clientReceiveTime": 1743341465697,
+    "e2eLatency": 7
+  },
+  {
+    "discussionId": 2049,
+    "clientRequestTime": 1743341465691,
+    "clientReceiveTime": 1743341465701,
+    "e2eLatency": 10
+  },
+  {
+    "discussionId": 2050,
+    "clientRequestTime": 1743341465700,
+    "clientReceiveTime": 1743341465705,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 2051,
+    "clientRequestTime": 1743341465757,
+    "clientReceiveTime": 1743341465762,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 2052,
+    "clientRequestTime": 1743341465765,
+    "clientReceiveTime": 1743341465769,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 2053,
+    "clientRequestTime": 1743341465773,
+    "clientReceiveTime": 1743341465780,
+    "e2eLatency": 7
+  },
+  {
+    "discussionId": 2054,
+    "clientRequestTime": 1743341465712,
+    "clientReceiveTime": 1743341465786,
+    "e2eLatency": 74
+  },
+  {
+    "discussionId": 2055,
+    "clientRequestTime": 1743341465789,
+    "clientReceiveTime": 1743341465858,
+    "e2eLatency": 69
+  },
+  {
+    "discussionId": 2056,
+    "clientRequestTime": 1743341465861,
+    "clientReceiveTime": 1743341465867,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 2057,
+    "clientRequestTime": 1743341465870,
+    "clientReceiveTime": 1743341465875,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 2059,
+    "clientRequestTime": 1743341466415,
+    "clientReceiveTime": 1743341466436,
+    "e2eLatency": 21
+  },
+  {
+    "discussionId": 2058,
+    "clientRequestTime": 1743341466416,
+    "clientReceiveTime": 1743341466444,
+    "e2eLatency": 28
+  },
+  {
+    "discussionId": 2060,
+    "clientRequestTime": 1743341466439,
+    "clientReceiveTime": 1743341466445,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 2061,
+    "clientRequestTime": 1743341466448,
+    "clientReceiveTime": 1743341466452,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 2062,
+    "clientRequestTime": 1743341466493,
+    "clientReceiveTime": 1743341466503,
+    "e2eLatency": 10
+  },
+  {
+    "discussionId": 2063,
+    "clientRequestTime": 1743341466630,
+    "clientReceiveTime": 1743341466639,
+    "e2eLatency": 9
+  },
+  {
+    "discussionId": 2064,
+    "clientRequestTime": 1743341466630,
+    "clientReceiveTime": 1743341466641,
+    "e2eLatency": 11
+  },
+  {
+    "discussionId": 2065,
+    "clientRequestTime": 1743341466643,
+    "clientReceiveTime": 1743341466649,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 2066,
+    "clientRequestTime": 1743341466643,
+    "clientReceiveTime": 1743341466651,
+    "e2eLatency": 8
+  },
+  {
+    "discussionId": 2067,
+    "clientRequestTime": 1743341466653,
+    "clientReceiveTime": 1743341466658,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 2068,
+    "clientRequestTime": 1743341466653,
+    "clientReceiveTime": 1743341466659,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 2069,
+    "clientRequestTime": 1743341466725,
+    "clientReceiveTime": 1743341466734,
+    "e2eLatency": 9
+  },
+  {
+    "discussionId": 2070,
+    "clientRequestTime": 1743341466771,
+    "clientReceiveTime": 1743341466837,
+    "e2eLatency": 66
+  },
+  {
+    "discussionId": 2071,
+    "clientRequestTime": 1743341466840,
+    "clientReceiveTime": 1743341466844,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 2072,
+    "clientRequestTime": 1743341466847,
+    "clientReceiveTime": 1743341466852,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 2073,
+    "clientRequestTime": 1743341466803,
+    "clientReceiveTime": 1743341466872,
+    "e2eLatency": 69
+  },
+  {
+    "discussionId": 2074,
+    "clientRequestTime": 1743341466875,
+    "clientReceiveTime": 1743341466882,
+    "e2eLatency": 7
+  },
+  {
+    "discussionId": 2075,
+    "clientRequestTime": 1743341466888,
+    "clientReceiveTime": 1743341466892,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 2076,
+    "clientRequestTime": 1743341467409,
+    "clientReceiveTime": 1743341467479,
+    "e2eLatency": 70
+  },
+  {
+    "discussionId": 2077,
+    "clientRequestTime": 1743341467482,
+    "clientReceiveTime": 1743341467487,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 2078,
+    "clientRequestTime": 1743341467490,
+    "clientReceiveTime": 1743341467494,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 2079,
+    "clientRequestTime": 1743341467502,
+    "clientReceiveTime": 1743341467507,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 2080,
+    "clientRequestTime": 1743341467510,
+    "clientReceiveTime": 1743341467514,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 2081,
+    "clientRequestTime": 1743341467517,
+    "clientReceiveTime": 1743341467523,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 2082,
+    "clientRequestTime": 1743341467518,
+    "clientReceiveTime": 1743341467528,
+    "e2eLatency": 10
+  },
+  {
+    "discussionId": 2083,
+    "clientRequestTime": 1743341467642,
+    "clientReceiveTime": 1743341467650,
+    "e2eLatency": 8
+  },
+  {
+    "discussionId": 2084,
+    "clientRequestTime": 1743341467642,
+    "clientReceiveTime": 1743341467651,
+    "e2eLatency": 9
+  },
+  {
+    "discussionId": 2085,
+    "clientRequestTime": 1743341467652,
+    "clientReceiveTime": 1743341467658,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 2086,
+    "clientRequestTime": 1743341467653,
+    "clientReceiveTime": 1743341467660,
+    "e2eLatency": 7
+  },
+  {
+    "discussionId": 2087,
+    "clientRequestTime": 1743341467661,
+    "clientReceiveTime": 1743341467667,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 2088,
+    "clientRequestTime": 1743341467662,
+    "clientReceiveTime": 1743341467669,
+    "e2eLatency": 7
+  },
+  {
+    "discussionId": 2089,
+    "clientRequestTime": 1743341467736,
+    "clientReceiveTime": 1743341467747,
+    "e2eLatency": 11
+  },
+  {
+    "discussionId": 2090,
+    "clientRequestTime": 1743341467782,
+    "clientReceiveTime": 1743341467787,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 2091,
+    "clientRequestTime": 1743341467790,
+    "clientReceiveTime": 1743341467794,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 2093,
+    "clientRequestTime": 1743341467798,
+    "clientReceiveTime": 1743341467803,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 2092,
+    "clientRequestTime": 1743341467797,
+    "clientReceiveTime": 1743341467808,
+    "e2eLatency": 11
+  },
+  {
+    "discussionId": 2094,
+    "clientRequestTime": 1743341467813,
+    "clientReceiveTime": 1743341467881,
+    "e2eLatency": 68
+  },
+  {
+    "discussionId": 2095,
+    "clientRequestTime": 1743341467884,
+    "clientReceiveTime": 1743341467888,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 2096,
+    "clientRequestTime": 1743341467891,
+    "clientReceiveTime": 1743341467895,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 2097,
+    "clientRequestTime": 1743341468413,
+    "clientReceiveTime": 1743341468428,
+    "e2eLatency": 15
+  },
+  {
+    "discussionId": 2098,
+    "clientRequestTime": 1743341468432,
+    "clientReceiveTime": 1743341468438,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 2099,
+    "clientRequestTime": 1743341468441,
+    "clientReceiveTime": 1743341468446,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 2100,
+    "clientRequestTime": 1743341468514,
+    "clientReceiveTime": 1743341468523,
+    "e2eLatency": 9
+  },
+  {
+    "discussionId": 2101,
+    "clientRequestTime": 1743341468516,
+    "clientReceiveTime": 1743341468586,
+    "e2eLatency": 70
+  },
+  {
+    "discussionId": 2102,
+    "clientRequestTime": 1743341468589,
+    "clientReceiveTime": 1743341468593,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 2103,
+    "clientRequestTime": 1743341468596,
+    "clientReceiveTime": 1743341468600,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 2104,
+    "clientRequestTime": 1743341468631,
+    "clientReceiveTime": 1743341468640,
+    "e2eLatency": 9
+  },
+  {
+    "discussionId": 2105,
+    "clientRequestTime": 1743341468631,
+    "clientReceiveTime": 1743341468642,
+    "e2eLatency": 11
+  },
+  {
+    "discussionId": 2106,
+    "clientRequestTime": 1743341468644,
+    "clientReceiveTime": 1743341468650,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 2107,
+    "clientRequestTime": 1743341468644,
+    "clientReceiveTime": 1743341468652,
+    "e2eLatency": 8
+  },
+  {
+    "discussionId": 2108,
+    "clientRequestTime": 1743341468656,
+    "clientReceiveTime": 1743341468661,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 2109,
+    "clientRequestTime": 1743341468656,
+    "clientReceiveTime": 1743341468663,
+    "e2eLatency": 7
+  },
+  {
+    "discussionId": 2110,
+    "clientRequestTime": 1743341468745,
+    "clientReceiveTime": 1743341468754,
+    "e2eLatency": 9
+  },
+  {
+    "discussionId": 2111,
+    "clientRequestTime": 1743341468731,
+    "clientReceiveTime": 1743341468806,
+    "e2eLatency": 75
+  },
+  {
+    "discussionId": 2112,
+    "clientRequestTime": 1743341468795,
+    "clientReceiveTime": 1743341468863,
+    "e2eLatency": 68
+  },
+  {
+    "discussionId": 2113,
+    "clientRequestTime": 1743341468866,
+    "clientReceiveTime": 1743341468870,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 2114,
+    "clientRequestTime": 1743341468873,
+    "clientReceiveTime": 1743341468879,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 2115,
+    "clientRequestTime": 1743341468813,
+    "clientReceiveTime": 1743341468881,
+    "e2eLatency": 68
+  },
+  {
+    "discussionId": 2116,
+    "clientRequestTime": 1743341468884,
+    "clientReceiveTime": 1743341468889,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 2117,
+    "clientRequestTime": 1743341468892,
+    "clientReceiveTime": 1743341468896,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 2118,
+    "clientRequestTime": 1743341469413,
+    "clientReceiveTime": 1743341469429,
+    "e2eLatency": 16
+  },
+  {
+    "discussionId": 2119,
+    "clientRequestTime": 1743341469433,
+    "clientReceiveTime": 1743341469438,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 2120,
+    "clientRequestTime": 1743341469442,
+    "clientReceiveTime": 1743341469446,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 2121,
+    "clientRequestTime": 1743341469529,
+    "clientReceiveTime": 1743341469538,
+    "e2eLatency": 9
+  },
+  {
+    "discussionId": 2122,
+    "clientRequestTime": 1743341469541,
+    "clientReceiveTime": 1743341469546,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 2123,
+    "clientRequestTime": 1743341469550,
+    "clientReceiveTime": 1743341469554,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 2124,
+    "clientRequestTime": 1743341469632,
+    "clientReceiveTime": 1743341469704,
+    "e2eLatency": 72
+  },
+  {
+    "discussionId": 2125,
+    "clientRequestTime": 1743341469632,
+    "clientReceiveTime": 1743341469706,
+    "e2eLatency": 74
+  },
+  {
+    "discussionId": 2126,
+    "clientRequestTime": 1743341469707,
+    "clientReceiveTime": 1743341469714,
+    "e2eLatency": 7
+  },
+  {
+    "discussionId": 2127,
+    "clientRequestTime": 1743341469707,
+    "clientReceiveTime": 1743341469715,
+    "e2eLatency": 8
+  },
+  {
+    "discussionId": 2128,
+    "clientRequestTime": 1743341469717,
+    "clientReceiveTime": 1743341469722,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 2129,
+    "clientRequestTime": 1743341469717,
+    "clientReceiveTime": 1743341469724,
+    "e2eLatency": 7
+  },
+  {
+    "discussionId": 2130,
+    "clientRequestTime": 1743341469746,
+    "clientReceiveTime": 1743341469753,
+    "e2eLatency": 7
+  },
+  {
+    "discussionId": 2131,
+    "clientRequestTime": 1743341469757,
+    "clientReceiveTime": 1743341469764,
+    "e2eLatency": 7
+  },
+  {
+    "discussionId": 2132,
+    "clientRequestTime": 1743341469758,
+    "clientReceiveTime": 1743341469771,
+    "e2eLatency": 13
+  },
+  {
+    "discussionId": 2133,
+    "clientRequestTime": 1743341469767,
+    "clientReceiveTime": 1743341469773,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 2134,
+    "clientRequestTime": 1743341469796,
+    "clientReceiveTime": 1743341469868,
+    "e2eLatency": 72
+  },
+  {
+    "discussionId": 2135,
+    "clientRequestTime": 1743341469871,
+    "clientReceiveTime": 1743341469875,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 2136,
+    "clientRequestTime": 1743341469877,
+    "clientReceiveTime": 1743341469882,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 2137,
+    "clientRequestTime": 1743341469829,
+    "clientReceiveTime": 1743341469897,
+    "e2eLatency": 68
+  },
+  {
+    "discussionId": 2138,
+    "clientRequestTime": 1743341469900,
+    "clientReceiveTime": 1743341469904,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 2139,
+    "clientRequestTime": 1743341469908,
+    "clientReceiveTime": 1743341469913,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 2140,
+    "clientRequestTime": 1743341470435,
+    "clientReceiveTime": 1743341470451,
+    "e2eLatency": 16
+  },
+  {
+    "discussionId": 2141,
+    "clientRequestTime": 1743341470454,
+    "clientReceiveTime": 1743341470460,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 2142,
+    "clientRequestTime": 1743341470463,
+    "clientReceiveTime": 1743341470468,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 2143,
+    "clientRequestTime": 1743341470529,
+    "clientReceiveTime": 1743341470600,
+    "e2eLatency": 71
+  },
+  {
+    "discussionId": 2144,
+    "clientRequestTime": 1743341470603,
+    "clientReceiveTime": 1743341470607,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 2145,
+    "clientRequestTime": 1743341470609,
+    "clientReceiveTime": 1743341470614,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 2146,
+    "clientRequestTime": 1743341470655,
+    "clientReceiveTime": 1743341470726,
+    "e2eLatency": 71
+  },
+  {
+    "discussionId": 2147,
+    "clientRequestTime": 1743341470655,
+    "clientReceiveTime": 1743341470728,
+    "e2eLatency": 73
+  },
+  {
+    "discussionId": 2148,
+    "clientRequestTime": 1743341470729,
+    "clientReceiveTime": 1743341470735,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 2149,
+    "clientRequestTime": 1743341470730,
+    "clientReceiveTime": 1743341470737,
+    "e2eLatency": 7
+  },
+  {
+    "discussionId": 2150,
+    "clientRequestTime": 1743341470738,
+    "clientReceiveTime": 1743341470745,
+    "e2eLatency": 7
+  },
+  {
+    "discussionId": 2151,
+    "clientRequestTime": 1743341470738,
+    "clientReceiveTime": 1743341470746,
+    "e2eLatency": 8
+  },
+  {
+    "discussionId": 2153,
+    "clientRequestTime": 1743341470748,
+    "clientReceiveTime": 1743341470819,
+    "e2eLatency": 71
+  },
+  {
+    "discussionId": 2154,
+    "clientRequestTime": 1743341470821,
+    "clientReceiveTime": 1743341470827,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 2152,
+    "clientRequestTime": 1743341470810,
+    "clientReceiveTime": 1743341470828,
+    "e2eLatency": 18
+  },
+  {
+    "discussionId": 2155,
+    "clientRequestTime": 1743341470831,
+    "clientReceiveTime": 1743341470836,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 2156,
+    "clientRequestTime": 1743341470809,
+    "clientReceiveTime": 1743341470877,
+    "e2eLatency": 68
+  },
+  {
+    "discussionId": 2157,
+    "clientRequestTime": 1743341470880,
+    "clientReceiveTime": 1743341470885,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 2158,
+    "clientRequestTime": 1743341470888,
+    "clientReceiveTime": 1743341470893,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 2159,
+    "clientRequestTime": 1743341470841,
+    "clientReceiveTime": 1743341470908,
+    "e2eLatency": 67
+  },
+  {
+    "discussionId": 2160,
+    "clientRequestTime": 1743341470910,
+    "clientReceiveTime": 1743341470916,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 2161,
+    "clientRequestTime": 1743341470918,
+    "clientReceiveTime": 1743341470923,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 2162,
+    "clientRequestTime": 1743341471450,
+    "clientReceiveTime": 1743341471522,
+    "e2eLatency": 72
+  },
+  {
+    "discussionId": 2163,
+    "clientRequestTime": 1743341471524,
+    "clientReceiveTime": 1743341471529,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 2164,
+    "clientRequestTime": 1743341471528,
+    "clientReceiveTime": 1743341471534,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 2165,
+    "clientRequestTime": 1743341471532,
+    "clientReceiveTime": 1743341471538,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 2166,
+    "clientRequestTime": 1743341471538,
+    "clientReceiveTime": 1743341471543,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 2167,
+    "clientRequestTime": 1743341471545,
+    "clientReceiveTime": 1743341471550,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 2168,
+    "clientRequestTime": 1743341471667,
+    "clientReceiveTime": 1743341471673,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 2169,
+    "clientRequestTime": 1743341471675,
+    "clientReceiveTime": 1743341471680,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 2170,
+    "clientRequestTime": 1743341471682,
+    "clientReceiveTime": 1743341471688,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 2171,
+    "clientRequestTime": 1743341471667,
+    "clientReceiveTime": 1743341471736,
+    "e2eLatency": 69
+  },
+  {
+    "discussionId": 2172,
+    "clientRequestTime": 1743341471738,
+    "clientReceiveTime": 1743341471743,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 2173,
+    "clientRequestTime": 1743341471745,
+    "clientReceiveTime": 1743341471750,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 2174,
+    "clientRequestTime": 1743341471760,
+    "clientReceiveTime": 1743341471827,
+    "e2eLatency": 67
+  },
+  {
+    "discussionId": 2175,
+    "clientRequestTime": 1743341471829,
+    "clientReceiveTime": 1743341471835,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 2176,
+    "clientRequestTime": 1743341471837,
+    "clientReceiveTime": 1743341471842,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 2177,
+    "clientRequestTime": 1743341471853,
+    "clientReceiveTime": 1743341471862,
+    "e2eLatency": 9
+  },
+  {
+    "discussionId": 2178,
+    "clientRequestTime": 1743341471866,
+    "clientReceiveTime": 1743341471879,
+    "e2eLatency": 13
+  },
+  {
+    "discussionId": 2179,
+    "clientRequestTime": 1743341471808,
+    "clientReceiveTime": 1743341471892,
+    "e2eLatency": 84
+  },
+  {
+    "discussionId": 2180,
+    "clientRequestTime": 1743341471886,
+    "clientReceiveTime": 1743341471895,
+    "e2eLatency": 9
+  },
+  {
+    "discussionId": 2181,
+    "clientRequestTime": 1743341471897,
+    "clientReceiveTime": 1743341471906,
+    "e2eLatency": 9
+  },
+  {
+    "discussionId": 2182,
+    "clientRequestTime": 1743341471910,
+    "clientReceiveTime": 1743341471916,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 2183,
+    "clientRequestTime": 1743341471841,
+    "clientReceiveTime": 1743341471967,
+    "e2eLatency": 126
+  },
+  {
+    "discussionId": 2184,
+    "clientRequestTime": 1743341471975,
+    "clientReceiveTime": 1743341471982,
+    "e2eLatency": 7
+  },
+  {
+    "discussionId": 2185,
+    "clientRequestTime": 1743341471985,
+    "clientReceiveTime": 1743341471990,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 2186,
+    "clientRequestTime": 1743341472463,
+    "clientReceiveTime": 1743341472479,
+    "e2eLatency": 16
+  },
+  {
+    "discussionId": 2187,
+    "clientRequestTime": 1743341472484,
+    "clientReceiveTime": 1743341472490,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 2188,
+    "clientRequestTime": 1743341472492,
+    "clientReceiveTime": 1743341472497,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 2189,
+    "clientRequestTime": 1743341472557,
+    "clientReceiveTime": 1743341472564,
+    "e2eLatency": 7
+  },
+  {
+    "discussionId": 2190,
+    "clientRequestTime": 1743341472567,
+    "clientReceiveTime": 1743341472573,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 2191,
+    "clientRequestTime": 1743341472575,
+    "clientReceiveTime": 1743341472581,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 2192,
+    "clientRequestTime": 1743341472666,
+    "clientReceiveTime": 1743341472674,
+    "e2eLatency": 8
+  },
+  {
+    "discussionId": 2193,
+    "clientRequestTime": 1743341472677,
+    "clientReceiveTime": 1743341472683,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 2194,
+    "clientRequestTime": 1743341472685,
+    "clientReceiveTime": 1743341472690,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 2195,
+    "clientRequestTime": 1743341472666,
+    "clientReceiveTime": 1743341472738,
+    "e2eLatency": 72
+  },
+  {
+    "discussionId": 2196,
+    "clientRequestTime": 1743341472740,
+    "clientReceiveTime": 1743341472744,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 2197,
+    "clientRequestTime": 1743341472747,
+    "clientReceiveTime": 1743341472752,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 2198,
+    "clientRequestTime": 1743341472760,
+    "clientReceiveTime": 1743341472771,
+    "e2eLatency": 11
+  },
+  {
+    "discussionId": 2199,
+    "clientRequestTime": 1743341472836,
+    "clientReceiveTime": 1743341472846,
+    "e2eLatency": 10
+  },
+  {
+    "discussionId": 2200,
+    "clientRequestTime": 1743341472850,
+    "clientReceiveTime": 1743341472856,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 2201,
+    "clientRequestTime": 1743341472858,
+    "clientReceiveTime": 1743341472863,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 2202,
+    "clientRequestTime": 1743341472852,
+    "clientReceiveTime": 1743341472931,
+    "e2eLatency": 79
+  },
+  {
+    "discussionId": 2203,
+    "clientRequestTime": 1743341472867,
+    "clientReceiveTime": 1743341472937,
+    "e2eLatency": 70
+  },
+  {
+    "discussionId": 2204,
+    "clientRequestTime": 1743341472939,
+    "clientReceiveTime": 1743341472944,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 2205,
+    "clientRequestTime": 1743341472946,
+    "clientReceiveTime": 1743341472951,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 2206,
+    "clientRequestTime": 1743341473461,
+    "clientReceiveTime": 1743341473540,
+    "e2eLatency": 79
+  },
+  {
+    "discussionId": 2207,
+    "clientRequestTime": 1743341473542,
+    "clientReceiveTime": 1743341473548,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 2208,
+    "clientRequestTime": 1743341473550,
+    "clientReceiveTime": 1743341473554,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 2209,
+    "clientRequestTime": 1743341473571,
+    "clientReceiveTime": 1743341473578,
+    "e2eLatency": 7
+  },
+  {
+    "discussionId": 2210,
+    "clientRequestTime": 1743341473580,
+    "clientReceiveTime": 1743341473585,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 2211,
+    "clientRequestTime": 1743341473587,
+    "clientReceiveTime": 1743341473592,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 2212,
+    "clientRequestTime": 1743341473697,
+    "clientReceiveTime": 1743341473708,
+    "e2eLatency": 11
+  },
+  {
+    "discussionId": 2213,
+    "clientRequestTime": 1743341473696,
+    "clientReceiveTime": 1743341473768,
+    "e2eLatency": 72
+  },
+  {
+    "discussionId": 2214,
+    "clientRequestTime": 1743341473770,
+    "clientReceiveTime": 1743341473776,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 2215,
+    "clientRequestTime": 1743341473778,
+    "clientReceiveTime": 1743341473784,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 2216,
+    "clientRequestTime": 1743341473759,
+    "clientReceiveTime": 1743341473828,
+    "e2eLatency": 69
+  },
+  {
+    "discussionId": 2217,
+    "clientRequestTime": 1743341473831,
+    "clientReceiveTime": 1743341473836,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 2218,
+    "clientRequestTime": 1743341473839,
+    "clientReceiveTime": 1743341473843,
+    "e2eLatency": 4
+  },
+  {
+    "discussionId": 2219,
+    "clientRequestTime": 1743341473836,
+    "clientReceiveTime": 1743341473903,
+    "e2eLatency": 67
+  },
+  {
+    "discussionId": 2220,
+    "clientRequestTime": 1743341473905,
+    "clientReceiveTime": 1743341473910,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 2221,
+    "clientRequestTime": 1743341473852,
+    "clientReceiveTime": 1743341473921,
+    "e2eLatency": 69
+  },
+  {
+    "discussionId": 2222,
+    "clientRequestTime": 1743341473914,
+    "clientReceiveTime": 1743341473923,
+    "e2eLatency": 9
+  },
+  {
+    "discussionId": 2223,
+    "clientRequestTime": 1743341473925,
+    "clientReceiveTime": 1743341473933,
+    "e2eLatency": 8
+  },
+  {
+    "discussionId": 2224,
+    "clientRequestTime": 1743341473867,
+    "clientReceiveTime": 1743341473936,
+    "e2eLatency": 69
+  },
+  {
+    "discussionId": 2225,
+    "clientRequestTime": 1743341473936,
+    "clientReceiveTime": 1743341473943,
+    "e2eLatency": 7
+  },
+  {
+    "discussionId": 2226,
+    "clientRequestTime": 1743341473938,
+    "clientReceiveTime": 1743341473945,
+    "e2eLatency": 7
+  },
+  {
+    "discussionId": 2227,
+    "clientRequestTime": 1743341473946,
+    "clientReceiveTime": 1743341473952,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 2228,
+    "clientRequestTime": 1743341474489,
+    "clientReceiveTime": 1743341474570,
+    "e2eLatency": 81
+  },
+  {
+    "discussionId": 2229,
+    "clientRequestTime": 1743341474581,
+    "clientReceiveTime": 1743341474588,
+    "e2eLatency": 7
+  },
+  {
+    "discussionId": 2230,
+    "clientRequestTime": 1743341474590,
+    "clientReceiveTime": 1743341474596,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 2231,
+    "clientRequestTime": 1743341474599,
+    "clientReceiveTime": 1743341474604,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 2232,
+    "clientRequestTime": 1743341474708,
+    "clientReceiveTime": 1743341474718,
+    "e2eLatency": 10
+  },
+  {
+    "discussionId": 2233,
+    "clientRequestTime": 1743341474707,
+    "clientReceiveTime": 1743341474720,
+    "e2eLatency": 13
+  },
+  {
+    "discussionId": 2234,
+    "clientRequestTime": 1743341474721,
+    "clientReceiveTime": 1743341474728,
+    "e2eLatency": 7
+  },
+  {
+    "discussionId": 2235,
+    "clientRequestTime": 1743341474722,
+    "clientReceiveTime": 1743341474730,
+    "e2eLatency": 8
+  },
+  {
+    "discussionId": 2236,
+    "clientRequestTime": 1743341474731,
+    "clientReceiveTime": 1743341474737,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 2237,
+    "clientRequestTime": 1743341474731,
+    "clientReceiveTime": 1743341474739,
+    "e2eLatency": 8
+  },
+  {
+    "discussionId": 2238,
+    "clientRequestTime": 1743341474770,
+    "clientReceiveTime": 1743341474778,
+    "e2eLatency": 8
+  },
+  {
+    "discussionId": 2239,
+    "clientRequestTime": 1743341474782,
+    "clientReceiveTime": 1743341474788,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 2240,
+    "clientRequestTime": 1743341474783,
+    "clientReceiveTime": 1743341474790,
+    "e2eLatency": 7
+  },
+  {
+    "discussionId": 2241,
+    "clientRequestTime": 1743341474791,
+    "clientReceiveTime": 1743341474797,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 2242,
+    "clientRequestTime": 1743341474846,
+    "clientReceiveTime": 1743341474919,
+    "e2eLatency": 73
+  },
+  {
+    "discussionId": 2243,
+    "clientRequestTime": 1743341474921,
+    "clientReceiveTime": 1743341474927,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 2244,
+    "clientRequestTime": 1743341474863,
+    "clientReceiveTime": 1743341474932,
+    "e2eLatency": 69
+  },
+  {
+    "discussionId": 2245,
+    "clientRequestTime": 1743341474931,
+    "clientReceiveTime": 1743341474936,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 2246,
+    "clientRequestTime": 1743341474936,
+    "clientReceiveTime": 1743341474949,
+    "e2eLatency": 13
+  },
+  {
+    "discussionId": 2248,
+    "clientRequestTime": 1743341474878,
+    "clientReceiveTime": 1743341474951,
+    "e2eLatency": 73
+  },
+  {
+    "discussionId": 2247,
+    "clientRequestTime": 1743341474938,
+    "clientReceiveTime": 1743341474954,
+    "e2eLatency": 16
+  },
+  {
+    "discussionId": 2249,
+    "clientRequestTime": 1743341474953,
+    "clientReceiveTime": 1743341474961,
+    "e2eLatency": 8
+  },
+  {
+    "discussionId": 2250,
+    "clientRequestTime": 1743341474990,
+    "clientReceiveTime": 1743341474995,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 2251,
+    "clientRequestTime": 1743341474997,
+    "clientReceiveTime": 1743341475002,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 2252,
+    "clientRequestTime": 1743341475489,
+    "clientReceiveTime": 1743341475505,
+    "e2eLatency": 16
+  },
+  {
+    "discussionId": 2253,
+    "clientRequestTime": 1743341475507,
+    "clientReceiveTime": 1743341475512,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 2254,
+    "clientRequestTime": 1743341475514,
+    "clientReceiveTime": 1743341475519,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 2255,
+    "clientRequestTime": 1743341475581,
+    "clientReceiveTime": 1743341475656,
+    "e2eLatency": 75
+  },
+  {
+    "discussionId": 2256,
+    "clientRequestTime": 1743341475706,
+    "clientReceiveTime": 1743341475717,
+    "e2eLatency": 11
+  },
+  {
+    "discussionId": 2257,
+    "clientRequestTime": 1743341475706,
+    "clientReceiveTime": 1743341475728,
+    "e2eLatency": 22
+  },
+  {
+    "discussionId": 2259,
+    "clientRequestTime": 1743341475723,
+    "clientReceiveTime": 1743341475731,
+    "e2eLatency": 8
+  },
+  {
+    "discussionId": 2260,
+    "clientRequestTime": 1743341475734,
+    "clientReceiveTime": 1743341475740,
+    "e2eLatency": 6
+  },
+  {
+    "discussionId": 2258,
+    "clientRequestTime": 1743341475720,
+    "clientReceiveTime": 1743341475741,
+    "e2eLatency": 21
+  },
+  {
+    "discussionId": 2261,
+    "clientRequestTime": 1743341475799,
+    "clientReceiveTime": 1743341475871,
+    "e2eLatency": 72
+  },
+  {
+    "discussionId": 2262,
+    "clientRequestTime": 1743341475873,
+    "clientReceiveTime": 1743341475878,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 2263,
+    "clientRequestTime": 1743341475881,
+    "clientReceiveTime": 1743341475886,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 2264,
+    "clientRequestTime": 1743341475861,
+    "clientReceiveTime": 1743341475932,
+    "e2eLatency": 71
+  },
+  {
+    "discussionId": 2265,
+    "clientRequestTime": 1743341475861,
+    "clientReceiveTime": 1743341475934,
+    "e2eLatency": 73
+  },
+  {
+    "discussionId": 2266,
+    "clientRequestTime": 1743341475936,
+    "clientReceiveTime": 1743341475947,
+    "e2eLatency": 11
+  },
+  {
+    "discussionId": 2267,
+    "clientRequestTime": 1743341475938,
+    "clientReceiveTime": 1743341475949,
+    "e2eLatency": 11
+  },
+  {
+    "discussionId": 2268,
+    "clientRequestTime": 1743341475950,
+    "clientReceiveTime": 1743341475958,
+    "e2eLatency": 8
+  },
+  {
+    "discussionId": 2269,
+    "clientRequestTime": 1743341475951,
+    "clientReceiveTime": 1743341475959,
+    "e2eLatency": 8
+  },
+  {
+    "discussionId": 2270,
+    "clientRequestTime": 1743341475892,
+    "clientReceiveTime": 1743341475964,
+    "e2eLatency": 72
+  },
+  {
+    "discussionId": 2271,
+    "clientRequestTime": 1743341475966,
+    "clientReceiveTime": 1743341475971,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 2272,
+    "clientRequestTime": 1743341475973,
+    "clientReceiveTime": 1743341475978,
+    "e2eLatency": 5
+  },
+  {
+    "discussionId": 2273,
+    "clientRequestTime": 1743341476579,
+    "clientReceiveTime": 1743341476595,
+    "e2eLatency": 16
+  },
+  {
+    "discussionId": 2274,
+    "clientRequestTime": 1743341477662,
+    "clientReceiveTime": 1743341477683,
+    "e2eLatency": 21
+  },
+  {
+    "discussionId": 2275,
+    "clientRequestTime": 1743341477745,
+    "clientReceiveTime": 1743341477758,
+    "e2eLatency": 13
+  }
+]

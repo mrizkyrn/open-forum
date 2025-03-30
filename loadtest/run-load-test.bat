@@ -32,8 +32,8 @@ set "TEST_NAME=%1"
 set "PHASE_NAME=%2"
 if "%PHASE_NAME%"=="" set "PHASE_NAME=all"
 set "CONFIG_FILE=%CONFIGS_DIR%\%TEST_NAME%.yml"
-set "DURATION=%3"
-if "%DURATION%"=="" set "DURATION=%DEFAULT_DURATION%"
+@REM set "DURATION=%3"
+@REM if "%DURATION%"=="" set "DURATION=%DEFAULT_DURATION%"
 
 REM ====================== VALIDATE CONFIGURATION =========================
 if not exist "%CONFIG_FILE%" (
@@ -61,22 +61,21 @@ echo [INFO] Starting socket listener...
 start "Socket Listener" cmd /c "node %SCRIPTS_DIR%\socket-listener.js %TEST_NAME% %PHASE_NAME%"
 
 echo [INFO] Waiting for socket listener to initialize...
-timeout /t 5 > NUL
+timeout /t 2 > NUL
 
 REM ======================== START RESOURCE MONITORING ====================
-echo [INFO] Starting resource monitoring...
-start "Resource Monitor" cmd /c "node %SCRIPTS_DIR%\monitor-resources.js %TEST_NAME% %PHASE_NAME% %DURATION%"
+@REM echo [INFO] Starting resource monitoring...
+@REM start "Resource Monitor" cmd /c "node %SCRIPTS_DIR%\monitor-resources.js %TEST_NAME% %PHASE_NAME% %DURATION%"
 
-echo [INFO] Waiting for monitors to initialize... (%MONITOR_WAIT%s)
-timeout /t %MONITOR_WAIT% > NUL
+@REM echo [INFO] Waiting for monitors to initialize... (%MONITOR_WAIT%s)
+@REM timeout /t %MONITOR_WAIT%  NUL
 
 REM =========================== RUN ARTILLERY TEST ========================
 echo.
 echo STARTING LOAD TEST: %TEST_NAME% (%PHASE_NAME%)                     
-echo Test will run for approximately %DURATION% seconds                  
 echo.
 
-set "REPORT_PATH=%RESULTS_ROOT%\reports\%TEST_NAME%\%PHASE_NAME%-report.json"
+set "REPORT_PATH=%RESULTS_ROOT%\reports\%TEST_NAME%\%PHASE_NAME%-%DATE:~-10,2%-%TIME:~0,2%-%TIME:~3,2%-%TIME:~6,2%.json"
 call artillery run --output "%REPORT_PATH%" "%CONFIG_FILE%"
 
 if %errorlevel% neq 0 (
