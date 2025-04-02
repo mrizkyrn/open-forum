@@ -16,6 +16,7 @@ export const useSpaceFollow = () => {
       // Cancel any outgoing refetches
       await queryClient.cancelQueries({ queryKey: ['spaces'] });
       await queryClient.cancelQueries({ queryKey: ['space', spaceId] });
+      await queryClient.cancelQueries({ queryKey: ['popularSpaces'] });
 
       // Snapshot the previous value
       const previousSpaces = queryClient.getQueryData(['spaces']);
@@ -70,6 +71,7 @@ export const useSpaceFollow = () => {
       // Invalidate queries to refetch the latest data
       queryClient.invalidateQueries({ queryKey: ['spaces'] });
       queryClient.invalidateQueries({ queryKey: ['space'] });
+      queryClient.invalidateQueries({ queryKey: ['popularSpaces'] });
     },
   });
 
@@ -82,6 +84,7 @@ export const useSpaceFollow = () => {
       // Cancel any outgoing refetches
       await queryClient.cancelQueries({ queryKey: ['spaces'] });
       await queryClient.cancelQueries({ queryKey: ['space', spaceId] });
+      await queryClient.cancelQueries({ queryKey: ['popularSpaces'] });
 
       // Snapshot the previous value
       const previousSpaces = queryClient.getQueryData(['spaces']);
@@ -138,6 +141,7 @@ export const useSpaceFollow = () => {
       // Invalidate queries to refetch the latest data
       queryClient.invalidateQueries({ queryKey: ['spaces'] });
       queryClient.invalidateQueries({ queryKey: ['space'] });
+      queryClient.invalidateQueries({ queryKey: ['popularSpaces'] });
     },
   });
 

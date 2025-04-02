@@ -76,7 +76,6 @@ const CommentCard: React.FC<CommentCardProps> = ({
   };
 
   const handleFormClickOutside = () => {
-    console.log('handleFormClickOutside');
     if (onToggleReply) {
       onToggleReply(comment.id);
     }

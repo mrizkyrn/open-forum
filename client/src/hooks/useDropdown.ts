@@ -1,4 +1,5 @@
-import { useState, useEffect, RefObject } from 'react';
+import { RefObject, useState } from 'react';
+import { useOnClickOutside } from './useOnClickOutside';
 
 export function useDropdown(ref: RefObject<HTMLElement>) {
   const [isOpen, setIsOpen] = useState(false);
@@ -7,16 +8,7 @@ export function useDropdown(ref: RefObject<HTMLElement>) {
   const open = () => setIsOpen(true);
   const close = () => setIsOpen(false);
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (ref.current && !ref.current.contains(event.target as Node)) {
-        setIsOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [ref]);
+  useOnClickOutside(ref, close);
 
   return { isOpen, toggle, open, close };
 }

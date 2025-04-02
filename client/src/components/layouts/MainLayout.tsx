@@ -9,6 +9,7 @@ import LeftSidebar, { NavItem } from './LeftSidebar';
 import Logo from './Logo';
 import RightSidebar from './RightSidebar';
 import UserAvatar from './UserAvatar';
+import { CreateDiscussionModal } from '@/features/discussions/components';
 
 const MobileNavItem = ({
   item,
@@ -38,11 +39,13 @@ const MobileNavItem = ({
 
 const MainLayout = () => {
   const { isAuthenticated, isLoading, logout, user } = useAuth();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { socket, isConnected } = useSocket();
+
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [newNotificationReceived, setNewNotificationReceived] = useState(false);
 
   // Get unread notification count
@@ -53,6 +56,10 @@ const MainLayout = () => {
   });
 
   const unreadCount = unreadCountData?.count || 0;
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
 
   // Navigation item active state check
   const isNavItemActive = useCallback(
@@ -195,6 +202,7 @@ const MainLayout = () => {
             user={user}
             onNavigate={(path) => navigate(path)}
             onLogout={onLogout}
+            onCreateDiscussion={() => setIsCreateModalOpen(true)}
           />
         </div>
 
@@ -230,6 +238,9 @@ const MainLayout = () => {
           ))}
         </div>
       </div>
+
+      {/* Create Discussion Modal */}
+      <CreateDiscussionModal isOpen={isCreateModalOpen} onClose={() => setIsCreateModalOpen(false)} />
     </div>
   );
 };

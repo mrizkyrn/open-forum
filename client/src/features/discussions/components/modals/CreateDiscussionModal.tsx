@@ -2,10 +2,12 @@ import { Modal, ModalBody, ModalFooter, ModalHeader } from '@/components/modals/
 import MainButton from '@/components/ui/buttons/MainButton';
 import FilePreview from '@/components/ui/file-displays/FilePreview';
 import { discussionApi } from '@/features/discussions/services';
+import { spaceApi } from '@/features/spaces/services';
 import { useFileHandling } from '@/hooks/useFileHandling';
 import { ALLOWED_FILE_TYPES, MAX_DISCUSSION_FILES, MAX_FILE_SIZE } from '@/utils/constants';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { CheckCircle, Tag as TagIcon, Upload, X } from 'lucide-react';
+import { getFileUrl } from '@/utils/helpers';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { CheckCircle, Layers, Tag as TagIcon, Upload, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { CreateDiscussionDto } from '../../types';
@@ -16,7 +18,7 @@ interface CreateDiscussionModalProps {
   onClose: () => void;
 }
 
-const CreateDiscussionModal: React.FC<CreateDiscussionModalProps> = ({ preselectedSpaceId, isOpen, onClose }) => {
+const CreateDiscussionModal: React.FC<CreateDiscussionModalProps> = ({ preselectedSpaceId = 1, isOpen, onClose }) => {
   const queryClient = useQueryClient();
 
   const [formData, setFormData] = useState<CreateDiscussionDto>({
@@ -33,6 +35,14 @@ const CreateDiscussionModal: React.FC<CreateDiscussionModalProps> = ({ preselect
     ALLOWED_FILE_TYPES,
     MAX_FILE_SIZE,
   );
+
+  const { data: spaceInfo, isLoading: isSpaceLoading } = useQuery({
+    queryKey: ['space', preselectedSpaceId],
+    queryFn: () => spaceApi.getSpaceById(preselectedSpaceId),
+    enabled: isOpen && !!preselectedSpaceId,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    retry: 1,
+  });
 
   useEffect(() => {
     updateFormField('files', files);
@@ -124,6 +134,52 @@ const CreateDiscussionModal: React.FC<CreateDiscussionModalProps> = ({ preselect
       <ModalHeader title="Create New Discussion" onClose={handleClose} />
 
       <ModalBody>
+        {/* Space Information */}
+        <div className="mb-4 rounded-md border border-gray-200 bg-gray-50 p-3">
+          <div className="flex items-center gap-3">
+            {isSpaceLoading ? (
+              <div className="h-10 w-10 animate-pulse rounded-md bg-gray-200"></div>
+            ) : spaceInfo ? (
+              <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-md bg-green-100">
+                {spaceInfo.iconUrl ? (
+                  <img
+                    src={getFileUrl(spaceInfo.iconUrl)}
+                    alt={spaceInfo.name}
+                    className="h-full w-full object-cover"
+                  />
+                ) : (
+                  <Layers className="h-5 w-5 text-green-600" />
+                )}
+              </div>
+            ) : (
+              <div className="flex h-10 w-10 items-center justify-center rounded-md bg-gray-100">
+                <Layers className="h-5 w-5 text-gray-500" />
+              </div>
+            )}
+
+            <div>
+              <div className="flex items-center gap-1">
+                <h3 className="font-medium text-gray-800">
+                  {isSpaceLoading ? (
+                    <div className="h-5 w-32 animate-pulse rounded bg-gray-200"></div>
+                  ) : spaceInfo ? (
+                    spaceInfo.name
+                  ) : (
+                    'Unknown Space'
+                  )}
+                </h3>
+              </div>
+              <p className="text-xs text-gray-500">
+                {isSpaceLoading ? (
+                  <div className="mt-1 h-3 w-40 animate-pulse rounded bg-gray-200"></div>
+                ) : (
+                  "You're creating a discussion in this space"
+                )}
+              </p>
+            </div>
+          </div>
+        </div>
+
         {/* Content textarea */}
         <div className="mb-1">
           <label htmlFor="content" className="mb-2 block text-sm font-medium text-gray-700">
@@ -162,7 +218,7 @@ const CreateDiscussionModal: React.FC<CreateDiscussionModalProps> = ({ preselect
             Tags <span className="text-xs text-gray-500">(comma or enter to add)</span>
           </label>
           {formData.tags.length > 0 && (
-            <div className="flex flex-wrap gap-2 mb-2">
+            <div className="mb-2 flex flex-wrap gap-2">
               {formData.tags.map((tag, index) => (
                 <span
                   key={index}
@@ -189,13 +245,13 @@ const CreateDiscussionModal: React.FC<CreateDiscussionModalProps> = ({ preselect
                 onChange={(e) => setTagInput(e.target.value)}
                 onKeyDown={handleTagKeyDown}
                 placeholder="Add tags..."
-                className="w-full h-10 rounded-md border border-gray-300 px-3 focus:ring-1 focus:ring-gray-500 focus:outline-none"
+                className="h-10 w-full rounded-md border border-gray-300 px-3 focus:ring-1 focus:ring-gray-500 focus:outline-none"
               />
               {tagInput && (
                 <button
                   type="button"
                   onClick={() => setTagInput('')}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  className="absolute top-1/2 right-2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
                   aria-label="Clear tag input"
                 >
                   <X size={16} />
@@ -205,7 +261,7 @@ const CreateDiscussionModal: React.FC<CreateDiscussionModalProps> = ({ preselect
             <MainButton
               onClick={handleAddTag}
               disabled={!tagInput.trim()}
-              className="flex-shrink-0 h-10"
+              className="h-10 flex-shrink-0"
               leftIcon={<TagIcon size={16} />}
             >
               Add Tag
@@ -221,7 +277,7 @@ const CreateDiscussionModal: React.FC<CreateDiscussionModalProps> = ({ preselect
 
           {/* File previews */}
           {files.length > 0 && (
-            <div className="flex flex-wrap gap-2 mb-2">
+            <div className="mb-2 flex flex-wrap gap-2">
               {files.map((file, index) => (
                 <FilePreview
                   key={index}

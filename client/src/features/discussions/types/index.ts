@@ -44,13 +44,12 @@ export enum DiscussionSortBy {
   createdAt = 'createdAt',
   updatedAt = 'updatedAt',
   commentCount = 'commentCount',
-  upvoteCount = 'upvoteCount',
-  downvoteCount = 'downvoteCount',
+  voteCount = 'voteCount',
 }
 
 export interface SearchDiscussionDto extends SearchDto {
   tags?: string[];
-  sortBy: DiscussionSortBy;
+  sortBy?: DiscussionSortBy;
   authorId?: number;
   isAnonymous?: boolean;
   spaceId?: number;

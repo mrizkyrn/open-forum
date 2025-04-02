@@ -66,7 +66,7 @@ export interface SearchUserParams {
   page: number;
   limit: number;
   search?: string;
-  sortOrder: SortOrder;
+  sortOrder?: SortOrder;
   role?: UserRole;
   sortBy?: UserSortBy;
 }

@@ -56,7 +56,7 @@ export const discussionApi = {
 
   async getBookmarkedDiscussions(search: SearchDiscussionDto): Promise<PaginatedResponse<Discussion>> {
     try {
-      const response = await apiClient.get<ApiResponse<PaginatedResponse<Discussion>>>('/discussions/bookmarks', {
+      const response = await apiClient.get<ApiResponse<PaginatedResponse<Discussion>>>('/discussions/bookmarked', {
         params: search,
       });
       return response.data.data;

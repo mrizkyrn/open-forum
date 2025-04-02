@@ -38,8 +38,11 @@ export class DiscussionSpaceController {
     type: [DiscussionSpaceResponseDto],
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
-  async getPopularSpaces(@Query('limit', ParseIntPipe) limit: number = 10): Promise<DiscussionSpaceResponseDto[]> {
-    return this.spaceService.getPopularSpaces(limit);
+  async getPopularSpaces(
+    @Query('limit', ParseIntPipe) limit: number = 10,
+    @ReqUser() currentUser?: User,
+  ): Promise<DiscussionSpaceResponseDto[]> {
+    return this.spaceService.getPopularSpaces(limit, currentUser);
   }
 
   @Get('slug/:slug')

@@ -1,22 +1,22 @@
-import ErrorFetching from '@/components/feedback/ErrorFetching';
-import LoadingSpinner from '@/components/feedback/LoadingSpinner';
+import FeedbackDisplay from '@/components/feedback/FeedbackDisplay';
+import LoadingIndicator from '@/components/feedback/LoadinIndicator';
 import { useAuth } from '@/features/auth/hooks/useAuth';
 import { CreateDiscussionModal, DiscussionCard } from '@/features/discussions/components';
-import { useInfiniteDiscussions } from '@/features/discussions/hooks/useInfiniteDiscussions';
+import { DiscussionFeedType, useInfiniteDiscussions } from '@/features/discussions/hooks/useInfiniteDiscussions';
 import { SearchDiscussionDto } from '@/features/discussions/types';
 import { useIntersectionObserver } from '@/hooks/useIntersectionObserver';
 import { useSocket } from '@/hooks/useSocket';
-import { ArrowUp, PencilLine } from 'lucide-react';
+import { ArrowUp } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import DiscussionPostSkeleton from './DiscussionPostSkeleton';
 
 interface DiscussionPostProps {
   search?: Partial<SearchDiscussionDto>;
   preselectedSpaceId?: number;
+  feedType?: DiscussionFeedType;
 }
 
-const DiscussionPost: React.FC<DiscussionPostProps> = ({ search, preselectedSpaceId }) => {
+const DiscussionPost: React.FC<DiscussionPostProps> = ({ search, preselectedSpaceId, feedType = 'regular' }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newDiscussions, setNewDiscussions] = useState(0);
 
@@ -26,25 +26,28 @@ const DiscussionPost: React.FC<DiscussionPostProps> = ({ search, preselectedSpac
   const { user } = useAuth();
   const { socket, isConnected } = useSocket();
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status, refetch } = useInfiniteDiscussions(search);
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status, refetch } = useInfiniteDiscussions({
+    ...search,
+    feedType,
+  });
 
   const { entry, observerRef } = useIntersectionObserver({
     threshold: 0.5,
     enabled: !!hasNextPage && !isFetchingNextPage,
   });
+
   useEffect(() => {
     if (!socket || !isConnected) return;
 
     // Handle global new discussions (only if we're on the home feed without a space filter)
     const handleNewDiscussion = (data: any) => {
-      if (!preselectedSpaceId && data.authorId !== user?.id) {
+      if (feedType === 'regular' && !preselectedSpaceId && data.authorId !== user?.id) {
         setNewDiscussions((prev) => prev + 1);
       }
     };
 
     // Handle space-specific new discussions
     const handleNewSpaceDiscussion = (data: any) => {
-      // Only update if we're viewing this space or the home feed
       if (preselectedSpaceId && data.spaceId === preselectedSpaceId && data.authorId !== user?.id) {
         setNewDiscussions((prev) => prev + 1);
       }
@@ -58,7 +61,7 @@ const DiscussionPost: React.FC<DiscussionPostProps> = ({ search, preselectedSpac
       socket.off('newDiscussion', handleNewDiscussion);
       socket.off('newSpaceDiscussion', handleNewSpaceDiscussion);
     };
-  }, [socket, isConnected, preselectedSpaceId, search?.spaceId, user?.id]);
+  }, [socket, isConnected, preselectedSpaceId, search?.spaceId, user?.id, feedType]);
 
   const handleRefreshDiscussions = async () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -79,7 +82,22 @@ const DiscussionPost: React.FC<DiscussionPostProps> = ({ search, preselectedSpac
   }
 
   if (status === 'error') {
-    return <ErrorFetching text="Failed to load discussions" onRetry={refetch} />;
+    return (
+      <FeedbackDisplay
+        title="Failed to load discussions"
+        description="There was an error retrieving discussions."
+        variant="error"
+        size="lg"
+        actions={[
+          {
+            label: 'Try again',
+            icon: ArrowUp,
+            onClick: () => refetch(),
+            variant: 'danger',
+          },
+        ]}
+      />
+    );
   }
 
   const discussions = data?.pages
@@ -88,16 +106,12 @@ const DiscussionPost: React.FC<DiscussionPostProps> = ({ search, preselectedSpac
 
   if (discussions.length === 0) {
     return (
-      <div className="flex flex-col items-center gap-4 p-8 text-center">
-        <div className="text-gray-500">No discussions found.</div>
-        <Link
-          to="/new-discussion"
-          className="flex items-center gap-2 rounded-md bg-green-600 px-4 py-2 text-white transition-colors hover:bg-green-700"
-        >
-          <PencilLine size={18} />
-          Start a New Discussion
-        </Link>
-      </div>
+      <FeedbackDisplay
+        title="No discussions found"
+        description="Be the first to start a discussion!"
+        size="lg"
+        variant="default"
+      />
     );
   }
 
@@ -123,7 +137,7 @@ const DiscussionPost: React.FC<DiscussionPostProps> = ({ search, preselectedSpac
         ))}
 
         {/* Loading more indicator */}
-        {isFetchingNextPage && <LoadingSpinner text="Loading more discussions..." />}
+        {isFetchingNextPage && <LoadingIndicator text="Loading more discussions..." />}
 
         {/* Invisible element for intersection observer */}
         {hasNextPage && <div ref={observerRef} className="bgre h-5" />}

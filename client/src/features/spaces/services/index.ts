@@ -15,9 +15,9 @@ export const spaceApi = {
     }
   },
 
-  async getSpaceById(id: number): Promise<void> {
+  async getSpaceById(id: number): Promise<Space> {
     try {
-      const response = await apiClient.get<ApiResponse<void>>(`/spaces/${id}`);
+      const response = await apiClient.get<ApiResponse<Space>>(`/spaces/${id}`);
       return response.data.data;
     } catch (error: any) {
       return handleApiError(error, 'Failed to fetch space');

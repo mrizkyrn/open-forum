@@ -1,138 +1,109 @@
-import { ActiveFilters, DiscussionPost, FilterToolbar } from '@/features/discussions/components';
+import { DiscussionPost, DiscussionSearchBar } from '@/features/discussions/components';
 import { DiscussionSortBy, SearchDiscussionDto } from '@/features/discussions/types';
+import { useDebounce } from '@/hooks/useDebounce';
 import { SortOrder } from '@/types/SearchTypes';
-import { Search as SearchIcon } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 const SearchPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [searchInput, setSearchInput] = useState(searchParams.get('query') || '');
+  const [pendingSearch, setPendingSearch] = useState<string>(searchParams.get('q') || '');
+  const isClearing = useRef(false);
 
-  const [searchFilters, setSearchFilters] = useState<SearchDiscussionDto>({
-    page: Number(searchParams.get('page')) || 1,
-    limit: Number(searchParams.get('limit')) || 10,
-    search: searchParams.get('query') || undefined,
-    sortBy: (searchParams.get('sortBy') as DiscussionSortBy) || DiscussionSortBy.createdAt,
-    sortOrder: (searchParams.get('sortOrder') as SortOrder) || SortOrder.DESC,
-    tags: searchParams.has('tags') ? searchParams.get('tags')?.split(',') || [] : undefined,
-    isAnonymous: searchParams.has('isAnonymous') ? searchParams.get('isAnonymous') === 'true' : undefined,
-  });
-
-  useEffect(() => {
-    const newFilters: SearchDiscussionDto = {
+  const searchFilters = useMemo(
+    () => ({
       page: Number(searchParams.get('page')) || 1,
       limit: Number(searchParams.get('limit')) || 10,
+      search: searchParams.get('q') || undefined,
       sortBy: (searchParams.get('sortBy') as DiscussionSortBy) || DiscussionSortBy.createdAt,
       sortOrder: (searchParams.get('sortOrder') as SortOrder) || SortOrder.DESC,
-    };
+      tags: searchParams.has('tags') ? searchParams.get('tags')?.split(',').filter(Boolean) : undefined,
+      isAnonymous: searchParams.has('isAnonymous') ? searchParams.get('isAnonymous') === 'true' : undefined,
+    }),
+    [searchParams],
+  );
 
-    if (searchParams.has('query')) {
-      newFilters.search = searchParams.get('query') || undefined;
-      setSearchInput(searchParams.get('query') || '');
+  useEffect(() => {
+    if (!isClearing.current) {
+      setPendingSearch(searchFilters.search || '');
     }
+  }, [searchFilters.search]);
 
-    if (searchParams.has('tags')) {
-      const tagsParam = searchParams.get('tags');
-      newFilters.tags = tagsParam && tagsParam.length > 0 ? tagsParam.split(',').filter(Boolean) : [];
-    }
+  const debouncedSearch = useDebounce(pendingSearch, 500);
 
-    if (searchParams.has('authorId')) {
-      newFilters.authorId = Number(searchParams.get('authorId'));
-    }
+  useEffect(() => {
+    if (isClearing.current) return;
 
-    if (searchParams.has('isAnonymous')) {
-      newFilters.isAnonymous = searchParams.get('isAnonymous') === 'true';
-    }
-
-    setSearchFilters(newFilters);
-  }, [searchParams]);
-
-  const handleSearchSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    const params = new URLSearchParams(searchParams);
-    if (searchInput) {
-      params.set('query', searchInput);
-    } else {
-      params.delete('query');
-    }
-
-    setSearchParams(params);
-  };
-
-  const applyFilters = (filters: Partial<SearchDiscussionDto>) => {
-    const params = new URLSearchParams(searchParams);
-
-    Object.entries(filters).forEach(([key, value]) => {
-      const paramName = key === 'search' ? 'query' : key;
-
-      if (value === undefined || value === null || value === '') {
-        params.delete(paramName);
-      } else if (Array.isArray(value)) {
-        if (value.length > 0) {
-          params.set(paramName, value.join(','));
-        } else {
-          params.delete(paramName);
-        }
+    if (debouncedSearch !== searchFilters.search) {
+      const newParams = new URLSearchParams(searchParams);
+      if (debouncedSearch) {
+        newParams.set('q', debouncedSearch);
       } else {
-        params.set(paramName, String(value));
+        newParams.delete('q');
       }
-    });
+      setSearchParams(newParams);
+    }
+  }, [debouncedSearch, searchFilters.search, searchParams, setSearchParams]);
 
-    setSearchParams(params);
-  };
+  const handleSearch = useCallback((searchTerm: string) => {
+    isClearing.current = false;
+    setPendingSearch(searchTerm);
+  }, []);
 
-  const resetAllFilters = () => {
+  const applyFilters = useCallback(
+    (filters: Partial<SearchDiscussionDto>) => {
+      const newParams = new URLSearchParams(searchParams);
+
+      Object.entries(filters).forEach(([key, value]) => {
+        const paramName = key === 'search' ? 'q' : key;
+
+        if (value === undefined || value === null || value === '') {
+          newParams.delete(paramName);
+        } else if (Array.isArray(value)) {
+          if (value.length > 0) {
+            newParams.set(paramName, value.join(','));
+          } else {
+            newParams.delete(paramName);
+          }
+        } else {
+          newParams.set(paramName, String(value));
+        }
+      });
+
+      setSearchParams(newParams);
+    },
+    [searchParams, setSearchParams],
+  );
+
+  const resetAllFilters = useCallback(() => {
+    isClearing.current = true;
+    setPendingSearch('');
     setSearchParams(new URLSearchParams());
-    setSearchInput('');
-  };
+
+    if (typeof window !== 'undefined') {
+      window.setTimeout(() => {
+        isClearing.current = false;
+      }, 100);
+    }
+  }, [setSearchParams]);
 
   return (
     <div className="w-full">
-      {/* Search input and filter toolbar */}
-      <div className="flex flex-col gap-4 rounded-lg bg-white p-4">
-        {/* Search input */}
-        <form onSubmit={handleSearchSubmit} className="relative">
-          <div className="relative">
-            <input
-              type="text"
-              value={searchInput}
-              onChange={(e) => setSearchInput(e.target.value)}
-              placeholder="Search for discussions..."
-              className="w-full rounded-lg border border-gray-300 px-4 py-3 pl-10 focus:border-green-500 focus:ring-2 focus:ring-green-200 focus:outline-none"
-            />
-            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-              <SearchIcon size={18} className="text-gray-400" />
-            </div>
-            <button
-              type="submit"
-              className="absolute top-1/2 right-2 -translate-y-1/2 rounded-md bg-green-600 px-4 py-1.5 text-sm font-medium text-white hover:bg-green-700"
-            >
-              Search
-            </button>
-          </div>
-        </form>
-
-        {/* Filter toolbar */}
-        <FilterToolbar currentFilters={searchFilters} onFilterChange={applyFilters} />
-      </div>
-
-      {/* Active filters */}
-      <div className="mb-6">
-        <ActiveFilters currentFilters={searchFilters} onFilterChange={applyFilters} onClearAll={resetAllFilters} />
+      {/* Search input and filters */}
+      <div className="mb-3 flex flex-col gap-4 rounded-lg">
+        <DiscussionSearchBar
+          currentFilters={{
+            ...searchFilters,
+            search: pendingSearch,
+          }}
+          onFilterChange={applyFilters}
+          onSearch={handleSearch}
+          onReset={resetAllFilters}
+        />
       </div>
 
       {/* Search results */}
-      {searchFilters.search || searchFilters.tags || searchFilters.isAnonymous ? (
-        <div className="mt-4">
-          <DiscussionPost search={searchFilters} />
-        </div>
-      ) : (
-        <div className="flex items-center justify-center h-96 text-gray-400 text-2xl font-bold">
-          Search for discussions above
-        </div>
-      )}
+      <DiscussionPost search={searchFilters} />
     </div>
   );
 };

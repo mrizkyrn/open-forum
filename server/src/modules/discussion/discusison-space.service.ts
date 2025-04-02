@@ -104,11 +104,7 @@ export class DiscussionSpaceService {
           let isFollowing = false;
 
           if (currentUser) {
-            if ('is_following' in space) {
-              isFollowing = Boolean(space.is_following);
-            } else {
-              isFollowing = await this.isFollowing(space.id, currentUser.id);
-            }
+            isFollowing = await this.isFollowing(space.id, currentUser.id);
           }
 
           return DiscussionSpaceResponseDto.fromEntity(space, isFollowing);
@@ -362,7 +358,7 @@ export class DiscussionSpaceService {
 
   // ----- Popular Spaces -----
 
-  async getPopularSpaces(limit: number): Promise<DiscussionSpaceResponseDto[]> {
+  async getPopularSpaces(limit: number, currentUser?: User): Promise<DiscussionSpaceResponseDto[]> {
     try {
       const spaces = await this.spaceRepository
         .createQueryBuilder('space')
@@ -370,7 +366,19 @@ export class DiscussionSpaceService {
         .take(limit)
         .getMany();
 
-      return spaces.map((space) => DiscussionSpaceResponseDto.fromEntity(space, false));
+      const formattedSpaces = await Promise.all(
+        spaces.map(async (space) => {
+          let isFollowing = false;
+
+          if (currentUser) {
+            isFollowing = await this.isFollowing(space.id, currentUser.id);
+          }
+
+          return DiscussionSpaceResponseDto.fromEntity(space, isFollowing);
+        }),
+      );
+
+      return formattedSpaces;
     } catch (error) {
       this.logger.error(`Failed to fetch popular spaces: ${error.message}`, error.stack);
       throw error;

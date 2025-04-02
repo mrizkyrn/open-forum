@@ -32,23 +32,23 @@ const MainButton = React.forwardRef<HTMLButtonElement, MainButtonProps>(
     ref,
   ) => {
     // Base styles always applied
-    const baseStyles = 'font-semibold rounded-lg flex items-center justify-center transition-colors focus:outline-none';
+    const baseStyles = 'font-semibold rounded-lg flex items-center justify-center transition-colors';
 
     // Variant styles
     const variantStyles = {
-      primary: 'bg-primary text-white hover:bg-primary-dark focus:ring-1 focus:ring-primary-darker',
-      secondary: 'bg-gray-100 text-gray-800 hover:bg-gray-200 focus:ring-1 focus:ring-gray-300',
-      outline: 'bg-transparent border border-gray-300 text-gray-700 hover:bg-gray-50 focus:ring-1 focus:ring-gray-300',
-      ghost: 'bg-transparent text-gray-700 hover:bg-gray-100 focus:ring-1 focus:ring-gray-200',
-      danger: 'bg-red-600 text-white hover:bg-red-700 focus:ring-1 focus:ring-red-800',
-      warning: 'bg-yellow-500 text-white hover:bg-yellow-600 focus:ring-1 focus:ring-yellow-600',
-      success: 'bg-green-500 text-white hover:bg-green-600 focus:ring-1 focus:ring-green-600',
+      primary: 'bg-primary text-white hover:bg-primary-dark',
+      secondary: 'bg-gray-100 text-gray-800 hover:bg-gray-200',
+      outline: 'bg-transparent border border-gray-300 text-gray-700 hover:bg-gray-50',
+      ghost: 'bg-transparent text-gray-700 hover:bg-gray-100',
+      danger: 'bg-red-600 text-white hover:bg-red-700',
+      warning: 'bg-yellow-500 text-white hover:bg-yellow-600',
+      success: 'bg-green-500 text-white hover:bg-green-600',
     };
 
     // Size styles
     const sizeStyles = {
-      sm: 'text-xs px-3 py-2',
-      md: 'text-sm px-4 py-2',
+      sm: 'text-xs px-4 py-2',
+      md: 'text-sm px-5 py-2.5',
       lg: 'text-base px-6 py-4',
     };
 

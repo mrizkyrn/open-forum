@@ -4,8 +4,8 @@ export enum SortOrder {
 }
 
 export interface SearchDto {
-  page: number;
-  limit: number;
+  page?: number;
+  limit?: number;
   search?: string;
-  sortOrder: SortOrder;
+  sortOrder?: SortOrder;
 }

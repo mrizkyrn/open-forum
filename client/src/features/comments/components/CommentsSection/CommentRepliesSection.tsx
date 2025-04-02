@@ -1,4 +1,4 @@
-import LoadingSpinner from '@/components/feedback/LoadingSpinner';
+import LoadingIndicator from '@/components/feedback/LoadinIndicator';
 import { CommentCard } from '@/features/comments/components';
 import { commentApi } from '@/features/comments/services';
 import { Comment } from '@/features/comments/types';
@@ -36,7 +36,7 @@ const CommentRepliesSection: React.FC<CommentRepliesSectionProps> = ({
 
   const replies = repliesData?.pages.flatMap((page) => page.items) || [];
   if (isLoadingReplies && !isFetchingMoreReplies) {
-    return <LoadingSpinner text="Loading replies..." />;
+    return <LoadingIndicator size="sm" />;
   }
 
   if (isErrorReplies) {

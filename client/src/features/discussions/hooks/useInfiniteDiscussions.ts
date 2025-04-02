@@ -3,6 +3,8 @@ import { DiscussionSortBy } from '@/features/discussions/types';
 import { SortOrder } from '@/types/SearchTypes';
 import { useInfiniteQuery } from '@tanstack/react-query';
 
+export type DiscussionFeedType = 'regular' | 'bookmarked';
+
 interface UseInfiniteDiscussionsOptions {
   limit?: number;
   tags?: string[];
@@ -12,6 +14,7 @@ interface UseInfiniteDiscussionsOptions {
   authorId?: number;
   spaceId?: number;
   isAnonymous?: boolean;
+  feedType?: DiscussionFeedType;
 }
 
 export function useInfiniteDiscussions(options: UseInfiniteDiscussionsOptions = {}) {
@@ -24,22 +27,22 @@ export function useInfiniteDiscussions(options: UseInfiniteDiscussionsOptions = 
     authorId,
     spaceId,
     isAnonymous,
+    feedType = 'regular',
   } = options;
 
   return useInfiniteQuery({
-    queryKey: ['discussions', { limit, tags, spaceId, search, sortBy, sortOrder, authorId, isAnonymous }],
+    queryKey: ['discussions', feedType, { limit, tags, spaceId, search, sortBy, sortOrder, authorId, isAnonymous }],
     queryFn: async ({ pageParam = 1 }) => {
-      return await discussionApi.getDiscussions({
-        page: pageParam,
-        limit,
-        tags,
-        spaceId,
-        search,
-        sortBy,
-        sortOrder,
-        authorId,
-        isAnonymous,
-      });
+      const params = { limit, tags, search, sortBy, sortOrder, authorId, spaceId, isAnonymous };
+      const queryParams = { ...params, page: pageParam };
+      
+      // Choose the right API method based on feedType
+      if (feedType === 'bookmarked') {
+        return await discussionApi.getBookmarkedDiscussions(queryParams);
+      }
+      
+      // Default to regular discussions
+      return await discussionApi.getDiscussions(queryParams);
     },
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {

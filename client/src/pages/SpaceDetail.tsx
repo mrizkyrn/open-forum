@@ -1,11 +1,13 @@
-import LoadingSpinner from '@/components/feedback/LoadingSpinner';
+import FeedbackDisplay from '@/components/feedback/FeedbackDisplay';
+import LoadingIndicator from '@/components/feedback/LoadinIndicator';
 import BackButton from '@/components/ui/buttons/BackButton';
 import { DiscussionPost } from '@/features/discussions/components';
 import NewDiscussionButton from '@/features/discussions/components/DiscussionPost/NewDiscussionButton';
-import { useSpace } from '@/features/spaces/hooks/useSpace';
 import { useSpaceFollow } from '@/features/spaces/hooks/useSpaceFollow';
+import { spaceApi } from '@/features/spaces/services';
 import { useSocket } from '@/hooks/useSocket';
 import { getFileUrl } from '@/utils/helpers';
+import { useQuery } from '@tanstack/react-query';
 import { Users } from 'lucide-react';
 import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -15,20 +17,21 @@ const SpaceDetailPage = () => {
   const navigate = useNavigate();
 
   const { socket, isConnected } = useSocket();
-  const { data: space, isLoading: spaceLoading } = useSpace(slug as string);
   const { followSpace, unfollowSpace, followingMap } = useSpaceFollow();
+  const { data: space, isLoading: spaceLoading } = useQuery({
+    queryKey: ['space', slug],
+    queryFn: () => spaceApi.getSpaceBySlug(slug as string),
+    enabled: !!slug,
+  });
 
-  // Track specific space loading state
   const isFollowLoading = space ? followingMap[space.id] : false;
 
   useEffect(() => {
     if (!socket || !isConnected || !space?.id) return;
 
-    // Join the space room to receive space-specific updates
     socket.emit('joinSpace', { spaceId: space.id });
     console.log(`Joined space room: ${space.id}`);
 
-    // Cleanup function
     return () => {
       socket.emit('leaveSpace', { spaceId: space.id });
       console.log(`Left space room: ${space.id}`);
@@ -46,21 +49,24 @@ const SpaceDetailPage = () => {
   };
 
   if (spaceLoading) {
-    return <LoadingSpinner />;
+    return <LoadingIndicator />;
   }
 
   if (!space) {
     return (
-      <div className="flex flex-col items-center p-8 text-center">
-        <h2 className="mb-4 text-xl font-bold">Space not found</h2>
-        <p className="mb-4 text-gray-600">The space you're looking for doesn't exist or has been removed.</p>
-        <button
-          onClick={() => navigate('/spaces')}
-          className="rounded-md bg-green-600 px-4 py-2 text-white hover:bg-green-700"
-        >
-          Browse Spaces
-        </button>
-      </div>
+      <FeedbackDisplay
+        variant="error"
+        title="Space not found"
+        description="The space you're looking for doesn't exist or has been removed."
+        actions={[
+          {
+            label: 'Browse Spaces',
+            variant: 'outline',
+            onClick: () => navigate('/spaces'),
+          },
+        ]}
+        size="md"
+      />
     );
   }
 
@@ -70,7 +76,7 @@ const SpaceDetailPage = () => {
       <BackButton />
 
       {/* Space header */}
-      <div className="mb-6 rounded-lg bg-white">
+      <div className="mb-6 rounded-lg bg-white border border-gray-100">
         {/* Space Banner */}
         <div className="h-44 w-full overflow-hidden rounded-t-lg bg-gray-200">
           {space.bannerUrl ? (
@@ -128,7 +134,7 @@ const SpaceDetailPage = () => {
         </div>
       </div>
 
-      {/* Discussion post */}
+      {/* Discussions Section */}
       <div className="flex w-full flex-col">
         <NewDiscussionButton preselectedSpaceId={space.id} className="mb-4" />
         <DiscussionPost preselectedSpaceId={space.id} search={{ spaceId: space.id }} />

@@ -6,13 +6,14 @@ import { lazy, Suspense } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 
 // Lazy-loaded components
-const Home = lazy(() => import('@/pages/Home'));
-const Login = lazy(() => import('@/pages/Login'));
-const DiscussionDetail = lazy(() => import('@/pages/DiscussionDetail'));
+const HomePage = lazy(() => import('@/pages/HomePage'));
+const LoginPage = lazy(() => import('@/pages/LoginPage'));
+const DiscussionDetailPage = lazy(() => import('@/pages/DiscussionDetailPage'));
 const SpacesPage = lazy(() => import('@/pages/SpacesPage'));
 const SpaceDetailPage = lazy(() => import('@/pages/SpaceDetail'));
 const SearchPage = lazy(() => import('@/pages/SearchPage'));
 const NotificationsPage = lazy(() => import('@/pages/NotificationsPage'));
+const BookmarksPage = lazy(() => import('@/pages/BookmarksPage'));
 const OverviewPage = lazy(() => import('@/pages/Admin/OverviewPage'));
 const UserManagementPage = lazy(() => import('@/pages/Admin/UserManagementPage'));
 const DiscussionManagementPage = lazy(() => import('@/pages/Admin/DiscussionManagementPage'));
@@ -35,7 +36,7 @@ const routes = [
     children: [
       {
         index: true,
-        element: lazyLoad(Home),
+        element: lazyLoad(HomePage),
       },
       {
         path: '/spaces',
@@ -43,7 +44,7 @@ const routes = [
       },
       {
         path: '/discussions/:id',
-        element: lazyLoad(DiscussionDetail),
+        element: lazyLoad(DiscussionDetailPage),
       },
       {
         path: '/spaces/:slug',
@@ -57,6 +58,10 @@ const routes = [
         path: '/notifications',
         element: lazyLoad(NotificationsPage),
       },
+      {
+        path: '/bookmarks',
+        element: lazyLoad(BookmarksPage),
+      }
     ],
   },
   {
@@ -87,7 +92,7 @@ const routes = [
   },
   {
     path: '/login',
-    element: lazyLoad(Login),
+    element: lazyLoad(LoginPage),
   },
   {
     path: '*',

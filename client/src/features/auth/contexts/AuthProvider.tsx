@@ -5,8 +5,10 @@ import { LoginRequest, RegisterRequest } from '@/features/auth/types';
 import { AuthContext } from './AuthContext';
 import { authReducer, initialState } from './reducer';
 import { User } from '@/features/users/types';
+import { useQueryClient } from '@tanstack/react-query';
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const queryClient = useQueryClient();
   const [state, dispatch] = useReducer(authReducer, initialState);
 
   const refreshToken = useCallback(async (): Promise<string> => {
@@ -61,6 +63,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       storageUtils.setUser(user);
 
       dispatch({ type: 'AUTH_SUCCESS', payload: { user, accessToken } });
+
+      queryClient.clear();
       
       return user;
     } catch (error) {

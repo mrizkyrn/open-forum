@@ -1,4 +1,5 @@
 import UserAvatar from '@/components/layouts/UserAvatar';
+import MainButton from '@/components/ui/buttons/MainButton';
 import FilePreview from '@/components/ui/file-displays/FilePreview';
 import { useAuth } from '@/features/auth/hooks/useAuth';
 import { commentApi } from '@/features/comments/services';
@@ -6,7 +7,7 @@ import { useFileHandling } from '@/hooks/useFileHandling';
 import { Attachment } from '@/types/AttachmentTypes';
 import { ALLOWED_FILE_TYPES, MAX_COMMENT_FILES, MAX_FILE_SIZE } from '@/utils/constants';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { ImagePlus, Loader2 } from 'lucide-react';
+import { ImagePlus } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 
@@ -261,16 +262,18 @@ const CommentForm: React.FC<CommentFormProps> = ({
                 </button>
               )}
 
-              <button
+              <MainButton
                 type="submit"
-                disabled={!value.trim() || isPending}
-                className={`bg-primary hover:bg-primary-dark flex items-center gap-1 rounded-md py-2 text-white disabled:bg-gray-400 ${
-                  isReply || isEditing ? 'px-3 text-xs' : 'px-4 text-sm'
-                }`}
+                variant="primary"
+                isLoading={isPending}
+                disabled={isPending || !value.trim()}
+                onClick={() => {
+                  setIsFocused(false);
+                  if (onClickOutside) onClickOutside();
+                }}
               >
-                {isPending ? <Loader2 size={isReply || isEditing ? 12 : 14} className="animate-spin" /> : null}
                 {getActionText()}
-              </button>
+              </MainButton>
             </div>
           </div>
         </div>

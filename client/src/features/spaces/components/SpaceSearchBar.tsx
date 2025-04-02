@@ -1,0 +1,111 @@
+import { SortButton } from '@/components/ui/buttons/SortButton';
+import SearchInput from '@/components/ui/inputs/SearchInput';
+import { SpaceSortBy } from '@/features/spaces/types';
+import { SortOrder } from '@/types/SearchTypes';
+import { Clock, Grid, List, SortAsc, UserCheck } from 'lucide-react';
+
+interface SpaceSearchBarProps {
+  searchTerm: string;
+  onSearchChange: (value: string) => void;
+  sortBy: SpaceSortBy;
+  onSortChange: (sortBy: SpaceSortBy) => void;
+  sortOrder: SortOrder;
+  onOrderChange: (order: SortOrder) => void;
+  viewMode: 'grid' | 'list';
+  onViewModeChange: (mode: 'grid' | 'list') => void;
+}
+
+const SpaceSearchBar: React.FC<SpaceSearchBarProps> = ({
+  searchTerm,
+  onSearchChange,
+  sortBy,
+  onSortChange,
+  sortOrder,
+  onOrderChange,
+  viewMode,
+  onViewModeChange,
+}) => {
+  // Handle sort change with direction toggle
+  const handleSortChange = (newSortBy: SpaceSortBy) => {
+    if (sortBy === newSortBy) {
+      onOrderChange(sortOrder === SortOrder.ASC ? SortOrder.DESC : SortOrder.ASC);
+    } else {
+      onSortChange(newSortBy);
+      onOrderChange(SortOrder.DESC);
+    }
+  };
+
+  return (
+    <div className="mb-6 flex flex-col gap-3">
+      {/* Search row */}
+      <div className="flex w-full items-center gap-2">
+        <div className="relative flex-grow">
+          <SearchInput value={searchTerm} onChange={onSearchChange} placeholder="Search spaces..." size="md" />
+        </div>
+
+        {/* View mode toggle - always visible */}
+        <div className="flex h-9 rounded-md border border-gray-300">
+          <button
+            onClick={() => onViewModeChange('grid')}
+            className={`flex h-full items-center justify-center rounded-l-md px-2 text-xs sm:px-3 ${
+              viewMode === 'grid' ? 'bg-gray-100 text-gray-800' : 'text-gray-500'
+            }`}
+            aria-label="Grid view"
+            title="Grid view"
+          >
+            <Grid size={16} />
+          </button>
+          <button
+            onClick={() => onViewModeChange('list')}
+            className={`flex h-full items-center justify-center rounded-r-md px-2 text-xs sm:px-3 ${
+              viewMode === 'list' ? 'bg-gray-100 text-gray-800' : 'text-gray-500'
+            }`}
+            aria-label="List view"
+            title="List view"
+          >
+            <List size={16} />
+          </button>
+        </div>
+      </div>
+
+      {/* Sort row - responsive */}
+      <div className="flex flex-wrap items-center gap-1.5">
+        <span className="text-xs text-gray-400">Sort:</span>
+
+        <div className="flex flex-wrap items-center gap-1">
+          <SortButton<SpaceSortBy>
+            label="Followers"
+            icon={<UserCheck size={14} />}
+            currentSortBy={sortBy}
+            sortBy={SpaceSortBy.followerCount}
+            sortOrder={sortOrder}
+            onSortChange={handleSortChange}
+            size="xs"
+          />
+
+          <SortButton<SpaceSortBy>
+            label="Name"
+            icon={<SortAsc size={14} />}
+            currentSortBy={sortBy}
+            sortBy={SpaceSortBy.name}
+            sortOrder={sortOrder}
+            onSortChange={handleSortChange}
+            size="xs"
+          />
+
+          <SortButton<SpaceSortBy>
+            label="Date"
+            icon={<Clock size={14} />}
+            currentSortBy={sortBy}
+            sortBy={SpaceSortBy.createdAt}
+            sortOrder={sortOrder}
+            onSortChange={handleSortChange}
+            size="xs"
+          />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default SpaceSearchBar;

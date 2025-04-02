@@ -157,32 +157,10 @@ const Pagination: React.FC<PaginationProps> = ({
 
       {/* Page navigation */}
       <nav className="flex items-center justify-between" aria-label="Pagination">
-        <div className="flex flex-1 justify-between sm:hidden">
-          {/* Mobile view: simplified prev/next only */}
-          <button
-            onClick={() => hasPreviousPage && onPageChange(currentPage - 1)}
-            disabled={!hasPreviousPage}
-            className={`relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium ${
-              hasPreviousPage ? 'text-gray-700 hover:bg-gray-50' : 'cursor-not-allowed text-gray-400'
-            }`}
-          >
-            Previous
-          </button>
-          <button
-            onClick={() => hasNextPage && onPageChange(currentPage + 1)}
-            disabled={!hasNextPage}
-            className={`relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium ${
-              hasNextPage ? 'text-gray-700 hover:bg-gray-50' : 'cursor-not-allowed text-gray-400'
-            }`}
-          >
-            Next
-          </button>
-        </div>
-
-        {/* Desktop view: full pagination */}
-        <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-end">
+        {/* Page size selector and info text */}
+        <div className="sm:flex sm:flex-1 sm:items-center sm:justify-end">
           <div>
-            <nav className="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
+            <nav className="isolate inline-flex -space-x-px rounded-md" aria-label="Pagination">
               {/* Previous page button */}
               <button
                 onClick={() => hasPreviousPage && onPageChange(currentPage - 1)}

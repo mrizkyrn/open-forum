@@ -1,15 +1,15 @@
-import LoadingSpinner from '@/components/feedback/LoadingSpinner';
+import FeedbackDisplay from '@/components/feedback/FeedbackDisplay';
+import LoadingIndicator from '@/components/feedback/LoadinIndicator';
 import BackButton from '@/components/ui/buttons/BackButton';
 import { CommentForm, CommentsSection } from '@/features/comments/components';
 import { DiscussionCard, UpdateDiscussionModal } from '@/features/discussions/components';
 import { discussionApi } from '@/features/discussions/services';
 import { useSocket } from '@/hooks/useSocket';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { AlertCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-const DiscussionDetail = () => {
+const DiscussionDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const queryClient = useQueryClient();
 
@@ -70,22 +70,17 @@ const DiscussionDetail = () => {
   });
 
   if (isLoading) {
-    return <LoadingSpinner />;
+    return <LoadingIndicator />;
   }
 
   if (isError || !discussion) {
     return (
-      <div className="flex flex-col items-center justify-center gap-4 px-4 py-16 text-center">
-        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-red-50">
-          <AlertCircle size={32} className="text-red-500" />
-        </div>
-        <h2 className="text-xl font-semibold text-gray-900">Discussion Not Found</h2>
-        <p className="max-w-md text-gray-500">
-          This discussion may have been removed or doesn't exist. It might have been deleted by the author or a
-          moderator.
-        </p>
-        <BackButton />
-      </div>
+      <FeedbackDisplay
+        title="Discussion Not Found"
+        description="This discussion may have been removed or doesn't exist. It might have been deleted by the author or a moderator."
+        variant="error"
+        size="md"
+      />
     );
   }
 
@@ -99,7 +94,7 @@ const DiscussionDetail = () => {
         <DiscussionCard discussion={discussion} />
 
         {/* Comments section */}
-        <div className="rounded-xl bg-white mt-4">
+        <div className="mt-4 rounded-xl bg-white">
           {/* Comment form */}
           <div className="mb-3">
             <CommentForm discussionId={discussion.id} />
@@ -116,4 +111,4 @@ const DiscussionDetail = () => {
   );
 };
 
-export default DiscussionDetail;
+export default DiscussionDetailPage;

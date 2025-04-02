@@ -7,8 +7,7 @@ export enum DiscussionSortBy {
   createdAt = 'createdAt',
   updatedAt = 'updatedAt',
   commentCount = 'commentCount',
-  upvoteCount = 'upvoteCount',
-  downvoteCount = 'downvoteCount',
+  voteCount = 'voteCount',
 }
 
 export class SearchDiscussionDto extends SearchDto {

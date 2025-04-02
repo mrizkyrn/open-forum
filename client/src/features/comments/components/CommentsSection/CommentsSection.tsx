@@ -1,5 +1,5 @@
 import ErrorFetching from '@/components/feedback/ErrorFetching';
-import LoadingSpinner from '@/components/feedback/LoadingSpinner';
+import LoadingIndicator from '@/components/feedback/LoadinIndicator';
 import MainButton from '@/components/ui/buttons/MainButton';
 import { CommentCard } from '@/features/comments/components';
 import { commentApi } from '@/features/comments/services';
@@ -54,7 +54,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({ discussionId }) => {
   };
 
   if (isLoading) {
-    return <LoadingSpinner />;
+    return <LoadingIndicator />;
   }
 
   if (isError) {
@@ -64,13 +64,13 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({ discussionId }) => {
   return (
     <div className="flex flex-col gap-2">
       {/* Header section with sort options */}
-      <div className="flex items-center justify-between mb-2">
+      <div className="mb-2 flex items-center justify-between">
         <h3 className="text-lg font-medium">Comments {comments.length > 0 && `(${comments.length})`}</h3>
 
         {/* Sort dropdown */}
         {comments.length > 0 && (
           <div ref={sortDropdownRef} className="relative">
-            <MainButton onClick={sortDropdown.toggle} rightIcon={<ChevronDown size={14} />} variant='outline' size='sm'>
+            <MainButton onClick={sortDropdown.toggle} rightIcon={<ChevronDown size={14} />} variant="outline" size="sm">
               Sort: {getSortOptionText}
             </MainButton>
 

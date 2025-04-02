@@ -24,7 +24,7 @@ import { VoteEntityType } from '../vote/entities/vote.entity';
 import { VoteService } from '../vote/vote.service';
 import { CreateDiscussionDto } from './dto/create-discussion.dto';
 import { DiscussionResponseDto, PopularTagsResponseDto } from './dto/discussion-response.dto';
-import { SearchDiscussionDto } from './dto/search-discussion.dto';
+import { DiscussionSortBy, SearchDiscussionDto } from './dto/search-discussion.dto';
 import { UpdateDiscussionDto } from './dto/update-discussion.dto';
 import { Bookmark } from './entities/bookmark.entity';
 import { DiscussionSpace } from './entities/discussion-space.entity';
@@ -586,10 +586,17 @@ export class DiscussionService {
     const queryBuilder = this.discussionRepository
       .createQueryBuilder('discussion')
       .leftJoinAndSelect('discussion.author', 'author')
-      .leftJoinAndSelect('discussion.space', 'space')
-      .orderBy(`discussion.${sortBy}`, sortOrder)
-      .skip(offset)
-      .take(limit);
+      .leftJoinAndSelect('discussion.space', 'space');
+
+    if (sortBy === DiscussionSortBy.voteCount) {
+      queryBuilder
+        .addSelect('COALESCE(discussion.upvote_count, 0) - COALESCE(discussion.downvote_count, 0)', 'net_votes')
+        .addOrderBy('net_votes', sortOrder);
+    } else {
+      queryBuilder.addOrderBy(`discussion.${sortBy}`, sortOrder);
+    }
+
+    queryBuilder.skip(offset).take(limit);
 
     this.applyDiscussionFilters(queryBuilder, searchDto);
 
