@@ -1,6 +1,6 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns';
-import { Download, Eye, MessageSquare, MoreHorizontal, RefreshCw, Trash2 } from 'lucide-react';
+import { Eye, MessageSquare, MoreHorizontal, Trash2 } from 'lucide-react';
 import { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -9,17 +9,15 @@ import UserAvatar from '@/components/layouts/UserAvatar';
 import ConfirmationModal from '@/components/modals/ConfirmationModal';
 import { DataTable } from '@/features/admin/components/DataTable';
 import FilterBar from '@/features/admin/components/FilterBar';
+import PageHeader from '@/features/admin/components/PageHeader';
 import Pagination from '@/features/admin/components/Pagination';
+import SelectFilter from '@/features/admin/components/SelectFilter';
 import { useDiscussions } from '@/features/discussions/hooks/useDiscussions';
 import { discussionApi } from '@/features/discussions/services';
-import { Discussion, DiscussionSortBy } from '@/features/discussions/types';
+import { Discussion } from '@/features/discussions/types';
 import { useSpaces } from '@/features/spaces/hooks/useSpaces';
 import { useDropdown } from '@/hooks/useDropdown';
-
-const truncateText = (text: string, maxLength: number) => {
-  if (text.length <= maxLength) return text;
-  return text.slice(0, maxLength) + '...';
-};
+import { truncateText } from '@/utils/helpers';
 
 const DiscussionManagementPage = () => {
   const queryClient = useQueryClient();
@@ -27,9 +25,6 @@ const DiscussionManagementPage = () => {
   const [isDeleting, setIsDeleting] = useState(false);
   const [selectedDiscussion, setSelectedDiscussion] = useState<Discussion | null>(null);
   const [activeDropdownId, setActiveDropdownId] = useState<number | null>(null);
-  const [spaceFilter, setSpaceFilter] = useState<number | undefined>(undefined);
-  const [tagFilter, setTagFilter] = useState<string | undefined>(undefined);
-  const [anonymousFilter, setAnonymousFilter] = useState<boolean | undefined>(undefined);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -39,10 +34,8 @@ const DiscussionManagementPage = () => {
     close: closeDropdown,
   } = useDropdown(dropdownRef as React.RefObject<HTMLElement>);
 
-  // Get spaces for the filter
   const { spaces } = useSpaces();
 
-  // Get discussions with filtering
   const {
     discussions,
     meta,
@@ -55,11 +48,8 @@ const DiscussionManagementPage = () => {
     handleSpaceFilterChange,
     handleTagFilterChange,
     handleAnonymousFilterChange,
-  } = useDiscussions({
-    spaceId: spaceFilter,
-    tags: tagFilter ? [tagFilter] : undefined,
-    isAnonymous: anonymousFilter,
-  });
+    handleResetFilters,
+  } = useDiscussions();
 
   const handleToggleDropdown = (discussionId: number) => {
     if (activeDropdownId === discussionId) {
@@ -113,23 +103,12 @@ const DiscussionManagementPage = () => {
     return Array.from(allTags).sort();
   };
 
-  const handleResetFilters = () => {
-    handleSearchChange('');
-    setSpaceFilter(undefined);
-    handleSpaceFilterChange(undefined);
-    setTagFilter(undefined);
-    handleTagFilterChange(undefined);
-    setAnonymousFilter(undefined);
-    handleAnonymousFilterChange(undefined);
-    handleSortChange(DiscussionSortBy.createdAt);
-  };
-
   const columns = [
     {
       header: 'Discussion',
       accessor: (discussion: Discussion) => (
         <div className="max-w-lg">
-          <div className="font-medium text-dark">{truncateText(discussion.content, 80)}</div>
+          <div className="text-dark font-medium">{truncateText(discussion.content, 80)}</div>
           <div className="mt-1 flex items-center gap-2 text-xs text-gray-500">
             <div className="flex items-center">
               <MessageSquare size={12} className="mr-1" />
@@ -147,7 +126,7 @@ const DiscussionManagementPage = () => {
             <>
               <UserAvatar fullName={discussion.author.fullName} avatarUrl={discussion.author.avatarUrl} size="sm" />
               <div className="ml-3">
-                <div className="text-sm font-medium text-dark">{discussion.author.fullName}</div>
+                <div className="text-dark text-sm font-medium">{discussion.author.fullName}</div>
                 <div className="text-xs text-gray-500">@{discussion.author.username}</div>
               </div>
             </>
@@ -170,8 +149,6 @@ const DiscussionManagementPage = () => {
           </span>
         </div>
       ),
-      sortable: true,
-      sortKey: 'isAnonymous',
     },
     {
       header: 'Space',
@@ -182,8 +159,6 @@ const DiscussionManagementPage = () => {
           </span>
         </div>
       ),
-      sortable: true,
-      sortKey: 'spaceId',
     },
     {
       header: 'Tags',
@@ -200,7 +175,7 @@ const DiscussionManagementPage = () => {
     {
       header: 'Created',
       accessor: (discussion: Discussion) => (
-        <span className="whitespace-nowrap text-sm text-gray-500">
+        <span className="text-sm whitespace-nowrap text-gray-500">
           {format(new Date(discussion.createdAt), 'MMM d, yyyy HH:mm')}
         </span>
       ),
@@ -220,7 +195,7 @@ const DiscussionManagementPage = () => {
         </div>
       ),
       sortable: true,
-      sortKey: 'upvoteCount',
+      sortKey: 'voteCount',
     },
     {
       header: 'Actions',
@@ -258,24 +233,13 @@ const DiscussionManagementPage = () => {
   ];
 
   return (
-    <div className="space-y-8">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight text-dark">Discussions Management</h1>
-          <p className="mt-2 text-sm text-gray-500">Manage forum discussions and content</p>
-        </div>
-
-        {/* Action buttons */}
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <button
-            onClick={handleExportDiscussions}
-            className="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50"
-          >
-            <Download size={16} className="mr-2" />
-            Export
-          </button>
-        </div>
-      </div>
+    <div className="space-y-5">
+      <PageHeader
+        title="Discussions Management"
+        description="Manage forum discussions and content"
+        showExportButton
+        onExportClick={handleExportDiscussions}
+      />
 
       {/* Filters */}
       <FilterBar
@@ -284,68 +248,31 @@ const DiscussionManagementPage = () => {
           onChange: handleSearchChange,
           placeholder: 'Search discussions by content...',
         }}
+        onReset={handleResetFilters}
       >
-        {/* Space filter */}
-        <select
-          className="rounded-lg border border-gray-300 bg-gray-50 p-2 text-sm text-dark focus:border-green-500 focus:ring-green-500"
-          value={spaceFilter || ''}
-          onChange={(e) => {
-            const value = e.target.value ? parseInt(e.target.value) : undefined;
-            setSpaceFilter(value);
-            handleSpaceFilterChange(value);
-          }}
-        >
-          <option value="">All Spaces</option>
-          {spaces.map((space) => (
-            <option key={space.id} value={space.id}>
-              {space.name}
-            </option>
-          ))}
-        </select>
+        <SelectFilter
+          options={spaces.map((space) => ({ value: space.id, label: space.name }))}
+          value={filters.spaceId}
+          onChange={handleSpaceFilterChange}
+          placeholder="All Spaces"
+        />
 
-        {/* Tags filter */}
-        <select
-          className="rounded-lg border border-gray-300 bg-gray-50 p-2 text-sm text-dark focus:border-blue-500 focus:ring-blue-500"
-          value={tagFilter || ''}
-          onChange={(e) => {
-            const value = e.target.value || undefined;
-            setTagFilter(value);
-            handleTagFilterChange(value ? [value] : undefined);
-          }}
-        >
-          <option value="">All Tags</option>
-          {getAllUniqueTags().map((tag) => (
-            <option key={tag} value={tag}>
-              {tag}
-            </option>
-          ))}
-        </select>
+        <SelectFilter
+          options={getAllUniqueTags().map((tag) => ({ value: tag, label: tag }))}
+          value={filters.tags ? filters.tags[0] : undefined}
+          onChange={(value) => handleTagFilterChange(value ? [value] : undefined)}
+          placeholder="All Tags"
+        />
 
-        {/* Anonymous filter */}
-        <select
-          className="rounded-lg border border-gray-300 bg-gray-50 p-2 text-sm text-dark focus:border-purple-500 focus:ring-purple-500"
-          value={anonymousFilter === undefined ? '' : anonymousFilter ? 'true' : 'false'}
-          onChange={(e) => {
-            let value: boolean | undefined = undefined;
-            if (e.target.value === 'true') value = true;
-            if (e.target.value === 'false') value = false;
-
-            setAnonymousFilter(value);
-            handleAnonymousFilterChange(value);
-          }}
-        >
-          <option value="">All Posts</option>
-          <option value="true">Anonymous Only</option>
-          <option value="false">Non-Anonymous Only</option>
-        </select>
-
-        <button
-          onClick={handleResetFilters}
-          className="inline-flex items-center justify-center rounded-md border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
-        >
-          <RefreshCw className="mr-2 h-4 w-4" />
-          Reset Filters
-        </button>
+        <SelectFilter
+          options={[
+            { value: true, label: 'Anonymous Only' },
+            { value: false, label: 'Non-Anonymous Only' },
+          ]}
+          value={filters.isAnonymous}
+          onChange={handleAnonymousFilterChange}
+          placeholder="All Posts"
+        />
       </FilterBar>
 
       {/* Discussions Table */}
@@ -376,7 +303,6 @@ const DiscussionManagementPage = () => {
             totalItems={meta.totalItems}
             onPageChange={handlePageChange}
             onPageSizeChange={handleLimitChange}
-            pageSizeOptions={[5, 10, 25, 50, 100]}
           />
         )}
       </div>

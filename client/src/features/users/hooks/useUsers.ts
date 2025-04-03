@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
-import { SortOrder, UserRole, UserSortBy } from '../types';
 import { useState } from 'react';
 import { userApi } from '../services/userApi';
+import { SortOrder, UserRole, UserSortBy } from '../types';
 
 export interface UserFilters {
   page: number;
@@ -14,7 +14,8 @@ export interface UserFilters {
 
 export const defaultFilters: UserFilters = {
   page: 1,
-  limit: 5,
+  limit: 10,
+  sortBy: UserSortBy.createdAt,
   sortOrder: SortOrder.DESC,
 };
 
@@ -32,38 +33,43 @@ export function useUsers(initialFilters: Partial<UserFilters> = {}) {
 
   const { data, isLoading, error } = queryResult;
 
-  const updateFilters = (newFilters: Partial<UserFilters>) => {
-    setFilters((prev) => ({
-      ...prev,
-      ...newFilters,
-      // Reset to page 1 when any filter except page changes
-      page: 'page' in newFilters ? newFilters.page! : 1,
-    }));
-  };
 
   const handlePageChange = (page: number) => {
-    updateFilters({ page });
+    setFilters((prev) => ({ ...prev, page }));
   };
 
   const handleLimitChange = (limit: number) => {
-    updateFilters({ limit });
+    setFilters((prev) => ({ ...prev, page: 1, limit }));
   };
 
   const handleSearchChange = (search: string) => {
-    updateFilters({ search });
+    setFilters((prev) => ({ ...prev, page: 1, search }));
   };
 
   const handleRoleFilterChange = (role?: UserRole) => {
-    updateFilters({ role });
+    setFilters((prev) => ({ ...prev, page: 1, role }));
   };
 
   const handleSortChange = (sortBy: string) => {
     const newSortOrder = filters.sortBy === sortBy && filters.sortOrder === 'ASC' ? 'DESC' : 'ASC';
 
-    updateFilters({
+    setFilters((prev) => ({
+      ...prev,
       sortBy: sortBy as UserSortBy,
       sortOrder: newSortOrder as SortOrder,
-    });
+    }));
+  };
+
+  const handleResetFilters = () => {
+    setFilters((prev) => ({
+      ...prev,
+      page: 1,
+      limit: filters.limit,
+      search: '',
+      role: undefined,
+      sortBy: UserSortBy.createdAt,
+      sortOrder: SortOrder.DESC,
+    }));
   };
 
   return {
@@ -72,11 +78,11 @@ export function useUsers(initialFilters: Partial<UserFilters> = {}) {
     isLoading,
     error,
     filters,
-    updateFilters,
     handlePageChange,
     handleLimitChange,
     handleSearchChange,
     handleRoleFilterChange,
     handleSortChange,
+    handleResetFilters,
   };
 }

@@ -1,13 +1,15 @@
 import { useQuery } from '@tanstack/react-query';
 import { format } from 'date-fns';
-import { AlertTriangle, CheckCircle, Flag, RefreshCw, X } from 'lucide-react';
+import { AlertTriangle, CheckCircle, Flag, MessageCircle, X } from 'lucide-react';
 import { useState } from 'react';
 
 import UserAvatar from '@/components/layouts/UserAvatar';
 import { DataTable } from '@/features/admin/components/DataTable';
 import FilterBar from '@/features/admin/components/FilterBar';
+import PageHeader from '@/features/admin/components/PageHeader';
 import Pagination from '@/features/admin/components/Pagination';
 import ReportDetailModal from '@/features/admin/components/ReportDetailModal';
+import SelectFilter from '@/features/admin/components/SelectFilter';
 import StatsCard from '@/features/admin/components/StatsCard';
 import StatusBadge from '@/features/admin/components/StatusBadge';
 import { useReports } from '@/features/reports/hooks/useReports';
@@ -15,10 +17,8 @@ import { reportApi } from '@/features/reports/services';
 import { Report, ReportStatus, ReportTargetType } from '@/features/reports/types';
 
 const ReportManagementPage = () => {
-  // State for report detail modal
   const [selectedReport, setSelectedReport] = useState<Report | null>(null);
 
-  // Use the reports hook for data fetching and filtering
   const {
     reports,
     meta,
@@ -32,10 +32,9 @@ const ReportManagementPage = () => {
     handleStatusFilterChange,
     handleTypeFilterChange,
     handleSortChange,
-    resetFilters,
+    handleResetFilters,
   } = useReports();
 
-  // Fetch report statistics
   const { data: reportStats } = useQuery({
     queryKey: ['reportStats'],
     queryFn: reportApi.getReportStats,
@@ -48,6 +47,11 @@ const ReportManagementPage = () => {
   const closeReportDetail = () => {
     setSelectedReport(null);
     refetch();
+  };
+
+  const handleExportDiscussions = () => {
+    console.log('Exporting discussions...');
+    // Implement export functionality here
   };
 
   const columns = [
@@ -83,8 +87,6 @@ const ReportManagementPage = () => {
             return <StatusBadge label={report.targetType} color="gray" />;
         }
       },
-      sortable: true,
-      sortKey: 'targetType',
     },
     {
       header: 'Status',
@@ -100,8 +102,6 @@ const ReportManagementPage = () => {
             return <StatusBadge label={report.status} color="gray" />;
         }
       },
-      sortable: true,
-      sortKey: 'status',
     },
     {
       header: 'Submitted',
@@ -133,11 +133,13 @@ const ReportManagementPage = () => {
   ];
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight text-gray-900">Reports Management</h1>
-        <p className="mt-2 text-sm text-gray-500">Review and manage user reports of inappropriate content</p>
-      </div>
+    <div className="space-y-5">
+      <PageHeader
+        title="Report Management"
+        description="Manage and review reports from users."
+        showExportButton
+        onExportClick={handleExportDiscussions}
+      />
 
       {/* Stats Cards */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -178,33 +180,32 @@ const ReportManagementPage = () => {
           onChange: handleSearchChange,
           placeholder: 'Search reports...',
         }}
+        onReset={handleResetFilters}
       >
-        <select
-          className="rounded-lg border border-gray-300 bg-gray-50 p-2 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
+        {/* Status Filter */}
+        <SelectFilter
+          options={[
+            { label: 'Pending', value: ReportStatus.PENDING },
+            { label: 'Resolved', value: ReportStatus.RESOLVED },
+            { label: 'Dismissed', value: ReportStatus.DISMISSED },
+          ]}
           value={filters.status || ''}
-          onChange={(e) => handleStatusFilterChange((e.target.value as ReportStatus) || undefined)}
-        >
-          <option value="">All Statuses</option>
-          <option value={ReportStatus.PENDING}>Pending</option>
-          <option value={ReportStatus.RESOLVED}>Resolved</option>
-          <option value={ReportStatus.DISMISSED}>Dismissed</option>
-        </select>
-        <select
-          className="rounded-lg border border-gray-300 bg-gray-50 p-2 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
+          onChange={(value) => handleStatusFilterChange(value as ReportStatus)}
+          placeholder="All Statuses"
+          leftIcon={<Flag size={16} />}
+        />
+
+        {/* Type Filter */}
+        <SelectFilter
+          options={[
+            { label: 'Discussions', value: ReportTargetType.DISCUSSION },
+            { label: 'Comments', value: ReportTargetType.COMMENT },
+          ]}
           value={filters.targetType || ''}
-          onChange={(e) => handleTypeFilterChange((e.target.value as ReportTargetType) || undefined)}
-        >
-          <option value="">All Types</option>
-          <option value={ReportTargetType.DISCUSSION}>Discussions</option>
-          <option value={ReportTargetType.COMMENT}>Comments</option>
-        </select>
-        <button
-          onClick={resetFilters}
-          className="inline-flex items-center justify-center rounded-md border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
-        >
-          <RefreshCw className="mr-2 h-4 w-4" />
-          Reset Filters
-        </button>
+          onChange={(value) => handleTypeFilterChange(value as ReportTargetType)}
+          placeholder="All Types"
+          leftIcon={<MessageCircle size={16} />}
+        />
       </FilterBar>
 
       {/* Reports Table */}
@@ -237,7 +238,6 @@ const ReportManagementPage = () => {
             totalItems={meta.totalItems}
             onPageChange={handlePageChange}
             onPageSizeChange={handleLimitChange}
-            pageSizeOptions={[5, 10, 25, 50, 100]}
           />
         )}
       </div>

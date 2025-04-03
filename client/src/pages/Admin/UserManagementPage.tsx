@@ -1,23 +1,22 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns';
-import { Download, Edit, MoreHorizontal, RefreshCw, Trash2, UserCheck, Users } from 'lucide-react';
+import { Edit, MoreHorizontal, Trash2, UserCheck, Users } from 'lucide-react';
 import { useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 
+import UserAvatar from '@/components/layouts/UserAvatar';
+import ConfirmationModal from '@/components/modals/ConfirmationModal';
+import { DataTable } from '@/features/admin/components/DataTable';
+import FilterBar from '@/features/admin/components/FilterBar';
+import PageHeader from '@/features/admin/components/PageHeader';
+import Pagination from '@/features/admin/components/Pagination';
+import SelectFilter from '@/features/admin/components/SelectFilter';
+import StatusBadge from '@/features/admin/components/StatusBadge';
 import { adminApi } from '@/features/admin/services';
+import UserFormModal from '@/features/users/components/UserFormModal';
 import { useUsers } from '@/features/users/hooks/useUsers';
 import { User, UserRole } from '@/features/users/types';
 import { useDropdown } from '@/hooks/useDropdown';
-
-// Import our reusable components
-import UserAvatar from '@/components/layouts/UserAvatar';
-import ConfirmationModal from '@/components/modals/ConfirmationModal';
-import MainButton from '@/components/ui/buttons/MainButton';
-import { DataTable } from '@/features/admin/components/DataTable';
-import FilterBar from '@/features/admin/components/FilterBar';
-import Pagination from '@/features/admin/components/Pagination';
-import StatusBadge from '@/features/admin/components/StatusBadge';
-import UserFormModal from '@/features/users/components/UserFormModal';
 
 const UserManagementPage = () => {
   const queryClient = useQueryClient();
@@ -45,6 +44,7 @@ const UserManagementPage = () => {
     handleSearchChange,
     handleRoleFilterChange,
     handleSortChange,
+    handleResetFilters,
   } = useUsers();
 
   const handleToggleDropdown = (userId: number) => {
@@ -79,12 +79,13 @@ const UserManagementPage = () => {
         setIsDeleting(true);
         await adminApi.deleteUser(selectedUser.id);
         queryClient.invalidateQueries({ queryKey: ['users'] });
-        setIsDeleteModalOpen(false);
         toast.success('User deleted successfully');
       } catch (error) {
         console.error('Error deleting user:', error);
-        toast.error('Failed to delete user');
+        const errorMessage = error instanceof Error ? error.message : 'Failed to delete user';
+        toast.error(errorMessage);
       } finally {
+        setIsDeleteModalOpen(false);
         setIsDeleting(false);
       }
     }
@@ -120,7 +121,7 @@ const UserManagementPage = () => {
         <div className="flex items-center">
           <UserAvatar fullName={user.fullName} avatarUrl={user.avatarUrl} size="sm" />
           <div className="ml-4">
-            <div className="text-sm font-medium text-dark">{user.fullName}</div>
+            <div className="text-dark text-sm font-medium">{user.fullName}</div>
             <div className="text-sm text-gray-500">@{user.username}</div>
           </div>
         </div>
@@ -185,59 +186,37 @@ const UserManagementPage = () => {
   ];
 
   return (
-    <div className="space-y-8">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight text-dark">Users Management</h1>
-          <p className="mt-2 text-sm text-gray-500">Manage user accounts and permissions</p>
-        </div>
+    <div className="space-y-5">
+      <PageHeader
+        title="User Management"
+        description="Manage user accounts and permissions"
+        showNewButton
+        showExportButton
+        onNewClick={handleNewUser}
+        onExportClick={handleExportUsers}
+        newButtonText="New User"
+        newButtonIcon={<UserCheck size={16} />}
+      />
 
-        {/* Action buttons and filters */}
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <div className="flex gap-2">
-            <MainButton onClick={handleNewUser} leftIcon={<UserCheck size={16} />}>
-              New User
-            </MainButton>
-            <button
-              onClick={handleExportUsers}
-              className="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50"
-            >
-              <Download size={16} className="mr-2" />
-              Export
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Filters */}
       <FilterBar
         searchProps={{
           value: filters.search || '',
           onChange: handleSearchChange,
           placeholder: 'Search users by name or username...',
         }}
+        onReset={handleResetFilters}
       >
-        <select
-          className="rounded-lg border border-gray-300 bg-gray-50 p-2 text-sm text-dark focus:border-blue-500 focus:ring-blue-500"
+        <SelectFilter
+          options={[
+            { label: 'Admin', value: UserRole.ADMIN },
+            { label: 'Lecturer', value: UserRole.LECTURER },
+            { label: 'Student', value: UserRole.STUDENT },
+          ]}
           value={filters.role || ''}
-          onChange={(e) => handleRoleFilterChange(e.target.value as UserRole | undefined)}
-        >
-          <option value="">All Roles</option>
-          <option value={UserRole.ADMIN}>Admin</option>
-          <option value={UserRole.LECTURER}>Lecturer</option>
-          <option value={UserRole.STUDENT}>Student</option>
-        </select>
-        <button
-          onClick={() => {
-            handleSearchChange('');
-            handleRoleFilterChange(undefined);
-            handleSortChange('createdAt');
-          }}
-          className="inline-flex items-center justify-center rounded-md border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
-        >
-          <RefreshCw className="mr-2 h-4 w-4" />
-          Reset Filters
-        </button>
+          placeholder="All Roles"
+          onChange={(value) => handleRoleFilterChange(value as UserRole | undefined)}
+          leftIcon={<UserCheck size={16} />}
+        />
       </FilterBar>
 
       {/* Users Table */}
@@ -268,7 +247,6 @@ const UserManagementPage = () => {
             totalItems={meta.totalItems}
             onPageChange={handlePageChange}
             onPageSizeChange={handleLimitChange}
-            pageSizeOptions={[5, 10, 25, 50, 100]}
           />
         )}
       </div>

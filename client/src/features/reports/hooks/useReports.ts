@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { SortOrder } from '@/types/SearchTypes';
 import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
 import { reportApi } from '../services';
 import { ReportSortBy, ReportStatus, ReportTargetType, SearchReportDto } from '../types';
-import { SortOrder } from '@/types/SearchTypes';
 
 interface ReportsFilters {
   page?: number;
@@ -57,7 +57,7 @@ export const useReports = (initialFilters: ReportsFilters = {}) => {
     }));
   };
 
-  const resetFilters = () => {
+  const handleResetFilters = () => {
     setFilters({
       page: 1,
       limit: filters.limit,
@@ -82,6 +82,6 @@ export const useReports = (initialFilters: ReportsFilters = {}) => {
     handleStatusFilterChange,
     handleTypeFilterChange,
     handleSortChange,
-    resetFilters,
+    handleResetFilters,
   };
 };

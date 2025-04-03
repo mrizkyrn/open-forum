@@ -39,6 +39,17 @@ export const useSpaces = (initialFilters = {}) => {
     }));
   };
 
+  const handleResetFilters = () => {
+    setFilters((prev) => ({
+      ...prev,
+      page: 1,
+      limit: filters.limit,
+      search: '',
+      sortBy: SpaceSortBy.name,
+      sortOrder: SortOrder.ASC,
+    }));
+  }
+
   return {
     spaces: data?.items || [],
     meta: data?.meta,
@@ -50,5 +61,6 @@ export const useSpaces = (initialFilters = {}) => {
     handleLimitChange,
     handleSearchChange,
     handleSortChange,
+    handleResetFilters,
   };
 };

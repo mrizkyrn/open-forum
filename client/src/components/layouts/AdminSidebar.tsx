@@ -58,7 +58,7 @@ const AdminSidebar: FC<AdminSidebarProps> = ({
     <div
       className={`${
         collapsed ? 'w-16' : 'w-64'
-      } relative flex h-full flex-col border-r border-gray-100 bg-white transition-all duration-300 ease-in-out`}
+      } relative flex h-full flex-col border-r border-gray-200 bg-white transition-all duration-300 ease-in-out`}
     >
       {/* Collapse toggle button */}
       <button

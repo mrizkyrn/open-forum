@@ -22,3 +22,8 @@ export const getFileUrl = (url: string) => {
 export const formatDateDistance = (date: string | number | Date) => {
   return formatDistanceToNow(new Date(date), { addSuffix: true });
 };
+
+export const truncateText = (text: string, maxLength: number) => {
+  if (text.length <= maxLength) return text;
+  return text.slice(0, maxLength) + '...';
+};

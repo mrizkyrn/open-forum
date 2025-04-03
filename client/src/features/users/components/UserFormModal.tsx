@@ -1,15 +1,17 @@
+import { ModalBody, ModalFooter, ModalHeader } from '@/components/modals/Modal';
 import Modal from '@/components/modals/Modal/Modal';
+import MainButton from '@/components/ui/buttons/MainButton';
 import { adminApi } from '@/features/admin/services';
 import { User, UserRole } from '@/features/users/types';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Loader2, UserCheck, X } from 'lucide-react';
+import { Loader2, UserCheck } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
 interface UserFormModalProps {
   isOpen: boolean;
   onClose: () => void;
-  user: User | null; // null for create, User for update
+  user: User | null;
 }
 
 const UserFormModal: React.FC<UserFormModalProps> = ({ isOpen, onClose, user }) => {
@@ -133,20 +135,17 @@ const UserFormModal: React.FC<UserFormModalProps> = ({ isOpen, onClose, user }) 
     if (!validateForm()) return;
 
     if (isEditMode && user) {
-      // Update existing user
       const updateData: any = {
         fullName: formData.fullName,
         role: formData.role,
       };
 
-      // Only include password if it's provided
       if (formData.password) {
         updateData.password = formData.password;
       }
 
       updateMutation.mutate({ id: user.id, data: updateData });
     } else {
-      // Create new user
       createMutation.mutate({
         username: formData.username,
         fullName: formData.fullName,
@@ -160,17 +159,10 @@ const UserFormModal: React.FC<UserFormModalProps> = ({ isOpen, onClose, user }) 
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="md">
-      <div className="space-y-4" onClick={(e) => e.stopPropagation()}>
-        {/* Header */}
-        <div className="flex items-center justify-between border-b border-gray-200 pb-4">
-          <h2 className="text-xl font-semibold">{isEditMode ? 'Edit User' : 'Create New User'}</h2>
-          <button onClick={onClose} className="rounded-full p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600">
-            <X size={20} />
-          </button>
-        </div>
+      <ModalHeader title={isEditMode ? 'Edit User' : 'Create New User'} onClose={onClose} />
 
-        {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-4">
+      <ModalBody>
+        <form id="userForm" onSubmit={handleSubmit} className="space-y-4">
           {/* Username field */}
           <div>
             <label htmlFor="username" className="block text-sm font-medium text-gray-700">
@@ -182,8 +174,8 @@ const UserFormModal: React.FC<UserFormModalProps> = ({ isOpen, onClose, user }) 
               name="username"
               value={formData.username}
               onChange={handleChange}
-              disabled={isEditMode} // Username can't be changed in edit mode
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none disabled:bg-gray-100 disabled:text-gray-500"
+              disabled={isEditMode}
+              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 focus:border-green-500 focus:ring-1 focus:ring-green-500 focus:outline-none disabled:bg-gray-100 disabled:text-gray-500"
             />
             {errors.username && <p className="mt-1 text-sm text-red-600">{errors.username}</p>}
           </div>
@@ -199,7 +191,7 @@ const UserFormModal: React.FC<UserFormModalProps> = ({ isOpen, onClose, user }) 
               name="fullName"
               value={formData.fullName}
               onChange={handleChange}
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 focus:border-green-500 focus:ring-1 focus:ring-green-500 focus:outline-none"
             />
             {errors.fullName && <p className="mt-1 text-sm text-red-600">{errors.fullName}</p>}
           </div>
@@ -214,7 +206,7 @@ const UserFormModal: React.FC<UserFormModalProps> = ({ isOpen, onClose, user }) 
               name="role"
               value={formData.role}
               onChange={handleChange}
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 focus:border-green-500 focus:ring-1 focus:ring-green-500 focus:outline-none"
             >
               <option value={UserRole.STUDENT}>Student</option>
               <option value={UserRole.LECTURER}>Lecturer</option>
@@ -233,7 +225,7 @@ const UserFormModal: React.FC<UserFormModalProps> = ({ isOpen, onClose, user }) 
               name="password"
               value={formData.password}
               onChange={handleChange}
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 focus:border-green-500 focus:ring-1 focus:ring-green-500 focus:outline-none"
             />
             {errors.password && <p className="mt-1 text-sm text-red-600">{errors.password}</p>}
           </div>
@@ -249,41 +241,29 @@ const UserFormModal: React.FC<UserFormModalProps> = ({ isOpen, onClose, user }) 
               name="confirmPassword"
               value={formData.confirmPassword}
               onChange={handleChange}
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 focus:border-green-500 focus:ring-1 focus:ring-green-500 focus:outline-none"
             />
             {errors.confirmPassword && <p className="mt-1 text-sm text-red-600">{errors.confirmPassword}</p>}
           </div>
-
-          {/* Submit Buttons */}
-          <div className="flex justify-end gap-2 border-t border-gray-200 pt-4">
-            <button
-              type="button"
-              onClick={onClose}
-              className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50"
-              disabled={isPending}
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="rounded-md bg-green-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-green-700 disabled:bg-green-400"
-              disabled={isPending}
-            >
-              {isPending ? (
-                <>
-                  <Loader2 size={16} className="mr-2 inline animate-spin" />
-                  {isEditMode ? 'Updating...' : 'Creating...'}
-                </>
-              ) : (
-                <>
-                  <UserCheck size={16} className="mr-2 inline" />
-                  {isEditMode ? 'Update User' : 'Create User'}
-                </>
-              )}
-            </button>
-          </div>
         </form>
-      </div>
+      </ModalBody>
+
+      <ModalFooter>
+        <MainButton type="button" variant="outline" className="w-full sm:w-auto" onClick={onClose} disabled={isPending}>
+          Cancel
+        </MainButton>
+        <MainButton
+          type="submit"
+          form="userForm"
+          className="w-full sm:w-auto"
+          disabled={isPending}
+          variant="primary"
+          isLoading={isPending}
+          leftIcon={isEditMode ? <Loader2 size={16} /> : <UserCheck size={16} />}
+        >
+          {isEditMode ? 'Update User' : 'Create User'}
+        </MainButton>
+      </ModalFooter>
     </Modal>
   );
 };

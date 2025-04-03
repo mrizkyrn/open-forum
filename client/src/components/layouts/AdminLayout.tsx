@@ -1,7 +1,7 @@
 import { useAuth } from '@/features/auth/hooks/useAuth';
 import { UserRole } from '@/features/users/types';
 import { BarChart2, Flag, FolderKanban, LayoutDashboard, MessagesSquare, Settings, Users } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import AdminSidebar from './AdminSidebar';
 
@@ -16,6 +16,13 @@ const AdminLayout = () => {
   const { user, logout, isLoading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const mainContentRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (mainContentRef.current) {
+      mainContentRef.current.scrollTop = 0;
+    }
+  }, [location.pathname]);
 
   // Check admin permission and redirect if not admin
   useEffect(() => {
@@ -54,7 +61,7 @@ const AdminLayout = () => {
   if (!user) return null;
 
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex h-screen bg-gray-50 text-dark">
       {/* Admin Sidebar */}
       <AdminSidebar
         collapsed={collapsed}
@@ -67,9 +74,8 @@ const AdminLayout = () => {
       />
 
       {/* Main content */}
-      <div className="flex-1 overflow-auto">
+      <div ref={mainContentRef} className="flex-1 overflow-auto">
         <div className="p-4 sm:p-6 md:p-8">
-          {/* Max-width container for content */}
           <div className="mx-auto w-full max-w-7xl">
             <Outlet />
           </div>

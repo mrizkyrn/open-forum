@@ -1,22 +1,20 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns';
-import { Boxes, Download, Edit, MoreHorizontal, Plus, RefreshCw, Trash2 } from 'lucide-react';
+import { Boxes, Download, Edit, MoreHorizontal, Plus, Trash2 } from 'lucide-react';
 import { useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 
-import { adminApi } from '@/features/admin/services';
-import { Space, SpaceSortBy } from '@/features/spaces/types';
-import { useDropdown } from '@/hooks/useDropdown';
-
-// Import our reusable components
 import ConfirmationModal from '@/components/modals/ConfirmationModal';
 import MainButton from '@/components/ui/buttons/MainButton';
 import { DataTable } from '@/features/admin/components/DataTable';
 import FilterBar from '@/features/admin/components/FilterBar';
 import Pagination from '@/features/admin/components/Pagination';
-import { getFileUrl } from '@/utils/helpers';
-import { useSpaces } from '@/features/spaces/hooks/useSpaces';
 import SpaceFormModal from '@/features/admin/components/SpaceFormModal';
+import { adminApi } from '@/features/admin/services';
+import { useSpaces } from '@/features/spaces/hooks/useSpaces';
+import { Space } from '@/features/spaces/types';
+import { useDropdown } from '@/hooks/useDropdown';
+import { getFileUrl } from '@/utils/helpers';
 
 const SpaceManagementPage = () => {
   const queryClient = useQueryClient();
@@ -81,7 +79,7 @@ const SpaceManagementPage = () => {
         toast.success('Space deleted successfully');
       } catch (error) {
         console.error('Error deleting space:', error);
-        toast.error('Failed to delete space');
+        toast.error((error as Error).message || 'Failed to delete space');
       } finally {
         setIsDeleting(false);
       }
@@ -103,7 +101,7 @@ const SpaceManagementPage = () => {
       header: 'Space',
       accessor: (space: Space) => (
         <div className="flex items-center">
-          <div className="flex-shrink-0 h-10 w-10">
+          <div className="h-10 w-10 flex-shrink-0">
             {space.iconUrl ? (
               <img src={getFileUrl(space.iconUrl)} alt={space.name} className="h-10 w-10 rounded-full object-cover" />
             ) : (
@@ -113,7 +111,7 @@ const SpaceManagementPage = () => {
             )}
           </div>
           <div className="ml-4">
-            <div className="text-sm font-medium text-dark">{space.name}</div>
+            <div className="text-dark text-sm font-medium">{space.name}</div>
             <div className="text-sm text-gray-500">/{space.slug}</div>
           </div>
         </div>
@@ -167,13 +165,15 @@ const SpaceManagementPage = () => {
                 <Edit className="mr-3 h-4 w-4 text-gray-400" />
                 Edit Space
               </button>
-              <button
-                className="flex w-full items-center px-4 py-2 text-left text-sm text-red-600 hover:bg-gray-50"
-                onClick={() => handleDeletePrompt(space)}
-              >
-                <Trash2 className="mr-3 h-4 w-4 text-red-400" />
-                Delete Space
-              </button>
+              {space.id !== 1 && (
+                <button
+                  className="flex w-full items-center px-4 py-2 text-left text-sm text-red-600 hover:bg-gray-50"
+                  onClick={() => handleDeletePrompt(space)}
+                >
+                  <Trash2 className="mr-3 h-4 w-4 text-red-400" />
+                  Delete Space
+                </button>
+              )}
             </div>
           )}
         </div>
@@ -183,10 +183,10 @@ const SpaceManagementPage = () => {
   ];
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-5">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight text-dark">Spaces Management</h1>
+          <h1 className="text-dark text-2xl font-semibold tracking-tight">Spaces Management</h1>
           <p className="mt-2 text-sm text-gray-500">Manage forum spaces and their properties</p>
         </div>
 
@@ -214,18 +214,7 @@ const SpaceManagementPage = () => {
           onChange: handleSearchChange,
           placeholder: 'Search spaces by name or slug...',
         }}
-      >
-        <button
-          onClick={() => {
-            handleSearchChange('');
-            handleSortChange(SpaceSortBy.name);
-          }}
-          className="inline-flex items-center justify-center rounded-md border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
-        >
-          <RefreshCw className="mr-2 h-4 w-4" />
-          Reset Filters
-        </button>
-      </FilterBar>
+      />
 
       {/* Spaces Table */}
       <div className="rounded-lg border border-gray-100 bg-white">
@@ -255,7 +244,6 @@ const SpaceManagementPage = () => {
             totalItems={meta.totalItems}
             onPageChange={handlePageChange}
             onPageSizeChange={handleLimitChange}
-            pageSizeOptions={[5, 10, 25, 50, 100]}
           />
         )}
       </div>

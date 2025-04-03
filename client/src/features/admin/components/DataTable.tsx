@@ -1,5 +1,6 @@
+import FeedbackDisplay from '@/components/feedback/FeedbackDisplay';
+import LoadingIndicator from '@/components/feedback/LoadinIndicator';
 import { ReactNode } from 'react';
-import { Loader2, AlertTriangle } from 'lucide-react';
 
 interface Column<T> {
   header: string | ReactNode;
@@ -41,44 +42,43 @@ export function DataTable<T>({
   onSortChange,
 }: DataTableProps<T>) {
   if (isLoading) {
-    return (
-      <div className="flex h-64 items-center justify-center">
-        <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-        <span>Loading data...</span>
-      </div>
-    );
+    return <LoadingIndicator fullWidth className="h-64" type="dots" />;
   }
 
   if (isError) {
     return (
-      <div className="flex h-64 flex-col items-center justify-center">
-        <AlertTriangle className="mb-2 h-10 w-10 text-red-500" />
-        <p className="text-lg font-medium text-gray-900">Failed to load data</p>
-        <p className="text-sm text-gray-500">Please try refreshing the page</p>
-        {onRetry && (
-          <button
-            onClick={onRetry}
-            className="mt-4 inline-flex items-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700"
-          >
-            Retry
-          </button>
-        )}
-      </div>
+      <FeedbackDisplay
+        title="Error loading data"
+        description="An error occurred while loading the data. Please try again."
+        variant="error"
+        size="md"
+        actions={[
+          {
+            label: 'Retry',
+            onClick: onRetry,
+            variant: 'outline',
+          },
+        ]}
+        className="h-64"
+      />
     );
   }
 
   if (data.length === 0 && emptyState) {
     return (
       <div className="flex h-64 flex-col items-center justify-center">
-        {emptyState.icon}
-        <p className="text-lg font-medium text-gray-900">{emptyState.title}</p>
-        <p className="text-sm text-gray-500">{emptyState.description}</p>
+        <FeedbackDisplay
+          title={emptyState.title}
+          description={emptyState.description}
+          icon={emptyState.icon}
+          size="md"
+        />
       </div>
     );
   }
 
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto overflow-y-visible">
       <table className="w-full divide-y divide-gray-200">
         <thead className="bg-gray-50">
           <tr>
@@ -89,9 +89,7 @@ export function DataTable<T>({
                   column.className || ''
                 }`}
                 onClick={
-                  column.sortable && onSortChange && column.sortKey
-                    ? () => onSortChange(column.sortKey!)
-                    : undefined
+                  column.sortable && onSortChange && column.sortKey ? () => onSortChange(column.sortKey!) : undefined
                 }
               >
                 {typeof column.header === 'string' && column.sortable ? (
@@ -121,9 +119,7 @@ export function DataTable<T>({
             >
               {columns.map((column, index) => (
                 <td key={index} className={`px-6 py-4 ${column.className || ''}`}>
-                  {typeof column.accessor === 'function'
-                    ? column.accessor(item)
-                    : (item[column.accessor] as ReactNode)}
+                  {typeof column.accessor === 'function' ? column.accessor(item) : (item[column.accessor] as ReactNode)}
                 </td>
               ))}
             </tr>

@@ -29,6 +29,7 @@ export const useDiscussions = (initialFilters: DiscussionsFilters = {}) => {
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ['discussions', filters],
     queryFn: () => discussionApi.getDiscussions(filters),
+    staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
   const handlePageChange = (page: number) => {
@@ -67,6 +68,21 @@ export const useDiscussions = (initialFilters: DiscussionsFilters = {}) => {
     }));
   };
 
+  const handleResetFilters = () => {
+    setFilters((prev) => ({
+      ...prev,
+      page: 1,
+      limit: filters.limit,
+      search: '',
+      spaceId: undefined,
+      tags: undefined,
+      authorId: undefined,
+      isAnonymous: undefined,
+      sortBy: DiscussionSortBy.createdAt,
+      sortOrder: SortOrder.DESC,
+    }));
+  }
+
   return {
     discussions: data?.items || [],
     meta: data?.meta,
@@ -82,5 +98,6 @@ export const useDiscussions = (initialFilters: DiscussionsFilters = {}) => {
     handleAuthorFilterChange,
     handleAnonymousFilterChange,
     handleSortChange,
+    handleResetFilters,
   };
 };

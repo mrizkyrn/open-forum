@@ -1,5 +1,5 @@
 import { AlertTriangle, CheckCircle, Info, LucideIcon, XCircle } from 'lucide-react';
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 
 export type FeedbackVariant = 'default' | 'info' | 'warning' | 'error' | 'success';
@@ -38,6 +38,12 @@ interface FeedbackDisplayProps {
 
   /** Whether to hide the icon */
   hideIcon?: boolean;
+
+  /** Custom icon to override the default variant icon */
+  icon?: ReactNode;
+
+  /** Whether to apply background color to the component */
+  useBackground?: boolean;
 }
 
 const FeedbackDisplay: React.FC<FeedbackDisplayProps> = ({
@@ -49,6 +55,8 @@ const FeedbackDisplay: React.FC<FeedbackDisplayProps> = ({
   className = '',
   compact = false,
   hideIcon = false,
+  icon,
+  useBackground = false,
 }) => {
   // Default icons for each variant
   const defaultIcons: Record<FeedbackVariant, LucideIcon> = {
@@ -64,11 +72,11 @@ const FeedbackDisplay: React.FC<FeedbackDisplayProps> = ({
 
   // Map variant to styles
   const variantStyles = {
-    default: 'bg-white border-gray-200',
-    info: 'bg-blue-50 border-blue-200',
-    warning: 'bg-yellow-50 border-yellow-200',
-    error: 'bg-red-50 border-red-200',
-    success: 'bg-green-50 border-green-200',
+    default: 'bg-white border border-gray-200',
+    info: 'bg-blue-50 border border-blue-200',
+    warning: 'bg-yellow-50 border border-yellow-200',
+    error: 'bg-red-50 border border-red-200',
+    success: 'bg-green-50 border border-green-200',
   };
 
   // Map variant to icon container styles
@@ -152,10 +160,14 @@ const FeedbackDisplay: React.FC<FeedbackDisplayProps> = ({
     );
   };
 
+  const getDefaultIconSize = () => {
+    return size === 'sm' ? 20 : size === 'md' ? 24 : 32;
+  };
+
   return (
     <div
-      className={`flex flex-col items-center rounded-lg border text-center ${
-        variantStyles[variant]
+      className={`flex flex-col items-center rounded-lg text-center ${
+        useBackground && variantStyles[variant]
       } ${sizeStyles[size]} ${className}`}
     >
       {!hideIcon && (
@@ -164,7 +176,16 @@ const FeedbackDisplay: React.FC<FeedbackDisplayProps> = ({
             iconContainerStyles[variant]
           }`}
         >
-          <IconComponent size={size === 'sm' ? 20 : size === 'md' ? 24 : 32} />
+          {icon ? (
+            <div
+              style={{ width: `${getDefaultIconSize()}px`, height: `${getDefaultIconSize()}px` }}
+              className="flex items-center justify-center"
+            >
+              {icon}
+            </div>
+          ) : (
+            <IconComponent size={getDefaultIconSize()} />
+          )}
         </div>
       )}
 

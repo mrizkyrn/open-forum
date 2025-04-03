@@ -47,9 +47,9 @@ const MainButton = React.forwardRef<HTMLButtonElement, MainButtonProps>(
 
     // Size styles
     const sizeStyles = {
-      sm: 'text-xs px-4 py-2',
-      md: 'text-sm px-5 py-2.5',
-      lg: 'text-base px-6 py-4',
+      sm: 'text-xs px-4 h-8',
+      md: 'text-sm px-5 h-9',
+      lg: 'text-base px-6 h-10',
     };
 
     // State styles
