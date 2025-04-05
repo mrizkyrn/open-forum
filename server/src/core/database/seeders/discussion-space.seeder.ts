@@ -24,7 +24,6 @@ export async function seedDiscussionSpaces(dataSource: DataSource, users: User[]
 
   // Create sample spaces
   const spaces = [
-    // General spaces (created by admin)
     spaceRepository.create({
       name: 'General',
       description: 'A place for all general discussions about university life.',
@@ -79,28 +78,4 @@ export async function seedDiscussionSpaces(dataSource: DataSource, users: User[]
   // Save spaces
   const savedSpaces = await spaceRepository.save(spaces);
   console.log(`🌐 Created ${savedSpaces.length} discussion spaces`);
-
-  // Add followers to spaces
-  for (const space of savedSpaces) {
-    // Get random subset of users to follow this space
-    const followers = users.sort(() => Math.random() - 0.5).slice(0, Math.floor(Math.random() * users.length) + 1);
-
-    if (followers.length > 0) {
-      // Update followerCount
-      space.followerCount = followers.length;
-      await spaceRepository.save(space);
-
-      // Add followers via direct query to the join table
-      for (const follower of followers) {
-        await dataSource
-          .createQueryBuilder()
-          .insert()
-          .into('discussion_space_followers')
-          .values({ space_id: space.id, user_id: follower.id })
-          .execute();
-      }
-
-      console.log(`👥 Added ${followers.length} followers to ${space.name}`);
-    }
-  }
 }

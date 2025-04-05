@@ -6,3 +6,5 @@ export * from './jwt/jwt-config.type';
 export * from './jwt/jwt.config';
 export * from './redis/redis-config.type';
 export * from './redis/redis.config';
+export * from './externalApi/external-api-config.type';
+export * from './externalApi/external-api.config';

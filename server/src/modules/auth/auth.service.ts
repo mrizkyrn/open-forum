@@ -1,52 +1,124 @@
+import { HttpService } from '@nestjs/axios';
 import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { LoginDto } from './dto/login.dto';
-import { RegisterDto } from './dto/register.dto';
-import { JwtPayload } from './interfaces/jwt-payload.interface';
-import { UserService } from '../user/user.service';
+import { JwtService } from '@nestjs/jwt';
+import { lastValueFrom } from 'rxjs';
+import { UserRole } from '../../common/enums/user-role.enum';
+import { ExternalApiConfig, JWTConfig } from '../../config';
+import { AcademicService } from '../academic/academic.service';
 import { UserResponseDto } from '../user/dto/user-response.dto';
-import { JWTConfig } from '../../config';
+import { User } from '../user/entities/user.entity';
+import { UserService } from '../user/user.service';
+import { LoginDto } from './dto/login.dto';
+import { JwtPayload } from './interfaces/jwt-payload.interface';
 
 @Injectable()
 export class AuthService {
   private readonly logger = new Logger(AuthService.name);
   private readonly jwtConfig: JWTConfig;
+  private readonly apiConfig: ExternalApiConfig;
 
   constructor(
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
+    private readonly httpService: HttpService,
+    private readonly academicService: AcademicService,
   ) {
     this.jwtConfig = this.configService.get<JWTConfig>('jwt')!;
-  }
-
-  async register(registerDto: RegisterDto) {
-    return await this.userService.create(registerDto);
+    this.apiConfig = this.configService.get<ExternalApiConfig>('externalApi')!;
   }
 
   async login(loginDto: LoginDto) {
     const user = await this.userService.getUserWithCredentials(loginDto.username);
-    if (!user) {
-      throw new UnauthorizedException('Incorrect username or password');
+
+    // If user exists and is admin, verify password
+    if (user && user.role === UserRole.ADMIN && user.password) {
+      const isPasswordValid = await this.userService.verifyPassword(loginDto.password, user.password);
+      if (!isPasswordValid) {
+        throw new UnauthorizedException('Incorrect username or password');
+      }
+
+      const tokens = await this.generateAuthTokens(user);
+      return {
+        user: UserResponseDto.fromEntity(user),
+        ...tokens,
+      };
     }
 
-    const isPasswordValid = await this.userService.verifyPassword(loginDto.password, user.password);
-    if (!isPasswordValid) {
+    // If not admin or user not found, try external authentication for students
+    try {
+      const authenticatedUser = await this.authenticateWithExternalApi(loginDto);
+      const tokens = await this.generateAuthTokens(authenticatedUser);
+
+      return {
+        user: UserResponseDto.fromEntity(authenticatedUser),
+        ...tokens,
+      };
+    } catch (error) {
+      this.logger.error(`External authentication failed: ${error.message}`);
       throw new UnauthorizedException('Incorrect username or password');
     }
+  }
 
-    const tokens = await this.generateAuthTokens(user);
+  private async authenticateWithExternalApi(loginDto: LoginDto): Promise<User> {
+    try {
+      const { data } = await lastValueFrom(
+        this.httpService.post<any>(
+          `${this.apiConfig.baseUrl}/data/auth_mahasiswa`,
+          new URLSearchParams({
+            username: loginDto.username,
+            password: loginDto.password,
+          }).toString(),
+          {
+            auth: {
+              username: this.apiConfig.username,
+              password: this.apiConfig.password,
+            },
+            headers: {
+              API_KEY_NAME: this.apiConfig.keyName,
+              API_KEY_SECRET: this.apiConfig.keySecret,
+            },
+          },
+        ),
+      );
 
-    return {
-      user: UserResponseDto.fromEntity(user),
-      ...tokens,
-    };
+      if (!data || !data.data) {
+        throw new UnauthorizedException('Authentication failed');
+      }
+
+      const studentData = data.data;
+
+      // Find study program by code
+      const studyProgram = await this.academicService.findStudyProgramByCode(studentData.kode_program_studi);
+
+      if (!studyProgram) {
+        this.logger.warn(
+          `Study program with code ${studentData.kode_program_studi} not found for student ${studentData.nim}`,
+        );
+      }
+
+      // Create or update user with external data
+      return await this.userService.createUser({
+        username: studentData.nim,
+        fullName: studentData.nama,
+        gender: studentData.jeniskelamin,
+        batchYear: studentData.angkatan,
+        educationLevel: studentData.program_pendidikan,
+        email: studentData.email,
+        phone: studentData.hp,
+        studyProgramId: studyProgram?.id || null,
+        role: UserRole.STUDENT,
+      });
+    } catch (error) {
+      this.logger.error(`External API authentication error: ${error.message}`, error.stack);
+      throw new UnauthorizedException('External authentication failed');
+    }
   }
 
   async refreshToken(userId: number) {
     try {
-      const user = await this.userService.findById(userId);
+      const user = await this.userService.getUserEntity(userId);
       return this.generateAuthTokens(user);
     } catch (error) {
       this.logger.warn(`Failed token refresh attempt for user ID ${userId}: ${error.message}`);
@@ -54,7 +126,7 @@ export class AuthService {
     }
   }
 
-  private async generateAuthTokens(user: UserResponseDto) {
+  private async generateAuthTokens(user: User) {
     const payload: JwtPayload = {
       sub: user.id,
       username: user.username,

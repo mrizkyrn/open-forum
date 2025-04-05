@@ -41,7 +41,9 @@ export class Discussion extends BaseEntity {
   @Column({ name: 'space_id', nullable: true })
   spaceId: number;
 
-  @ManyToOne(() => DiscussionSpace, (space) => space.discussions)
+  @ManyToOne(() => DiscussionSpace, (space) => space.discussions, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'space_id' })
   space: DiscussionSpace;
 

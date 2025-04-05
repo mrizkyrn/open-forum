@@ -1,11 +1,8 @@
-import * as fs from 'fs';
-import * as path from 'path';
-import { Injectable, BadRequestException, NotFoundException, InternalServerErrorException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
-import { v4 as uuidv4 } from 'uuid';
+import { FileService, FileType } from '../../core/file/file.service';
 import { Attachment, AttachmentType } from './entities/attachment.entity';
-import { FileService, FileType } from 'src/core/file/file.service';
 
 @Injectable()
 export class AttachmentService {

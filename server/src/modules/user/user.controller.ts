@@ -1,28 +1,25 @@
 import {
   BadRequestException,
-  Body,
   Controller,
   Delete,
   Get,
   Param,
   ParseIntPipe,
   Post,
-  Put,
   Query,
   UploadedFile,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBearerAuth, ApiConsumes, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { UserService } from './user.service';
-import { User } from './entities/user.entity';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { ReqUser } from '../../common/decorators/user.decorator';
 import { Pageable } from '../../common/interfaces/pageable.interface';
-import { PageableUserResponseDto, UserResponseDto } from './dto/user-response.dto';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { SearchUserDto } from './dto/search-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { PageableUserResponseDto, UserDetailResponseDto, UserResponseDto } from './dto/user-response.dto';
+import { User } from './entities/user.entity';
+import { UserService } from './user.service';
 
 @ApiBearerAuth()
 @ApiTags('Users')
@@ -45,33 +42,20 @@ export class UserController {
 
   @Get('me')
   @ApiOperation({ summary: 'Get current user profile' })
-  @ApiResponse({ status: 200, description: 'Returns current user profile', type: UserResponseDto })
+  @ApiResponse({ status: 200, description: 'Returns current user profile', type: UserDetailResponseDto })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
-  async getCurrentUser(@ReqUser() currentUser: User): Promise<UserResponseDto> {
+  async getCurrentUser(@ReqUser() currentUser: User): Promise<UserDetailResponseDto> {
     return await this.userService.findById(currentUser.id);
   }
 
   @Get(':id')
   @ApiOperation({ summary: 'Get user by ID' })
   @ApiParam({ name: 'id', description: 'User ID', type: Number })
-  @ApiResponse({ status: 200, description: 'Returns user details', type: UserResponseDto })
+  @ApiResponse({ status: 200, description: 'Returns user details', type: UserDetailResponseDto })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 404, description: 'User not found' })
-  async getUserById(@Param('id', ParseIntPipe) id: number): Promise<UserResponseDto> {
+  async getUserById(@Param('id', ParseIntPipe) id: number): Promise<UserDetailResponseDto> {
     return await this.userService.findById(id);
-  }
-
-  @Put('me')
-  @ApiOperation({ summary: 'Update current user' })
-  @ApiParam({ name: 'id', description: 'User ID', type: Number })
-  @ApiResponse({ status: 200, description: 'User updated successfully', type: UserResponseDto })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 404, description: 'User not found' })
-  async updateCurrentUser(
-    @ReqUser() currentUser: User,
-    @Body() updateUserDto: UpdateUserDto,
-  ): Promise<UserResponseDto> {
-    return await this.userService.update(currentUser.id, updateUserDto);
   }
 
   @Post('me/avatar')

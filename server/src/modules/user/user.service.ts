@@ -1,13 +1,15 @@
 import { BadRequestException, ConflictException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
+import { UserRole } from 'src/common/enums/user-role.enum';
 import { Between, Repository, SelectQueryBuilder } from 'typeorm';
 import { Pageable } from '../../common/interfaces/pageable.interface';
 import { FileService } from '../../core/file/file.service';
+import { CreateAdminDto } from './dto/create-admin.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { SearchUserDto } from './dto/search-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { UserResponseDto } from './dto/user-response.dto';
+import { UserDetailResponseDto, UserResponseDto } from './dto/user-response.dto';
 import { User } from './entities/user.entity';
 
 @Injectable()
@@ -24,25 +26,67 @@ export class UserService {
 
   // ----- Core CRUD Operations -----
 
-  async create(createUserDto: CreateUserDto): Promise<UserResponseDto> {
+  async createAdmin(createAdminDto: CreateAdminDto): Promise<UserResponseDto> {
     const existingUser = await this.userRepository.findOne({
-      where: { username: createUserDto.username },
+      where: { username: createAdminDto.username },
     });
 
     if (existingUser) {
       throw new ConflictException('Username already exists');
     }
 
-    const hashedPassword = await this.hashPassword(createUserDto.password);
+    const hashedPassword = await this.hashPassword(createAdminDto.password);
     const newUser = this.userRepository.create({
-      username: createUserDto.username,
+      username: createAdminDto.username,
       password: hashedPassword,
-      fullName: createUserDto.fullName,
-      role: createUserDto.role,
+      fullName: createAdminDto.fullName,
+      role: UserRole.ADMIN,
+      email: createAdminDto.email,
     });
 
     const savedUser = await this.userRepository.save(newUser);
     return UserResponseDto.fromEntity(savedUser);
+  }
+
+  async createUser(userData: CreateUserDto): Promise<User> {
+    if (!userData.username) {
+      throw new BadRequestException('Username is required');
+    }
+    let user = await this.userRepository.findOne({
+      where: { username: userData.username },
+    });
+
+    if (user) {
+      Object.assign(user, {
+        fullName: userData.fullName,
+        gender: userData.gender,
+        batchYear: userData.batchYear,
+        educationLevel: userData.educationLevel,
+        studyProgramId: userData.studyProgramId,
+        email: userData.email || user.email,
+        phone: userData.phone || user.phone,
+      });
+    } else {
+      user = this.userRepository.create({
+        username: userData.username,
+        fullName: userData.fullName,
+        gender: userData.gender,
+        batchYear: userData.batchYear,
+        educationLevel: userData.educationLevel,
+        studyProgramId: userData.studyProgramId,
+        email: userData.email,
+        phone: userData.phone,
+        role: UserRole.STUDENT,
+        password: null,
+      });
+    }
+
+    try {
+      return await this.userRepository.save(user);
+    } catch (error) {
+      this.logger.error(`Failed to create/update user from external data: ${error.message}`, error.stack);
+      throw new BadRequestException('Failed to create user from external data');
+    }
   }
 
   async findAll(searchDto: SearchUserDto): Promise<Pageable<UserResponseDto>> {
@@ -55,13 +99,21 @@ export class UserService {
     return this.createPaginatedResponse(users, totalItems, page, limit);
   }
 
-  async findById(id: number): Promise<UserResponseDto> {
-    const user = await this.getUserEntityById(id);
-    return UserResponseDto.fromEntity(user);
+  async findById(id: number): Promise<UserDetailResponseDto> {
+    const user = await this.getUserEntity(id, ['studyProgram', 'studyProgram.faculty']);
+    return UserDetailResponseDto.fromEntity(user);
+  }
+
+  async findByUsername(username: string): Promise<User | null> {
+    return this.userRepository.findOne({ where: { username } });
   }
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<UserResponseDto> {
     const user = await this.getUserEntityById(id);
+
+    if (user.role !== UserRole.ADMIN) {
+      throw new BadRequestException('Only admins can be updated');
+    }
 
     if (updateUserDto.fullName) user.fullName = updateUserDto.fullName;
     if (updateUserDto.role !== undefined) user.role = updateUserDto.role;
@@ -144,6 +196,17 @@ export class UserService {
   }
 
   // ----- Other Operations -----
+
+  async getUserEntity(id: number, relations: string[] = []): Promise<User> {
+    const user = await this.userRepository.findOne({
+      where: { id },
+      relations,
+    });
+    if (!user) {
+      throw new NotFoundException(`User with ID ${id} not found`);
+    }
+    return user;
+  }
 
   async countTotal(): Promise<number> {
     return this.userRepository.count();

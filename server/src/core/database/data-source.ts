@@ -1,5 +1,7 @@
 import 'dotenv/config';
 import { DataSource } from 'typeorm';
+import { Faculty } from '../../modules/academic/entity/faculty.entity';
+import { StudyProgram } from '../../modules/academic/entity/study-program.entity';
 import { UserActivity } from '../../modules/analytic/entities/user-activity.entity';
 import { Attachment } from '../../modules/attachment/entities/attachment.entity';
 import { CommentMention } from '../../modules/comment/entities/comment-mention.entity';
@@ -35,6 +37,8 @@ export default new DataSource({
     ReportReason,
     Notification,
     UserActivity,
+    Faculty,
+    StudyProgram,
   ],
   migrations: ['src/core/database/migrations/*{.ts,.js}'],
   migrationsTableName: 'typeorm_migrations',

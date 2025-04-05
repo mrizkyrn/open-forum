@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, DeleteDateColumn, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { CreateDateColumn, DeleteDateColumn, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 export class BaseEntity {
   @PrimaryGeneratedColumn('increment')
@@ -14,7 +14,7 @@ export class BaseEntity {
     onUpdate: 'CURRENT_TIMESTAMP',
   })
   updatedAt: Date;
-  
+
   @DeleteDateColumn({ name: 'deleted_at', type: 'timestamp', nullable: true })
   deletedAt?: Date;
 }
