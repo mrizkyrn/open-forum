@@ -11,7 +11,7 @@ import { useEffect, useState } from 'react';
 import DiscussionPostSkeleton from './DiscussionPostSkeleton';
 
 interface DiscussionPostProps {
-  search?: Partial<SearchDiscussionDto>;
+  search?: SearchDiscussionDto;
   preselectedSpaceId?: number;
   feedType?: DiscussionFeedType;
 }
@@ -141,11 +141,6 @@ const DiscussionPost: React.FC<DiscussionPostProps> = ({ search, preselectedSpac
 
         {/* Invisible element for intersection observer */}
         {hasNextPage && <div ref={observerRef} className="bgre h-5" />}
-
-        {/* End of results message */}
-        {!hasNextPage && discussions.length > 0 && (
-          <div className="py-3 text-center text-gray-500">You've reached the end of discussions</div>
-        )}
       </div>
 
       <CreateDiscussionModal

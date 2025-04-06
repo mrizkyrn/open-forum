@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { userApi } from '../services/userApi';
+import { userApi } from '../services';
 import { SortOrder, UserRole, UserSortBy } from '../types';
 
 export interface UserFilters {
@@ -31,8 +31,7 @@ export function useUsers(initialFilters: Partial<UserFilters> = {}) {
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
-  const { data, isLoading, error } = queryResult;
-
+  const { data, isLoading, isError } = queryResult;
 
   const handlePageChange = (page: number) => {
     setFilters((prev) => ({ ...prev, page }));
@@ -76,7 +75,7 @@ export function useUsers(initialFilters: Partial<UserFilters> = {}) {
     users: data?.items || [],
     meta: data?.meta,
     isLoading,
-    error,
+    isError,
     filters,
     handlePageChange,
     handleLimitChange,

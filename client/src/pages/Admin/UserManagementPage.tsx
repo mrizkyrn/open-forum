@@ -38,6 +38,7 @@ const UserManagementPage = () => {
     users,
     meta,
     isLoading,
+    isError,
     filters,
     handlePageChange,
     handleLimitChange,
@@ -225,6 +226,7 @@ const UserManagementPage = () => {
           data={users}
           columns={columns}
           isLoading={isLoading}
+          isError={isError}
           keyExtractor={(user) => user.id}
           currentSortKey={filters.sortBy}
           sortOrder={filters.sortOrder}

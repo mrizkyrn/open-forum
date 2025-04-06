@@ -45,6 +45,12 @@ export const authReducer = (state: AuthState, action: AuthAction): AuthState => 
         error: null,
       };
 
+    case 'UPDATE_USER':
+      return {
+        ...state,
+        user: action.payload.user,
+      };
+
     case 'REFRESH_TOKEN':
       return {
         ...state,

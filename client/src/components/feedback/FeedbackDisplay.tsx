@@ -166,7 +166,7 @@ const FeedbackDisplay: React.FC<FeedbackDisplayProps> = ({
 
   return (
     <div
-      className={`flex flex-col items-center rounded-lg text-center ${
+      className={`flex flex-col items-center justify-center rounded-lg text-center ${
         useBackground && variantStyles[variant]
       } ${sizeStyles[size]} ${className}`}
     >

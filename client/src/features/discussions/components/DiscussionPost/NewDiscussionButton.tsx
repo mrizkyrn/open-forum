@@ -14,7 +14,7 @@ const NewDiscussionButton: React.FC<NewDiscussionButtonProps> = ({ preselectedSp
 
   return (
     <>
-      <div className={` flex w-full items-center gap-2 rounded-xl bg-white p-4 border border-gray-100 ${className}`}>
+      <div className={`flex w-full items-center gap-2 rounded-xl border border-gray-100 bg-white p-4 ${className}`}>
         <UserAvatar fullName={user?.fullName} avatarUrl={user?.avatarUrl} size="sm" />
         <button
           onClick={() => setIsModalOpen(true)}

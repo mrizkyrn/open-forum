@@ -1,13 +1,13 @@
+import { ConflictException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { ConflictException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
+import { Repository } from 'typeorm';
 
-import { UserService } from './user.service';
-import { User } from './entities/user.entity';
-import { CreateUserDto } from './dto/create-user.dto';
 import { UserRole } from '../../common/enums/user-role.enum';
+import { CreateUserDto } from './dto/create-external-user.dto';
+import { User } from './entities/user.entity';
+import { UserService } from './user.service';
 
 // Mock bcrypt
 jest.mock('bcrypt');

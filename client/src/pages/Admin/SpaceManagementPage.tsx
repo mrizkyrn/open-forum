@@ -1,13 +1,13 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns';
-import { Boxes, Download, Edit, MoreHorizontal, Plus, Trash2 } from 'lucide-react';
+import { Boxes, Edit, MoreHorizontal, Plus, Trash2 } from 'lucide-react';
 import { useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import ConfirmationModal from '@/components/modals/ConfirmationModal';
-import MainButton from '@/components/ui/buttons/MainButton';
 import { DataTable } from '@/features/admin/components/DataTable';
 import FilterBar from '@/features/admin/components/FilterBar';
+import PageHeader from '@/features/admin/components/PageHeader';
 import Pagination from '@/features/admin/components/Pagination';
 import SpaceFormModal from '@/features/admin/components/SpaceFormModal';
 import { adminApi } from '@/features/admin/services';
@@ -36,6 +36,7 @@ const SpaceManagementPage = () => {
     spaces,
     meta,
     isLoading,
+    isError,
     filters,
     handlePageChange,
     handleLimitChange,
@@ -184,28 +185,16 @@ const SpaceManagementPage = () => {
 
   return (
     <div className="space-y-5">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-dark text-2xl font-semibold tracking-tight">Spaces Management</h1>
-          <p className="mt-2 text-sm text-gray-500">Manage forum spaces and their properties</p>
-        </div>
-
-        {/* Action buttons and filters */}
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <div className="flex gap-2">
-            <MainButton onClick={handleNewSpace} leftIcon={<Plus size={16} />}>
-              New Space
-            </MainButton>
-            <button
-              onClick={handleExportSpaces}
-              className="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50"
-            >
-              <Download size={16} className="mr-2" />
-              Export
-            </button>
-          </div>
-        </div>
-      </div>
+      <PageHeader
+        title="Space Management"
+        description="Manage forum spaces and their properties"
+        showNewButton
+        showExportButton
+        onNewClick={handleNewSpace}
+        onExportClick={handleExportSpaces}
+        newButtonText="New Space"
+        newButtonIcon={<Plus size={16} />}
+      />
 
       {/* Filters */}
       <FilterBar
@@ -222,6 +211,7 @@ const SpaceManagementPage = () => {
           data={spaces}
           columns={columns}
           isLoading={isLoading}
+          isError={isError}
           keyExtractor={(space) => space.id}
           currentSortKey={filters.sortBy}
           sortOrder={filters.sortOrder}

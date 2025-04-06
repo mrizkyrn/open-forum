@@ -6,7 +6,7 @@ import { Between, Repository, SelectQueryBuilder } from 'typeorm';
 import { Pageable } from '../../common/interfaces/pageable.interface';
 import { FileService } from '../../core/file/file.service';
 import { CreateAdminDto } from './dto/create-admin.dto';
-import { CreateUserDto } from './dto/create-user.dto';
+import { CreateExternalUserDto } from './dto/create-external-user.dto';
 import { SearchUserDto } from './dto/search-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserDetailResponseDto, UserResponseDto } from './dto/user-response.dto';
@@ -48,7 +48,7 @@ export class UserService {
     return UserResponseDto.fromEntity(savedUser);
   }
 
-  async createUser(userData: CreateUserDto): Promise<User> {
+  async createExternalUser(userData: CreateExternalUserDto): Promise<User> {
     if (!userData.username) {
       throw new BadRequestException('Username is required');
     }
@@ -78,6 +78,7 @@ export class UserService {
         phone: userData.phone,
         role: UserRole.STUDENT,
         password: null,
+        isExternalUser: true,
       });
     }
 
@@ -104,8 +105,17 @@ export class UserService {
     return UserDetailResponseDto.fromEntity(user);
   }
 
-  async findByUsername(username: string): Promise<User | null> {
-    return this.userRepository.findOne({ where: { username } });
+  async findByUsername(username: string): Promise<UserDetailResponseDto> {
+    const user = await this.userRepository.findOne({
+      where: { username },
+      relations: ['studyProgram', 'studyProgram.faculty'],
+    });
+
+    if (!user) {
+      throw new NotFoundException(`User with username ${username} not found`);
+    }
+
+    return UserDetailResponseDto.fromEntity(user);
   }
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<UserResponseDto> {

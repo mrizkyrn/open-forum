@@ -58,6 +58,16 @@ export class UserController {
     return await this.userService.findById(id);
   }
 
+  @Get('username/:username')
+  @ApiOperation({ summary: 'Get user by username' })
+  @ApiParam({ name: 'username', description: 'Username', type: String })
+  @ApiResponse({ status: 200, description: 'Returns user details', type: UserDetailResponseDto })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 404, description: 'User not found' })
+  async getUserByUsername(@Param('username') username: string): Promise<UserDetailResponseDto> {
+    return await this.userService.findByUsername(username);
+  }
+
   @Post('me/avatar')
   @UseInterceptors(FileInterceptor('avatar'))
   @ApiOperation({ summary: 'Upload avatar for current user' })

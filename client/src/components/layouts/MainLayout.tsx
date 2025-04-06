@@ -1,15 +1,15 @@
 import { useAuth } from '@/features/auth/hooks/useAuth';
+import { CreateDiscussionModal } from '@/features/discussions/components';
 import { notificationApi } from '@/features/notifications/services/notificationApi';
 import { useSocket } from '@/hooks/useSocket';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { Bell, Bookmark, Home, Layers, LogOut, Menu, Search, User } from 'lucide-react';
+import { Bell, Bookmark, Home, Layers, LogOut, Menu, Plus, Search, User, X } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import LeftSidebar, { NavItem } from './LeftSidebar';
 import Logo from './Logo';
 import RightSidebar from './RightSidebar';
 import UserAvatar from './UserAvatar';
-import { CreateDiscussionModal } from '@/features/discussions/components';
 
 const MobileNavItem = ({
   item,
@@ -33,6 +33,30 @@ const MobileNavItem = ({
         )}
       </div>
       <span className={`mt-1 text-xs ${isActive ? 'text-primary font-medium' : 'text-gray-500'}`}>{item.name}</span>
+    </button>
+  );
+};
+
+const MobileMenuItem = ({
+  icon,
+  label,
+  onClick,
+  isDanger = false,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  onClick: () => void;
+  isDanger?: boolean;
+}) => {
+  return (
+    <button
+      onClick={onClick}
+      className={`flex w-full items-center rounded-md px-4 py-3 text-sm transition-colors ${
+        isDanger ? 'text-red-600 hover:bg-red-50' : 'text-gray-700 hover:bg-gray-50'
+      }`}
+    >
+      <span className={`mr-3 ${isDanger ? 'text-red-500' : 'text-gray-500'}`}>{icon}</span>
+      <span>{label}</span>
     </button>
   );
 };
@@ -98,12 +122,19 @@ const MainLayout = () => {
   const onLogout = async () => {
     try {
       await logout();
+      setMobileMenuOpen(false);
     } catch (error) {
       console.error('Logout failed:', error);
     }
   };
 
-  // Navigation items
+  // Navigate to a path and close mobile menu
+  const navigateAndClose = (path: string) => {
+    navigate(path);
+    setMobileMenuOpen(false);
+  };
+
+  // Navigation items (excluding Profile and Bookmarks for mobile)
   const navItems: NavItem[] = [
     { name: 'Home', path: '/', icon: <Home size={20} /> },
     { name: 'Spaces', path: '/spaces', icon: <Layers size={20} /> },
@@ -114,7 +145,16 @@ const MainLayout = () => {
       icon: <Bell size={20} />,
       badge: unreadCount > 0 || newNotificationReceived,
     },
-    { name: 'Profile', path: '/profile', icon: <User size={20} /> },
+  ];
+
+  // Full navigation items for desktop
+  const desktopNavItems: NavItem[] = [
+    ...navItems,
+    {
+      name: 'Profile',
+      path: user?.username ? `/profile/${user.username}` : '/profile',
+      icon: <User size={20} />,
+    },
     { name: 'Bookmarks', path: '/bookmarks', icon: <Bookmark size={20} /> },
   ];
 
@@ -167,36 +207,80 @@ const MainLayout = () => {
       </div>
 
       {/* Mobile Menu */}
-      {mobileMenuOpen && (
-        <div className="fixed inset-0 z-50 bg-black/50 sm:hidden" onClick={() => setMobileMenuOpen(false)}>
-          <div
-            className="absolute top-0 right-0 h-full w-64 bg-white p-4 shadow-lg"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="mb-6 flex items-center">
-              <UserAvatar fullName={user?.fullName} avatarUrl={user?.avatarUrl} size="md" />
-              <div className="ml-3">
-                <p className="font-medium text-gray-800">{user?.fullName || 'User'}</p>
-                <p className="text-sm text-gray-500">@{user?.username || 'username'}</p>
-              </div>
-            </div>
+      <div
+        className={`fixed inset-0 z-50 bg-black/50 transition-opacity duration-300 ease-in-out sm:hidden ${
+          mobileMenuOpen ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'
+        }`}
+        onClick={() => setMobileMenuOpen(false)}
+      >
+        <div
+          className={`absolute top-0 right-0 flex h-full w-72 flex-col bg-white shadow-lg transition-transform duration-300 ease-in-out ${
+            mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
+          }`}
+          onClick={(e) => e.stopPropagation()}
+        >
+          {/* Menu Header with Close Button */}
+          <div className="flex items-center justify-between border-b border-gray-100 p-4">
+            <h2 className="text-lg font-semibold text-gray-800">Menu</h2>
+            {/* Close Button */}
             <button
-              onClick={onLogout}
-              className="flex w-full items-center rounded-md px-4 py-2 text-red-600 hover:bg-red-50"
+              onClick={() => setMobileMenuOpen(false)}
+              className="rounded-full p-1 text-gray-500 hover:bg-gray-100"
             >
-              <LogOut size={18} className="mr-3" />
-              <span>Logout</span>
+              <X size={20} />
             </button>
           </div>
+
+          {/* User Profile Section */}
+          <div className="border-b border-gray-100 p-4">
+            <UserAvatar fullName={user?.fullName} avatarUrl={user?.avatarUrl} size="md" />
+            <div className="mt-2 flex flex-col items-start">
+              <p className="font-medium text-gray-800">{user?.fullName || 'User'}</p>
+              <p className="text-sm text-gray-500">@{user?.username || 'username'}</p>
+            </div>
+          </div>
+
+          {/* Menu Items - Main Content Area */}
+          <div className="flex-1 overflow-y-auto">
+            <MobileMenuItem
+              icon={<User size={18} />}
+              label="Profile"
+              onClick={() => navigateAndClose(user?.username ? `/profile/${user.username}` : '/profile')}
+            />
+            <MobileMenuItem
+              icon={<Bookmark size={18} />}
+              label="Bookmarks"
+              onClick={() => navigateAndClose('/bookmarks')}
+            />
+
+            {/* Create Discussion */}
+            <div className="mt-4 px-4 py-3">
+              <button
+                onClick={() => {
+                  setIsCreateModalOpen(true);
+                  setMobileMenuOpen(false);
+                }}
+                className="bg-primary flex w-full items-center justify-center rounded-md px-4 py-2 text-sm font-medium text-white"
+              >
+                <Plus size={16} className="mr-2" />
+                Create Discussion
+              </button>
+            </div>
+          </div>
+
+          {/* Logout placed at the bottom with margin-top auto */}
+          <div className="mt-auto border-t border-gray-100">
+            <MobileMenuItem icon={<LogOut size={18} />} label="Logout" onClick={onLogout} isDanger />
+          </div>
         </div>
-      )}
+      </div>
 
       {/* Three-column Layout with fixed-width sidebar */}
-      <div className="mx-auto flex max-w-7xl pt-14 sm:pt-0">
+      <div className="mx-auto flex max-w-7xl">
         {/* Left Sidebar */}
         <div className="hidden flex-shrink-0 sm:block">
           <LeftSidebar
-            navItems={navItems}
+            navItems={desktopNavItems}
             isNavItemActive={isNavItemActive}
             unreadCount={unreadCount}
             user={user}
@@ -210,7 +294,7 @@ const MainLayout = () => {
         <div className="flex-grow">
           <div className="grid grid-cols-12">
             {/* Middle Column: Main Content */}
-            <div className="col-span-12 min-h-screen bg-white md:col-span-8">
+            <div className="col-span-12 min-h-screen bg-light py-14 sm:py-0 md:col-span-8">
               <div className="p-4">
                 <Outlet />
               </div>
@@ -224,10 +308,10 @@ const MainLayout = () => {
         </div>
       </div>
 
-      {/* Bottom Navigation for Mobile */}
+      {/* Bottom Navigation for Mobile - Now with only 4 items */}
       <div className="fixed right-0 bottom-0 left-0 z-20 border-t border-gray-100 bg-white sm:hidden">
         <div className="flex h-16 items-center justify-around px-2">
-          {navItems.slice(0, 5).map((item) => (
+          {navItems.map((item) => (
             <MobileNavItem
               key={item.name}
               item={item}

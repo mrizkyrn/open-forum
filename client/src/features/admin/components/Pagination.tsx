@@ -128,20 +128,20 @@ const Pagination: React.FC<PaginationProps> = ({
   return (
     <div className="flex flex-col-reverse gap-4 border-t border-gray-200 px-4 py-3 md:flex-row md:items-center md:justify-between md:px-6">
       {/* Page size selector and info text */}
-      <div className="flex flex-col space-y-2 text-md text-gray-700 md:flex-row md:items-center md:space-y-0 md:space-x-4">
+      <div className="text-md flex flex-col space-y-2 text-sm text-gray-700 md:flex-row md:items-center md:space-y-0 md:space-x-4">
         <span>
           Showing <span className="font-medium">{startItem}</span> to <span className="font-medium">{endItem}</span> of{' '}
           <span className="font-medium">{totalItems}</span> results
         </span>
 
         {onPageSizeChange && (
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2 text-sm">
             <label htmlFor="page-size" className="whitespace-nowrap">
               Items per page:
             </label>
             <select
               id="page-size"
-              className="block rounded-md border-gray-300 py-1 pr-8 pl-2 text-md focus:border-blue-500 focus:ring-blue-500"
+              className="text-md block rounded-md border-gray-300 py-1 pr-8 pl-2 focus:border-blue-500 focus:ring-blue-500"
               value={pageSize}
               onChange={(e) => onPageSizeChange(Number(e.target.value))}
             >
@@ -165,12 +165,11 @@ const Pagination: React.FC<PaginationProps> = ({
               <button
                 onClick={() => hasPreviousPage && onPageChange(currentPage - 1)}
                 disabled={!hasPreviousPage}
-                className={`relative inline-flex items-center rounded-l-md border border-gray-300 bg-white px-2 py-2 text-md font-medium ${
+                className={`text-md relative inline-flex items-center rounded-l-md border border-gray-300 bg-white p-2 font-medium ${
                   hasPreviousPage ? 'text-gray-500 hover:bg-gray-50' : 'cursor-not-allowed text-gray-300'
                 }`}
               >
-                <span className="sr-only">Previous</span>
-                <ChevronLeft className="h-5 w-5" aria-hidden="true" />
+                <ChevronLeft size={16} aria-hidden="true" />
               </button>
 
               {/* Page buttons */}
@@ -178,7 +177,7 @@ const Pagination: React.FC<PaginationProps> = ({
                 page === 'ellipsis' ? (
                   <span
                     key={`ellipsis-${idx}`}
-                    className="relative inline-flex items-center border border-gray-300 bg-white px-4 py-2 text-md font-medium text-gray-700"
+                    className="text-md relative inline-flex items-center border border-gray-300 bg-white px-4 py-2 font-medium text-gray-700"
                   >
                     &hellip;
                   </span>
@@ -187,7 +186,7 @@ const Pagination: React.FC<PaginationProps> = ({
                     key={page}
                     onClick={() => onPageChange(page)}
                     aria-current={page === currentPage ? 'page' : undefined}
-                    className={`relative inline-flex items-center border px-4 py-2 text-md font-medium ${
+                    className={`relative inline-flex items-center border px-4 py-2 text-xs font-medium ${
                       page === currentPage
                         ? 'z-10 border-blue-500 bg-blue-50 text-blue-600'
                         : 'border-gray-300 bg-white text-gray-500 hover:bg-gray-50'
@@ -202,12 +201,11 @@ const Pagination: React.FC<PaginationProps> = ({
               <button
                 onClick={() => hasNextPage && onPageChange(currentPage + 1)}
                 disabled={!hasNextPage}
-                className={`relative inline-flex items-center rounded-r-md border border-gray-300 bg-white px-2 py-2 text-md font-medium ${
+                className={`text-md relative inline-flex items-center rounded-r-md border border-gray-300 bg-white p-2 font-medium ${
                   hasNextPage ? 'text-gray-500 hover:bg-gray-50' : 'cursor-not-allowed text-gray-300'
                 }`}
               >
-                <span className="sr-only">Next</span>
-                <ChevronRight className="h-5 w-5" aria-hidden="true" />
+                <ChevronRight size={16} aria-hidden="true" />
               </button>
             </nav>
           </div>

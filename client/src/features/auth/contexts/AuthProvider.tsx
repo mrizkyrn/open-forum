@@ -1,11 +1,11 @@
-import { useCallback, useEffect, useReducer } from 'react';
-import { storageUtils } from '@/utils/storage';
 import { authApi } from '@/features/auth/services/authApi';
 import { LoginRequest, RegisterRequest } from '@/features/auth/types';
+import { User } from '@/features/users/types';
+import { storageUtils } from '@/utils/storage';
+import { useQueryClient } from '@tanstack/react-query';
+import { useCallback, useEffect, useReducer } from 'react';
 import { AuthContext } from './AuthContext';
 import { authReducer, initialState } from './reducer';
-import { User } from '@/features/users/types';
-import { useQueryClient } from '@tanstack/react-query';
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const queryClient = useQueryClient();
@@ -65,7 +65,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       dispatch({ type: 'AUTH_SUCCESS', payload: { user, accessToken } });
 
       queryClient.clear();
-      
+
       return user;
     } catch (error) {
       console.error('Login failed:', error);
@@ -106,6 +106,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     dispatch({ type: 'CLEAR_ERROR' });
   };
 
+  const updateUser = useCallback(
+    (userData: Partial<User>) => {
+      if (state.user) {
+        const updatedUser = { ...state.user, ...userData };
+        storageUtils.setUser(updatedUser);
+        dispatch({
+          type: 'UPDATE_USER',
+          payload: { user: updatedUser },
+        });
+      }
+    },
+    [state.user],
+  );
+
   // Context value
   const contextValue = {
     // State
@@ -119,6 +133,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     login,
     logout,
     register,
+    updateUser,
     clearError,
     refreshToken,
   };

@@ -1,27 +1,10 @@
-import { handleApiError } from '@/utils/helpers';
+import { SearchUserParams, User, UserDetail } from '@/features/users/types';
 import { apiClient } from '@/services/client';
-import { SearchUserParams, User, UserRole } from '@/features/users/types';
 import { ApiResponse, PaginatedResponse } from '@/types/ResponseTypes';
-
-// Type for creating a new user
-export interface CreateUserDto {
-  username: string;
-  password: string;
-  fullName: string;
-  role: UserRole;
-}
-
-// Type for updating an existing user
-export interface UpdateUserDto {
-  fullName?: string;
-  role?: UserRole;
-}
+import { handleApiError } from '@/utils/helpers';
 
 // User API service with comprehensive error handling
 export const userApi = {
-  /**
-   * Get paginated list of users with filters
-   */
   async getUsers(params: SearchUserParams): Promise<PaginatedResponse<User>> {
     try {
       const response = await apiClient.get<ApiResponse<PaginatedResponse<User>>>('/users', {
@@ -33,9 +16,6 @@ export const userApi = {
     }
   },
 
-  /**
-   * Get a specific user by ID
-   */
   async getUserById(id: number): Promise<User> {
     try {
       const response = await apiClient.get<ApiResponse<User>>(`/users/${id}`);
@@ -45,33 +25,24 @@ export const userApi = {
     }
   },
 
-  /**
-   * Get current authenticated user's profile
-   */
-  async getCurrentUser(): Promise<User> {
+  async getUserByUsername(username: string): Promise<UserDetail> {
     try {
-      const response = await apiClient.get<ApiResponse<User>>('/users/me');
+      const response = await apiClient.get<ApiResponse<UserDetail>>(`/users/username/${username}`);
+      return response.data.data;
+    } catch (error: any) {
+      return handleApiError(error, 'Failed to fetch user by username');
+    }
+  },
+
+  async getCurrentUser(): Promise<UserDetail> {
+    try {
+      const response = await apiClient.get<ApiResponse<UserDetail>>('/users/me');
       return response.data.data;
     } catch (error: any) {
       return handleApiError(error, 'Failed to fetch current user profile');
     }
   },
 
-  /**
-   * Update current user's profile
-   */
-  async updateCurrentUser(data: UpdateUserDto): Promise<User> {
-    try {
-      const response = await apiClient.put<ApiResponse<User>>('/users/me', data);
-      return response.data.data;
-    } catch (error: any) {
-      throw handleApiError(error, 'Failed to update profile');
-    }
-  },
-
-  /**
-   * Upload avatar for current user
-   */
   async uploadAvatar(file: File): Promise<User> {
     try {
       const formData = new FormData();
@@ -88,9 +59,6 @@ export const userApi = {
     }
   },
 
-  /**
-   * Remove current user's avatar
-   */
   async removeAvatar(): Promise<User> {
     try {
       const response = await apiClient.delete<ApiResponse<User>>('/users/me/avatar');

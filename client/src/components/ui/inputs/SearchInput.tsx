@@ -55,7 +55,7 @@ export const SearchInput: React.FC<SearchInputProps> = ({
   const iconSize = size === 'sm' ? 14 : size === 'md' ? 16 : 18;
 
   return (
-    <div className="relative w-full">
+    <div className="relative w-full bg-white">
       <input
         type="text"
         value={value}

@@ -13,9 +13,12 @@ const SpacesPage = lazy(() => import('@/pages/SpacesPage'));
 const SpaceDetailPage = lazy(() => import('@/pages/SpaceDetail'));
 const SearchPage = lazy(() => import('@/pages/SearchPage'));
 const NotificationsPage = lazy(() => import('@/pages/NotificationsPage'));
+const UserProfilePage = lazy(() => import('@/pages/UserProfilePage'));
 const BookmarksPage = lazy(() => import('@/pages/BookmarksPage'));
 const OverviewPage = lazy(() => import('@/pages/Admin/OverviewPage'));
 const UserManagementPage = lazy(() => import('@/pages/Admin/UserManagementPage'));
+const FacultyManagementPage = lazy(() => import('@/pages/Admin/FacultyManagementPage'));
+const StudyProgramManagementPage = lazy(() => import('@/pages/Admin/StudyProgramManagementPage'));
 const DiscussionManagementPage = lazy(() => import('@/pages/Admin/DiscussionManagementPage'));
 const SpaceManagementPage = lazy(() => import('@/pages/Admin/SpaceManagementPage'));
 const ReportManagementPage = lazy(() => import('@/pages/Admin/ReportManagementPage'));
@@ -59,9 +62,13 @@ const routes = [
         element: lazyLoad(NotificationsPage),
       },
       {
+        path: '/profile/:username',
+        element: lazyLoad(UserProfilePage),
+      },
+      {
         path: '/bookmarks',
         element: lazyLoad(BookmarksPage),
-      }
+      },
     ],
   },
   {
@@ -75,6 +82,14 @@ const routes = [
       {
         path: 'users',
         element: lazyLoad(UserManagementPage),
+      },
+      {
+        path: 'faculties',
+        element: lazyLoad(FacultyManagementPage),
+      },
+      {
+        path: 'study-programs',
+        element: lazyLoad(StudyProgramManagementPage),
       },
       {
         path: 'discussions',

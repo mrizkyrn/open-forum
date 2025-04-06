@@ -45,4 +45,7 @@ export class User extends BaseEntity {
 
   @Column({ name: 'last_active_at', type: 'timestamp', nullable: true })
   lastActiveAt: Date | null;
+
+  @Column({ name: 'is_external', type: 'boolean', default: false })
+  isExternalUser: boolean;
 }

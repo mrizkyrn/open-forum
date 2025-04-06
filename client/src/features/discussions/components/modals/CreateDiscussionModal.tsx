@@ -169,13 +169,20 @@ const CreateDiscussionModal: React.FC<CreateDiscussionModalProps> = ({ preselect
                   )}
                 </h3>
               </div>
-              <p className="text-xs text-gray-500">
+              {isSpaceLoading ? (
+                <div className="mt-1 h-3 w-40 animate-pulse rounded bg-gray-200"></div>
+              ) : spaceInfo ? (
+                <p className="text-sm text-gray-500">{spaceInfo.description}</p>
+              ) : (
+                <p className="text-sm text-gray-500">No description available</p>
+              )}
+              {/* <p className="text-xs text-gray-500">
                 {isSpaceLoading ? (
                   <div className="mt-1 h-3 w-40 animate-pulse rounded bg-gray-200"></div>
                 ) : (
                   "You're creating a discussion in this space"
                 )}
-              </p>
+              </p> */}
             </div>
           </div>
         </div>

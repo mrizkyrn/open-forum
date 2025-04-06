@@ -1,6 +1,16 @@
 import { useAuth } from '@/features/auth/hooks/useAuth';
 import { UserRole } from '@/features/users/types';
-import { BarChart2, Flag, FolderKanban, LayoutDashboard, MessagesSquare, Settings, Users } from 'lucide-react';
+import {
+  BarChart2,
+  BookOpen,
+  Building,
+  Flag,
+  FolderKanban,
+  LayoutDashboard,
+  MessagesSquare,
+  Settings,
+  Users,
+} from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import AdminSidebar from './AdminSidebar';
@@ -35,6 +45,8 @@ const AdminLayout = () => {
   const menuItems: MenuItem[] = [
     { icon: <LayoutDashboard size={18} />, label: 'Overview', path: '/admin' },
     { icon: <Users size={18} />, label: 'Users', path: '/admin/users' },
+    { icon: <Building size={20} />, label: 'Faculties', path: '/admin/faculties' },
+    { icon: <BookOpen size={20} />, label: 'Study Programs', path: '/admin/study-programs' },
     { icon: <MessagesSquare size={18} />, label: 'Discussions', path: '/admin/discussions' },
     { icon: <FolderKanban size={18} />, label: 'Spaces', path: '/admin/spaces' },
     { icon: <Flag size={18} />, label: 'Reports', path: '/admin/reports' },
@@ -61,7 +73,7 @@ const AdminLayout = () => {
   if (!user) return null;
 
   return (
-    <div className="flex h-screen bg-gray-50 text-dark">
+    <div className="text-dark flex h-screen bg-gray-50">
       {/* Admin Sidebar */}
       <AdminSidebar
         collapsed={collapsed}

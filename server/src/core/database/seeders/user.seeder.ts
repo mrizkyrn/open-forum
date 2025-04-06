@@ -20,11 +20,44 @@ export async function seedUsers(dataSource: DataSource): Promise<User[]> {
 
   // Create sample users
   const users = [
+    // Admin
     userRepository.create({
       username: 'admin',
       password,
       fullName: 'Administrator',
       role: UserRole.ADMIN,
+    }),
+
+    // Students
+    userRepository.create({
+      username: 'spongebob',
+      password,
+      fullName: 'SpongeBob SquarePants',
+      role: UserRole.STUDENT,
+    }),
+    userRepository.create({
+      username: 'patrick',
+      password,
+      fullName: 'Patrick Star',
+      role: UserRole.STUDENT,
+    }),
+    userRepository.create({
+      username: 'sandy',
+      password,
+      fullName: 'Sandy Cheeks',
+      role: UserRole.STUDENT,
+    }),
+    userRepository.create({
+      username: 'squidward',
+      password,
+      fullName: 'Squidward Tentacles',
+      role: UserRole.STUDENT,
+    }),
+    userRepository.create({
+      username: 'plankton',
+      password,
+      fullName: 'Sheldon J. Plankton',
+      role: UserRole.STUDENT,
     }),
   ];
 

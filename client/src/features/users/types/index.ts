@@ -1,3 +1,5 @@
+import { Faculty, StudyProgram } from '@/features/academic/types';
+
 export enum UserRole {
   ADMIN = 'admin',
   STUDENT = 'student',
@@ -8,6 +10,8 @@ export interface User {
   id: number;
   username: string;
   fullName: string;
+  gender: string;
+  batchYear: string;
   role: UserRole;
   avatarUrl?: string | null;
   lastActiveAt?: Date;
@@ -15,38 +19,23 @@ export interface User {
   updatedAt: Date;
 }
 
-// import { IsEnum, IsOptional } from 'class-validator';
-// import { ApiProperty } from '@nestjs/swagger';
-// import { UserRole } from '../../../common/enums/user-role.enum';
-// import { SearchDto } from '../../../common/dto/search.dto';
-
-// export enum UserSortBy {
-//   createdAt = 'createdAt',
-//   updatedAt = 'updatedAt',
-//   username = 'username',
-//   fullName = 'fullName',
-// }
-
-// export class SearchUserDto extends SearchDto {
-//   @ApiProperty({
-//     description: 'Filter by user role',
-//     enum: UserRole,
-//     required: false,
-//   })
-//   @IsOptional()
-//   @IsEnum(UserRole)
-//   role?: UserRole;
-
-//   @ApiProperty({
-//     description: 'Field to sort by',
-//     enum: UserSortBy,
-//     default: UserSortBy.createdAt,
-//     required: false,
-//   })
-//   @IsOptional()
-//   @IsEnum(UserSortBy)
-//   sortBy: UserSortBy = UserSortBy.createdAt;
-// }
+export interface UserDetail {
+  id: number;
+  username: string;
+  fullName: string;
+  gender: string;
+  batchYear: string;
+  educationLevel: string;
+  studyProgram: StudyProgram;
+  faculty: Faculty;
+  email: string;
+  phone: string;
+  role: UserRole;
+  avatarUrl?: string | null;
+  lastActiveAt?: Date;
+  createdAt: Date;
+  updatedAt: Date;
+}
 
 export enum UserSortBy {
   createdAt = 'createdAt',
@@ -69,4 +58,16 @@ export interface SearchUserParams {
   sortOrder?: SortOrder;
   role?: UserRole;
   sortBy?: UserSortBy;
+}
+
+export interface CreateUserDto {
+  username: string;
+  password: string;
+  fullName: string;
+  role: UserRole;
+}
+
+export interface UpdateUserDto {
+  fullName?: string;
+  role?: UserRole;
 }

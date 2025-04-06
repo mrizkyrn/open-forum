@@ -33,7 +33,10 @@ export class AuthService {
     const user = await this.userService.getUserWithCredentials(loginDto.username);
 
     // If user exists and is admin, verify password
-    if (user && user.role === UserRole.ADMIN && user.password) {
+    if (user && !user.isExternalUser) {
+      if (!user.password) {
+        throw new UnauthorizedException('Incorrect username or password');
+      }
       const isPasswordValid = await this.userService.verifyPassword(loginDto.password, user.password);
       if (!isPasswordValid) {
         throw new UnauthorizedException('Incorrect username or password');
@@ -99,7 +102,7 @@ export class AuthService {
       }
 
       // Create or update user with external data
-      return await this.userService.createUser({
+      return await this.userService.createExternalUser({
         username: studentData.nim,
         fullName: studentData.nama,
         gender: studentData.jeniskelamin,

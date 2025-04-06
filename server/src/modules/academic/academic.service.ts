@@ -230,6 +230,7 @@ export class AcademicService {
         faculty.viceDean1Name = facultyData.nama_dosen_wadek_1;
         faculty.viceDean2Name = facultyData.nama_dosen_wadek_2;
         faculty.viceDean3Name = facultyData.nama_dosen_wadek_3;
+        faculty.updatedAt = new Date();
 
         // Save faculty
         const savedFaculty = await this.facultyRepository.save(faculty);
@@ -299,6 +300,7 @@ export class AcademicService {
         studyProgram.educationLevel = programData.program_pendidikan;
         studyProgram.facultyId = faculty.id;
         studyProgram.directorName = programData.nama_dosen_ketua_prodi;
+        studyProgram.updatedAt = new Date();
 
         // Save study program
         const savedProgram = await this.studyProgramRepository.save(studyProgram);

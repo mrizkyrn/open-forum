@@ -40,6 +40,7 @@ const DiscussionManagementPage = () => {
     discussions,
     meta,
     isLoading,
+    isError,
     filters,
     handlePageChange,
     handleLimitChange,
@@ -281,6 +282,7 @@ const DiscussionManagementPage = () => {
           data={discussions}
           columns={columns}
           isLoading={isLoading}
+          isError={isError}
           keyExtractor={(discussion) => discussion.id}
           currentSortKey={filters.sortBy}
           sortOrder={filters.sortOrder}

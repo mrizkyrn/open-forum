@@ -48,7 +48,7 @@ const SpaceSearchBar: React.FC<SpaceSearchBarProps> = ({
           <button
             onClick={() => onViewModeChange('grid')}
             className={`flex h-full items-center justify-center rounded-l-md px-2 text-xs sm:px-3 ${
-              viewMode === 'grid' ? 'bg-gray-100 text-gray-800' : 'text-gray-500'
+              viewMode === 'grid' ? 'bg-gray-100 text-gray-800' : 'text-gray-500 bg-white'
             }`}
             aria-label="Grid view"
             title="Grid view"
@@ -58,7 +58,7 @@ const SpaceSearchBar: React.FC<SpaceSearchBarProps> = ({
           <button
             onClick={() => onViewModeChange('list')}
             className={`flex h-full items-center justify-center rounded-r-md px-2 text-xs sm:px-3 ${
-              viewMode === 'list' ? 'bg-gray-100 text-gray-800' : 'text-gray-500'
+              viewMode === 'list' ? 'bg-gray-100 text-gray-800' : 'text-gray-500 bg-white'
             }`}
             aria-label="List view"
             title="List view"

@@ -1,23 +1,10 @@
 import { ReportStatus } from '@/features/reports/types';
 import { CreateSpaceDto, Space, UpdateSpaceDto } from '@/features/spaces/types';
-import { User, UserRole } from '@/features/users/types';
+import { CreateUserDto, UpdateUserDto, User, UserRole } from '@/features/users/types';
 import { apiClient } from '@/services/client';
 import { ApiResponse } from '@/types/ResponseTypes';
 import { handleApiError } from '@/utils/helpers';
 import { ActivityData, ActivityDataParams, DashboardStats, StatsParams } from '../types';
-
-export interface CreateUserDto {
-  username: string;
-  password: string;
-  fullName: string;
-  role: UserRole;
-}
-
-// Type for updating an existing user
-export interface UpdateUserDto {
-  fullName?: string;
-  role?: UserRole;
-}
 
 export const adminApi = {
   async getDashboardStats(params: StatsParams): Promise<DashboardStats> {
@@ -183,6 +170,22 @@ export const adminApi = {
       await apiClient.post<ApiResponse<void>>(`/admin/reports/${id}/handle`, data);
     } catch (error: any) {
       throw handleApiError(error, 'Failed to update report status');
+    }
+  },
+
+  async syncFaculties(): Promise<void> {
+    try {
+      await apiClient.post<ApiResponse<void>>('/admin/academic/sync-faculties');
+    } catch (error: any) {
+      throw handleApiError(error, 'Failed to sync faculties');
+    }
+  },
+
+  async syncStudyPrograms(): Promise<void> {
+    try {
+      await apiClient.post<ApiResponse<void>>('/admin/academic/sync-study-programs');
+    } catch (error: any) {
+      throw handleApiError(error, 'Failed to sync study programs');
     }
   },
 };
