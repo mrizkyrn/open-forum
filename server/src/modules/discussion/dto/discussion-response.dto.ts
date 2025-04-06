@@ -192,3 +192,4 @@ export class PopularTagsResponseDto {
   @ApiProperty({ description: 'Number of times the tag is used', example: 42 })
   count: number;
 }
+

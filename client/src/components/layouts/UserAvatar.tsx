@@ -7,18 +7,9 @@ interface UserAvatarProps {
   avatarUrl?: string | null;
   size?: AvatarSize;
   className?: string;
-  hasBorder?: boolean;
-  borderColor?: string;
 }
 
-const UserAvatar: React.FC<UserAvatarProps> = ({
-  fullName = 'Anonymous',
-  avatarUrl,
-  size = 'md',
-  className = '',
-  hasBorder = false,
-  borderColor = 'border-gray-200',
-}) => {
+const UserAvatar: React.FC<UserAvatarProps> = ({ fullName = 'Anonymous', avatarUrl, size = 'md', className = '' }) => {
   const [imgSrc, setImgSrc] = useState<string | null>(null);
   const [hasError, setHasError] = useState(false);
 
@@ -29,7 +20,7 @@ const UserAvatar: React.FC<UserAvatarProps> = ({
       return {
         width: `${size}px`,
         height: `${size}px`,
-        sizeClass: '',
+        sizeClass: `w-${size} h-${size}`,
       };
     }
 
@@ -83,12 +74,11 @@ const UserAvatar: React.FC<UserAvatarProps> = ({
   };
 
   const { width, height, sizeClass } = getSizeValue();
-  const borderStyle = hasBorder ? `border-2 ${borderColor}` : '';
 
   if (!imgSrc) {
     return (
       <div
-        className={`rounded-full bg-gray-200 ${sizeClass} ${borderStyle} ${className}`}
+        className={`rounded-full bg-gray-200 ${sizeClass} ${className}`}
         style={!sizeClass ? { width, height } : undefined}
       />
     );
@@ -99,7 +89,7 @@ const UserAvatar: React.FC<UserAvatarProps> = ({
       src={imgSrc}
       alt={`${fullName}'s avatar`}
       onError={handleError}
-      className={`rounded-full object-cover ${sizeClass} ${borderStyle} ${className}`}
+      className={`rounded-full object-cover ${sizeClass} ${className}`}
       style={!sizeClass ? { width, height } : undefined}
       width={width}
       height={height}

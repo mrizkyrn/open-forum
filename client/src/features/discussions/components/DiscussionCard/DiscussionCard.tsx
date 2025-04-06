@@ -13,10 +13,14 @@ import DiscussionCardHeader from './DiscussionCardHeader';
 interface DiscussionCardProps {
   discussion: Discussion;
   onDiscussionDeleted?: () => void;
-  source?: string;
+  disableNavigation?: boolean;
 }
 
-const DiscussionCard: React.FC<DiscussionCardProps> = ({ discussion, onDiscussionDeleted, source }) => {
+const DiscussionCard: React.FC<DiscussionCardProps> = ({
+  discussion,
+  onDiscussionDeleted,
+  disableNavigation = false,
+}) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [showEditModal, setShowEditModal] = useState(false);
@@ -51,19 +55,21 @@ const DiscussionCard: React.FC<DiscussionCardProps> = ({ discussion, onDiscussio
 
   const handleCardClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (
+      disableNavigation ||
       (e.target as Element).closest('button') ||
       (e.target as Element).closest('a') ||
       (e.target as Element).closest('[role="button"]')
     ) {
       return;
     }
-    navigate(`/discussions/${discussion.id}?source=${source ?? 'feed'}`);
+
+    navigate(`/discussions/${discussion.id}`);
   };
 
   return (
     <>
       <div
-        className="flex w-full border border-gray-100 cursor-pointer flex-col gap-3 rounded-xl bg-white p-4"
+        className={`flex w-full ${disableNavigation ? '' : 'cursor-pointer'} flex-col gap-3 rounded-xl border border-gray-100 bg-white p-4`}
         onClick={handleCardClick}
       >
         <DiscussionCardHeader

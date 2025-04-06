@@ -11,6 +11,7 @@ const LoginPage = lazy(() => import('@/pages/LoginPage'));
 const DiscussionDetailPage = lazy(() => import('@/pages/DiscussionDetailPage'));
 const SpacesPage = lazy(() => import('@/pages/SpacesPage'));
 const SpaceDetailPage = lazy(() => import('@/pages/SpaceDetail'));
+const ExplorePage = lazy(() => import('@/pages/ExplorePage'));
 const SearchPage = lazy(() => import('@/pages/SearchPage'));
 const NotificationsPage = lazy(() => import('@/pages/NotificationsPage'));
 const UserProfilePage = lazy(() => import('@/pages/UserProfilePage'));
@@ -52,6 +53,10 @@ const routes = [
       {
         path: '/spaces/:slug',
         element: lazyLoad(SpaceDetailPage),
+      },
+      {
+        path: '/explore',
+        element: lazyLoad(ExplorePage),
       },
       {
         path: '/search',

@@ -16,6 +16,7 @@ import {
 } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { ApiBearerAuth, ApiConsumes, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
 import { ReqUser } from '../../common/decorators/user.decorator';
 import { Pageable } from '../../common/interfaces/pageable.interface';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -75,8 +76,8 @@ export class DiscussionController {
   @ApiOperation({ summary: 'Get popular tags' })
   @ApiResponse({ status: 200, description: 'Returns list of popular tags', type: [PopularTagsResponseDto] })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
-  async getPopularTags(@Query('limit', ParseIntPipe) limit: number = 10): Promise<PopularTagsResponseDto[]> {
-    return this.discussionService.getPopularTags(limit);
+  async getPopularTags(@Query() paginationDto: PaginationDto): Promise<Pageable<PopularTagsResponseDto>> {
+    return this.discussionService.getPopularTags(paginationDto.page, paginationDto.limit);
   }
 
   @Get('bookmarked')

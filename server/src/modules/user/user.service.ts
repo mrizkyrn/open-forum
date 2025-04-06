@@ -90,11 +90,11 @@ export class UserService {
     }
   }
 
-  async findAll(searchDto: SearchUserDto): Promise<Pageable<UserResponseDto>> {
+  async findAll(searchDto: SearchUserDto, currentUser?: User): Promise<Pageable<UserResponseDto>> {
     const { page, limit } = searchDto;
     const offset = (page - 1) * limit;
 
-    const queryBuilder = this.createUserSearchQuery(searchDto, offset, limit);
+    const queryBuilder = this.createUserSearchQuery(searchDto, offset, limit, currentUser);
     const [users, totalItems] = await queryBuilder.getManyAndCount();
 
     return this.createPaginatedResponse(users, totalItems, page, limit);
@@ -281,8 +281,14 @@ export class UserService {
     }
   }
 
-  private createUserSearchQuery(params: SearchUserDto, offset: number, limit: number): SelectQueryBuilder<User> {
+  private createUserSearchQuery(
+    params: SearchUserDto,
+    offset: number,
+    limit: number,
+    currentUser?: User,
+  ): SelectQueryBuilder<User> {
     const { search, role, sortBy, sortOrder } = params;
+    const isAdmin = currentUser?.role === UserRole.ADMIN;
 
     let queryBuilder = this.userRepository
       .createQueryBuilder('user')
@@ -290,13 +296,17 @@ export class UserService {
       .skip(offset)
       .take(limit);
 
+    if (!isAdmin) {
+      queryBuilder = queryBuilder.where('user.role != :adminRole', { adminRole: UserRole.ADMIN });
+    }
+
     if (search) {
-      queryBuilder = queryBuilder.where('user.username ILIKE :search OR user.fullName ILIKE :search', {
+      queryBuilder = queryBuilder.andWhere('(user.username ILIKE :search OR user.fullName ILIKE :search)', {
         search: `%${search}%`,
       });
     }
 
-    if (role) {
+    if (role && isAdmin) {
       queryBuilder = queryBuilder.andWhere('user.role = :role', { role });
     }
 

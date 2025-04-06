@@ -3,14 +3,19 @@ import { useNavigate } from 'react-router-dom';
 
 interface BackButtonProps {
   text?: string;
+  backTo?: string;
   className?: string;
 }
 
-const BackButton: React.FC<BackButtonProps> = ({ text, className }) => {
+const BackButton: React.FC<BackButtonProps> = ({ text, backTo, className }) => {
   const navigate = useNavigate();
 
   const handleBackClick = () => {
-    navigate(-1);
+    if (backTo) {
+      navigate(backTo);
+    } else {
+      navigate(-1);
+    }
   };
 
   return (

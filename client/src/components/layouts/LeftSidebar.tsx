@@ -64,7 +64,7 @@ const LeftSidebar = ({
   onCreateDiscussion,
 }: LeftSidebarProps) => {
   return (
-    <div className="sticky top-0 h-screen overflow-y-auto border-r border-gray-200 bg-white transition-all duration-200 sm:w-16 lg:w-64">
+    <div className="sticky top-0 h-screen overflow-y-auto border-r border-gray-200 bg-white transition-all duration-200 sm:w-16 lg:w-72">
       <div className="flex items-center p-4 sm:justify-center lg:justify-start">
         <div className="hidden lg:block">
           <Logo />

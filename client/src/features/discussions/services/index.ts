@@ -65,11 +65,14 @@ export const discussionApi = {
     }
   },
 
-  async getPopularTags(limit = 10): Promise<{ tag: string; count: number }[]> {
+  async getPopularTags({page = 1, limit = 10}): Promise<PaginatedResponse<{ tag: string; count: number }>> {
     try {
-      const response = await apiClient.get<ApiResponse<{ tag: string; count: number }[]>>('/discussions/tags/popular', {
-        params: { limit },
-      });
+      const response = await apiClient.get<ApiResponse<PaginatedResponse<{ tag: string; count: number }>>>(
+        '/discussions/tags/popular',
+        {
+          params: { page, limit },
+        },
+      );
       return response.data.data;
     } catch (error: any) {
       return handleApiError(error, 'Failed to fetch popular tags');

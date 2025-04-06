@@ -36,8 +36,11 @@ export class UserController {
     type: PageableUserResponseDto,
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
-  async getAllUsers(@Query() searchDto: SearchUserDto): Promise<Pageable<UserResponseDto>> {
-    return this.userService.findAll(searchDto);
+  async getAllUsers(
+    @Query() searchDto: SearchUserDto,
+    @ReqUser() currentUser: User,
+  ): Promise<Pageable<UserResponseDto>> {
+    return this.userService.findAll(searchDto, currentUser);
   }
 
   @Get('me')

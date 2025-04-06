@@ -103,7 +103,7 @@ const LoginForm: React.FC = () => {
           />
         </div>
         <div className="mt-6">
-          <MainButton type="submit" isLoading={isLoading} fullWidth>
+          <MainButton type="submit" isLoading={isLoading} fullWidth size="xl">
             Login
           </MainButton>
         </div>

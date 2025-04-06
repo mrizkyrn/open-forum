@@ -431,19 +431,51 @@ export class DiscussionService {
 
   // ------ Tag Operations ------
 
-  async getPopularTags(limit: number = 10): Promise<PopularTagsResponseDto[]> {
-    const result = await this.discussionRepository
-      .createQueryBuilder('discussion')
-      .select('unnest(tags) as tag, count(*) as count')
-      .groupBy('tag')
-      .orderBy('count', 'DESC')
-      .limit(limit)
-      .getRawMany();
+  async getPopularTags(page: number = 1, limit: number = 10): Promise<Pageable<PopularTagsResponseDto>> {
+    // For pagination parameters
+    const offset = (page - 1) * limit;
 
-    return result.map((item) => ({
+    // Query to unnest the tags array and count occurrences
+    const result = await this.discussionRepository.query(
+      `
+      SELECT tag, COUNT(*) as count
+      FROM discussions, UNNEST(tags) as tag
+      WHERE deleted_at IS NULL
+      GROUP BY tag
+      ORDER BY count DESC, tag ASC
+      LIMIT $1 OFFSET $2
+    `,
+      [limit, offset],
+    );
+
+    // Get total count for pagination
+    const totalCountResult = await this.discussionRepository.query(`
+      SELECT COUNT(*) as total FROM (
+        SELECT DISTINCT tag 
+        FROM discussions, UNNEST(tags) as tag
+        WHERE deleted_at IS NULL
+      ) as unique_tags
+    `);
+
+    const totalItems = parseInt(totalCountResult[0].total) || 0;
+
+    // Format results
+    const formattedTags = result.map((item) => ({
       tag: item.tag,
-      count: parseInt(item.count, 10),
+      count: parseInt(item.count),
     }));
+
+    return {
+      items: formattedTags,
+      meta: {
+        totalItems,
+        itemsPerPage: limit,
+        currentPage: page,
+        totalPages: Math.ceil(totalItems / limit),
+        hasNextPage: page < Math.ceil(totalItems / limit),
+        hasPreviousPage: page > 1,
+      },
+    };
   }
 
   // ------ Other Operations ------

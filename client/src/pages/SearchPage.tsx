@@ -1,58 +1,41 @@
+import BackButton from '@/components/ui/buttons/BackButton';
 import { DiscussionPost, DiscussionSearchBar } from '@/features/discussions/components';
 import { DiscussionSortBy, SearchDiscussionDto } from '@/features/discussions/types';
-import { useDebounce } from '@/hooks/useDebounce';
+import UsersList from '@/features/users/components/UsersList';
 import { SortOrder } from '@/types/SearchTypes';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { MessageSquare, User } from 'lucide-react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+
+type SearchTab = 'discussions' | 'users';
 
 const SearchPage = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [pendingSearch, setPendingSearch] = useState<string>(searchParams.get('q') || '');
-  const isClearing = useRef(false);
+  const navigate = useNavigate();
+  const [filterParams, setFilterParams] = useSearchParams();
+  const [activeTab, setActiveTab] = useState<SearchTab>('discussions');
 
-  const searchFilters = useMemo(
+  useEffect(() => {
+    if (!filterParams.get('q') && !filterParams.get('tags')) {
+      navigate('/explore', { replace: true });
+    }
+  }, [filterParams, navigate]);
+
+  const searchTerm = filterParams.get('q') || '';
+
+  const filters = useMemo(
     () => ({
-      page: Number(searchParams.get('page')) || 1,
-      limit: Number(searchParams.get('limit')) || 10,
-      search: searchParams.get('q') || undefined,
-      sortBy: (searchParams.get('sortBy') as DiscussionSortBy) || DiscussionSortBy.createdAt,
-      sortOrder: (searchParams.get('sortOrder') as SortOrder) || SortOrder.DESC,
-      tags: searchParams.has('tags') ? searchParams.get('tags')?.split(',').filter(Boolean) : undefined,
-      isAnonymous: searchParams.has('isAnonymous') ? searchParams.get('isAnonymous') === 'true' : undefined,
+      search: searchTerm,
+      sortBy: (filterParams.get('sortBy') as DiscussionSortBy) || DiscussionSortBy.createdAt,
+      sortOrder: (filterParams.get('sortOrder') as SortOrder) || SortOrder.DESC,
+      tags: filterParams.has('tags') ? filterParams.get('tags')?.split(',').filter(Boolean) : undefined,
+      isAnonymous: filterParams.has('isAnonymous') ? filterParams.get('isAnonymous') === 'true' : undefined,
     }),
-    [searchParams],
+    [filterParams, searchTerm],
   );
-
-  useEffect(() => {
-    if (!isClearing.current) {
-      setPendingSearch(searchFilters.search || '');
-    }
-  }, [searchFilters.search]);
-
-  const debouncedSearch = useDebounce(pendingSearch, 500);
-
-  useEffect(() => {
-    if (isClearing.current) return;
-
-    if (debouncedSearch !== searchFilters.search) {
-      const newParams = new URLSearchParams(searchParams);
-      if (debouncedSearch) {
-        newParams.set('q', debouncedSearch);
-      } else {
-        newParams.delete('q');
-      }
-      setSearchParams(newParams);
-    }
-  }, [debouncedSearch, searchFilters.search, searchParams, setSearchParams]);
-
-  const handleSearch = useCallback((searchTerm: string) => {
-    isClearing.current = false;
-    setPendingSearch(searchTerm);
-  }, []);
 
   const applyFilters = useCallback(
     (filters: Partial<SearchDiscussionDto>) => {
-      const newParams = new URLSearchParams(searchParams);
+      const newParams = new URLSearchParams(filterParams);
 
       Object.entries(filters).forEach(([key, value]) => {
         const paramName = key === 'search' ? 'q' : key;
@@ -70,40 +53,72 @@ const SearchPage = () => {
         }
       });
 
-      setSearchParams(newParams);
+      setFilterParams(newParams);
     },
-    [searchParams, setSearchParams],
+    [filterParams, setFilterParams],
   );
 
   const resetAllFilters = useCallback(() => {
-    isClearing.current = true;
-    setPendingSearch('');
-    setSearchParams(new URLSearchParams());
-
-    if (typeof window !== 'undefined') {
-      window.setTimeout(() => {
-        isClearing.current = false;
-      }, 100);
+    const newParams = new URLSearchParams();
+    if (searchTerm) {
+      newParams.set('q', searchTerm);
     }
-  }, [setSearchParams]);
+
+    if (filters.tags && !searchTerm) {
+      newParams.set('tags', filters.tags?.join(',') || '');
+    }
+    setFilterParams(newParams);
+  }, [searchTerm, filters.tags, setFilterParams]);
 
   return (
     <div className="w-full">
-      {/* Search input and filters */}
-      <div className="mb-3 flex flex-col gap-4 rounded-lg">
-        <DiscussionSearchBar
-          currentFilters={{
-            ...searchFilters,
-            search: pendingSearch,
-          }}
-          onFilterChange={applyFilters}
-          onSearch={handleSearch}
-          onReset={resetAllFilters}
-        />
+      {/* Back to explore link */}
+      {searchTerm ? (
+        <BackButton backTo="/explore" text={`Results for "${searchTerm}"`} />
+      ) : (
+        <BackButton backTo="/explore" text="Explore" />
+      )}
+
+      <div className="border-b border-gray-200 bg-white">
+        <nav className="flex" aria-label="Search Tabs">
+          <button
+            className={`flex w-full items-center justify-center border-b-2 px-1 py-3 text-sm font-medium whitespace-nowrap ${
+              activeTab === 'discussions'
+                ? 'border-green-600 text-green-600'
+                : 'border-transparent text-gray-500 hover:border-gray-300 hover:bg-gray-100 hover:text-gray-700'
+            }`}
+            onClick={() => setActiveTab('discussions')}
+            aria-current={activeTab === 'discussions' ? 'page' : undefined}
+          >
+            <MessageSquare size={16} className="mr-2" />
+            Discussions
+          </button>
+          <button
+            className={`flex w-full items-center justify-center border-b-2 px-1 py-3 text-sm font-medium whitespace-nowrap ${
+              activeTab === 'users'
+                ? 'border-green-600 text-green-600'
+                : 'border-transparent text-gray-500 hover:border-gray-300 hover:bg-gray-100 hover:text-gray-700'
+            }`}
+            onClick={() => setActiveTab('users')}
+            aria-current={activeTab === 'users' ? 'page' : undefined}
+          >
+            <User size={16} className="mr-2" />
+            Users
+          </button>
+        </nav>
       </div>
 
-      {/* Search results */}
-      <DiscussionPost search={searchFilters} />
+      {activeTab === 'discussions' && (
+        <>
+          <div className="my-3 flex flex-col gap-4 rounded-lg">
+            <DiscussionSearchBar currentFilters={filters} onFilterChange={applyFilters} onReset={resetAllFilters} />
+          </div>
+
+          <DiscussionPost search={filters} />
+        </>
+      )}
+
+      {activeTab === 'users' && <UsersList searchTerm={searchTerm} />}
     </div>
   );
 };

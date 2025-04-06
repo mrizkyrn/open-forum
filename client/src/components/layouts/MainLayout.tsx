@@ -85,37 +85,32 @@ const MainLayout = () => {
     window.scrollTo(0, 0);
   }, [location.pathname]);
 
-  // Navigation item active state check
   const isNavItemActive = useCallback(
     (itemPath: string) => {
-      const searchParams = new URLSearchParams(location.search);
-      const source = searchParams.get('source');
+      const pathMappings = {
+        '/profile': '/profile',
+        '/bookmarks': '/bookmarks',
+        '/spaces': '/spaces',
+        '/explore': '/explore',
+        '/search': '/explore',
+        '/notifications': '/notifications',
+      };
 
+      // Check if the current path matches the item path directly
       if (location.pathname === itemPath) {
         return true;
       }
 
-      // For discussion pages, use the source param if available
-      if (location.pathname.startsWith('/discussions/')) {
-        if (source === 'spaces' && itemPath === '/spaces') return true;
-        if (source === 'search' && itemPath === '/search') return true;
-        if (!source && itemPath === '/') return true;
-        return false;
-      }
-
-      // For other paths, check if current path starts with the item path
-      if (itemPath !== '/' && location.pathname.startsWith(itemPath)) {
-        return true;
-      }
-
-      // Home is active for regular discussions with no source
-      if (itemPath === '/' && location.pathname.startsWith('/discussions') && !source) {
-        return true;
+      // For other nested pages, find their parent item
+      for (const [pathPrefix, navItem] of Object.entries(pathMappings)) {
+        if (location.pathname.startsWith(pathPrefix) && navItem === itemPath) {
+          return true;
+        }
       }
 
       return false;
     },
-    [location.pathname, location.search],
+    [location.pathname],
   );
 
   // Handle logout
@@ -138,7 +133,7 @@ const MainLayout = () => {
   const navItems: NavItem[] = [
     { name: 'Home', path: '/', icon: <Home size={20} /> },
     { name: 'Spaces', path: '/spaces', icon: <Layers size={20} /> },
-    { name: 'Search', path: '/search', icon: <Search size={20} /> },
+    { name: 'Explore', path: '/explore', icon: <Search size={20} /> },
     {
       name: 'Notifications',
       path: '/notifications',
@@ -197,7 +192,7 @@ const MainLayout = () => {
   }, [socket, isConnected, user?.id, refetchUnreadCount, queryClient]);
 
   return (
-    <div className="text-dark min-h-screen bg-gray-50">
+    <div className="text-dark min-h-screen bg-white">
       {/* Mobile Header */}
       <div className="fixed top-0 right-0 left-0 z-10 flex h-14 items-center justify-between border-b border-gray-100 bg-white px-4 sm:hidden">
         <Logo />
@@ -292,9 +287,9 @@ const MainLayout = () => {
 
         {/* Main Content & Right Sidebar */}
         <div className="flex-grow">
-          <div className="grid grid-cols-12">
+          <div className="grid grid-cols-10">
             {/* Middle Column: Main Content */}
-            <div className="col-span-12 min-h-screen bg-light py-14 sm:py-0 md:col-span-8">
+            <div className="bg-light col-span-10 min-h-screen py-14 sm:py-0 md:col-span-6">
               <div className="p-4">
                 <Outlet />
               </div>

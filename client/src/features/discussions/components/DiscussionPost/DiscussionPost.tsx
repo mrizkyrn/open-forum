@@ -20,9 +20,6 @@ const DiscussionPost: React.FC<DiscussionPostProps> = ({ search, preselectedSpac
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newDiscussions, setNewDiscussions] = useState(0);
 
-  const currentUrl = window.location.href;
-  const currentUrlPath = currentUrl.split('/')[3];
-
   const { user } = useAuth();
   const { socket, isConnected } = useSocket();
 
@@ -133,7 +130,7 @@ const DiscussionPost: React.FC<DiscussionPostProps> = ({ search, preselectedSpac
       <div className="flex flex-col items-center gap-2">
         {/* Discussion cards */}
         {discussions.map((discussion) => (
-          <DiscussionCard key={discussion.id} discussion={discussion} source={currentUrlPath} />
+          <DiscussionCard key={discussion.id} discussion={discussion} />
         ))}
 
         {/* Loading more indicator */}

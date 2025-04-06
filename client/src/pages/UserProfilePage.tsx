@@ -1,4 +1,6 @@
 import FeedbackDisplay from '@/components/feedback/FeedbackDisplay';
+import UserAvatar from '@/components/layouts/UserAvatar';
+import BackButton from '@/components/ui/buttons/BackButton';
 import { useAuth } from '@/features/auth/hooks/useAuth';
 import { DiscussionPost } from '@/features/discussions/components';
 import AvatarUpload from '@/features/users/components/AvatarUpload';
@@ -51,26 +53,26 @@ const UserProfilePage = () => {
       {/* Header with avatar and basic info */}
       <div className="overflow-hidden rounded-lg border border-gray-100 bg-white">
         <div className="from-primary-lighter to-primary-dark relative h-32 bg-gradient-to-r">
+          {
+            // add back button if user is not current user
+            currentUser?.id !== user.id && (
+              <div className="absolute top-4 left-4 z-10">
+                <BackButton className="text-white" />
+              </div>
+            )
+          }
+
           <div className="absolute -bottom-12 left-6">
             <div className="relative">
               {currentUser?.id === user.id ? (
-                <AvatarUpload
-                  currentAvatarUrl={user.avatarUrl ?? null}
-                  size="24"
-                  onSuccess={() => {
-                    // User profile will be refreshed automatically via queryClient invalidation
-                  }}
-                />
+                <AvatarUpload currentAvatarUrl={user.avatarUrl ?? null} size="24" onSuccess={() => {}} />
               ) : (
-                <div className="h-24 w-24 overflow-hidden rounded-full border-4 border-white bg-white">
-                  {user.avatarUrl ? (
-                    <img src={user.avatarUrl} alt={user.fullName} className="h-full w-full object-cover" />
-                  ) : (
-                    <div className="flex h-full w-full items-center justify-center bg-gray-100 text-gray-400">
-                      <User className="h-10 w-10" />
-                    </div>
-                  )}
-                </div>
+                <UserAvatar
+                  fullName={user.fullName}
+                  avatarUrl={user.avatarUrl}
+                  size={24}
+                  className="border-4 border-white"
+                />
               )}
               <div className="absolute -right-1 -bottom-1 rounded-full bg-green-500 p-1.5">
                 <UserCheck className="h-3 w-3 text-white" />
@@ -216,9 +218,7 @@ const UserProfilePage = () => {
           </div>
         </>
       ) : (
-        <div className="rounded-lg border border-gray-100 bg-white p-4">
-          <DiscussionPost search={{ authorId: user.id }} />
-        </div>
+        <DiscussionPost search={{ authorId: user.id }} />
       )}
     </div>
   );

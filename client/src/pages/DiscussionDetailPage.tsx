@@ -91,7 +91,7 @@ const DiscussionDetailPage = () => {
         <BackButton />
 
         {/* Main discussion card */}
-        <DiscussionCard discussion={discussion} />
+        <DiscussionCard discussion={discussion} disableNavigation={true} />
 
         {/* Comments section */}
         <div className="mt-4 rounded-xl bg-white">

@@ -2,7 +2,7 @@ import { Loader2 } from 'lucide-react';
 import React from 'react';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'warning' | 'success';
-export type ButtonSize = 'sm' | 'md' | 'lg';
+export type ButtonSize = 'sm' | 'md' | 'lg' | 'xl';
 
 export interface MainButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
@@ -50,6 +50,7 @@ const MainButton = React.forwardRef<HTMLButtonElement, MainButtonProps>(
       sm: 'text-xs px-4 h-8',
       md: 'text-sm px-5 h-9',
       lg: 'text-base px-6 h-10',
+      xl: 'text-lg px-7 h-12',
     };
 
     // State styles
