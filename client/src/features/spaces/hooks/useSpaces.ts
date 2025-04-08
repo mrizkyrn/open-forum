@@ -2,7 +2,16 @@ import { SortOrder } from '@/types/SearchTypes';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { spaceApi } from '../services';
-import { SearchSpaceDto, SpaceSortBy } from '../types';
+import { SearchSpaceDto, SpaceSortBy, SpaceType } from '../types';
+
+export interface SpaceFilters {
+  page: number;
+  limit: number;
+  search?: string;
+  sortOrder: SortOrder;
+  spaceType?: SpaceType;
+  sortBy?: SpaceSortBy;
+}
 
 export const useSpaces = (initialFilters = {}) => {
   const [filters, setFilters] = useState<SearchSpaceDto>({
@@ -39,6 +48,10 @@ export const useSpaces = (initialFilters = {}) => {
     }));
   };
 
+  const handleTypeFilterChange = (type: SpaceType) => {
+    setFilters((prev) => ({ ...prev, page: 1, spaceType: type }));
+  };
+
   const handleResetFilters = () => {
     setFilters((prev) => ({
       ...prev,
@@ -48,7 +61,7 @@ export const useSpaces = (initialFilters = {}) => {
       sortBy: SpaceSortBy.name,
       sortOrder: SortOrder.ASC,
     }));
-  }
+  };
 
   return {
     spaces: data?.items || [],
@@ -61,6 +74,7 @@ export const useSpaces = (initialFilters = {}) => {
     handleLimitChange,
     handleSearchChange,
     handleSortChange,
+    handleTypeFilterChange,
     handleResetFilters,
   };
 };

@@ -15,7 +15,7 @@ export async function seedDatabase(dataSource: DataSource): Promise<void> {
     // Seed in sequence to maintain referential integrity
     const users = await seedUsers(dataSource);
     await seedDiscussionSpaces(dataSource, users);
-    await seedReportReasons(dataSource);
+    // await seedReportReasons(dataSource);
 
     console.log('✅ Database seeding completed successfully');
   } catch (error) {

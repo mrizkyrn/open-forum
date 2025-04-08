@@ -11,14 +11,16 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Pageable } from '../../common/interfaces/pageable.interface';
 import { FileService } from '../../core/file/file.service';
+import { Faculty } from '../academic/entity/faculty.entity';
+import { StudyProgram } from '../academic/entity/study-program.entity';
 import { AnalyticService } from '../analytic/analytic.service';
 import { ActivityEntityType, ActivityType } from '../analytic/entities/user-activity.entity';
 import { User } from '../user/entities/user.entity';
 import { CreateDiscussionSpaceDto } from './dto/create-discussion-space.dto';
 import { DiscussionSpaceResponseDto } from './dto/discussion-space-response.dto';
-import { SearchSpaceDto } from './dto/search-space.dto';
+import { SearchSpaceDto, SpaceSortBy } from './dto/search-space.dto';
 import { UpdateDiscussionSpaceDto } from './dto/update-discussion-space.dto';
-import { DiscussionSpace } from './entities/discussion-space.entity';
+import { DiscussionSpace, SpaceType } from './entities/discussion-space.entity';
 
 @Injectable()
 export class DiscussionSpaceService {
@@ -43,6 +45,33 @@ export class DiscussionSpaceService {
       throw new ConflictException(`Space with slug "${createDto.slug}" already exists`);
     }
 
+    // Validate space type and associated IDs
+    if (createDto.spaceType === SpaceType.STUDY_PROGRAM) {
+      if (!createDto.studyProgramId) {
+        throw new BadRequestException('Study Program ID is required for study program spaces');
+      }
+
+      const studyProgram = await this.spaceRepository.manager.findOne(StudyProgram, {
+        where: { id: createDto.studyProgramId },
+      });
+      if (!studyProgram) {
+        throw new BadRequestException(`Study Program with ID ${createDto.studyProgramId} not found`);
+      }
+
+      createDto.facultyId = studyProgram.facultyId;
+    } else if (createDto.spaceType === SpaceType.FACULTY) {
+      if (!createDto.facultyId) {
+        throw new BadRequestException('Faculty ID is required for faculty spaces');
+      }
+
+      const faculty = await this.spaceRepository.manager.findOne(Faculty, {
+        where: { id: createDto.facultyId },
+      });
+      if (!faculty) {
+        throw new BadRequestException(`Faculty with ID ${createDto.facultyId} not found`);
+      }
+    }
+
     const queryRunner = this.spaceRepository.manager.connection.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
@@ -57,6 +86,9 @@ export class DiscussionSpaceService {
         description: createDto.description,
         slug: createDto.slug,
         creatorId: currentUser.id,
+        spaceType: createDto.spaceType,
+        facultyId: createDto.facultyId || null,
+        studyProgramId: createDto.studyProgramId || null,
         followerCount: 0,
       });
 
@@ -95,21 +127,14 @@ export class DiscussionSpaceService {
       const { page, limit } = searchDto;
       const offset = (page - 1) * limit;
 
-      const queryBuilder = this.buildSpaceSearchQuery(searchDto, offset, limit);
+      const queryBuilder = this.buildSpaceSearchQuery(searchDto, offset, limit, currentUser);
       const [spaces, totalItems] = await queryBuilder.getManyAndCount();
 
-      // Format response and check if current user is following each space
-      const formattedSpaces = await Promise.all(
-        spaces.map(async (space) => {
-          let isFollowing = false;
-
-          if (currentUser) {
-            isFollowing = await this.isFollowing(space.id, currentUser.id);
-          }
-
-          return DiscussionSpaceResponseDto.fromEntity(space, isFollowing);
-        }),
-      );
+      // Format the response
+      const formattedSpaces = spaces.map((space) => {
+        const isFollowing = currentUser ? (space as any).isFollowedByCurrentUser > 0 : false;
+        return DiscussionSpaceResponseDto.fromEntity(space, isFollowing);
+      });
 
       return this.createPaginatedResponse(formattedSpaces, totalItems, page, limit);
     } catch (error) {
@@ -155,20 +180,95 @@ export class DiscussionSpaceService {
     currentUser: User,
     files?: { icon?: Express.Multer.File[]; banner?: Express.Multer.File[] },
   ): Promise<DiscussionSpaceResponseDto> {
-    const space = await this.getSpaceWithFollowers(id);
+    // Validate input if no fields are provided
+    if (
+      !updateDto.name &&
+      !updateDto.description &&
+      !updateDto.slug &&
+      !updateDto.spaceType &&
+      !updateDto.facultyId &&
+      !updateDto.studyProgramId &&
+      !files?.icon &&
+      !files?.banner
+    ) {
+      throw new BadRequestException('No fields to update');
+    }
 
+    const space = await this.getSpaceWithFollowers(id);
     this.verifyCreator(space, currentUser.id);
     await this.validateSlugUniqueness(updateDto.slug, space.slug, id);
+
+    if (updateDto.spaceType) {
+      // When changing space type, set appropriate faculty and study program values
+      switch (updateDto.spaceType) {
+        case SpaceType.STUDY_PROGRAM:
+          // Study program spaces need both study program and faculty IDs
+          const studyProgramId = updateDto.studyProgramId ?? space.studyProgramId;
+          if (!studyProgramId) {
+            throw new BadRequestException('Study Program ID is required for study program spaces');
+          }
+
+          const studyProgram = await this.spaceRepository.manager.findOne(StudyProgram, {
+            where: { id: studyProgramId },
+          });
+          if (!studyProgram) {
+            throw new BadRequestException(`Study Program with ID ${studyProgramId} not found`);
+          }
+
+          // Set faculty ID from study program
+          updateDto.facultyId = studyProgram.facultyId;
+          break;
+
+        case SpaceType.FACULTY:
+          // Faculty spaces need faculty ID but not study program ID
+          if (!updateDto.facultyId && !space.facultyId) {
+            throw new BadRequestException('Faculty ID is required for faculty spaces');
+          }
+
+          updateDto.studyProgramId = null;
+          break;
+
+        case SpaceType.ACADEMIC:
+        case SpaceType.ORGANIZATION:
+        case SpaceType.CAMPUS:
+        case SpaceType.OTHER:
+          updateDto.facultyId = null;
+          updateDto.studyProgramId = null;
+          break;
+      }
+    } else if (updateDto.studyProgramId) {
+      // If changing only study program without changing type, get faculty from study program
+      const studyProgram = await this.spaceRepository.manager.findOne(StudyProgram, {
+        where: { id: updateDto.studyProgramId },
+      });
+      if (!studyProgram) {
+        throw new BadRequestException(`Study Program with ID ${updateDto.studyProgramId} not found`);
+      }
+      updateDto.facultyId = studyProgram.facultyId;
+    }
+
+    // Handle faculty changes (validation only if setting a non-null value)
+    if (updateDto.facultyId && updateDto.facultyId !== space.facultyId) {
+      const faculty = await this.spaceRepository.manager.findOne(Faculty, {
+        where: { id: updateDto.facultyId },
+      });
+      if (!faculty) {
+        throw new BadRequestException(`Faculty with ID ${updateDto.facultyId} not found`);
+      }
+    }
 
     const queryRunner = this.spaceRepository.manager.connection.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
 
     try {
-      // Update basic fields if provided
       if (updateDto.name) space.name = updateDto.name;
       if (updateDto.description !== undefined) space.description = updateDto.description;
       if (updateDto.slug) space.slug = updateDto.slug;
+      if (updateDto.spaceType) space.spaceType = updateDto.spaceType;
+
+      space.facultyId = updateDto.facultyId !== undefined ? updateDto.facultyId : space.facultyId;
+      space.studyProgramId = updateDto.studyProgramId !== undefined ? updateDto.studyProgramId : space.studyProgramId;
 
       // Handle icon update/removal
       if (files?.icon && files.icon.length > 0) {
@@ -396,18 +496,52 @@ export class DiscussionSpaceService {
       .skip(offset)
       .take(limit);
 
+    if (sortBy === SpaceSortBy.followerCount) {
+      queryBuilder = queryBuilder.addOrderBy('space.id', 'ASC');
+    }
+
+    // Filter by search term
     if (searchDto.search) {
       queryBuilder = queryBuilder.where('space.name ILIKE :search OR space.description ILIKE :search', {
         search: `%${searchDto.search}%`,
       });
     }
 
-    if (currentUser) {
+    // Filter by space type
+    if (searchDto.spaceType) {
+      queryBuilder = queryBuilder.andWhere('space.spaceType = :spaceType', {
+        spaceType: searchDto.spaceType,
+      });
+    }
+
+    // Filter by faculty
+    if (searchDto.facultyId) {
+      queryBuilder = queryBuilder.andWhere('space.facultyId = :facultyId', {
+        facultyId: searchDto.facultyId,
+      });
+    }
+
+    // Filter by study program
+    if (searchDto.studyProgramId) {
+      queryBuilder = queryBuilder.andWhere('space.studyProgramId = :studyProgramId', {
+        studyProgramId: searchDto.studyProgramId,
+      });
+    }
+    // Filter by followed spaces
+    if (searchDto.following && currentUser) {
       queryBuilder = queryBuilder
-        .leftJoin('space.followers', 'currentUserFollowing', 'currentUserFollowing.id = :currentUserId', {
-          currentUserId: currentUser.id,
-        })
-        .addSelect('CASE WHEN currentUserFollowing.id IS NOT NULL THEN true ELSE false END', 'is_following');
+        .innerJoin('space.followers', 'follower')
+        .andWhere('follower.id = :userId', { userId: currentUser.id });
+    }
+
+    // Add is_following flag for the current user
+    if (currentUser) {
+      queryBuilder = queryBuilder.loadRelationCountAndMap(
+        'space.isFollowedByCurrentUser',
+        'space.followers',
+        'follower',
+        (qb) => qb.where('follower.id = :currentUserId', { currentUserId: currentUser.id }),
+      );
     }
 
     return queryBuilder;

@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsEnum, IsNumber, IsOptional } from 'class-validator';
 import { SearchDto } from '../../../common/dto/search.dto';
+import { SpaceType } from '../entities/discussion-space.entity';
 
 export enum SpaceSortBy {
   name = 'name',
@@ -21,6 +22,49 @@ export class SearchSpaceDto extends SearchDto {
   @IsNumber()
   @Type(() => Number)
   creatorId?: number;
+
+  @ApiProperty({
+    description: 'Filter by space type',
+    required: false,
+    enum: SpaceType,
+    example: SpaceType.FACULTY,
+  })
+  @IsOptional()
+  @IsEnum(SpaceType)
+  @Type(() => String)
+  spaceType?: SpaceType;
+
+  @ApiProperty({
+    description: 'Filter by faculty ID',
+    required: false,
+    type: Number,
+    example: 1,
+  })
+  @IsOptional()
+  @IsNumber()
+  @Type(() => Number)
+  facultyId?: number;
+
+  @ApiProperty({
+    description: 'Filter by study program ID',
+    required: false,
+    type: Number,
+    example: 1,
+  })
+  @IsOptional()
+  @IsNumber()
+  @Type(() => Number)
+  studyProgramId?: number;
+
+  @ApiProperty({
+    description: 'Show only spaces followed by the current user',
+    required: false,
+    type: Boolean,
+    example: true,
+  })
+  @IsOptional()
+  @Type(() => Boolean)
+  following?: boolean;
 
   @ApiProperty({
     description: 'Field to sort by',

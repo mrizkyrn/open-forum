@@ -1,6 +1,6 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns';
-import { Boxes, Edit, MoreHorizontal, Plus, Trash2 } from 'lucide-react';
+import { Boxes, Edit, MoreHorizontal, Plus, Trash2, Type } from 'lucide-react';
 import { useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 
@@ -9,10 +9,11 @@ import { DataTable } from '@/features/admin/components/DataTable';
 import FilterBar from '@/features/admin/components/FilterBar';
 import PageHeader from '@/features/admin/components/PageHeader';
 import Pagination from '@/features/admin/components/Pagination';
+import SelectFilter from '@/features/admin/components/SelectFilter';
 import SpaceFormModal from '@/features/admin/components/SpaceFormModal';
 import { adminApi } from '@/features/admin/services';
 import { useSpaces } from '@/features/spaces/hooks/useSpaces';
-import { Space } from '@/features/spaces/types';
+import { Space, SpaceType } from '@/features/spaces/types';
 import { useDropdown } from '@/hooks/useDropdown';
 import { getFileUrl } from '@/utils/helpers';
 
@@ -42,7 +43,27 @@ const SpaceManagementPage = () => {
     handleLimitChange,
     handleSearchChange,
     handleSortChange,
+    handleTypeFilterChange,
+    handleResetFilters,
   } = useSpaces();
+
+  const labels: Record<SpaceType, string> = {
+    [SpaceType.ACADEMIC]: 'Academic',
+    [SpaceType.FACULTY]: 'Faculty',
+    [SpaceType.STUDY_PROGRAM]: 'Study Program',
+    [SpaceType.ORGANIZATION]: 'Organization',
+    [SpaceType.CAMPUS]: 'Campus',
+    [SpaceType.OTHER]: 'Other',
+  };
+
+  const colors: Record<SpaceType, { bg: string; text: string }> = {
+    [SpaceType.ACADEMIC]: { bg: 'bg-blue-100', text: 'text-blue-700' },
+    [SpaceType.FACULTY]: { bg: 'bg-purple-100', text: 'text-purple-700' },
+    [SpaceType.STUDY_PROGRAM]: { bg: 'bg-indigo-100', text: 'text-indigo-700' },
+    [SpaceType.ORGANIZATION]: { bg: 'bg-orange-100', text: 'text-orange-700' },
+    [SpaceType.CAMPUS]: { bg: 'bg-teal-100', text: 'text-teal-700' },
+    [SpaceType.OTHER]: { bg: 'bg-gray-100', text: 'text-gray-700' },
+  };
 
   const handleToggleDropdown = (spaceId: number) => {
     if (activeDropdownId === spaceId) {
@@ -124,8 +145,18 @@ const SpaceManagementPage = () => {
       header: 'Description',
       accessor: (space: Space) => (
         <div className="max-w-xs">
-          <p className="truncate text-sm text-gray-500">{space.description || 'No description'}</p>
+          <p className="text-sm text-gray-500">{space.description || 'No description'}</p>
         </div>
+      ),
+    },
+    {
+      header: 'Type',
+      accessor: (space: Space) => (
+        <span
+          className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${colors[space.spaceType].bg} ${colors[space.spaceType].text}`}
+        >
+          {labels[space.spaceType]}
+        </span>
       ),
     },
     {
@@ -201,9 +232,21 @@ const SpaceManagementPage = () => {
         searchProps={{
           value: filters.search || '',
           onChange: handleSearchChange,
-          placeholder: 'Search spaces by name or slug...',
+          placeholder: 'Search users by name or username...',
         }}
-      />
+        onReset={handleResetFilters}
+      >
+        <SelectFilter
+          options={Object.values(SpaceType).map((type) => ({
+            label: labels[type],
+            value: type,
+          }))}
+          value={filters.spaceType || ''}
+          placeholder="All Types"
+          onChange={(value) => handleTypeFilterChange(value as SpaceType)}
+          leftIcon={<Type size={16} />}
+        />
+      </FilterBar>
 
       {/* Spaces Table */}
       <div className="rounded-lg border border-gray-100 bg-white">

@@ -5,7 +5,7 @@ import SpacesList from '@/features/spaces/components/SpaceList';
 import SpaceSearchBar from '@/features/spaces/components/SpaceSearchBar';
 import { useSpaceFollow } from '@/features/spaces/hooks/useSpaceFollow';
 import { spaceApi } from '@/features/spaces/services';
-import { SpaceSortBy } from '@/features/spaces/types';
+import { SpaceSortBy, SpaceType } from '@/features/spaces/types';
 import { useDebounce } from '@/hooks/useDebounce';
 import { SortOrder } from '@/types/SearchTypes';
 import { useInfiniteQuery } from '@tanstack/react-query';
@@ -14,16 +14,16 @@ import { useEffect, useState } from 'react';
 
 const SpacesPage = () => {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-
   const [searchTerm, setSearchTerm] = useState('');
   const debouncedSearch = useDebounce(searchTerm, 500);
   const [sortBy, setSortBy] = useState<SpaceSortBy>(SpaceSortBy.followerCount);
   const [sortOrder, setSortOrder] = useState<SortOrder>(SortOrder.DESC);
+  const [selectedType, setSelectedType] = useState<SpaceType | null>(null);
 
   const { followSpace, unfollowSpace, isLoading: followLoading, followingMap } = useSpaceFollow();
 
   const { data, isLoading, isError, fetchNextPage, hasNextPage, isFetchingNextPage, refetch } = useInfiniteQuery({
-    queryKey: ['spaces', debouncedSearch, sortBy, sortOrder],
+    queryKey: ['spaces', debouncedSearch, sortBy, sortOrder, selectedType],
     queryFn: ({ pageParam = 1 }) =>
       spaceApi.getSpaces({
         page: pageParam,
@@ -31,14 +31,15 @@ const SpacesPage = () => {
         search: debouncedSearch,
         sortBy,
         sortOrder,
+        spaceType: selectedType,
       }),
+      initialPageParam: 1,
     getNextPageParam: (lastPage) => (lastPage.meta.hasNextPage ? lastPage.meta.currentPage + 1 : undefined),
-    initialPageParam: 1,
   });
 
   useEffect(() => {
     refetch();
-  }, [debouncedSearch, sortBy, sortOrder, refetch]);
+  }, [debouncedSearch, sortBy, sortOrder, selectedType, refetch]);
 
   const spaces = data?.pages.flatMap((page) => page.items) || [];
 
@@ -48,6 +49,10 @@ const SpacesPage = () => {
     } else {
       followSpace(spaceId);
     }
+  };
+
+  const handleTypeFilterChange = (type: SpaceType | null) => {
+    setSelectedType(type);
   };
 
   const handleLoadMore = () => {
@@ -67,6 +72,8 @@ const SpacesPage = () => {
         onOrderChange={setSortOrder}
         viewMode={viewMode}
         onViewModeChange={setViewMode}
+        selectedType={selectedType}
+        onTypeFilterChange={handleTypeFilterChange}
       />
 
       {isLoading ? (
@@ -88,7 +95,11 @@ const SpacesPage = () => {
       ) : spaces.length === 0 ? (
         <FeedbackDisplay
           title="No spaces found"
-          description={debouncedSearch ? `No spaces match "${debouncedSearch}"` : 'No spaces available'}
+          description={
+            debouncedSearch || selectedType
+              ? `No spaces match your filters${debouncedSearch ? ` "${debouncedSearch}"` : ''}`
+              : 'No spaces available'
+          }
           size="lg"
           variant="default"
         />

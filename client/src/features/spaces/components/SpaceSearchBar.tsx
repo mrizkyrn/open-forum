@@ -1,8 +1,8 @@
 import { SortButton } from '@/components/ui/buttons/SortButton';
 import SearchInput from '@/components/ui/inputs/SearchInput';
-import { SpaceSortBy } from '@/features/spaces/types';
+import { SpaceSortBy, SpaceType } from '@/features/spaces/types';
 import { SortOrder } from '@/types/SearchTypes';
-import { Clock, Grid, List, SortAsc, UserCheck } from 'lucide-react';
+import { BookOpen, Building, Clock, Grid, Landmark, List, School, SortAsc, Tag, UserCheck } from 'lucide-react';
 
 interface SpaceSearchBarProps {
   searchTerm: string;
@@ -13,6 +13,8 @@ interface SpaceSearchBarProps {
   onOrderChange: (order: SortOrder) => void;
   viewMode: 'grid' | 'list';
   onViewModeChange: (mode: 'grid' | 'list') => void;
+  selectedType?: SpaceType | null;
+  onTypeFilterChange: (type: SpaceType | null) => void;
 }
 
 const SpaceSearchBar: React.FC<SpaceSearchBarProps> = ({
@@ -24,6 +26,8 @@ const SpaceSearchBar: React.FC<SpaceSearchBarProps> = ({
   onOrderChange,
   viewMode,
   onViewModeChange,
+  selectedType,
+  onTypeFilterChange,
 }) => {
   // Handle sort change with direction toggle
   const handleSortChange = (newSortBy: SpaceSortBy) => {
@@ -33,6 +37,26 @@ const SpaceSearchBar: React.FC<SpaceSearchBarProps> = ({
       onSortChange(newSortBy);
       onOrderChange(SortOrder.DESC);
     }
+  };
+
+  // Type icons mapping
+  const typeIcons = {
+    [SpaceType.ACADEMIC]: <BookOpen size={14} />,
+    [SpaceType.FACULTY]: <Building size={14} />,
+    [SpaceType.STUDY_PROGRAM]: <School size={14} />,
+    [SpaceType.ORGANIZATION]: <Landmark size={14} />,
+    [SpaceType.CAMPUS]: <School size={14} />,
+    [SpaceType.OTHER]: <Tag size={14} />,
+  };
+
+  // Type labels for display
+  const typeLabels = {
+    [SpaceType.ACADEMIC]: 'Academic',
+    [SpaceType.FACULTY]: 'Faculty',
+    [SpaceType.STUDY_PROGRAM]: 'Program',
+    [SpaceType.ORGANIZATION]: 'Organization',
+    [SpaceType.CAMPUS]: 'Campus',
+    [SpaceType.OTHER]: 'Other',
   };
 
   return (
@@ -102,6 +126,42 @@ const SpaceSearchBar: React.FC<SpaceSearchBarProps> = ({
             onSortChange={handleSortChange}
             size="xs"
           />
+        </div>
+      </div>
+
+      {/* Type filter - new row */}
+      <div className="flex flex-wrap items-center gap-1.5">
+        <span className="text-xs text-gray-400">Type:</span>
+        
+        <div className="flex flex-wrap items-center gap-1">
+          {/* All types (reset) button */}
+          <button
+            onClick={() => onTypeFilterChange(null)}
+            className={`flex items-center gap-1 rounded-md px-2 py-1 text-xs ${
+              selectedType === null || selectedType === undefined
+                ? 'bg-gray-100 text-gray-800 font-medium'
+                : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'
+            }`}
+          >
+            <Tag size={14} />
+            <span>All</span>
+          </button>
+          
+          {/* Type filter buttons */}
+          {Object.values(SpaceType).map((type) => (
+            <button
+              key={type}
+              onClick={() => onTypeFilterChange(type)}
+              className={`flex items-center gap-1 rounded-md px-2 py-1 text-xs ${
+                selectedType === type
+                  ? 'bg-gray-100 text-gray-800 font-medium'
+                  : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'
+              }`}
+            >
+              {typeIcons[type]}
+              <span>{typeLabels[type]}</span>
+            </button>
+          ))}
         </div>
       </div>
     </div>

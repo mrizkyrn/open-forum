@@ -1,5 +1,6 @@
 import { Column, Entity, Index, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { BaseEntity } from '../../../core/database/entities/base.entity';
+import { DiscussionSpace } from '../../../modules/discussion/entities/discussion-space.entity';
 import { User } from '../../user/entities/user.entity';
 import { Faculty } from './faculty.entity';
 
@@ -27,4 +28,7 @@ export class StudyProgram extends BaseEntity {
 
   @OneToMany(() => User, (user) => user.studyProgram)
   students: User[];
+
+  @OneToMany(() => DiscussionSpace, (space) => space.studyProgram)
+  spaces: DiscussionSpace[];
 }

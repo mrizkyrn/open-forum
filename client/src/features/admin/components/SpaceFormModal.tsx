@@ -1,12 +1,13 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Image, Upload, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import { Modal, ModalBody, ModalFooter, ModalHeader } from '@/components/modals/Modal';
 import MainButton from '@/components/ui/buttons/MainButton';
+import { academicApi } from '@/features/academic/services';
 import { adminApi } from '@/features/admin/services';
-import { CreateSpaceDto, Space, UpdateSpaceDto } from '@/features/spaces/types';
+import { CreateSpaceDto, Space, SpaceType, UpdateSpaceDto } from '@/features/spaces/types';
 import { getFileUrl } from '@/utils/helpers';
 
 interface SpaceFormModalProps {
@@ -23,6 +24,9 @@ const SpaceFormModal: React.FC<SpaceFormModalProps> = ({ isOpen, onClose, space 
     name: '',
     description: '',
     slug: '',
+    spaceType: SpaceType.OTHER,
+    facultyId: null,
+    studyProgramId: null,
   });
 
   const [iconFile, setIconFile] = useState<File | null>(null);
@@ -30,6 +34,28 @@ const SpaceFormModal: React.FC<SpaceFormModalProps> = ({ isOpen, onClose, space 
   const [iconPreview, setIconPreview] = useState<string | null>(null);
   const [bannerPreview, setBannerPreview] = useState<string | null>(null);
   const [errors, setErrors] = useState<Partial<Record<keyof CreateSpaceDto, string>>>({});
+
+  // Fetch faculties
+  const { data: facultiesData } = useQuery({
+    queryKey: ['faculties'],
+    queryFn: () => academicApi.getFaculties({ page: 1, limit: 100 }),
+    enabled: isOpen && formData.spaceType === SpaceType.FACULTY,
+  });
+
+  // Fetch study programs
+  const { data: studyProgramsData } = useQuery({
+    queryKey: ['studyPrograms', formData.facultyId],
+    queryFn: () =>
+      academicApi.getStudyPrograms({
+        page: 1,
+        limit: 100,
+        ...(formData.facultyId && { facultyId: formData.facultyId }),
+      }),
+    enabled: isOpen && formData.spaceType === SpaceType.STUDY_PROGRAM,
+  });
+
+  const faculties = facultiesData?.items || [];
+  const studyPrograms = studyProgramsData?.items || [];
 
   // Reset form when modal opens/closes or space changes
   useEffect(() => {
@@ -39,6 +65,9 @@ const SpaceFormModal: React.FC<SpaceFormModalProps> = ({ isOpen, onClose, space 
           name: space.name || '',
           description: space.description || '',
           slug: space.slug || '',
+          spaceType: space.spaceType,
+          facultyId: space.facultyId,
+          studyProgramId: space.studyProgramId,
         });
         setIconPreview(space.iconUrl ? getFileUrl(space.iconUrl) : null);
         setBannerPreview(space.bannerUrl ? getFileUrl(space.bannerUrl) : null);
@@ -47,6 +76,9 @@ const SpaceFormModal: React.FC<SpaceFormModalProps> = ({ isOpen, onClose, space 
           name: '',
           description: '',
           slug: '',
+          spaceType: SpaceType.OTHER,
+          facultyId: null,
+          studyProgramId: null,
         });
         setIconPreview(null);
         setBannerPreview(null);
@@ -103,17 +135,44 @@ const SpaceFormModal: React.FC<SpaceFormModalProps> = ({ isOpen, onClose, space 
     },
   });
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
 
-    // Auto-generate slug from name if in create mode and slug hasn't been manually edited
-    if (name === 'name' && !isEditMode && !formData.slug) {
-      const slugValue = value
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/^-+|-+$/g, '');
-      setFormData((prev) => ({ ...prev, slug: slugValue }));
+    if (name === 'spaceType') {
+      // Reset faculty and study program when space type changes
+      const spaceType = value as SpaceType;
+      const shouldResetFaculty = spaceType !== SpaceType.FACULTY;
+      const shouldResetStudyProgram = spaceType !== SpaceType.STUDY_PROGRAM;
+
+      setFormData((prev) => ({
+        ...prev,
+        spaceType,
+        facultyId: shouldResetFaculty ? null : prev.facultyId,
+        studyProgramId: shouldResetStudyProgram ? null : prev.studyProgramId,
+      }));
+    } else if (name === 'facultyId') {
+      const facultyId = value ? parseInt(value) : null;
+      setFormData((prev) => ({
+        ...prev,
+        facultyId,
+      }));
+    } else if (name === 'studyProgramId') {
+      const studyProgramId = value ? parseInt(value) : null;
+      setFormData((prev) => ({
+        ...prev,
+        studyProgramId,
+      }));
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+
+      // Auto-generate slug from name if in create mode and slug hasn't been manually edited
+      if (name === 'name' && !isEditMode && !formData.slug) {
+        const slugValue = value
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/^-+|-+$/g, '');
+        setFormData((prev) => ({ ...prev, slug: slugValue }));
+      }
     }
 
     // Clear error when field is edited
@@ -157,47 +216,65 @@ const SpaceFormModal: React.FC<SpaceFormModalProps> = ({ isOpen, onClose, space 
       newErrors.slug = 'Slug can only contain lowercase letters, numbers, and hyphens';
     }
 
+    if (!formData.spaceType) {
+      newErrors.spaceType = 'Space type is required';
+    }
+
+    if (formData.spaceType === SpaceType.FACULTY && !formData.facultyId) {
+      newErrors.facultyId = 'Faculty is required for faculty spaces';
+    }
+
+    if (formData.spaceType === SpaceType.STUDY_PROGRAM) {
+      if (!formData.studyProgramId) {
+        newErrors.studyProgramId = 'Study program is required';
+      }
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = () => {
     if (!validateForm()) return;
-    
+
     if (isEditMode && space) {
-      // For edit mode, explicitly use UpdateSpaceDto
       const updateData: UpdateSpaceDto = {
         name: formData.name,
         description: formData.description,
         slug: formData.slug,
+        spaceType: formData.spaceType,
+        facultyId: formData.facultyId,
+        studyProgramId: formData.studyProgramId,
       };
-      
+
       // Handle icon
       if (iconFile) {
         updateData.icon = iconFile;
       } else if (space.iconUrl && iconPreview === null) {
         updateData.removeIcon = true;
       }
-      
+
       // Handle banner
       if (bannerFile) {
         updateData.banner = bannerFile;
       } else if (space.bannerUrl && bannerPreview === null) {
         updateData.removeBanner = true;
       }
-      
+
       updateMutation.mutate({ id: space.id, data: updateData });
     } else {
-      // For create mode, explicitly use CreateSpaceDto
       const createData: CreateSpaceDto = {
         name: formData.name || '',
         description: formData.description || '',
         slug: formData.slug || '',
+        spaceType: formData.spaceType as SpaceType,
+        facultyId: formData.facultyId,
+        studyProgramId: formData.studyProgramId,
       };
-      
+
       if (iconFile) createData.icon = iconFile;
       if (bannerFile) createData.banner = bannerFile;
-      
+
       createMutation.mutate(createData);
     }
   };
@@ -221,7 +298,7 @@ const SpaceFormModal: React.FC<SpaceFormModalProps> = ({ isOpen, onClose, space 
               onChange={handleInputChange}
               className={`mt-1 block w-full rounded-md border ${
                 errors.name ? 'border-red-300' : 'border-gray-300'
-              } px-3 py-2 shadow-sm focus:border-green-500 focus:outline-none focus:ring-green-500 sm:text-sm`}
+              } px-3 py-2 focus:border-green-500 focus:ring-green-500 focus:outline-none sm:text-sm`}
             />
             {errors.name && <p className="mt-1 text-sm text-red-600">{errors.name}</p>}
           </div>
@@ -231,7 +308,7 @@ const SpaceFormModal: React.FC<SpaceFormModalProps> = ({ isOpen, onClose, space 
             <label htmlFor="slug" className="block text-sm font-medium text-gray-700">
               Slug <span className="text-red-500">*</span>
             </label>
-            <div className="mt-1 flex rounded-md shadow-sm">
+            <div className="mt-1 flex rounded-md">
               <span className="inline-flex items-center rounded-l-md border border-r-0 border-gray-300 bg-gray-50 px-3 text-gray-500 sm:text-sm">
                 /
               </span>
@@ -243,7 +320,7 @@ const SpaceFormModal: React.FC<SpaceFormModalProps> = ({ isOpen, onClose, space 
                 onChange={handleInputChange}
                 className={`block w-full rounded-none rounded-r-md border ${
                   errors.slug ? 'border-red-300' : 'border-gray-300'
-                } px-3 py-2 focus:border-green-500 focus:outline-none focus:ring-green-500 sm:text-sm`}
+                } px-3 py-2 focus:border-green-500 focus:ring-green-500 focus:outline-none sm:text-sm`}
                 placeholder="unique-space-slug"
               />
             </div>
@@ -265,10 +342,89 @@ const SpaceFormModal: React.FC<SpaceFormModalProps> = ({ isOpen, onClose, space 
               rows={3}
               value={formData.description}
               onChange={handleInputChange}
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-green-500 focus:outline-none focus:ring-green-500 sm:text-sm"
+              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 focus:border-green-500 focus:ring-green-500 focus:outline-none sm:text-sm"
               placeholder="Describe what this space is about"
             />
           </div>
+
+          {/* Space Type */}
+          <div>
+            <label htmlFor="spaceType" className="block text-sm font-medium text-gray-700">
+              Space Type <span className="text-red-500">*</span>
+            </label>
+            <select
+              id="spaceType"
+              name="spaceType"
+              value={formData.spaceType}
+              onChange={handleInputChange}
+              className={`mt-1 block w-full rounded-md border ${
+                errors.spaceType ? 'border-red-300' : 'border-gray-300'
+              } px-3 py-2 focus:border-green-500 focus:ring-green-500 focus:outline-none sm:text-sm`}
+            >
+              <option value={SpaceType.ACADEMIC}>Academic</option>
+              <option value={SpaceType.FACULTY}>Faculty</option>
+              <option value={SpaceType.STUDY_PROGRAM}>Study Program</option>
+              <option value={SpaceType.ORGANIZATION}>Organization</option>
+              <option value={SpaceType.CAMPUS}>Campus</option>
+              <option value={SpaceType.OTHER}>Other</option>
+            </select>
+            {errors.spaceType && <p className="mt-1 text-sm text-red-600">{errors.spaceType}</p>}
+          </div>
+
+          {/* Faculty (only shown for FACULTY type) */}
+          {formData.spaceType === SpaceType.FACULTY && (
+            <div>
+              <label htmlFor="facultyId" className="block text-sm font-medium text-gray-700">
+                Faculty <span className="text-red-500">*</span>
+              </label>
+              <select
+                id="facultyId"
+                name="facultyId"
+                value={formData.facultyId || ''}
+                onChange={handleInputChange}
+                className={`mt-1 block w-full rounded-md border ${
+                  errors.facultyId ? 'border-red-300' : 'border-gray-300'
+                } px-3 py-2 focus:border-green-500 focus:ring-green-500 focus:outline-none sm:text-sm`}
+              >
+                <option value="">Select a faculty</option>
+                {faculties.map((faculty) => (
+                  <option key={faculty.id} value={faculty.id}>
+                    {faculty.facultyName}
+                  </option>
+                ))}
+              </select>
+              {errors.facultyId && <p className="mt-1 text-sm text-red-600">{errors.facultyId}</p>}
+            </div>
+          )}
+
+          {/* Study Program (only shown for STUDY_PROGRAM type) */}
+          {formData.spaceType === SpaceType.STUDY_PROGRAM && (
+            <div>
+              <label htmlFor="studyProgramId" className="block text-sm font-medium text-gray-700">
+                Study Program <span className="text-red-500">*</span>
+              </label>
+              <select
+                id="studyProgramId"
+                name="studyProgramId"
+                value={formData.studyProgramId || ''}
+                onChange={handleInputChange}
+                className={`mt-1 block w-full rounded-md border ${
+                  errors.studyProgramId ? 'border-red-300' : 'border-gray-300'
+                } px-3 py-2 focus:border-green-500 focus:ring-green-500 focus:outline-none sm:text-sm`}
+              >
+                <option value="">Select a study program</option>
+                {studyPrograms.map((program) => (
+                  <option key={program.id} value={program.id}>
+                    {program.studyProgramName}
+                  </option>
+                ))}
+              </select>
+              {errors.studyProgramId && <p className="mt-1 text-sm text-red-600">{errors.studyProgramId}</p>}
+              {studyPrograms.length === 0 && (
+                <p className="mt-1 text-sm text-amber-600">No study programs found for this faculty</p>
+              )}
+            </div>
+          )}
 
           {/* Icon Upload */}
           <div>
@@ -283,7 +439,7 @@ const SpaceFormModal: React.FC<SpaceFormModalProps> = ({ isOpen, onClose, space 
                       setIconFile(null);
                       setIconPreview(null);
                     }}
-                    className="absolute -right-2 -top-2 rounded-full bg-red-100 p-1 text-red-500 hover:bg-red-200"
+                    className="absolute -top-2 -right-2 rounded-full bg-red-100 p-1 text-red-500 hover:bg-red-200"
                   >
                     <X size={16} />
                   </button>
@@ -294,7 +450,7 @@ const SpaceFormModal: React.FC<SpaceFormModalProps> = ({ isOpen, onClose, space 
                 </div>
               )}
 
-              <label className="flex cursor-pointer items-center rounded-md bg-white px-3 py-2 text-sm font-medium text-gray-700 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+              <label className="flex cursor-pointer items-center rounded-md bg-white px-3 py-2 text-sm font-medium text-gray-700 ring-1 ring-gray-300 ring-inset hover:bg-gray-50">
                 <Upload size={16} className="mr-2" />
                 {iconPreview ? 'Change Icon' : 'Upload Icon'}
                 <input type="file" className="hidden" accept="image/*" onChange={handleIconChange} />
@@ -317,7 +473,7 @@ const SpaceFormModal: React.FC<SpaceFormModalProps> = ({ isOpen, onClose, space 
                       setBannerFile(null);
                       setBannerPreview(null);
                     }}
-                    className="absolute right-2 top-2 rounded-full bg-gray-800 bg-opacity-50 p-1 text-white hover:bg-opacity-70"
+                    className="bg-opacity-50 hover:bg-opacity-70 absolute top-2 right-2 rounded-full bg-gray-800 p-1 text-white"
                   >
                     <X size={16} />
                   </button>

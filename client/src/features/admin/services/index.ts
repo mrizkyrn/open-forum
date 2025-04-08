@@ -79,6 +79,15 @@ export const adminApi = {
       // Append basic space information
       formData.append('name', data.name.trim());
       formData.append('slug', data.slug.trim());
+      formData.append('spaceType', data.spaceType);
+
+      if (data.facultyId) {
+        formData.append('facultyId', data.facultyId.toString());
+      }
+
+      if (data.studyProgramId) {
+        formData.append('studyProgramId', data.studyProgramId.toString());
+      }
 
       if (data.description) {
         formData.append('description', data.description.trim());
@@ -118,6 +127,18 @@ export const adminApi = {
 
       if (data.description !== undefined) {
         formData.append('description', data.description.trim());
+      }
+
+      if (data.spaceType !== undefined) {
+        formData.append('spaceType', data.spaceType);
+      }
+
+      if (data.facultyId !== undefined) {
+        formData.append('facultyId', data.facultyId?.toString() || '');
+      }
+
+      if (data.studyProgramId !== undefined) {
+        formData.append('studyProgramId', data.studyProgramId?.toString() || '');
       }
 
       // Append files if they exist
