@@ -88,7 +88,7 @@ const AvatarUpload = ({ currentAvatarUrl, size = '24', onSuccess }: AvatarUpload
 
       {/* Upload/Remove overlay */}
       {(isHovering || isPending) && (
-        <div className="bg-opacity-40 absolute inset-0 flex items-center justify-center bg-black transition-all">
+        <div className="absolute inset-0 flex items-center justify-center bg-black/40 transition-all">
           {isPending ? (
             <div className="h-6 w-6 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
           ) : (
@@ -96,7 +96,7 @@ const AvatarUpload = ({ currentAvatarUrl, size = '24', onSuccess }: AvatarUpload
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="hover:bg-opacity-90 rounded-full bg-white p-2 text-gray-700 transition"
+                className="rounded-full bg-white p-2 text-gray-700 transition hover:bg-white/90"
                 aria-label="Upload new avatar"
               >
                 <Camera className="h-4 w-4" />

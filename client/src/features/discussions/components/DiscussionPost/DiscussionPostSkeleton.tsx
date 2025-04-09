@@ -7,7 +7,7 @@ interface DiscussionPostSkeletonProps {
 
 const DiscussionPostSkeleton: React.FC<DiscussionPostSkeletonProps> = ({ count = 3 }) => {
   return (
-    <div className="container mx-auto max-w-xl px-4">
+    <div className="container mx-auto max-w-xl">
       <div className="flex flex-col items-center gap-2">
         {/* Post input skeleton */}
         <div className="flex w-full items-center gap-2 rounded-xl bg-white p-4">

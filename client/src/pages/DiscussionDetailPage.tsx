@@ -94,7 +94,7 @@ const DiscussionDetailPage = () => {
         <DiscussionCard discussion={discussion} disableNavigation={true} />
 
         {/* Comments section */}
-        <div className="mt-4 rounded-xl bg-white">
+        <div className="mt-4 rounded-xl bg-white p-4 border border-gray-100">
           {/* Comment form */}
           <div className="mb-3">
             <CommentForm discussionId={discussion.id} />

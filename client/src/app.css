@@ -86,6 +86,8 @@
   display: none; /* Chrome, Safari and Opera */
 }
 
+
+
 /* Custom CSS for animations */
 @keyframes LoadingDotAnimation {
   0%,

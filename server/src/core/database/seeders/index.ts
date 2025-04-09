@@ -1,7 +1,8 @@
 import { DataSource } from 'typeorm';
-import { seedUsers } from './user.seeder';
 import { seedDiscussionSpaces } from './discussion-space.seeder';
+import { seedDiscussions } from './discussion.seeder';
 import { seedReportReasons } from './report-reason.seeder';
+import { seedUsers } from './user.seeder';
 
 export async function seedDatabase(dataSource: DataSource): Promise<void> {
   console.log('🌱 Starting database seeding...');
@@ -15,7 +16,8 @@ export async function seedDatabase(dataSource: DataSource): Promise<void> {
     // Seed in sequence to maintain referential integrity
     const users = await seedUsers(dataSource);
     await seedDiscussionSpaces(dataSource, users);
-    // await seedReportReasons(dataSource);
+    await seedDiscussions(dataSource);
+    await seedReportReasons(dataSource);
 
     console.log('✅ Database seeding completed successfully');
   } catch (error) {

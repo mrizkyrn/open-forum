@@ -53,4 +53,5 @@ export interface SearchDiscussionDto extends SearchDto {
   authorId?: number;
   isAnonymous?: boolean;
   spaceId?: number;
+  onlyFollowedSpaces?: boolean;
 }

@@ -8,6 +8,7 @@ export enum NotificationType {
   DISCUSSION_UPVOTE = 'discussion_upvote',
   COMMENT_UPVOTE = 'comment_upvote',
   REPORT_REVIEWED = 'report_reviewed',
+  USER_MENTIONED = 'user_mentioned',
 }
 
 /**

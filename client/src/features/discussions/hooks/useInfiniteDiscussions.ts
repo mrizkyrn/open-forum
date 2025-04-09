@@ -1,19 +1,11 @@
 import { discussionApi } from '@/features/discussions/services';
-import { DiscussionSortBy } from '@/features/discussions/types';
+import { DiscussionSortBy, SearchDiscussionDto } from '@/features/discussions/types';
 import { SortOrder } from '@/types/SearchTypes';
 import { useInfiniteQuery } from '@tanstack/react-query';
 
 export type DiscussionFeedType = 'regular' | 'bookmarked';
 
-interface UseInfiniteDiscussionsOptions {
-  limit?: number;
-  tags?: string[];
-  search?: string;
-  sortBy?: DiscussionSortBy;
-  sortOrder?: SortOrder;
-  authorId?: number;
-  spaceId?: number;
-  isAnonymous?: boolean;
+export interface UseInfiniteDiscussionsOptions extends Partial<SearchDiscussionDto> {
   feedType?: DiscussionFeedType;
 }
 
@@ -27,30 +19,43 @@ export function useInfiniteDiscussions(options: UseInfiniteDiscussionsOptions = 
     authorId,
     spaceId,
     isAnonymous,
+    onlyFollowedSpaces,
     feedType = 'regular',
   } = options;
 
   return useInfiniteQuery({
-    queryKey: ['discussions', feedType, { limit, tags, spaceId, search, sortBy, sortOrder, authorId, isAnonymous }],
+    queryKey: [
+      'discussions',
+      feedType,
+      { limit, tags, spaceId, search, sortBy, sortOrder, authorId, isAnonymous, onlyFollowedSpaces },
+    ],
     queryFn: async ({ pageParam = 1 }) => {
-      const params = { limit, tags, search, sortBy, sortOrder, authorId, spaceId, isAnonymous };
-      const queryParams = { ...params, page: pageParam };
-      
+      const params: SearchDiscussionDto = {
+        page: pageParam,
+        limit,
+        tags,
+        search,
+        sortBy,
+        sortOrder,
+        authorId,
+        spaceId,
+        isAnonymous,
+        onlyFollowedSpaces,
+      };
+
       // Choose the right API method based on feedType
       if (feedType === 'bookmarked') {
-        return await discussionApi.getBookmarkedDiscussions(queryParams);
+        return await discussionApi.getBookmarkedDiscussions(params);
       }
-      
+
       // Default to regular discussions
-      return await discussionApi.getDiscussions(queryParams);
+      return await discussionApi.getDiscussions(params);
     },
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {
-      // Return the next page number or undefined if no more pages
       return lastPage.meta.hasNextPage ? lastPage.meta.currentPage + 1 : undefined;
     },
     getPreviousPageParam: (firstPage) => {
-      // Return the previous page number or undefined if on first page
       return firstPage.meta.hasPreviousPage ? firstPage.meta.currentPage - 1 : undefined;
     },
   });

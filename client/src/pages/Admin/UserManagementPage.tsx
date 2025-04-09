@@ -4,7 +4,6 @@ import { Edit, MoreHorizontal, Trash2, UserCheck, Users } from 'lucide-react';
 import { useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 
-import UserAvatar from '@/components/layouts/UserAvatar';
 import ConfirmationModal from '@/components/modals/ConfirmationModal';
 import { DataTable } from '@/features/admin/components/DataTable';
 import FilterBar from '@/features/admin/components/FilterBar';
@@ -13,6 +12,7 @@ import Pagination from '@/features/admin/components/Pagination';
 import SelectFilter from '@/features/admin/components/SelectFilter';
 import StatusBadge from '@/features/admin/components/StatusBadge';
 import { adminApi } from '@/features/admin/services';
+import UserAvatar from '@/features/users/components/UserAvatar';
 import UserFormModal from '@/features/users/components/UserFormModal';
 import { useUsers } from '@/features/users/hooks/useUsers';
 import { User, UserRole } from '@/features/users/types';

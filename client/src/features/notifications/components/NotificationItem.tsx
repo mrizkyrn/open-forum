@@ -1,8 +1,9 @@
-import UserAvatar from '@/components/layouts/UserAvatar';
 import { Notification, NotificationType } from '@/features/notifications/types';
+import UserAvatar from '@/features/users/components/UserAvatar';
 import { format, formatDistanceToNow } from 'date-fns';
 import {
   AlertTriangle,
+  AtSign,
   Bell,
   Check,
   Loader2,
@@ -84,8 +85,8 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
             )}
 
             {/* For regular comment notifications, show comment content */}
-            {!isReportNotification && notification.data?.commentContent && (
-              <p className="mt-1 line-clamp-1 text-sm text-gray-500">{notification.data.commentContent}</p>
+            {!isReportNotification && notification.data?.content && (
+              <p className="mt-1 line-clamp-1 text-sm text-gray-500">{notification.data.content}</p>
             )}
 
             <div className="mt-1 flex items-center gap-2">
@@ -184,7 +185,8 @@ const getNotificationIcon = (notification: Notification) => {
     case NotificationType.NEW_COMMENT:
     case NotificationType.NEW_REPLY:
       return <MessageSquare className="h-5 w-5 text-green-500" />;
-
+    case NotificationType.USER_MENTIONED:
+      return <AtSign className="h-5 w-5 text-blue-500" />;
     case NotificationType.REPORT_REVIEWED: {
       if (data?.recipientType === 'content_author' && data.contentDeleted) {
         return <AlertTriangle className="h-5 w-5 text-red-500" />;
@@ -218,7 +220,8 @@ const getNotificationMessage = (notification: Notification) => {
       return `${actorName} commented on your discussion`;
     case NotificationType.NEW_REPLY:
       return `${actorName} replied to your comment`;
-
+    case NotificationType.USER_MENTIONED:
+      return `${actorName} mentioned you in a comment`;
     case NotificationType.REPORT_REVIEWED: {
       // If there's a specific message sent from the server, use it
       if (data?.message) {

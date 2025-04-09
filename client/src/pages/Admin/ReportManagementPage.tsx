@@ -3,7 +3,6 @@ import { format } from 'date-fns';
 import { AlertTriangle, CheckCircle, Flag, MessageCircle, X } from 'lucide-react';
 import { useState } from 'react';
 
-import UserAvatar from '@/components/layouts/UserAvatar';
 import { DataTable } from '@/features/admin/components/DataTable';
 import FilterBar from '@/features/admin/components/FilterBar';
 import PageHeader from '@/features/admin/components/PageHeader';
@@ -15,6 +14,7 @@ import StatusBadge from '@/features/admin/components/StatusBadge';
 import { useReports } from '@/features/reports/hooks/useReports';
 import { reportApi } from '@/features/reports/services';
 import { Report, ReportStatus, ReportTargetType } from '@/features/reports/types';
+import UserAvatar from '@/features/users/components/UserAvatar';
 
 const ReportManagementPage = () => {
   const [selectedReport, setSelectedReport] = useState<Report | null>(null);

@@ -1,12 +1,15 @@
-import UserAvatar from '@/components/layouts/UserAvatar';
 import MainButton from '@/components/ui/buttons/MainButton';
 import FilePreview from '@/components/ui/file-displays/FilePreview';
 import { useAuth } from '@/features/auth/hooks/useAuth';
 import { commentApi } from '@/features/comments/services';
+import UserAvatar from '@/features/users/components/UserAvatar';
+import { userApi } from '@/features/users/services';
+import { User } from '@/features/users/types';
+import { useDebounce } from '@/hooks/useDebounce';
 import { useFileHandling } from '@/hooks/useFileHandling';
 import { Attachment } from '@/types/AttachmentTypes';
 import { ALLOWED_FILE_TYPES, MAX_COMMENT_FILES, MAX_FILE_SIZE } from '@/utils/constants';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ImagePlus } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
@@ -41,6 +44,12 @@ const CommentForm: React.FC<CommentFormProps> = ({
   const [value, onChange] = useState(initialValue);
   const [attachmentsToRemove, setAttachmentsToRemove] = useState<number[]>([]);
   const [isFocused, setIsFocused] = useState(false);
+  const [showMentionDropdown, setShowMentionDropdown] = useState(false);
+  const [mentionQuery, setMentionQuery] = useState('');
+  const [mentionPosition, setMentionPosition] = useState({ top: 0, left: 0 });
+  const [cursorPosition, setCursorPosition] = useState(0);
+  const debouncedMentionQuery = useDebounce(mentionQuery, 300);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const { files, fileErrors, fileInputRef, handleFileChange, removeFile, clearFiles } = useFileHandling(
     MAX_COMMENT_FILES,
@@ -52,21 +61,33 @@ const CommentForm: React.FC<CommentFormProps> = ({
   const queryClient = useQueryClient();
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
+  // Query for username mentions
+  const { data: mentionUsers, isLoading: loadingMentions } = useQuery({
+    queryKey: ['userMentions', debouncedMentionQuery],
+    queryFn: () =>
+      userApi.getUsers({
+        page: 1,
+        limit: 5,
+        search: debouncedMentionQuery,
+      }),
+    enabled: showMentionDropdown && debouncedMentionQuery.length > 0,
+  });
+
   // Set initial value and adjust textarea height
   useEffect(() => {
     onChange(initialValue);
     setTimeout(adjustTextareaHeight, 0);
   }, [initialValue]);
 
-  // Focus and resize on mount for editing
   useEffect(() => {
     if (initialFocus && textareaRef.current) {
       setTimeout(() => {
         textareaRef.current?.focus();
-
+  
+        // If there's a prefilled mention, place cursor at the end
         const length = initialValue.length;
         textareaRef.current?.setSelectionRange(length, length);
-
+  
         adjustTextareaHeight();
       }, 50);
     }
@@ -82,6 +103,12 @@ const CommentForm: React.FC<CommentFormProps> = ({
       ) {
         return;
       }
+
+      // Close mention dropdown when clicking outside
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setShowMentionDropdown(false);
+      }
+
       setIsFocused(false);
 
       if (onClickOutside && !value.trim()) {
@@ -92,6 +119,81 @@ const CommentForm: React.FC<CommentFormProps> = ({
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [onClickOutside, value]);
+
+  // Function to check for @ character and handle mention dropdown
+  const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const newValue = e.target.value;
+    const cursorPos = e.target.selectionStart || 0;
+    setCursorPosition(cursorPos);
+    onChange(newValue);
+
+    // Check if we need to show mention dropdown
+    const textBeforeCursor = newValue.substring(0, cursorPos);
+    const mentionMatch = textBeforeCursor.match(/@(\w*)$/);
+
+    if (mentionMatch) {
+      const query = mentionMatch[1];
+      setMentionQuery(query);
+
+      // Calculate position for dropdown
+      if (textareaRef.current) {
+        const { top, left, height } = textareaRef.current.getBoundingClientRect();
+        // Create a temporary element to measure text width
+        const tempEl = document.createElement('div');
+        tempEl.style.position = 'absolute';
+        tempEl.style.visibility = 'hidden';
+        tempEl.style.whiteSpace = 'pre';
+        tempEl.style.font = window.getComputedStyle(textareaRef.current).font;
+        tempEl.textContent = textBeforeCursor;
+        document.body.appendChild(tempEl);
+
+        const textWidth = tempEl.getBoundingClientRect().width;
+        document.body.removeChild(tempEl);
+
+        // Position dropdown below the @ symbol
+        setMentionPosition({
+          top: top + height + window.scrollY,
+          left: left + textWidth - mentionMatch[0].length + window.scrollX,
+        });
+      }
+
+      setShowMentionDropdown(true);
+    } else {
+      setShowMentionDropdown(false);
+    }
+
+    adjustTextareaHeight();
+  };
+
+  // Function to handle selection of a username from dropdown
+  const handleSelectMention = (username: string) => {
+    if (textareaRef.current) {
+      const textBeforeCursor = value.substring(0, cursorPosition);
+      const textAfterCursor = value.substring(cursorPosition);
+
+      // Find the last @ before cursor
+      const mentionMatch = textBeforeCursor.match(/@(\w*)$/);
+
+      if (mentionMatch) {
+        const startPos = cursorPosition - mentionMatch[0].length;
+        const newValue = textBeforeCursor.substring(0, startPos) + `@${username} ` + textAfterCursor;
+
+        onChange(newValue);
+
+        // Set cursor position after the inserted username
+        const newCursorPos = startPos + username.length + 2; // +2 for @ and space
+        setTimeout(() => {
+          if (textareaRef.current) {
+            textareaRef.current.focus();
+            textareaRef.current.setSelectionRange(newCursorPos, newCursorPos);
+          }
+        }, 0);
+      }
+    }
+
+    setShowMentionDropdown(false);
+    adjustTextareaHeight();
+  };
 
   const { mutate: submitComment, isPending } = useMutation({
     mutationFn: async (data: FormData) => {
@@ -172,20 +274,51 @@ const CommentForm: React.FC<CommentFormProps> = ({
       <div className="flex items-start gap-2">
         {isReply || isEditing ? null : <UserAvatar fullName={user?.fullName} avatarUrl={user?.avatarUrl} size="md" />}
         <div className="flex w-full flex-col gap-3">
-          <textarea
-            ref={textareaRef}
-            value={value}
-            onChange={(e) => {
-              onChange(e.target.value);
-              adjustTextareaHeight();
-            }}
-            onFocus={() => setIsFocused(true)}
-            placeholder={isReply ? `Write a reply...` : 'Write a comment...'}
-            className={`focus:ring-primary-lighter w-full resize-none overflow-hidden rounded-md border border-gray-300 px-3 py-1 transition-all focus:ring-1 focus:outline-none ${
-              isReply ? 'min-h-[30px] text-sm' : 'min-h-[38px]'
-            }`}
-            rows={1}
-          />
+          <div className="relative w-full">
+            <textarea
+              ref={textareaRef}
+              value={value}
+              onChange={handleTextChange}
+              onFocus={() => setIsFocused(true)}
+              placeholder={isReply ? `Write a reply...` : 'Write a comment...'}
+              className={`focus:ring-primary-lighter w-full resize-none overflow-hidden rounded-md border border-gray-300 px-3 py-1 transition-all focus:ring-1 focus:outline-none ${
+                isReply ? 'min-h-[30px] text-sm' : 'min-h-[38px]'
+              }`}
+              rows={1}
+            />
+
+            {/* Mention dropdown */}
+            {showMentionDropdown && (
+              <div
+                ref={dropdownRef}
+                className="fixed z-10 max-h-60 w-64 overflow-y-auto rounded-md border border-gray-200 bg-white shadow-lg"
+                style={{
+                  top: `${mentionPosition.top}px`,
+                  left: `${mentionPosition.left}px`,
+                }}
+              >
+                {loadingMentions ? (
+                  <div className="p-2 text-sm text-gray-500">Loading...</div>
+                ) : mentionUsers && mentionUsers.items.length > 0 ? (
+                  mentionUsers.items.map((user: User) => (
+                    <div
+                      key={user.id}
+                      className="flex cursor-pointer items-center gap-2 p-2 hover:bg-gray-100"
+                      onClick={() => handleSelectMention(user.username)}
+                    >
+                      <UserAvatar fullName={user.fullName} avatarUrl={user.avatarUrl} size="sm" />
+                      <div>
+                        <div className="text-sm font-medium">{user.fullName}</div>
+                        <div className="text-xs text-gray-500">@{user.username}</div>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="p-2 text-sm text-gray-500">No users found</div>
+                )}
+              </div>
+            )}
+          </div>
 
           {/* Show existing attachments that haven't been marked for removal */}
           {isEditing && existingAttachments.length > 0 && (
@@ -261,12 +394,7 @@ const CommentForm: React.FC<CommentFormProps> = ({
                 </button>
               )}
 
-              <MainButton
-                type="submit"
-                variant="primary"
-                isLoading={isPending}
-                disabled={isPending || !value.trim()}
-              >
+              <MainButton type="submit" variant="primary" isLoading={isPending} disabled={isPending || !value.trim()}>
                 {getActionText()}
               </MainButton>
             </div>

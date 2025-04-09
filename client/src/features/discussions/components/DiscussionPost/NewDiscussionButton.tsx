@@ -1,6 +1,6 @@
-import UserAvatar from '@/components/layouts/UserAvatar';
 import { useAuth } from '@/features/auth/hooks/useAuth';
 import { CreateDiscussionModal } from '@/features/discussions/components';
+import UserAvatar from '@/features/users/components/UserAvatar';
 import { useState } from 'react';
 
 interface NewDiscussionButtonProps {

@@ -79,7 +79,7 @@ const SearchPage = () => {
         <BackButton backTo="/explore" text="Explore" />
       )}
 
-      <div className="border-b border-gray-200 bg-white">
+      <div className="mb-4 border-b border-gray-200 bg-white">
         <nav className="flex" aria-label="Search Tabs">
           <button
             className={`flex w-full items-center justify-center border-b-2 px-1 py-3 text-sm font-medium whitespace-nowrap ${
@@ -110,7 +110,7 @@ const SearchPage = () => {
 
       {activeTab === 'discussions' && (
         <>
-          <div className="my-3 flex flex-col gap-4 rounded-lg">
+          <div className="mb-3 flex flex-col gap-4 rounded-lg">
             <DiscussionSearchBar currentFilters={filters} onFilterChange={applyFilters} onReset={resetAllFilters} />
           </div>
 

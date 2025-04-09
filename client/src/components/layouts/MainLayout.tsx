@@ -6,10 +6,10 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Bell, Bookmark, Home, Layers, LogOut, Menu, Plus, Search, User, X } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import UserAvatar from '../../features/users/components/UserAvatar';
 import LeftSidebar, { NavItem } from './LeftSidebar';
 import Logo from './Logo';
 import RightSidebar from './RightSidebar';
-import UserAvatar from './UserAvatar';
 
 const MobileNavItem = ({
   item,

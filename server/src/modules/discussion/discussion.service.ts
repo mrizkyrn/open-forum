@@ -140,7 +140,7 @@ export class DiscussionService {
     const { page, limit } = searchDto;
     const offset = (page - 1) * limit;
 
-    const queryBuilder = this.buildDiscussionSearchQuery(searchDto, offset, limit);
+    const queryBuilder = this.buildDiscussionSearchQuery(searchDto, offset, limit, currentUser);
     const [discussions, totalItems] = await queryBuilder.getManyAndCount();
 
     await this.loadAttachmentsForDiscussions(discussions);
@@ -612,7 +612,12 @@ export class DiscussionService {
     return discussion;
   }
 
-  private buildDiscussionSearchQuery(searchDto: SearchDiscussionDto, offset: number, limit: number) {
+  private buildDiscussionSearchQuery(
+    searchDto: SearchDiscussionDto,
+    offset: number,
+    limit: number,
+    currentUser?: User,
+  ) {
     const { sortBy = 'createdAt', sortOrder = 'DESC' } = searchDto;
 
     const queryBuilder = this.discussionRepository
@@ -630,12 +635,12 @@ export class DiscussionService {
 
     queryBuilder.skip(offset).take(limit);
 
-    this.applyDiscussionFilters(queryBuilder, searchDto);
+    this.applyDiscussionFilters(queryBuilder, searchDto, currentUser);
 
     return queryBuilder;
   }
 
-  private applyDiscussionFilters(queryBuilder, searchDto: SearchDiscussionDto) {
+  private applyDiscussionFilters(queryBuilder, searchDto: SearchDiscussionDto, currentUser?: User) {
     if (searchDto.search) {
       queryBuilder.andWhere('discussion.content ILIKE :search', { search: `%${searchDto.search}%` });
     }
@@ -655,6 +660,18 @@ export class DiscussionService {
 
     if (searchDto.spaceId) {
       queryBuilder.andWhere('discussion.spaceId = :spaceId', { spaceId: searchDto.spaceId });
+    }
+
+    if (searchDto.onlyFollowedSpaces && currentUser?.id) {
+      queryBuilder.andWhere((qb) => {
+        const subQuery = qb
+          .subQuery()
+          .select('space_id')
+          .from('discussion_space_followers', 'followers')
+          .where('followers.user_id = :userId', { userId: currentUser.id })
+          .getQuery();
+        return 'discussion.space_id IN ' + subQuery;
+      });
     }
   }
 

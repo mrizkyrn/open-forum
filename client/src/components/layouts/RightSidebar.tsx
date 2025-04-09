@@ -125,7 +125,7 @@ const RightSidebar = () => {
   };
 
   return (
-    <div className="sticky top-0 min-h-screen border-l border-gray-200 bg-white px-4 py-4 lg:px-6">
+    <div className="hide-scrollbar sticky top-0 h-screen overflow-y-auto border-l border-gray-200 bg-white px-4 py-4 lg:px-6">
       {/* Explore button */}
       <MainButton variant="outline" size="xl" fullWidth onClick={() => navigate('/explore')}>
         Explore Discussions

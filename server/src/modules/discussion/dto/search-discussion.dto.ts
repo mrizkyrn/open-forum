@@ -68,4 +68,18 @@ export class SearchDiscussionDto extends SearchDto {
   @Type(() => Number)
   @IsNumber()
   spaceId?: number;
+
+  @ApiProperty({
+    description: 'Only show discussions from spaces the user follows',
+    example: true,
+    required: false,
+  })
+  @IsOptional()
+  @Transform(({ value }) => {
+    if (value === 'true') return true;
+    if (value === 'false') return false;
+    return value;
+  })
+  @IsBoolean()
+  onlyFollowedSpaces?: boolean;
 }

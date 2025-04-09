@@ -118,6 +118,15 @@ export class UserService {
     return UserDetailResponseDto.fromEntity(user);
   }
 
+  async findManyByUsernames(usernames: string[]): Promise<User[]> {
+    if (!usernames.length) return [];
+
+    return this.userRepository
+      .createQueryBuilder('user')
+      .where('user.username IN (:...usernames)', { usernames })
+      .getMany();
+  }
+
   async update(id: number, updateUserDto: UpdateUserDto): Promise<UserResponseDto> {
     const user = await this.getUserEntityById(id);
 

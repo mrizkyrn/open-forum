@@ -22,11 +22,11 @@ import { DiscussionService } from '../discussion/discussion.service';
 import { User } from '../user/entities/user.entity';
 import { VoteEntityType } from '../vote/entities/vote.entity';
 import { VoteService } from '../vote/vote.service';
+import { CommentMentionService } from './comment-mention.service';
 import { CommentResponseDto } from './dto/comment-response.dto';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { SearchCommentDto } from './dto/search-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
-import { CommentMention } from './entities/comment-mention.entity';
 import { Comment } from './entities/comment.entity';
 
 @Injectable()
@@ -36,8 +36,7 @@ export class CommentService {
   constructor(
     @InjectRepository(Comment)
     private readonly commentRepository: Repository<Comment>,
-    @InjectRepository(CommentMention)
-    private readonly commentMentionRepository: Repository<CommentMention>,
+    private readonly mentionService: CommentMentionService,
     @Inject(forwardRef(() => DiscussionService))
     private readonly discussionService: DiscussionService,
     private readonly attachmentService: AttachmentService,
@@ -107,6 +106,15 @@ export class CommentService {
 
         const savedComment = await queryRunner.manager.save(Comment, comment);
 
+        // Process mentions
+        await this.mentionService.processMentions(
+          createCommentDto.content,
+          savedComment.id,
+          discussionId,
+          currentUser.id,
+          queryRunner.manager,
+        );
+
         // Process files if they exist
         if (files && files.length > 0) {
           const attachments = await this.attachmentService.createMultipleAttachments(
@@ -137,7 +145,6 @@ export class CommentService {
           content: this.truncateContent(savedComment.content, 100),
           parentId: savedComment.parentId,
           hasAttachments: files && files.length > 0,
-          mentionedUserIds: createCommentDto.mentionedUserIds || [],
           clientRequestTime: createCommentDto.clientRequestTime || Date.now(),
         });
 
@@ -192,14 +199,9 @@ export class CommentService {
     const queryBuilder = this.buildCommentSearchQuery(searchDto, discussionId, offset, limit);
     const [comments, totalItems] = await queryBuilder.getManyAndCount();
 
-    // Get attachments and mentions for each comment
+    // Get attachments for each comment
     for (const comment of comments) {
       comment.attachments = await this.attachmentService.getAttachmentsByEntity(AttachmentType.COMMENT, comment.id);
-
-      comment.mentions = await this.commentMentionRepository.find({
-        where: { commentId: comment.id },
-        relations: ['user'],
-      });
     }
 
     const responseItems = await Promise.all(
@@ -242,14 +244,9 @@ export class CommentService {
 
       const [replies, totalItems] = await queryBuilder.getManyAndCount();
 
-      // Get attachments and mentions for each reply
+      // Get attachments for each reply
       for (const reply of replies) {
         reply.attachments = await this.attachmentService.getAttachmentsByEntity(AttachmentType.COMMENT, reply.id);
-
-        reply.mentions = await this.commentMentionRepository.find({
-          where: { commentId: reply.id },
-          relations: ['user'],
-        });
       }
 
       const formattedReplies = await Promise.all(
@@ -317,6 +314,14 @@ export class CommentService {
         // Update fields if provided
         if (updateCommentDto.content !== undefined) {
           comment.content = updateCommentDto.content;
+
+          await this.mentionService.updateMentions(
+            updateCommentDto.content,
+            comment.id,
+            comment.discussionId,
+            currentUser.id,
+            queryRunner.manager,
+          );
         }
 
         comment.isEdited = true;
@@ -495,32 +500,6 @@ export class CommentService {
     return results;
   }
 
-  async processMentions(commentId: number, mentionedUserIds: number[] = [], currentUserId?: number): Promise<void> {
-    this.logger.log(`Processing mentions for comment ID ${commentId}: ${mentionedUserIds.join(', ')}`);
-    const existingMentions = await this.commentMentionRepository.find({
-      where: { commentId },
-    });
-
-    // Remove existing mentions that are not in the new list
-    for (const mention of existingMentions) {
-      if (!mentionedUserIds.includes(mention.userId)) {
-        await this.commentMentionRepository.delete(mention.id);
-      }
-    }
-
-    // Add new mentions
-    for (const userId of mentionedUserIds) {
-      // Skip self-mentions if currentUserId is provided
-      if (currentUserId !== undefined && userId === currentUserId) continue;
-
-      const mentionExists = existingMentions.some((mention) => mention.userId === userId);
-      if (!mentionExists) {
-        const newMention = this.commentMentionRepository.create({ commentId, userId });
-        await this.commentMentionRepository.save(newMention);
-      }
-    }
-  }
-
   // ----- Helper Methods -----
 
   async getCommentWithAttachmentById(id: number): Promise<Comment> {
@@ -535,12 +514,6 @@ export class CommentService {
 
     const attachments = await this.attachmentService.getAttachmentsByEntity(AttachmentType.COMMENT, id);
     comment.attachments = attachments;
-
-    const mentions = await this.commentMentionRepository.find({
-      where: { commentId: id },
-      relations: ['user'],
-    });
-    comment.mentions = mentions;
 
     return comment;
   }

@@ -1,9 +1,9 @@
 import FeedbackDisplay from '@/components/feedback/FeedbackDisplay';
-import UserAvatar from '@/components/layouts/UserAvatar';
 import BackButton from '@/components/ui/buttons/BackButton';
 import { useAuth } from '@/features/auth/hooks/useAuth';
 import { DiscussionPost } from '@/features/discussions/components';
 import AvatarUpload from '@/features/users/components/AvatarUpload';
+import UserAvatar from '@/features/users/components/UserAvatar';
 import { userApi } from '@/features/users/services';
 import { UserRole } from '@/features/users/types';
 import { useQuery } from '@tanstack/react-query';

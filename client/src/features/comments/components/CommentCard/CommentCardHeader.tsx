@@ -1,6 +1,7 @@
 import { User } from '@/features/users/types';
 import { formatDateDistance } from '@/utils/helpers';
 import { Loader2 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import DiscussionDropdownAction from './CommentDropdownAction';
 
 interface CommentCardHeaderProps {
@@ -29,7 +30,9 @@ const CommentCardHeader: React.FC<CommentCardHeaderProps> = ({
       <div className="flex items-center gap-2">
         <div>
           <div className="flex items-center gap-1">
-            <span className="font-medium">{author.fullName}</span>
+            <Link to={`/profile/${author.username}`} className="cursor-pointer font-medium hover:underline">
+              {author.fullName}
+            </Link>
             <span className="text-xs text-gray-500">·</span>
             <span className="text-xs text-gray-500">{formatDateDistance(createdAt)}</span>
             {isEdited && <span className="text-xs text-gray-500">(edited)</span>}

@@ -1,7 +1,7 @@
-import UserAvatar from '@/components/layouts/UserAvatar';
 import ConfirmationModal from '@/components/modals/ConfirmationModal';
 import { commentApi } from '@/features/comments/services';
 import { Comment } from '@/features/comments/types';
+import UserAvatar from '@/features/users/components/UserAvatar';
 import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
@@ -89,6 +89,7 @@ const CommentCard: React.FC<CommentCardProps> = ({
           <UserAvatar
             fullName={comment.author.fullName}
             avatarUrl={comment.author.avatarUrl}
+            username={comment.author.username}
             size={isReply ? 'sm' : 'md'}
           />
 

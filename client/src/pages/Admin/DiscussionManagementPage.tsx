@@ -5,7 +5,6 @@ import { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-import UserAvatar from '@/components/layouts/UserAvatar';
 import ConfirmationModal from '@/components/modals/ConfirmationModal';
 import { DataTable } from '@/features/admin/components/DataTable';
 import FilterBar from '@/features/admin/components/FilterBar';
@@ -16,6 +15,7 @@ import { useDiscussions } from '@/features/discussions/hooks/useDiscussions';
 import { discussionApi } from '@/features/discussions/services';
 import { Discussion } from '@/features/discussions/types';
 import { useSpaces } from '@/features/spaces/hooks/useSpaces';
+import UserAvatar from '@/features/users/components/UserAvatar';
 import { useDropdown } from '@/hooks/useDropdown';
 import { truncateText } from '@/utils/helpers';
 

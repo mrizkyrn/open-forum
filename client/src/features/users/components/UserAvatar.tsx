@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 type AvatarSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | number;
 
@@ -7,9 +8,16 @@ interface UserAvatarProps {
   avatarUrl?: string | null;
   size?: AvatarSize;
   className?: string;
+  username?: string; // If provided, the avatar becomes clickable
 }
 
-const UserAvatar: React.FC<UserAvatarProps> = ({ fullName = 'Anonymous', avatarUrl, size = 'md', className = '' }) => {
+const UserAvatar: React.FC<UserAvatarProps> = ({
+  fullName = 'Anonymous',
+  avatarUrl,
+  size = 'md',
+  className = '',
+  username,
+}) => {
   const [imgSrc, setImgSrc] = useState<string | null>(null);
   const [hasError, setHasError] = useState(false);
 
@@ -75,27 +83,35 @@ const UserAvatar: React.FC<UserAvatarProps> = ({ fullName = 'Anonymous', avatarU
 
   const { width, height, sizeClass } = getSizeValue();
 
-  if (!imgSrc) {
-    return (
-      <div
-        className={`rounded-full bg-gray-200 ${sizeClass} ${className}`}
-        style={!sizeClass ? { width, height } : undefined}
-      />
-    );
-  }
+  // Determine if the avatar should be clickable (has username and not anonymous)
+  const shouldBeClickable = !!username && !isAnonymous;
 
-  return (
+  // Generate the avatar image element
+  const avatarImage = !imgSrc ? (
+    <div
+      className={`rounded-full bg-gray-200 ${sizeClass} ${className}`}
+      style={!sizeClass ? { width, height } : undefined}
+    />
+  ) : (
     <img
       src={imgSrc}
       alt={`${fullName}'s avatar`}
       onError={handleError}
-      className={`rounded-full object-cover ${sizeClass} ${className}`}
+      className={`rounded-full object-cover ${sizeClass} ${className} ${shouldBeClickable ? 'cursor-pointer hover:opacity-90' : ''}`}
       style={!sizeClass ? { width, height } : undefined}
       width={width}
       height={height}
       loading="lazy"
     />
   );
+
+  // If username is provided and not anonymous, wrap in Link component
+  if (shouldBeClickable) {
+    return <Link to={`/profile/${username}`}>{avatarImage}</Link>;
+  }
+
+  // Otherwise just return the avatar directly
+  return avatarImage;
 };
 
 export default UserAvatar;

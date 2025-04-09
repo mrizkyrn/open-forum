@@ -85,20 +85,6 @@ export class NotificationService implements OnModuleInit {
             }
           }
 
-          const mentionedUserIds = data.mentionedUserIds.filter((userId) => userId !== data.authorId);
-
-          if (mentionedUserIds.length) {
-            await this.commentService.processMentions(data.commentId, mentionedUserIds);
-            await this.createBatchNotifications({
-              recipientIds: mentionedUserIds,
-              actorId: data.authorId,
-              type: NotificationType.MENTION,
-              entityType: NotificationEntityType.COMMENT,
-              entityId: data.commentId,
-              data: baseNotificationData,
-            });
-          }
-
           this.logger.log(`Notifications processed for comment ID ${data.commentId}`);
         } catch (error) {
           this.logger.error(`Error processing notifications for comment: ${error.message}`, error.stack);
@@ -174,6 +160,36 @@ export class NotificationService implements OnModuleInit {
       })
       .catch((error) => {
         this.logger.error(`Failed to subscribe to vote events: ${error.message}`);
+      });
+
+    // Add subscription for mention events
+    this.redisService
+      .subscribe(RedisChannels.USER_MENTIONED, async (message) => {
+        try {
+          const data = JSON.parse(message);
+
+          // Create notification for each mentioned user
+          await this.createBatchNotifications(
+            {
+              recipientIds: data.userIds,
+              actorId: data.authorId,
+              type: NotificationType.USER_MENTIONED,
+              entityType: NotificationEntityType.COMMENT,
+              entityId: data.commentId,
+              data: {
+                discussionId: data.discussionId,
+                commentId: data.commentId,
+                content: data.content,
+              },
+            },
+            undefined, // No transaction needed here
+          );
+        } catch (error) {
+          this.logger.error(`Error processing mention notification: ${error.message}`, error.stack);
+        }
+      })
+      .catch((error) => {
+        this.logger.error(`Failed to subscribe to mention events: ${error.message}`);
       });
   }
 

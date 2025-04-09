@@ -8,6 +8,8 @@ import { CommentController } from './comment.controller';
 import { CommentService } from './comment.service';
 import { Comment } from './entities/comment.entity';
 import { CommentMention } from './entities/comment-mention.entity';
+import { CommentMentionService } from './comment-mention.service';
+import { UserModule } from '../user/user.module';
 
 @Module({
   imports: [
@@ -16,9 +18,10 @@ import { CommentMention } from './entities/comment-mention.entity';
     AttachmentModule,
     forwardRef(() => VoteModule),
     AnalyticModule,
+    UserModule,
   ],
-  providers: [CommentService],
+  providers: [CommentService, CommentMentionService],
   controllers: [CommentController],
-  exports: [CommentService],
+  exports: [CommentService, CommentMentionService],
 })
 export class CommentModule {}

@@ -9,7 +9,7 @@ export enum NotificationType {
   DISCUSSION_UPVOTE = 'discussion_upvote',
   COMMENT_UPVOTE = 'comment_upvote',
   REPORT_REVIEWED = 'report_reviewed',
-  MENTION = 'mention',
+  USER_MENTIONED = 'user_mentioned',
 }
 
 export enum NotificationEntityType {

@@ -1,7 +1,7 @@
 import { LogOut, Plus } from 'lucide-react';
 import { JSX } from 'react';
+import UserAvatar from '../../features/users/components/UserAvatar';
 import Logo from './Logo';
-import UserAvatar from './UserAvatar';
 
 // Navigation item type
 export type NavItem = {
@@ -90,7 +90,7 @@ const LeftSidebar = ({
         <div className="mt-5 px-2">
           <button
             onClick={onCreateDiscussion}
-            className="flex items-center justify-center rounded-full bg-primary px-4 py-2.5 text-center text-sm font-medium text-white transition-colors hover:bg-green-700 focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:outline-none sm:mx-auto sm:h-10 sm:w-10 sm:p-0 lg:h-auto lg:w-full lg:px-4 lg:py-2.5"
+            className="bg-primary flex items-center justify-center rounded-full px-4 py-2.5 text-center text-sm font-medium text-white transition-colors hover:bg-green-700 focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:outline-none sm:mx-auto sm:h-10 sm:w-10 sm:p-0 lg:h-auto lg:w-full lg:px-4 lg:py-2.5"
           >
             <Plus size={16} className="sm:h-5 sm:w-5 lg:mr-2 lg:h-4 lg:w-4" />
             <span className="sm:hidden lg:inline">Create Discussion</span>
