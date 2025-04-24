@@ -4,4 +4,6 @@ export enum RedisChannels {
   NOTIFICATION_CREATED = 'notification:created',
   VOTE_UPDATED = 'vote:updated',
   USER_MENTIONED = 'user:mentioned',
+  REPORT_SUBMITTED = 'report:submitted',
+  REPORT_REVIEWED = 'report:reviewed',
 }

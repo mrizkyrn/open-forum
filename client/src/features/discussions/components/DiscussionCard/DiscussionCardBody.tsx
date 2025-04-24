@@ -24,7 +24,7 @@ const DiscussionCardBody: React.FC<DiscussionCardBodyProps> = ({ content, attach
   };
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-2 sm:gap-3">
       <div>
         <p className="text-gray-700">{content}</p>
       </div>
@@ -44,23 +44,27 @@ const DiscussionCardBody: React.FC<DiscussionCardBodyProps> = ({ content, attach
         </div>
       )}
 
-      {/* Image attachments grid */}
-      {sortedImages.length > 0 && (
-        <div
-          className={`grid gap-1 overflow-hidden rounded-lg ${sortedImages.length > 1 ? 'grid-cols-2' : 'grid-cols-1'}`}
-        >
-          {sortedImages.map((image) => (
-            <ImageDisplay key={image.id} image={image} />
-          ))}
-        </div>
-      )}
+      {(sortedImages.length > 0 || sortedFiles.length > 0) && (
+        <div className="flex flex-col gap-1">
+          {/* Image attachments grid */}
+          {sortedImages.length > 0 && (
+            <div
+              className={`grid gap-1 overflow-hidden rounded-lg ${sortedImages.length > 1 ? 'grid-cols-2' : 'grid-cols-1'}`}
+            >
+              {sortedImages.map((image) => (
+                <ImageDisplay key={image.id} image={image} />
+              ))}
+            </div>
+          )}
 
-      {/* Document attachments list */}
-      {sortedFiles.length > 0 && (
-        <div className="mt-2 flex flex-col gap-2">
-          {sortedFiles.map((file) => (
-            <FileDisplay key={file.id} file={file} />
-          ))}
+          {/* Document attachments list */}
+          {sortedFiles.length > 0 && (
+            <div className="mt-2 flex flex-col gap-2">
+              {sortedFiles.map((file) => (
+                <FileDisplay key={file.id} file={file} />
+              ))}
+            </div>
+          )}
         </div>
       )}
     </div>

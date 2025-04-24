@@ -32,7 +32,7 @@ export class AuthService {
   async login(loginDto: LoginDto) {
     const user = await this.userService.getUserWithCredentials(loginDto.username);
 
-    // If user exists and is admin, verify password
+    // If user exists and is not an external user, check password
     if (user && !user.isExternalUser) {
       if (!user.password) {
         throw new UnauthorizedException('Incorrect username or password');
@@ -49,7 +49,7 @@ export class AuthService {
       };
     }
 
-    // If not admin or user not found, try external authentication for students
+    // If is an external user or user not found, authenticate with external API
     try {
       const authenticatedUser = await this.authenticateWithExternalApi(loginDto);
       const tokens = await this.generateAuthTokens(authenticatedUser);

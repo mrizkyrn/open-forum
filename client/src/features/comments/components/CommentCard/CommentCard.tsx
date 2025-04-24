@@ -15,13 +15,15 @@ interface CommentCardProps {
   comment: Comment;
   isReply?: boolean;
   showReplyForm?: boolean;
-  onToggleReply?: (commentId: number) => void;
+  replyMention?: string | null;
+  onToggleReply?: (commentId: number, replyToUsername?: string) => void;
 }
 
 const CommentCard: React.FC<CommentCardProps> = ({
   comment,
   isReply = false,
   showReplyForm = false,
+  replyMention = null,
   onToggleReply,
 }) => {
   const [showReplies, setShowReplies] = useState(false);
@@ -110,7 +112,6 @@ const CommentCard: React.FC<CommentCardProps> = ({
             {isEditing ? (
               <CommentForm
                 discussionId={comment.discussionId}
-                isReply={isReply}
                 parentId={comment.parentId}
                 initialValue={comment.content}
                 existingAttachments={comment.attachments}
@@ -120,7 +121,6 @@ const CommentCard: React.FC<CommentCardProps> = ({
                 onSuccess={() => {
                   setIsEditing(false);
                 }}
-                initialFocus={true}
               />
             ) : (
               <>
@@ -148,10 +148,9 @@ const CommentCard: React.FC<CommentCardProps> = ({
               <div className="mt-2">
                 <CommentForm
                   discussionId={comment.discussionId}
-                  isReply={true}
                   parentId={comment.id}
+                  initialValue={replyMention || ''}
                   onClickOutside={handleFormClickOutside}
-                  initialFocus={true}
                   onSuccess={() => {
                     if (onToggleReply) {
                       onToggleReply(comment.id);
@@ -167,7 +166,6 @@ const CommentCard: React.FC<CommentCardProps> = ({
               <CommentRepliesSection
                 comment={comment}
                 showReplies={showReplies}
-                showReplyForm={showReplyForm}
                 onToggleReply={onToggleReply}
               />
             )}

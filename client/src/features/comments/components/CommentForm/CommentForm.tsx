@@ -3,24 +3,19 @@ import FilePreview from '@/components/ui/file-displays/FilePreview';
 import { useAuth } from '@/features/auth/hooks/useAuth';
 import { commentApi } from '@/features/comments/services';
 import UserAvatar from '@/features/users/components/UserAvatar';
-import { userApi } from '@/features/users/services';
-import { User } from '@/features/users/types';
-import { useDebounce } from '@/hooks/useDebounce';
-import { useFileHandling } from '@/hooks/useFileHandling';
 import { Attachment } from '@/types/AttachmentTypes';
 import { ALLOWED_FILE_TYPES, MAX_COMMENT_FILES, MAX_FILE_SIZE } from '@/utils/constants';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { ImagePlus } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
+import MentionTextarea from './MentionTextArea';
 
 interface CommentFormProps {
   discussionId: number;
   commentId?: number;
   parentId?: number | null;
-  isReply?: boolean;
   isEditing?: boolean;
-  initialFocus?: boolean;
   initialValue?: string;
   existingAttachments?: Attachment[];
   onClickOutside?: () => void;
@@ -30,70 +25,33 @@ interface CommentFormProps {
 
 const CommentForm: React.FC<CommentFormProps> = ({
   discussionId,
-  isReply = false,
-  parentId,
-  onClickOutside,
-  initialFocus = false,
-  onSuccess,
-  isEditing = false,
   commentId,
+  parentId,
+  isEditing = false,
   initialValue = '',
   existingAttachments = [],
+  onClickOutside,
+  onSuccess,
   onCancel,
 }) => {
-  const [value, onChange] = useState(initialValue);
+  const isReply = Boolean(parentId);
+
+  const [value, setValue] = useState(initialValue);
   const [attachmentsToRemove, setAttachmentsToRemove] = useState<number[]>([]);
   const [isFocused, setIsFocused] = useState(false);
-  const [showMentionDropdown, setShowMentionDropdown] = useState(false);
-  const [mentionQuery, setMentionQuery] = useState('');
-  const [mentionPosition, setMentionPosition] = useState({ top: 0, left: 0 });
-  const [cursorPosition, setCursorPosition] = useState(0);
-  const debouncedMentionQuery = useDebounce(mentionQuery, 300);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-
-  const { files, fileErrors, fileInputRef, handleFileChange, removeFile, clearFiles } = useFileHandling(
-    MAX_COMMENT_FILES,
-    ALLOWED_FILE_TYPES,
-    MAX_FILE_SIZE,
-  );
+  const [files, setFiles] = useState<File[]>([]);
+  const [fileErrors, setFileErrors] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { user } = useAuth();
   const queryClient = useQueryClient();
-  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
-  // Query for username mentions
-  const { data: mentionUsers, isLoading: loadingMentions } = useQuery({
-    queryKey: ['userMentions', debouncedMentionQuery],
-    queryFn: () =>
-      userApi.getUsers({
-        page: 1,
-        limit: 5,
-        search: debouncedMentionQuery,
-      }),
-    enabled: showMentionDropdown && debouncedMentionQuery.length > 0,
-  });
-
-  // Set initial value and adjust textarea height
+  // Update textarea value when initialValue changes
   useEffect(() => {
-    onChange(initialValue);
-    setTimeout(adjustTextareaHeight, 0);
+    setValue(initialValue);
   }, [initialValue]);
 
-  useEffect(() => {
-    if (initialFocus && textareaRef.current) {
-      setTimeout(() => {
-        textareaRef.current?.focus();
-  
-        // If there's a prefilled mention, place cursor at the end
-        const length = initialValue.length;
-        textareaRef.current?.setSelectionRange(length, length);
-  
-        adjustTextareaHeight();
-      }, 50);
-    }
-  }, [initialFocus, initialValue]);
-
-  // Handle clicks outside the form to remove focus
+  // Handle clicks outside the form
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (
@@ -102,11 +60,6 @@ const CommentForm: React.FC<CommentFormProps> = ({
         (e.target as Element).closest('[role="button"]')
       ) {
         return;
-      }
-
-      // Close mention dropdown when clicking outside
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
-        setShowMentionDropdown(false);
       }
 
       setIsFocused(false);
@@ -119,81 +72,6 @@ const CommentForm: React.FC<CommentFormProps> = ({
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [onClickOutside, value]);
-
-  // Function to check for @ character and handle mention dropdown
-  const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const newValue = e.target.value;
-    const cursorPos = e.target.selectionStart || 0;
-    setCursorPosition(cursorPos);
-    onChange(newValue);
-
-    // Check if we need to show mention dropdown
-    const textBeforeCursor = newValue.substring(0, cursorPos);
-    const mentionMatch = textBeforeCursor.match(/@(\w*)$/);
-
-    if (mentionMatch) {
-      const query = mentionMatch[1];
-      setMentionQuery(query);
-
-      // Calculate position for dropdown
-      if (textareaRef.current) {
-        const { top, left, height } = textareaRef.current.getBoundingClientRect();
-        // Create a temporary element to measure text width
-        const tempEl = document.createElement('div');
-        tempEl.style.position = 'absolute';
-        tempEl.style.visibility = 'hidden';
-        tempEl.style.whiteSpace = 'pre';
-        tempEl.style.font = window.getComputedStyle(textareaRef.current).font;
-        tempEl.textContent = textBeforeCursor;
-        document.body.appendChild(tempEl);
-
-        const textWidth = tempEl.getBoundingClientRect().width;
-        document.body.removeChild(tempEl);
-
-        // Position dropdown below the @ symbol
-        setMentionPosition({
-          top: top + height + window.scrollY,
-          left: left + textWidth - mentionMatch[0].length + window.scrollX,
-        });
-      }
-
-      setShowMentionDropdown(true);
-    } else {
-      setShowMentionDropdown(false);
-    }
-
-    adjustTextareaHeight();
-  };
-
-  // Function to handle selection of a username from dropdown
-  const handleSelectMention = (username: string) => {
-    if (textareaRef.current) {
-      const textBeforeCursor = value.substring(0, cursorPosition);
-      const textAfterCursor = value.substring(cursorPosition);
-
-      // Find the last @ before cursor
-      const mentionMatch = textBeforeCursor.match(/@(\w*)$/);
-
-      if (mentionMatch) {
-        const startPos = cursorPosition - mentionMatch[0].length;
-        const newValue = textBeforeCursor.substring(0, startPos) + `@${username} ` + textAfterCursor;
-
-        onChange(newValue);
-
-        // Set cursor position after the inserted username
-        const newCursorPos = startPos + username.length + 2; // +2 for @ and space
-        setTimeout(() => {
-          if (textareaRef.current) {
-            textareaRef.current.focus();
-            textareaRef.current.setSelectionRange(newCursorPos, newCursorPos);
-          }
-        }, 0);
-      }
-    }
-
-    setShowMentionDropdown(false);
-    adjustTextareaHeight();
-  };
 
   const { mutate: submitComment, isPending } = useMutation({
     mutationFn: async (data: FormData) => {
@@ -209,6 +87,7 @@ const CommentForm: React.FC<CommentFormProps> = ({
       }
     },
     onSuccess: () => {
+      // Invalidate queries
       queryClient.invalidateQueries({ queryKey: ['comments', discussionId] });
       queryClient.invalidateQueries({ queryKey: ['discussion', discussionId] });
       queryClient.invalidateQueries({ queryKey: ['discussions'], exact: false });
@@ -217,8 +96,9 @@ const CommentForm: React.FC<CommentFormProps> = ({
         queryClient.invalidateQueries({ queryKey: ['commentReplies', parentId] });
       }
 
-      onChange('');
-      clearFiles();
+      // Reset form
+      setValue('');
+      setFiles([]);
       setAttachmentsToRemove([]);
       setIsFocused(false);
 
@@ -233,17 +113,6 @@ const CommentForm: React.FC<CommentFormProps> = ({
       toast.error(isEditing ? 'Failed to update comment' : 'Failed to post comment');
     },
   });
-
-  const adjustTextareaHeight = () => {
-    if (textareaRef.current) {
-      textareaRef.current.style.height = 'auto';
-      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
-    }
-  };
-
-  const removeExistingAttachment = (attachmentId: number) => {
-    setAttachmentsToRemove((prev) => [...prev, attachmentId]);
-  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -263,85 +132,86 @@ const CommentForm: React.FC<CommentFormProps> = ({
     }
   };
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFiles = Array.from(e.target.files || []);
+
+    if (files.length + selectedFiles.length > MAX_COMMENT_FILES) {
+      setFileErrors(`You can upload a maximum of ${MAX_COMMENT_FILES} files.`);
+      return;
+    }
+
+    const invalidType = selectedFiles.find((file) => !ALLOWED_FILE_TYPES.includes(file.type));
+    if (invalidType) {
+      setFileErrors(`File type not supported. Allowed types: images and PDF.`);
+      return;
+    }
+
+    const maxSize = MAX_FILE_SIZE;
+    const oversizeFile = selectedFiles.find((file) => file.size > maxSize);
+    if (oversizeFile) {
+      setFileErrors(`File size exceeds the 3MB limit.`);
+      return;
+    }
+
+    setFileErrors(null);
+    setFiles((prev) => [...prev, ...selectedFiles]);
+
+    // Reset the input value so the same file can be selected again
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  };
+
+  const removeFile = (index: number) => {
+    const updatedFiles = [...files];
+    updatedFiles.splice(index, 1);
+    setFiles(updatedFiles);
+    setFileErrors(null);
+  };
+
+  const removeExistingAttachment = (attachmentId: number) => {
+    setAttachmentsToRemove((prev) => [...prev, attachmentId]);
+  };
+
   const getActionText = () => {
     if (isEditing) return 'Save Changes';
     if (isReply) return `Reply`;
     return 'Post Comment';
   };
 
+  // Filter existing attachments to show only those not marked for removal
+  const filteredAttachments = existingAttachments.filter((attachment) => !attachmentsToRemove.includes(attachment.id));
+
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-2 rounded-lg bg-white">
       <div className="flex items-start gap-2">
         {isReply || isEditing ? null : <UserAvatar fullName={user?.fullName} avatarUrl={user?.avatarUrl} size="md" />}
         <div className="flex w-full flex-col gap-3">
-          <div className="relative w-full">
-            <textarea
-              ref={textareaRef}
-              value={value}
-              onChange={handleTextChange}
-              onFocus={() => setIsFocused(true)}
-              placeholder={isReply ? `Write a reply...` : 'Write a comment...'}
-              className={`focus:ring-primary-lighter w-full resize-none overflow-hidden rounded-md border border-gray-300 px-3 py-1 transition-all focus:ring-1 focus:outline-none ${
-                isReply ? 'min-h-[30px] text-sm' : 'min-h-[38px]'
-              }`}
-              rows={1}
-            />
+          {/* Mention Textarea Component */}
+          <MentionTextarea
+            value={value}
+            onChange={setValue}
+            onFocus={() => setIsFocused(true)}
+            isReply={isReply}
+            initialFocus={isReply || isEditing}
+          />
 
-            {/* Mention dropdown */}
-            {showMentionDropdown && (
-              <div
-                ref={dropdownRef}
-                className="fixed z-10 max-h-60 w-64 overflow-y-auto rounded-md border border-gray-200 bg-white shadow-lg"
-                style={{
-                  top: `${mentionPosition.top}px`,
-                  left: `${mentionPosition.left}px`,
-                }}
-              >
-                {loadingMentions ? (
-                  <div className="p-2 text-sm text-gray-500">Loading...</div>
-                ) : mentionUsers && mentionUsers.items.length > 0 ? (
-                  mentionUsers.items.map((user: User) => (
-                    <div
-                      key={user.id}
-                      className="flex cursor-pointer items-center gap-2 p-2 hover:bg-gray-100"
-                      onClick={() => handleSelectMention(user.username)}
-                    >
-                      <UserAvatar fullName={user.fullName} avatarUrl={user.avatarUrl} size="sm" />
-                      <div>
-                        <div className="text-sm font-medium">{user.fullName}</div>
-                        <div className="text-xs text-gray-500">@{user.username}</div>
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  <div className="p-2 text-sm text-gray-500">No users found</div>
-                )}
-              </div>
-            )}
-          </div>
-
-          {/* Show existing attachments that haven't been marked for removal */}
-          {isEditing && existingAttachments.length > 0 && (
+          {/* File previews */}
+          {((isEditing && filteredAttachments.length > 0) || files.length > 0) && (
             <div className="mb-2 flex flex-wrap gap-2">
-              {existingAttachments
-                .filter((attachment) => !attachmentsToRemove.includes(attachment.id))
-                .map((attachment) => (
+              {/* Existing attachments */}
+              {isEditing &&
+                filteredAttachments.map((attachment) => (
                   <FilePreview
-                    key={attachment.id}
+                    key={`existing-${attachment.id}`}
                     fileName={attachment.originalName}
                     isImage={attachment.isImage}
                     onRemove={() => removeExistingAttachment(attachment.id)}
                   />
                 ))}
-            </div>
-          )}
 
-          {/* File attachment previews - always show if files exist */}
-          {files.length > 0 && (
-            <div className="mb-2 flex flex-wrap gap-2">
+              {/* New file attachments */}
               {files.map((file, index) => (
                 <FilePreview
-                  key={file.name}
+                  key={`new-${file.name}-${index}`}
                   fileName={file.name}
                   isImage={file.type.includes('image')}
                   onRemove={() => removeFile(index)}
@@ -350,10 +220,10 @@ const CommentForm: React.FC<CommentFormProps> = ({
             </div>
           )}
 
-          {/* Error messages - always show if there are errors */}
+          {/* Error messages */}
           {fileErrors && <p className="mt-1 text-xs text-red-600">{fileErrors}</p>}
 
-          {/* File input and submit/cancel buttons */}
+          {/* Action Buttons and File Input */}
           <div
             className={`flex items-start justify-between transition-opacity duration-200 ${
               isFocused || value.trim().length > 0 ? 'opacity-100' : 'h-0 overflow-hidden opacity-0'
@@ -361,17 +231,17 @@ const CommentForm: React.FC<CommentFormProps> = ({
           >
             {/* File input button - unchanged */}
             <div className="flex items-center gap-2">
-              <button
+              <MainButton
                 type="button"
+                variant="outline"
                 onClick={() => fileInputRef.current?.click()}
                 disabled={files.length >= MAX_COMMENT_FILES}
-                className={`flex rounded-md border border-gray-300 px-2 py-1 text-xs text-gray-700 hover:bg-gray-100 ${
-                  files.length >= MAX_COMMENT_FILES ? 'bg-gray-100' : 'cursor-pointer bg-white'
-                }`}
+                className={`!px-2 ${files.length >= MAX_COMMENT_FILES ? 'bg-gray-100' : 'cursor-pointer bg-white'}`}
+                leftIcon={<ImagePlus size={16} className="text-primary" />}
+                size="sm"
               >
-                <ImagePlus size={16} className="text-primary mr-2" />
-                <p className="text-xs text-gray-500">Add Files</p>
-              </button>
+                Add Files
+              </MainButton>
               <input
                 ref={fileInputRef}
                 type="file"
@@ -383,18 +253,20 @@ const CommentForm: React.FC<CommentFormProps> = ({
             </div>
 
             <div className="flex items-center gap-2">
-              {/* Add Cancel button when editing */}
+              {/* Cancel button when editing */}
               {isEditing && onCancel && (
-                <button
-                  type="button"
-                  onClick={onCancel}
-                  className="rounded-md border border-gray-300 px-3 py-1 text-xs text-gray-700 hover:bg-gray-100"
-                >
+                <MainButton type="button" variant="outline" onClick={onCancel} size="sm">
                   Cancel
-                </button>
+                </MainButton>
               )}
 
-              <MainButton type="submit" variant="primary" isLoading={isPending} disabled={isPending || !value.trim()}>
+              <MainButton
+                type="submit"
+                variant="primary"
+                isLoading={isPending}
+                disabled={isPending || !value.trim()}
+                size="sm"
+              >
                 {getActionText()}
               </MainButton>
             </div>
@@ -404,7 +276,5 @@ const CommentForm: React.FC<CommentFormProps> = ({
     </form>
   );
 };
-
-CommentForm.displayName = 'CommentForm';
 
 export default CommentForm;

@@ -8,14 +8,12 @@ import { Loader2 } from 'lucide-react';
 interface CommentRepliesSectionProps {
   comment: Comment;
   showReplies: boolean;
-  showReplyForm: boolean;
-  onToggleReply?: (commentId: number) => void;
+  onToggleReply?: (commentId: number, replyToUsername?: string) => void;
 }
 
 const CommentRepliesSection: React.FC<CommentRepliesSectionProps> = ({
   comment,
   showReplies,
-  showReplyForm,
   onToggleReply,
 }) => {
   const {
@@ -33,6 +31,12 @@ const CommentRepliesSection: React.FC<CommentRepliesSectionProps> = ({
     initialPageParam: 1,
     staleTime: 1000 * 60 * 5,
   });
+
+  const handleNestedReply = (username: string) => {
+    if (onToggleReply) {
+      onToggleReply(comment.id, username);
+    }
+  };
 
   const replies = repliesData?.pages.flatMap((page) => page.items) || [];
   if (isLoadingReplies && !isFetchingMoreReplies) {
@@ -65,8 +69,7 @@ const CommentRepliesSection: React.FC<CommentRepliesSectionProps> = ({
           key={reply.id}
           comment={reply}
           isReply={true}
-          onToggleReply={onToggleReply}
-          showReplyForm={showReplyForm && reply.id === comment.id}
+          onToggleReply={() => handleNestedReply(reply.author.username)}
         />
       ))}
 

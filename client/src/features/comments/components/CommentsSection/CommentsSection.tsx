@@ -15,6 +15,7 @@ interface CommentsSectionProps {
 
 const CommentsSection: React.FC<CommentsSectionProps> = ({ discussionId }) => {
   const [activeReplyId, setActiveReplyId] = useState<number | null>(null);
+  const [replyMention, setReplyMention] = useState<string | null>(null);
   const [sortBy, setSortBy] = useState<CommentSortBy>(CommentSortBy.createdAt);
 
   const sortDropdownRef = useRef<HTMLDivElement>(null);
@@ -28,8 +29,20 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({ discussionId }) => {
     staleTime: 1000 * 60 * 5,
   });
 
-  const handleToggleReply = (commentId: number) => {
-    setActiveReplyId((prev) => (prev === commentId ? null : commentId));
+  const handleToggleReply = (commentId: number, mentionUsername?: string) => {
+    setActiveReplyId((prev) => {
+      // If we're closing the form or opening a different one, clear the mention
+      if (prev === commentId || prev !== null) {
+        setReplyMention(null);
+      }
+      
+      // If we have a username to mention, store it
+      if (mentionUsername) {
+        setReplyMention(`@${mentionUsername} `);
+      }
+      
+      return prev === commentId ? null : commentId;
+    });
   };
 
   const comments = data?.pages.flatMap((page) => page.items) || [];
@@ -122,6 +135,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({ discussionId }) => {
               comment={comment}
               onToggleReply={handleToggleReply}
               showReplyForm={activeReplyId === comment.id}
+              replyMention={activeReplyId === comment.id ? replyMention : null}
             />
           ))}
 

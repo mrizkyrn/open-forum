@@ -14,15 +14,13 @@ const HomePage = () => {
 
   return (
     <div className="flex w-full flex-col">
-      <NewDiscussionButton className="rounded-b-none" />
-
       {/* Tab Navigation */}
-      <div className="mb-4 border-b border-gray-200 bg-white">
+      <div className="border border-b-0 border-gray-100 bg-white">
         <nav className="flex" aria-label="Home Tabs">
           <button
-            className={`flex w-full items-center justify-center border-b-2 px-1 py-3 text-sm font-medium whitespace-nowrap ${
+            className={`flex w-full items-center justify-center border-b-2 px-1 py-2 sm:py-3 text-sm font-medium whitespace-nowrap ${
               activeTab === 'latest'
-                ? 'border-green-600 text-green-600'
+                ? 'border-green-600 bg-gray-50 text-green-600'
                 : 'border-transparent text-gray-500 hover:border-gray-300 hover:bg-gray-100 hover:text-gray-700'
             }`}
             onClick={() => handleTabChange('latest')}
@@ -32,9 +30,9 @@ const HomePage = () => {
             Latest
           </button>
           <button
-            className={`flex w-full items-center justify-center border-b-2 px-1 py-3 text-sm font-medium whitespace-nowrap ${
+            className={`flex w-full items-center justify-center border-b-2 px-1 py-2 sm:py-3 text-sm font-medium whitespace-nowrap ${
               activeTab === 'following'
-                ? 'border-green-600 text-green-600'
+                ? 'border-green-600 bg-gray-50 text-green-600'
                 : 'border-transparent text-gray-500 hover:border-gray-300 hover:bg-gray-100 hover:text-gray-700'
             }`}
             onClick={() => handleTabChange('following')}
@@ -45,6 +43,8 @@ const HomePage = () => {
           </button>
         </nav>
       </div>
+
+      <NewDiscussionButton className="rounded-b-none mb-4" />
 
       {/* Discussion Content based on active tab */}
       <DiscussionPost search={activeTab === 'following' ? { onlyFollowedSpaces: true } : {}} />

@@ -1,6 +1,6 @@
-import { Entity, Column, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
-import { User } from '../../user/entities/user.entity';
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { BaseEntity } from '../../../core/database/entities/base.entity';
+import { User } from '../../user/entities/user.entity';
 
 export enum VoteEntityType {
   DISCUSSION = 'discussion',
@@ -14,14 +14,17 @@ export enum VoteValue {
 
 @Entity('votes')
 export class Vote extends BaseEntity {
-  @PrimaryColumn({ name: 'entity_type', type: 'enum', enum: VoteEntityType })
+  @Column({ name: 'entity_type', type: 'enum', enum: VoteEntityType })
   entityType: VoteEntityType;
 
-  @PrimaryColumn({ name: 'entity_id' })
+  @Column({ name: 'entity_id' })
   entityId: number;
 
   @Column({ type: 'integer' })
   value: VoteValue;
+
+  @Column({ name: 'user_id' })
+  userId: number;
 
   @ManyToOne(() => User, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })
