@@ -8,6 +8,7 @@ import { ReportReason } from './entities/report-reason.entity';
 import { Report } from './entities/report.entity';
 import { ReportController } from './report.controller';
 import { ReportService } from './report.service';
+import { WebsocketModule } from 'src/core/websocket/websocket.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { ReportService } from './report.service';
     CommentModule,
     NotificationModule,
     AnalyticModule,
+    WebsocketModule,
   ],
   providers: [ReportService],
   controllers: [ReportController],

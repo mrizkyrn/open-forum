@@ -125,7 +125,12 @@ export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection, OnG
         fullName: user.fullName,
       };
 
-      // Join user's private room for notifications
+      // Join admin room if user is an admin
+      if (user.role === 'admin') {
+        client.join('admins');
+        this.logger.log(`Client connected to admin room: ${client.id}`);
+      }
+      // Join user-specific room for notifications
       client.join(`user:${user.id}`);
 
       // Track online status
@@ -270,6 +275,11 @@ export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection, OnG
     };
 
     this.server.to(`discussion:${discussionId}`).emit('newComment', payload);
+    return true;
+  }
+
+  notifyNewReportToAdmins(report: any) {
+    this.server.to('admins').emit('newReport', report);
     return true;
   }
 }

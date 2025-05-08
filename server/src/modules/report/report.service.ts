@@ -1,5 +1,6 @@
 import { BadRequestException, ForbiddenException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { WebsocketGateway } from 'src/core/websocket/websocket.gateway';
 import { Between, FindOptionsWhere, Repository } from 'typeorm';
 import { Pageable } from '../../common/interfaces/pageable.interface';
 import { AnalyticService } from '../analytic/analytic.service';
@@ -29,6 +30,7 @@ export class ReportService {
     private readonly commentService: CommentService,
     private readonly notificationService: NotificationService,
     private readonly analyticService: AnalyticService,
+    private readonly websocketGateway: WebsocketGateway,
   ) {}
 
   // ----- Report CRUD Operations -----
@@ -50,6 +52,16 @@ export class ReportService {
 
       const report = await this.reportRepository.save(newReport);
       await this.populateTargetDetails(report);
+
+      await this.websocketGateway.notifyNewReportToAdmins({
+        id: report.id,
+        targetType: report.targetType,
+        targetId: report.targetId,
+        reasonId: report.reasonId,
+        description: report.description,
+        status: report.status,
+        createdAt: report.createdAt,
+      });
 
       await this.analyticService.recordActivity(
         currentUser.id,

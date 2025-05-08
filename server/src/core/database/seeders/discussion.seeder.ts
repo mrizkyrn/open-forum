@@ -38,11 +38,11 @@ export async function seedDiscussions(dataSource: DataSource): Promise<void> {
     return;
   }
 
-  // Generate random date between now and a week ago
+  // Generate random date between now and a month ago
   const getRandomDate = (): Date => {
     const now = new Date();
-    const oneWeekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-    return new Date(oneWeekAgo.getTime() + Math.random() * (now.getTime() - oneWeekAgo.getTime()));
+    const oneMonthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+    return new Date(oneMonthAgo.getTime() + Math.random() * (now.getTime() - oneMonthAgo.getTime()));
   };
 
   const getRandomTags = (allTags: string[]): string[] => {
