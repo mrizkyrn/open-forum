@@ -1,5 +1,5 @@
-import { ArrowBigDown, ArrowBigUp, MessageCircle, Reply } from 'lucide-react';
 import { useVote } from '@/features/votes/hooks/useVote';
+import { ArrowBigDown, ArrowBigUp, MessageCircle, Reply } from 'lucide-react';
 
 interface CommentCardFooterProps {
   commentId: number;
@@ -10,6 +10,7 @@ interface CommentCardFooterProps {
   showReplyForm: boolean;
   showReplies: boolean;
   isReply: boolean;
+  isDeleted?: boolean;
   onToggleReply: () => void;
   onToggleShowReplies: () => void;
 }
@@ -23,6 +24,7 @@ const CommentCardFooter: React.FC<CommentCardFooterProps> = ({
   showReplyForm,
   showReplies,
   isReply,
+  isDeleted,
   onToggleReply,
   onToggleShowReplies,
 }) => {
@@ -47,48 +49,66 @@ const CommentCardFooter: React.FC<CommentCardFooterProps> = ({
   };
 
   return (
-    <div className="flex flex-wrap items-center gap-2 xs:gap-3 md:gap-4 text-sm">
+    <div className="xs:gap-3 flex flex-wrap items-center gap-2 text-sm md:gap-4">
       {/* Vote buttons */}
       <div className="flex items-center gap-1">
         <button
-          className={`rounded-full p-1 hover:bg-gray-100 ${currentVoteStatus === 1 && 'text-primary bg-green-50'}`}
-          onClick={() => handleVote(1)}
-          disabled={isVoting}
+          className={`rounded-full p-1 ${
+            isDeleted
+              ? 'cursor-not-allowed opacity-50'
+              : `hover:bg-gray-100 ${currentVoteStatus === 1 ? 'text-primary bg-green-50' : ''}`
+          }`}
+          onClick={() => !isDeleted && handleVote(1)}
+          disabled={isVoting || isDeleted}
         >
-          <ArrowBigUp strokeWidth={1.5} size={18} className={currentVoteStatus === 1 ? 'fill-primary' : ''} />
+          <ArrowBigUp
+            strokeWidth={1.5}
+            size={18}
+            className={!isDeleted && currentVoteStatus === 1 ? 'fill-primary' : ''}
+          />
         </button>
-        <span className={`text-xs ${getVoteColor(voteCount)}`}>{voteCount}</span>
+        <span className={`text-xs ${!isDeleted ? getVoteColor(voteCount) : 'text-gray-400'}`}>{voteCount}</span>
         <button
-          className={`rounded-full p-1 hover:bg-gray-100 ${currentVoteStatus === -1 && 'bg-red-50 text-red-500'}`}
-          onClick={() => handleVote(-1)}
-          disabled={isVoting}
+          className={`rounded-full p-1 ${
+            isDeleted
+              ? 'cursor-not-allowed opacity-50'
+              : `hover:bg-gray-100 ${currentVoteStatus === -1 ? 'bg-red-50 text-red-500' : ''}`
+          }`}
+          onClick={() => !isDeleted && handleVote(-1)}
+          disabled={isVoting || isDeleted}
         >
-          <ArrowBigDown strokeWidth={1.5} size={18} className={currentVoteStatus === -1 ? 'fill-red-500' : ''} />
+          <ArrowBigDown
+            strokeWidth={1.5}
+            size={18}
+            className={!isDeleted && currentVoteStatus === -1 ? 'fill-red-500' : ''}
+          />
         </button>
       </div>
 
       {/* Reply button */}
-      <button
-        onClick={onToggleReply}
-        className={`flex min-w-[60px] items-center gap-1 rounded px-1.5 py-1 text-xs hover:bg-gray-100 sm:px-2 ${
-          showReplyForm ? 'bg-gray-100 font-medium' : ''
-        }`}
-      >
-        <Reply size={12} className="sm:hidden" />
-        <Reply size={14} className="hidden sm:block" />
-        <span className="whitespace-nowrap">{showReplyForm ? 'Cancel' : 'Reply'}</span>
-      </button>
+      {!isDeleted && (
+        <button
+          onClick={onToggleReply}
+          className={`flex min-w-[60px] items-center gap-1 rounded px-1.5 py-1 text-xs hover:bg-gray-100 sm:px-2 ${
+            showReplyForm ? 'bg-gray-100 font-medium' : ''
+          }`}
+        >
+          <Reply size={12} className="sm:hidden" />
+          <Reply size={14} className="hidden sm:block" />
+          <span className="whitespace-nowrap">{showReplyForm ? 'Cancel' : 'Reply'}</span>
+        </button>
+      )}
 
       {/* Show replies button */}
       {hasReplies && !isReply && (
         <button
           onClick={onToggleShowReplies}
-          className="flex items-center gap-1 rounded px-1.5 py-1 text-xs hover:bg-gray-100 sm:px-2 whitespace-nowrap"
+          className="flex items-center gap-1 rounded px-1.5 py-1 text-xs whitespace-nowrap hover:bg-gray-100 sm:px-2"
         >
           <MessageCircle size={12} className="sm:hidden" />
           <MessageCircle size={14} className="hidden sm:block" />
           <span>{showReplies ? 'Hide' : 'Show'}</span>
-          <span className="hidden xs:inline">
+          <span className="xs:inline hidden">
             {replyCount} {replyCount === 1 ? 'reply' : 'replies'}
           </span>
           <span className="xs:hidden">{replyCount}</span>

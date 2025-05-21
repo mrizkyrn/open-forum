@@ -1,15 +1,16 @@
-import { Attachment } from '@/types/AttachmentTypes';
-import ImageDisplay from '@/components/ui/file-displays/ImageDisplay';
 import FileDisplay from '@/components/ui/file-displays/FileDisplay';
-import { Link } from 'react-router-dom';
+import ImageDisplay from '@/components/ui/file-displays/ImageDisplay';
+import { Attachment } from '@/types/AttachmentTypes';
 import { JSX } from 'react';
+import { Link } from 'react-router-dom';
 
 interface CommentCardBodyProps {
   content: string;
   attachments: Attachment[];
+  isDeleted?: boolean;
 }
 
-const CommentCardBody: React.FC<CommentCardBodyProps> = ({ content, attachments = [] }) => {
+const CommentCardBody: React.FC<CommentCardBodyProps> = ({ content, attachments = [], isDeleted = false }) => {
   const imageAttachments = attachments.filter((attachment) => attachment.isImage);
   const fileAttachments = attachments.filter((attachment) => !attachment.isImage);
 
@@ -28,55 +29,59 @@ const CommentCardBody: React.FC<CommentCardBodyProps> = ({ content, attachments 
       if (match.index > lastIndex) {
         parts.push(text.slice(lastIndex, match.index));
       }
-      
+
       // Add the styled mention
       const username = match[1];
       parts.push(
-        <Link 
-          to={`/profile/${username}`} 
+        <Link
+          to={`/profile/${username}`}
           key={`mention-${match.index}`}
-          className="text-primary hover:underline font-medium"
+          className="text-primary font-medium hover:underline"
         >
           @{username}
-        </Link>
+        </Link>,
       );
-      
+
       lastIndex = match.index + match[0].length;
     }
-    
+
     // Add any remaining text after the last mention
     if (lastIndex < text.length) {
       parts.push(text.slice(lastIndex));
     }
-    
+
     return parts;
   };
 
   return (
     <div className="flex flex-col gap-2">
-      {/* Comment text with mentions */}
-      <p className="text-sm text-gray-700">
-        {renderContentWithMentions(content)}
-      </p>
+      {isDeleted ? (
+        <p className="text-sm text-gray-500 italic">This comment has been deleted.</p>
+      ) : (
+        <>
+          {/* Comment text with mentions */}
+          <p className="text-sm text-gray-700">{renderContentWithMentions(content)}</p>
 
-      {/* Image attachments - more compact for comments */}
-      {sortedImages.length > 0 && (
-        <div
-          className={`grid gap-1 overflow-hidden rounded-lg ${sortedImages.length > 1 ? 'grid-cols-2' : 'grid-cols-1'}`}
-        >
-          {sortedImages.map((image) => (
-            <ImageDisplay key={image.id} image={image} />
-          ))}
-        </div>
-      )}
+          {/* Image attachments - more compact for comments */}
+          {sortedImages.length > 0 && (
+            <div
+              className={`grid gap-1 overflow-hidden rounded-lg ${sortedImages.length > 1 ? 'grid-cols-2' : 'grid-cols-1'}`}
+            >
+              {sortedImages.map((image) => (
+                <ImageDisplay key={image.id} image={image} />
+              ))}
+            </div>
+          )}
 
-      {/* File attachments - more compact for comments */}
-      {sortedFiles.length > 0 && (
-        <div className="flex flex-col gap-1">
-          {sortedFiles.map((file) => (
-            <FileDisplay key={file.id} file={file} />
-          ))}
-        </div>
+          {/* File attachments - more compact for comments */}
+          {sortedFiles.length > 0 && (
+            <div className="flex flex-col gap-1">
+              {sortedFiles.map((file) => (
+                <FileDisplay key={file.id} file={file} />
+              ))}
+            </div>
+          )}
+        </>
       )}
     </div>
   );

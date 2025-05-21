@@ -14,8 +14,9 @@ export class CommentResponseDto {
   @ApiProperty({
     description: 'Comment content',
     example: 'This is a comment on the discussion',
+    nullable: true,
   })
-  content: string;
+  content: string | null;
 
   @ApiProperty({
     description: 'Author of the comment',
@@ -99,14 +100,22 @@ export class CommentResponseDto {
   })
   mentionedUsers?: UserResponseDto[];
 
+  @ApiProperty({
+    description: 'Whether the comment has been deleted',
+    example: false,
+  })
+  isDeleted?: boolean;
+
   static fromEntity(comment: Comment, voteStatus?: number | null): CommentResponseDto {
     const dto = new CommentResponseDto();
+    const isDeleted = !!comment.deletedAt;
 
     dto.id = comment.id;
-    dto.content = comment.content;
+    dto.isDeleted = isDeleted;
+    dto.content = isDeleted ? null : comment.content;
     dto.createdAt = comment.createdAt;
     dto.updatedAt = comment.updatedAt;
-    dto.isEdited = comment.isEdited;
+    dto.isEdited = isDeleted ? false : comment.isEdited;
     dto.discussionId = comment.discussionId;
     dto.parentId = comment.parentId;
     dto.upvoteCount = comment.upvoteCount;

@@ -10,12 +10,13 @@ export const commentApi = {
     page: number,
     limit: number,
     sortBy: CommentSortBy,
+    sortOrder: SortOrder = SortOrder.DESC,
   ): Promise<PaginatedResponse<Comment>> {
     try {
       const response = await apiClient.get<ApiResponse<PaginatedResponse<Comment>>>(
         `/discussions/${discussionId}/comments`,
         {
-          params: { page, limit, sortBy },
+          params: { page, limit, sortBy, sortOrder },
         },
       );
       return response.data.data;
@@ -28,7 +29,7 @@ export const commentApi = {
     commentId: number,
     page: number,
     limit: number,
-    sortOrder: SortOrder = SortOrder.DESC,
+    sortOrder: SortOrder = SortOrder.ASC,
   ): Promise<PaginatedResponse<Comment>> {
     try {
       const response = await apiClient.get<ApiResponse<PaginatedResponse<Comment>>>(`/comments/${commentId}/replies`, {

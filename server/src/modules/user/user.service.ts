@@ -5,8 +5,8 @@ import { UserRole } from 'src/common/enums/user-role.enum';
 import { Between, Repository, SelectQueryBuilder } from 'typeorm';
 import { Pageable } from '../../common/interfaces/pageable.interface';
 import { FileService } from '../../core/file/file.service';
-import { CreateAdminDto } from './dto/create-admin.dto';
 import { CreateExternalUserDto } from './dto/create-external-user.dto';
+import { CreateUserDto } from './dto/create-user.dto';
 import { SearchUserDto } from './dto/search-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserDetailResponseDto, UserResponseDto } from './dto/user-response.dto';
@@ -26,22 +26,21 @@ export class UserService {
 
   // ----- Core CRUD Operations -----
 
-  async createAdmin(createAdminDto: CreateAdminDto): Promise<UserResponseDto> {
+  async create(createUserDto: CreateUserDto): Promise<UserResponseDto> {
     const existingUser = await this.userRepository.findOne({
-      where: { username: createAdminDto.username },
+      where: { username: createUserDto.username },
     });
 
     if (existingUser) {
       throw new ConflictException('Username already exists');
     }
 
-    const hashedPassword = await this.hashPassword(createAdminDto.password);
+    const hashedPassword = await this.hashPassword(createUserDto.password);
     const newUser = this.userRepository.create({
-      username: createAdminDto.username,
+      username: createUserDto.username,
       password: hashedPassword,
-      fullName: createAdminDto.fullName,
-      role: UserRole.ADMIN,
-      email: createAdminDto.email,
+      fullName: createUserDto.fullName,
+      role: createUserDto.role,
     });
 
     const savedUser = await this.userRepository.save(newUser);
@@ -130,12 +129,16 @@ export class UserService {
   async update(id: number, updateUserDto: UpdateUserDto): Promise<UserResponseDto> {
     const user = await this.getUserEntityById(id);
 
-    if (user.role !== UserRole.ADMIN) {
-      throw new BadRequestException('Only admins can be updated');
+    if (user.isExternalUser) {
+      throw new BadRequestException('Cannot update external user');
     }
 
     if (updateUserDto.fullName) user.fullName = updateUserDto.fullName;
     if (updateUserDto.role !== undefined) user.role = updateUserDto.role;
+    if (updateUserDto.password) {
+      const hashedPassword = await this.hashPassword(updateUserDto.password);
+      user.password = hashedPassword;
+    }
 
     const updatedUser = await this.userRepository.save(user);
     return UserResponseDto.fromEntity(updatedUser);
@@ -305,16 +308,20 @@ export class UserService {
       .skip(offset)
       .take(limit);
 
-    if (!isAdmin) {
-      queryBuilder = queryBuilder.where('user.role != :adminRole', { adminRole: UserRole.ADMIN });
+    // Exclude admin users and the current user from results if not an admin
+    if (currentUser && !isAdmin) {
+      queryBuilder = queryBuilder.andWhere('user.role != :adminRole', { adminRole: UserRole.ADMIN });
+      queryBuilder = queryBuilder.andWhere('user.id != :currentUserId', { currentUserId: currentUser.id });
     }
 
+    // Search by name or username
     if (search) {
       queryBuilder = queryBuilder.andWhere('(user.username ILIKE :search OR user.fullName ILIKE :search)', {
         search: `%${search}%`,
       });
     }
 
+    // Filter by role (admin only)
     if (role && isAdmin) {
       queryBuilder = queryBuilder.andWhere('user.role = :role', { role });
     }

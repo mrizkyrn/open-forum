@@ -324,7 +324,7 @@ export class ReportService {
     } else if (report.targetType === ReportTargetType.COMMENT) {
       try {
         const comment = await this.commentService.findById(report.targetId);
-        if (comment) {
+        if (comment && comment.content) {
           discussionId = comment.discussionId;
           content = comment.content.substring(0, 50) + (comment.content.length > 50 ? '...' : '');
           targetAuthorId = comment.author.id;

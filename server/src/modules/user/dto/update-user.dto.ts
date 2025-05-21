@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEnum, IsOptional, IsString, Length } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsOptional, IsString, Length, Matches } from 'class-validator';
 import { UserRole } from '../../../common/enums/user-role.enum';
 
 export class UpdateUserDto {
@@ -22,4 +22,19 @@ export class UpdateUserDto {
   @IsOptional()
   @IsEnum(UserRole)
   role?: UserRole;
+
+  @ApiProperty({
+    description: 'User password (will be hashed)',
+    example: 'StrongP@ssw0rd',
+    minLength: 8,
+    maxLength: 100,
+  })
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  @Length(8, 100)
+  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d\W]{8,}$/, {
+    message: 'Password must include upper and lowercase letters and numbers',
+  })
+  password?: string;
 }

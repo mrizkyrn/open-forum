@@ -10,7 +10,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import * as fs from 'fs';
 import * as path from 'path';
-import { Between, EntityManager, Repository } from 'typeorm';
+import { Between, Brackets, EntityManager, Repository } from 'typeorm';
 import { Pageable } from '../../common/interfaces/pageable.interface';
 import { RedisChannels } from '../../core/redis/redis.constants';
 import { RedisService } from '../../core/redis/redis.service';
@@ -201,13 +201,17 @@ export class CommentService {
 
     // Get attachments for each comment
     for (const comment of comments) {
-      comment.attachments = await this.attachmentService.getAttachmentsByEntity(AttachmentType.COMMENT, comment.id);
+      if (!comment.deletedAt) {
+        comment.attachments = await this.attachmentService.getAttachmentsByEntity(AttachmentType.COMMENT, comment.id);
+      } else {
+        comment.attachments = [];
+      }
     }
 
     const responseItems = await Promise.all(
       comments.map(async (comment) => {
         let voteStatus: number | null = null;
-        if (currentUser) {
+        if (currentUser && !comment.deletedAt) {
           voteStatus = await this.voteService.getUserVoteStatus(currentUser.id, VoteEntityType.COMMENT, comment.id);
         }
 
@@ -227,13 +231,17 @@ export class CommentService {
       const { page, limit, sortBy = 'createdAt', sortOrder = 'ASC' } = searchDto;
       const offset = (page - 1) * limit;
 
-      // Validate parent comment
-      const parentComment = await this.commentRepository.findOne({ where: { id: parentId } });
+      // Validate parent comment - include withDeleted: true to find soft-deleted comments
+      const parentComment = await this.commentRepository.findOne({
+        where: { id: parentId },
+        withDeleted: true,
+      });
+
       if (!parentComment) {
         throw new NotFoundException(`Comment with ID ${parentId} not found`);
       }
 
-      // Get replies with pagination
+      // Get replies with pagination - these replies should be non-deleted ones
       const queryBuilder = this.commentRepository
         .createQueryBuilder('comment')
         .leftJoinAndSelect('comment.author', 'author')
@@ -545,6 +553,12 @@ export class CommentService {
       .orderBy(`comment.${sortBy}`, sortOrder)
       .skip(offset)
       .take(limit);
+
+    queryBuilder.withDeleted().andWhere(
+      new Brackets((qb) => {
+        qb.where('comment.deletedAt IS NULL').orWhere('comment.replyCount > 0');
+      }),
+    );
 
     return queryBuilder;
   }

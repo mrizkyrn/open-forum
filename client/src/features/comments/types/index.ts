@@ -5,7 +5,7 @@ import { SearchDto } from '@/types/SearchTypes';
 
 export interface Comment {
   id: number;
-  content: string;
+  content: string | null;
   author: User;
   isEdited: boolean;
   discussionId: number;
@@ -18,6 +18,7 @@ export interface Comment {
   updatedAt: Date;
   attachments: Attachment[];
   voteStatus?: VoteValue | null;
+  isDeleted?: boolean;
 }
 
 export interface CreateCommentDto {

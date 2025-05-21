@@ -101,7 +101,7 @@ const DiscussionDetailPage = () => {
           </div>
 
           {/* Comments list */}
-          <CommentsSection discussionId={discussion.id} />
+          <CommentsSection discussionId={discussion.id} commentCount={discussion.commentCount} />
         </div>
       </div>
 

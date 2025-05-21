@@ -5,25 +5,28 @@ import { CommentCard } from '@/features/comments/components';
 import { commentApi } from '@/features/comments/services';
 import { Comment, CommentSortBy } from '@/features/comments/types';
 import { useDropdown } from '@/hooks/useDropdown';
+import { SortOrder } from '@/types/SearchTypes';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { Calendar, ChevronDown, Loader2, MessageCircle, ThumbsUp } from 'lucide-react';
 import { useMemo, useRef, useState } from 'react';
 
 interface CommentsSectionProps {
   discussionId: number;
+  commentCount: number;
 }
 
-const CommentsSection: React.FC<CommentsSectionProps> = ({ discussionId }) => {
+const CommentsSection: React.FC<CommentsSectionProps> = ({ discussionId, commentCount }) => {
   const [activeReplyId, setActiveReplyId] = useState<number | null>(null);
   const [replyMention, setReplyMention] = useState<string | null>(null);
   const [sortBy, setSortBy] = useState<CommentSortBy>(CommentSortBy.createdAt);
+  const [sortOrder, setSortOrder] = useState<SortOrder>(SortOrder.ASC);
 
   const sortDropdownRef = useRef<HTMLDivElement>(null);
   const sortDropdown = useDropdown(sortDropdownRef as React.RefObject<HTMLElement>);
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isError, refetch } = useInfiniteQuery({
-    queryKey: ['comments', discussionId, sortBy],
-    queryFn: ({ pageParam = 1 }) => commentApi.getCommentsByDiscussion(discussionId, pageParam, 25, sortBy),
+    queryKey: ['comments', discussionId, sortBy, sortOrder],
+    queryFn: ({ pageParam = 1 }) => commentApi.getCommentsByDiscussion(discussionId, pageParam, 25, sortBy, sortOrder),
     getNextPageParam: (lastPage) => (lastPage.meta.hasNextPage ? lastPage.meta.currentPage + 1 : undefined),
     initialPageParam: 1,
     staleTime: 1000 * 60 * 5,
@@ -31,12 +34,10 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({ discussionId }) => {
 
   const handleToggleReply = (commentId: number, mentionUsername?: string) => {
     setActiveReplyId((prev) => {
-      // If we're closing the form or opening a different one, clear the mention
       if (prev === commentId || prev !== null) {
         setReplyMention(null);
       }
 
-      // If we have a username to mention, store it
       if (mentionUsername) {
         setReplyMention(`@${mentionUsername} `);
       }
@@ -51,23 +52,26 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({ discussionId }) => {
   const getSortOptionText = useMemo(() => {
     switch (sortBy) {
       case CommentSortBy.createdAt:
-        return 'Latest';
+        return sortOrder === SortOrder.DESC ? 'Newest' : 'Oldest';
       case CommentSortBy.upvoteCount:
         return 'Most Voted';
       case CommentSortBy.replyCount:
         return 'Most Replies';
       default:
-        return 'Latest';
+        return 'Oldest';
     }
-  }, [sortBy]);
+  }, [sortBy, sortOrder]);
 
-  const handleSortChange = (newSortBy: CommentSortBy) => {
+  const handleSortChange = (newSortBy: CommentSortBy, newSortOrder?: SortOrder) => {
     setSortBy(newSortBy);
+    if (newSortOrder !== undefined) {
+      setSortOrder(newSortOrder);
+    }
     sortDropdown.close();
   };
 
   if (isLoading) {
-    return <LoadingIndicator fullWidth/>;
+    return <LoadingIndicator fullWidth />;
   }
 
   if (isError) {
@@ -78,7 +82,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({ discussionId }) => {
     <div className="flex flex-col gap-2">
       {/* Header section with sort options */}
       <div className="mb-2 flex items-center justify-between">
-        <h3 className="text-lg font-medium">Comments {comments.length > 0 && `(${comments.length})`}</h3>
+        <h3 className="text-lg font-medium">Comments {commentCount > 0 && `(${commentCount})`}</h3>
 
         {/* Sort dropdown */}
         {comments.length > 0 && (
@@ -90,16 +94,38 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({ discussionId }) => {
             {sortDropdown.isOpen && (
               <div className="absolute top-full right-0 z-10 mt-1 w-48 rounded-md bg-white py-1 shadow-md">
                 <button
-                  onClick={() => handleSortChange(CommentSortBy.createdAt)}
+                  onClick={() => {
+                    handleSortChange(CommentSortBy.createdAt);
+                    setSortOrder(SortOrder.ASC);
+                  }}
                   className={`flex w-full items-center px-4 py-2 text-sm ${
-                    sortBy === CommentSortBy.createdAt ? 'bg-gray-100 text-gray-900' : 'text-gray-700'
+                    sortBy === CommentSortBy.createdAt && sortOrder === SortOrder.ASC
+                      ? 'bg-gray-100 text-gray-900'
+                      : 'text-gray-700'
+                  } hover:bg-gray-100`}
+                >
+                  <Calendar size={14} className="mr-2 rotate-180" />
+                  Oldest
+                </button>
+                <button
+                  onClick={() => {
+                    handleSortChange(CommentSortBy.createdAt);
+                    setSortOrder(SortOrder.DESC);
+                  }}
+                  className={`flex w-full items-center px-4 py-2 text-sm ${
+                    sortBy === CommentSortBy.createdAt && sortOrder === SortOrder.DESC
+                      ? 'bg-gray-100 text-gray-900'
+                      : 'text-gray-700'
                   } hover:bg-gray-100`}
                 >
                   <Calendar size={14} className="mr-2" />
-                  Latest
+                  Newest
                 </button>
                 <button
-                  onClick={() => handleSortChange(CommentSortBy.upvoteCount)}
+                  onClick={() => {
+                    handleSortChange(CommentSortBy.upvoteCount);
+                    setSortOrder(SortOrder.DESC);
+                  }}
                   className={`flex w-full items-center px-4 py-2 text-sm ${
                     sortBy === CommentSortBy.upvoteCount ? 'bg-gray-100 text-gray-900' : 'text-gray-700'
                   } hover:bg-gray-100`}
@@ -108,7 +134,10 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({ discussionId }) => {
                   Most Voted
                 </button>
                 <button
-                  onClick={() => handleSortChange(CommentSortBy.replyCount)}
+                  onClick={() => {
+                    handleSortChange(CommentSortBy.replyCount);
+                    setSortOrder(SortOrder.DESC);
+                  }}
                   className={`flex w-full items-center px-4 py-2 text-sm ${
                     sortBy === CommentSortBy.replyCount ? 'bg-gray-100 text-gray-900' : 'text-gray-700'
                   } hover:bg-gray-100`}

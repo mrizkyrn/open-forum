@@ -5,11 +5,11 @@ import { ReqUser } from '../../common/decorators/user.decorator';
 import { UserRole } from '../../common/enums/user-role.enum';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { CreateAdminDto } from '../user/dto/create-admin.dto';
 import { UpdateUserDto } from '../user/dto/update-user.dto';
 import { UserResponseDto } from '../user/dto/user-response.dto';
 import { User } from '../user/entities/user.entity';
 import { UserService } from '../user/user.service';
+import { CreateUserDto } from '../user/dto/create-user.dto';
 
 @ApiTags('Admin')
 @Controller('admin/users')
@@ -25,18 +25,18 @@ export class AdminUserController {
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Forbidden' })
   @ApiResponse({ status: 409, description: 'Username already exists' })
-  async createAdmin(@Body() createAdminDto: CreateAdminDto): Promise<UserResponseDto> {
-    return this.userService.createAdmin(createAdminDto);
+  async createUser(@Body() createUserDto: CreateUserDto): Promise<UserResponseDto> {
+    return this.userService.create(createUserDto);
   }
 
   @Put(':id')
   @Roles([UserRole.ADMIN])
-  @ApiOperation({ summary: 'Update user (Admin only)' })
+  @ApiOperation({ summary: 'Update user' })
   @ApiParam({ name: 'id', description: 'User ID', type: Number })
   @ApiResponse({ status: 200, description: 'User updated successfully', type: UserResponseDto })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 404, description: 'User not found' })
-  async updateAdmin(
+  async updateUser(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateUserDto: UpdateUserDto,
   ): Promise<UserResponseDto> {

@@ -106,6 +106,7 @@ const CommentCard: React.FC<CommentCardProps> = ({
               isEditing={isEditing}
               onEditClick={handleEditClick}
               onDeleteClick={handleDeleteClick}
+              isDeleted={comment.isDeleted}
             />
 
             {/* Edit form */}
@@ -113,7 +114,7 @@ const CommentCard: React.FC<CommentCardProps> = ({
               <CommentForm
                 discussionId={comment.discussionId}
                 parentId={comment.parentId}
-                initialValue={comment.content}
+                initialValue={comment.content || ''}
                 existingAttachments={comment.attachments}
                 isEditing={true}
                 commentId={comment.id}
@@ -125,7 +126,11 @@ const CommentCard: React.FC<CommentCardProps> = ({
             ) : (
               <>
                 {/* Comment body */}
-                <CommentCardBody content={comment.content} attachments={comment.attachments} />
+                <CommentCardBody
+                  content={comment.content || ''}
+                  attachments={comment.attachments}
+                  isDeleted={comment.isDeleted}
+                />
 
                 {/* Comment footer */}
                 <CommentCardFooter
@@ -139,6 +144,7 @@ const CommentCard: React.FC<CommentCardProps> = ({
                   isReply={isReply}
                   onToggleReply={handleReplyClick}
                   onToggleShowReplies={() => setShowReplies((prev) => !prev)}
+                  isDeleted={comment.isDeleted}
                 />
               </>
             )}
@@ -163,11 +169,7 @@ const CommentCard: React.FC<CommentCardProps> = ({
 
             {/* Replies section */}
             {showReplies && (
-              <CommentRepliesSection
-                comment={comment}
-                showReplies={showReplies}
-                onToggleReply={onToggleReply}
-              />
+              <CommentRepliesSection comment={comment} showReplies={showReplies} onToggleReply={onToggleReply} />
             )}
           </div>
         </div>
