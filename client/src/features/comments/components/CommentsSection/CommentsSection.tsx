@@ -1,5 +1,5 @@
 import ErrorFetching from '@/components/feedback/ErrorFetching';
-import LoadingIndicator from '@/components/feedback/LoadinIndicator';
+import LoadingIndicator from '@/components/feedback/LoadingIndicator';
 import MainButton from '@/components/ui/buttons/MainButton';
 import { CommentCard } from '@/features/comments/components';
 import { commentApi } from '@/features/comments/services';
@@ -23,7 +23,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({ discussionId }) => {
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isError, refetch } = useInfiniteQuery({
     queryKey: ['comments', discussionId, sortBy],
-    queryFn: ({ pageParam = 1 }) => commentApi.getCommentsByDiscussion(discussionId, pageParam, 3, sortBy),
+    queryFn: ({ pageParam = 1 }) => commentApi.getCommentsByDiscussion(discussionId, pageParam, 25, sortBy),
     getNextPageParam: (lastPage) => (lastPage.meta.hasNextPage ? lastPage.meta.currentPage + 1 : undefined),
     initialPageParam: 1,
     staleTime: 1000 * 60 * 5,
@@ -35,12 +35,12 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({ discussionId }) => {
       if (prev === commentId || prev !== null) {
         setReplyMention(null);
       }
-      
+
       // If we have a username to mention, store it
       if (mentionUsername) {
         setReplyMention(`@${mentionUsername} `);
       }
-      
+
       return prev === commentId ? null : commentId;
     });
   };
@@ -67,7 +67,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({ discussionId }) => {
   };
 
   if (isLoading) {
-    return <LoadingIndicator />;
+    return <LoadingIndicator fullWidth/>;
   }
 
   if (isError) {

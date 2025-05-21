@@ -1,5 +1,5 @@
 import FeedbackDisplay from '@/components/feedback/FeedbackDisplay';
-import LoadingIndicator from '@/components/feedback/LoadinIndicator';
+import LoadingIndicator from '@/components/feedback/LoadingIndicator';
 import { useAuth } from '@/features/auth/hooks/useAuth';
 import { CreateDiscussionModal, DiscussionCard } from '@/features/discussions/components';
 import { DiscussionFeedType, useInfiniteDiscussions } from '@/features/discussions/hooks/useInfiniteDiscussions';
@@ -116,7 +116,7 @@ const DiscussionPost: React.FC<DiscussionPostProps> = ({ search, preselectedSpac
     <div>
       {/* New discussions button - only show when there are new discussions */}
       {newDiscussions > 0 && (
-        <div className="fixed top-16 sm:top-8 left-1/2 z-50 -translate-x-1/2 transform">
+        <div className="fixed top-16 left-1/2 z-50 -translate-x-1/2 transform sm:top-8">
           <button
             onClick={handleRefreshDiscussions}
             className="pulse-animation flex items-center gap-2 rounded-full bg-green-600 px-4 py-2 text-sm font-medium text-white shadow-md transition-all hover:bg-green-700"

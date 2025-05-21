@@ -1,5 +1,5 @@
 import FeedbackDisplay from '@/components/feedback/FeedbackDisplay';
-import LoadingIndicator from '@/components/feedback/LoadinIndicator';
+import LoadingIndicator from '@/components/feedback/LoadingIndicator';
 import BackButton from '@/components/ui/buttons/BackButton';
 import { DiscussionPost } from '@/features/discussions/components';
 import NewDiscussionButton from '@/features/discussions/components/DiscussionPost/NewDiscussionButton';
@@ -49,7 +49,7 @@ const SpaceDetailPage = () => {
   };
 
   if (spaceLoading) {
-    return <LoadingIndicator />;
+    return <LoadingIndicator fullWidth />;
   }
 
   if (!space) {
@@ -76,36 +76,39 @@ const SpaceDetailPage = () => {
       <BackButton />
 
       {/* Space header */}
-      <div className="mb-6 rounded-lg bg-white border border-gray-100">
+      <div className="mb-4 rounded-lg border border-gray-100 bg-white sm:mb-6">
         {/* Space Banner */}
-        <div className="h-44 w-full overflow-hidden rounded-t-lg bg-gray-200">
+        <div className="h-28 w-full overflow-hidden bg-gray-200 sm:h-36 md:h-44">
           {space.bannerUrl ? (
-            <img
-              src={getFileUrl(space.bannerUrl)}
-              alt={space.name}
-              className="h-full w-full overflow-hidden object-cover"
-            />
+            <img src={getFileUrl(space.bannerUrl)} alt={space.name} className="h-full w-full object-cover" />
           ) : (
-            <div className="flex h-full items-center justify-center text-3xl font-bold text-gray-400">{space.name}</div>
+            <div className="flex h-full items-center justify-center text-xl font-bold text-gray-400 sm:text-2xl md:text-3xl">
+              {space.name}
+            </div>
           )}
         </div>
 
         {/* Space Details */}
-        <div className="p-6">
-          <div className="flex items-center justify-between">
+        <div className="p-3 sm:p-4 md:p-6">
+          {/* Responsive layout for small screens */}
+          <div className="flex flex-col gap-4 flex-wrap sm:flex-row sm:items-center sm:justify-between">
             {/* Space Icon and Name */}
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3 sm:gap-4">
               {space.iconUrl ? (
-                <img src={getFileUrl(space.iconUrl)} alt={space.name} className="h-16 w-16 rounded-full" />
+                <img
+                  src={getFileUrl(space.iconUrl)}
+                  alt={space.name}
+                  className="h-12 w-12 flex-shrink-0 rounded-full sm:h-14 sm:w-14 md:h-16 md:w-16"
+                />
               ) : (
-                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-green-100 text-2xl font-bold text-green-600">
+                <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-green-100 text-lg font-bold text-green-600 sm:h-14 sm:w-14 sm:text-xl md:h-16 md:w-16 md:text-2xl">
                   {space.name.charAt(0)}
                 </div>
               )}
-              <div>
-                <h1 className="text-2xl font-bold">{space.name}</h1>
-                <div className="flex items-center gap-1 text-sm text-gray-500">
-                  <Users size={16} />
+              <div className="min-w-0">
+                <h1 className="truncate text-xl font-bold sm:text-2xl">{space.name}</h1>
+                <div className="flex items-center gap-1 text-xs text-gray-500 sm:text-sm">
+                  <Users size={14} className="flex-shrink-0" />
                   <span>
                     {space.followerCount} {space.followerCount === 1 ? 'Member' : 'Members'}
                   </span>
@@ -117,7 +120,7 @@ const SpaceDetailPage = () => {
             <button
               onClick={toggleFollow}
               disabled={isFollowLoading}
-              className={`rounded-lg px-4 py-2 text-sm font-medium ${
+              className={`self-start rounded-lg px-3 py-1.5 text-sm font-medium whitespace-nowrap sm:self-auto sm:px-4 sm:py-2 ${
                 isFollowLoading
                   ? 'cursor-wait opacity-70'
                   : space.isFollowing
@@ -125,12 +128,23 @@ const SpaceDetailPage = () => {
                     : 'bg-green-600 text-white hover:bg-green-700'
               }`}
             >
-              {space.isFollowing ? 'Unfollow' : 'Follow'}
+              {isFollowLoading ? (
+                <span className="flex items-center gap-1">
+                  <span className="inline-block h-3 w-3 animate-spin rounded-full border-2 border-white border-t-transparent"></span>
+                  <span>{space.isFollowing ? 'Unfollowing...' : 'Following...'}</span>
+                </span>
+              ) : (
+                <span>{space.isFollowing ? 'Unfollow' : 'Follow'}</span>
+              )}
             </button>
           </div>
 
           {/* Space Description */}
-          {space.description && <p className="mt-4 text-gray-700">{space.description}</p>}
+          {space.description && (
+            <p className="mt-3 line-clamp-3 text-sm text-gray-700 sm:mt-4 sm:line-clamp-none sm:text-base">
+              {space.description}
+            </p>
+          )}
         </div>
       </div>
 

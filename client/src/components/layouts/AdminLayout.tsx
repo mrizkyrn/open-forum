@@ -1,5 +1,8 @@
 import { useAuth } from '@/features/auth/hooks/useAuth';
+import { reportApi } from '@/features/reports/services';
 import { UserRole } from '@/features/users/types';
+import { useSocket } from '@/hooks/useSocket';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   BarChart2,
   BookOpen,
@@ -19,14 +22,24 @@ interface MenuItem {
   icon: React.ReactNode;
   label: string;
   path: string;
+  badgeCount?: number;
 }
 
 const AdminLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
-  const { user, logout, isLoading } = useAuth();
+  const { user, logout, isLoading, isAuthenticated } = useAuth();
+  const { socket, isConnected } = useSocket();
   const navigate = useNavigate();
   const location = useLocation();
+  const queryClient = useQueryClient();
   const mainContentRef = useRef<HTMLDivElement>(null);
+
+  // Get pending reports count
+  const { data: reportStats } = useQuery({
+    queryKey: ['reportStats'],
+    queryFn: reportApi.getReportStats,
+    enabled: isAuthenticated && user?.role === UserRole.ADMIN,
+  });
 
   useEffect(() => {
     if (mainContentRef.current) {
@@ -41,6 +54,24 @@ const AdminLayout = () => {
     }
   }, [user, navigate, isLoading]);
 
+  // Listen for new reports
+  useEffect(() => {
+    if (!socket || !isConnected) return;
+
+    const handleNewReport = (report: any) => {
+      console.log('New report received:', report);
+      queryClient.invalidateQueries({ queryKey: ['pendingReports'] });
+      queryClient.invalidateQueries({ queryKey: ['reports'] });
+      queryClient.invalidateQueries({ queryKey: ['adminStats'] });
+    };
+
+    socket.on('newReport', handleNewReport);
+
+    return () => {
+      socket.off('newReport', handleNewReport);
+    };
+  }, [socket, isConnected, queryClient]);
+
   // Admin menu items
   const menuItems: MenuItem[] = [
     { icon: <LayoutDashboard size={18} />, label: 'Overview', path: '/admin' },
@@ -49,7 +80,7 @@ const AdminLayout = () => {
     { icon: <BookOpen size={20} />, label: 'Study Programs', path: '/admin/study-programs' },
     { icon: <MessagesSquare size={18} />, label: 'Discussions', path: '/admin/discussions' },
     { icon: <FolderKanban size={18} />, label: 'Spaces', path: '/admin/spaces' },
-    { icon: <Flag size={18} />, label: 'Reports', path: '/admin/reports' },
+    { icon: <Flag size={18} />, label: 'Reports', path: '/admin/reports', badgeCount: reportStats?.pending },
     { icon: <BarChart2 size={18} />, label: 'Analytics', path: '/admin/analytics' },
     { icon: <Settings size={18} />, label: 'Settings', path: '/admin/settings' },
   ];

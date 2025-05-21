@@ -1,5 +1,5 @@
 import FeedbackDisplay from '@/components/feedback/FeedbackDisplay';
-import LoadingIndicator from '@/components/feedback/LoadinIndicator';
+import LoadingIndicator from '@/components/feedback/LoadingIndicator';
 import MainButton from '@/components/ui/buttons/MainButton';
 import SpacesList from '@/features/spaces/components/SpaceList';
 import SpaceSearchBar from '@/features/spaces/components/SpaceSearchBar';
@@ -33,7 +33,7 @@ const SpacesPage = () => {
         sortOrder,
         spaceType: selectedType,
       }),
-      initialPageParam: 1,
+    initialPageParam: 1,
     getNextPageParam: (lastPage) => (lastPage.meta.hasNextPage ? lastPage.meta.currentPage + 1 : undefined),
   });
 

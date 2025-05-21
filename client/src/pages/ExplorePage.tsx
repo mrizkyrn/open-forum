@@ -1,4 +1,4 @@
-import LoadingIndicator from '@/components/feedback/LoadinIndicator';
+import LoadingIndicator from '@/components/feedback/LoadingIndicator';
 import { SearchInput } from '@/components/ui/inputs/SearchInput';
 import PopularTopicItem from '@/features/discussions/components/PopularTopicItem';
 import { discussionApi } from '@/features/discussions/services';

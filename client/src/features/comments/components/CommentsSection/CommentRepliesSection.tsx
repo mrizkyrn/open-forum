@@ -1,4 +1,4 @@
-import LoadingIndicator from '@/components/feedback/LoadinIndicator';
+import LoadingIndicator from '@/components/feedback/LoadingIndicator';
 import { CommentCard } from '@/features/comments/components';
 import { commentApi } from '@/features/comments/services';
 import { Comment } from '@/features/comments/types';
@@ -11,11 +11,7 @@ interface CommentRepliesSectionProps {
   onToggleReply?: (commentId: number, replyToUsername?: string) => void;
 }
 
-const CommentRepliesSection: React.FC<CommentRepliesSectionProps> = ({
-  comment,
-  showReplies,
-  onToggleReply,
-}) => {
+const CommentRepliesSection: React.FC<CommentRepliesSectionProps> = ({ comment, showReplies, onToggleReply }) => {
   const {
     data: repliesData,
     fetchNextPage: fetchNextReplies,
@@ -40,7 +36,7 @@ const CommentRepliesSection: React.FC<CommentRepliesSectionProps> = ({
 
   const replies = repliesData?.pages.flatMap((page) => page.items) || [];
   if (isLoadingReplies && !isFetchingMoreReplies) {
-    return <LoadingIndicator size="sm" />;
+    return <LoadingIndicator size="sm" fullWidth />;
   }
 
   if (isErrorReplies) {

@@ -1,5 +1,5 @@
 import FeedbackDisplay from '@/components/feedback/FeedbackDisplay';
-import LoadingIndicator from '@/components/feedback/LoadinIndicator';
+import LoadingIndicator from '@/components/feedback/LoadingIndicator';
 import ConfirmationModal from '@/components/modals/ConfirmationModal';
 import NotificationActionBar from '@/features/notifications/components/NotificatinoActionBar';
 import NotificationFilter from '@/features/notifications/components/NotificationFilter';

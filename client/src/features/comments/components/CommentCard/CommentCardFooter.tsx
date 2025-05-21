@@ -47,7 +47,7 @@ const CommentCardFooter: React.FC<CommentCardFooterProps> = ({
   };
 
   return (
-    <div className="flex items-center gap-4 text-sm">
+    <div className="flex flex-wrap items-center gap-2 xs:gap-3 md:gap-4 text-sm">
       {/* Vote buttons */}
       <div className="flex items-center gap-1">
         <button
@@ -55,7 +55,7 @@ const CommentCardFooter: React.FC<CommentCardFooterProps> = ({
           onClick={() => handleVote(1)}
           disabled={isVoting}
         >
-          <ArrowBigUp strokeWidth={1.5} size={20} className={currentVoteStatus === 1 ? 'fill-primary' : ''} />
+          <ArrowBigUp strokeWidth={1.5} size={18} className={currentVoteStatus === 1 ? 'fill-primary' : ''} />
         </button>
         <span className={`text-xs ${getVoteColor(voteCount)}`}>{voteCount}</span>
         <button
@@ -63,29 +63,35 @@ const CommentCardFooter: React.FC<CommentCardFooterProps> = ({
           onClick={() => handleVote(-1)}
           disabled={isVoting}
         >
-          <ArrowBigDown strokeWidth={1.5} size={20} className={currentVoteStatus === -1 ? 'fill-red-500' : ''} />
+          <ArrowBigDown strokeWidth={1.5} size={18} className={currentVoteStatus === -1 ? 'fill-red-500' : ''} />
         </button>
       </div>
 
       {/* Reply button */}
       <button
         onClick={onToggleReply}
-        className={`flex items-center gap-1 rounded px-2 py-1 text-xs hover:bg-gray-100 ${
+        className={`flex min-w-[60px] items-center gap-1 rounded px-1.5 py-1 text-xs hover:bg-gray-100 sm:px-2 ${
           showReplyForm ? 'bg-gray-100 font-medium' : ''
         }`}
       >
-        <Reply size={14} />
-        {showReplyForm ? 'Cancel Reply' : 'Reply'}
+        <Reply size={12} className="sm:hidden" />
+        <Reply size={14} className="hidden sm:block" />
+        <span className="whitespace-nowrap">{showReplyForm ? 'Cancel' : 'Reply'}</span>
       </button>
 
       {/* Show replies button */}
       {hasReplies && !isReply && (
         <button
           onClick={onToggleShowReplies}
-          className="flex items-center gap-1 rounded px-2 py-1 text-xs hover:bg-gray-100"
+          className="flex items-center gap-1 rounded px-1.5 py-1 text-xs hover:bg-gray-100 sm:px-2 whitespace-nowrap"
         >
-          <MessageCircle size={14} />
-          {showReplies ? 'Hide' : 'Show'} {replyCount} {replyCount === 1 ? 'reply' : 'replies'}
+          <MessageCircle size={12} className="sm:hidden" />
+          <MessageCircle size={14} className="hidden sm:block" />
+          <span>{showReplies ? 'Hide' : 'Show'}</span>
+          <span className="hidden xs:inline">
+            {replyCount} {replyCount === 1 ? 'reply' : 'replies'}
+          </span>
+          <span className="xs:hidden">{replyCount}</span>
         </button>
       )}
     </div>

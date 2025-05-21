@@ -2,7 +2,7 @@ import UserAvatar from '@/features/users/components/UserAvatar';
 import { User } from '@/features/users/types';
 import { formatDateDistance } from '@/utils/helpers';
 import { Loader2 } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import DiscussionDropdownAction from './DiscussionDropdownAction';
 
 interface DiscussionCardHeaderProps {
@@ -32,12 +32,6 @@ const DiscussionCardHeader: React.FC<DiscussionCardHeaderProps> = ({
   onDeleteClick,
   isDeleting = false,
 }) => {
-  const navigate = useNavigate();
-
-  const handleSpaceClick = () => {
-    navigate(`/spaces/${space.slug}`);
-  };
-
   return (
     <div className="flex items-start justify-between">
       {/* Profile image and user details */}
@@ -53,12 +47,12 @@ const DiscussionCardHeader: React.FC<DiscussionCardHeaderProps> = ({
             <h3 className="text-base font-semibold">Anonymous</h3>
           )}
           <div className="flex items-center gap-1 text-xs text-gray-500">
-            <button
-              onClick={handleSpaceClick}
+            <Link
+              to={`/spaces/${space.slug}`}
               className="hover:text-primary cursor-pointer font-medium hover:underline"
             >
               {space.name}
-            </button>
+            </Link>
             <span>·</span>
             <span>{formatDateDistance(createdAt)}</span>
             {isEdited && <span className="text-xs text-gray-500">(edited)</span>}

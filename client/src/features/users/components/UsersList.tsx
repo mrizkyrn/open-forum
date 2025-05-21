@@ -1,5 +1,5 @@
 import FeedbackDisplay from '@/components/feedback/FeedbackDisplay';
-import LoadingIndicator from '@/components/feedback/LoadinIndicator';
+import LoadingIndicator from '@/components/feedback/LoadingIndicator';
 import UserAvatar from '@/features/users/components/UserAvatar';
 import { userApi } from '@/features/users/services';
 import { SearchUserParams } from '@/features/users/types';

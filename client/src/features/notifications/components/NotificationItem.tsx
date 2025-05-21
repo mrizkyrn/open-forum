@@ -1,6 +1,6 @@
 import { Notification, NotificationType } from '@/features/notifications/types';
 import UserAvatar from '@/features/users/components/UserAvatar';
-import { format, formatDistanceToNow } from 'date-fns';
+import { formatDistanceToNow } from 'date-fns';
 import {
   AlertTriangle,
   AtSign,
@@ -91,10 +91,8 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
 
             <div className="mt-1 flex items-center gap-2">
               <span className="text-xs text-gray-500">
-                {formatDistanceToNow(new Date(notification.createdAt), { addSuffix: true })}
+                {formatDistanceToNow(new Date(notification.createdAt))}
               </span>
-              <span className="text-gray-400">•</span>
-              <span className="text-xs text-gray-500">{format(new Date(notification.createdAt), 'MMM d, h:mm a')}</span>
 
               {/* Report status badge */}
               {isReportNotification && notification.data?.status && (
@@ -124,19 +122,6 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
                 </>
               )}
 
-              {/* Unread indicator */}
-              {!notification.isRead && (
-                <>
-                  <span className="text-gray-400">•</span>
-                  <span
-                    className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
-                      isNew ? 'animate-pulse bg-yellow-100 text-yellow-800' : 'bg-blue-100 text-blue-800'
-                    }`}
-                  >
-                    {isNew ? 'Just now' : 'New'}
-                  </span>
-                </>
-              )}
             </div>
           </div>
         </div>

@@ -30,15 +30,15 @@ const CommentCardHeader: React.FC<CommentCardHeaderProps> = ({
       <div className="flex items-center gap-2">
         <div>
           <div className="flex items-center gap-1">
-            <Link to={`/profile/${author.username}`} className="cursor-pointer font-medium hover:underline">
+            <Link to={`/profile/${author.username}`} className="cursor-pointer line-clamp-1 font-medium hover:underline">
               {author.fullName}
             </Link>
             <span className="text-xs text-gray-500">·</span>
-            <span className="text-xs text-gray-500">{formatDateDistance(createdAt)}</span>
+            <span className="text-xs min-w-fit text-gray-500">{formatDateDistance(createdAt)}</span>
             {isEdited && <span className="text-xs text-gray-500">(edited)</span>}
           </div>
         </div>
-      </div>
+      </div> 
 
       {/* Dropdown menu */}
       {!isDeleting ? (

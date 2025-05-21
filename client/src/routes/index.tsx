@@ -1,5 +1,5 @@
 import ErrorBoundary from '@/components/feedback/ErrorBoundary';
-import LoadingPage from '@/components/feedback/LoadingPage';
+import LoadingIndicator from '@/components/feedback/LoadingIndicator';
 import AdminLayout from '@/components/layouts/AdminLayout';
 import MainLayout from '@/components/layouts/MainLayout';
 import { lazy, Suspense } from 'react';
@@ -27,7 +27,7 @@ const NotFound = lazy(() => import('@/pages/NotFound'));
 
 // Wrap Suspense in a reusable function
 const lazyLoad = (Component: React.ComponentType) => (
-  <Suspense fallback={<LoadingPage />}>
+  <Suspense fallback={<LoadingIndicator fullscreen fullWidth/>}>
     <Component />
   </Suspense>
 );

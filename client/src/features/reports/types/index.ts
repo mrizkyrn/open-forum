@@ -59,5 +59,5 @@ export enum ReportSortBy {
 export interface SearchReportDto extends SearchDto {
   status?: ReportStatus;
   targetType?: ReportTargetType;
-  sortBy: ReportSortBy;
+  sortBy?: ReportSortBy;
 }

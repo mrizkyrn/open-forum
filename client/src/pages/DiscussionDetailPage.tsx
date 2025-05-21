@@ -1,5 +1,5 @@
 import FeedbackDisplay from '@/components/feedback/FeedbackDisplay';
-import LoadingIndicator from '@/components/feedback/LoadinIndicator';
+import LoadingIndicator from '@/components/feedback/LoadingIndicator';
 import BackButton from '@/components/ui/buttons/BackButton';
 import { CommentForm, CommentsSection } from '@/features/comments/components';
 import { DiscussionCard, UpdateDiscussionModal } from '@/features/discussions/components';
@@ -70,7 +70,7 @@ const DiscussionDetailPage = () => {
   });
 
   if (isLoading) {
-    return <LoadingIndicator />;
+    return <LoadingIndicator fullWidth/>;
   }
 
   if (isError || !discussion) {
@@ -94,7 +94,7 @@ const DiscussionDetailPage = () => {
         <DiscussionCard discussion={discussion} disableNavigation={true} />
 
         {/* Comments section */}
-        <div className="mt-4 rounded-xl bg-white p-4 border border-gray-100">
+        <div className="mt-4 rounded-xl border border-gray-100 bg-white p-4">
           {/* Comment form */}
           <div className="mb-3">
             <CommentForm discussionId={discussion.id} />
