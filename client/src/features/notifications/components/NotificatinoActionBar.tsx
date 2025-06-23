@@ -1,5 +1,6 @@
-import { CheckCircle, Filter, Loader2, Trash2 } from 'lucide-react';
+import { CheckCircle, Loader2, Trash2 } from 'lucide-react';
 import React from 'react';
+import NotificationSettings from './NotificationSetting';
 
 interface NotificationActionBarProps {
   onMarkAllAsRead: () => void;
@@ -20,10 +21,7 @@ const NotificationActionBar: React.FC<NotificationActionBarProps> = ({
 }) => {
   return (
     <div className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-gray-200 bg-white p-4">
-      <div className="flex items-center gap-2">
-        <Filter className="h-5 w-5 text-gray-400" />
-        <span className="text-sm font-medium text-gray-700">Notification Actions</span>
-      </div>
+      <NotificationSettings />
 
       <div className="flex gap-2">
         <button

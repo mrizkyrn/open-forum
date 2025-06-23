@@ -85,8 +85,8 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
             )}
 
             {/* For regular comment notifications, show comment content */}
-            {!isReportNotification && notification.data?.content && (
-              <p className="mt-1 line-clamp-1 text-sm text-gray-500">{notification.data.content}</p>
+            {!isReportNotification && notification.data?.contentPreview && (
+              <p className="mt-1 line-clamp-1 text-sm text-gray-500">{notification.data.contentPreview}</p>
             )}
 
             <div className="mt-1 flex items-center gap-2">

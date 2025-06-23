@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { UserActivityInterceptor } from './common/interceptors/user-activity.interceptor';
-import { appConfig, databaseConfig, jwtConfig, redisConfig, externalApiConfig } from './config';
+import { appConfig, databaseConfig, jwtConfig, redisConfig, externalApiConfig, pushConfig } from './config';
 import { DatabaseModule } from './core/database/database.module';
 import { FileModule } from './core/file/file.module';
 import { RedisModule } from './core/redis/redis.module';
@@ -23,7 +23,7 @@ import { AcademicModule } from './modules/academic/academic.module';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [databaseConfig, appConfig, jwtConfig, redisConfig, externalApiConfig],
+      load: [databaseConfig, appConfig, jwtConfig, redisConfig, externalApiConfig, pushConfig],
     }),
     DatabaseModule,
     AuthModule,

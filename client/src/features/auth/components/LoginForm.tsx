@@ -2,12 +2,14 @@ import MainButton from '@/components/ui/buttons/MainButton';
 import { useAuth } from '@/features/auth/hooks/useAuth';
 import { LoginRequest } from '@/features/auth/types';
 import { UserRole } from '@/features/users/types';
+import { Eye, EyeOff } from 'lucide-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const LoginForm: React.FC = () => {
   const navigate = useNavigate();
   const { login, isLoading, error } = useAuth();
+  const [showPassword, setShowPassword] = useState(false);
 
   const [formData, setFormData] = useState<LoginRequest>({
     username: '',
@@ -20,6 +22,10 @@ const LoginForm: React.FC = () => {
       ...prev,
       [name]: value,
     }));
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(prev => !prev);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -91,16 +97,30 @@ const LoginForm: React.FC = () => {
           <label htmlFor="password" className="block text-xs font-semibold text-gray-600">
             PASSWORD
           </label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            className="focus:ring-primary-dark w-full rounded-lg border border-gray-300 px-4 py-3 focus:ring-1 focus:outline-none"
-            placeholder="Type here"
-            required
-          />
+          <div className="relative">
+            <input
+              type={showPassword ? "text" : "password"}
+              id="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              className="focus:ring-primary-dark w-full rounded-lg border border-gray-300 px-4 py-3 focus:ring-1 focus:outline-none"
+              placeholder="Type here"
+              required
+            />
+            <button
+              type="button"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              onClick={togglePasswordVisibility}
+              tabIndex={-1}
+            >
+              {showPassword ? (
+                <EyeOff size={20} strokeWidth={1.5} />
+              ) : (
+                <Eye size={20} strokeWidth={1.5} />
+              )}
+            </button>
+          </div>
         </div>
         <div className="mt-6">
           <MainButton type="submit" isLoading={isLoading} fullWidth size="xl">

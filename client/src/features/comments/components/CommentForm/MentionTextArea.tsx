@@ -22,11 +22,16 @@ const MentionTextarea: React.FC<MentionTextareaProps> = ({
 }) => {
   const [showMentionDropdown, setShowMentionDropdown] = useState(false);
   const [mentionQuery, setMentionQuery] = useState('');
-  const [mentionPosition, setMentionPosition] = useState({ top: 0, left: 0 });
+  const [mentionPosition, setMentionPosition] = useState({ top: 0, left: 0, placement: 'bottom' });
   const [cursorPosition, setCursorPosition] = useState(0);
   const debouncedMentionQuery = useDebounce(mentionQuery, 300);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+
+  // Constants for dropdown size and spacing
+  const DROPDOWN_HEIGHT = 250; // Estimated max height
+  const DROPDOWN_WIDTH = 256; // From w-64
+  const SAFETY_MARGIN = 10; // Extra margin to avoid touching edges
 
   // Query for username mentions
   const { data: mentionUsers, isLoading: loadingMentions } = useQuery({
@@ -77,7 +82,7 @@ const MentionTextarea: React.FC<MentionTextareaProps> = ({
     setCursorPosition(cursorPos);
     onChange(newValue);
 
-    // Check if we need to show mention dropdown
+    // Check if need to show mention dropdown
     const textBeforeCursor = newValue.substring(0, cursorPos);
     const mentionMatch = textBeforeCursor.match(/@(\w*)$/);
 
@@ -87,7 +92,9 @@ const MentionTextarea: React.FC<MentionTextareaProps> = ({
 
       // Calculate position for dropdown
       if (textareaRef.current) {
+        // Get the position of the textarea and the text before cursor
         const { top, left, height } = textareaRef.current.getBoundingClientRect();
+
         // Create a temporary element to measure text width
         const tempEl = document.createElement('div');
         tempEl.style.position = 'absolute';
@@ -100,10 +107,36 @@ const MentionTextarea: React.FC<MentionTextareaProps> = ({
         const textWidth = tempEl.getBoundingClientRect().width;
         document.body.removeChild(tempEl);
 
-        // Position dropdown below the @ symbol
+        // Calculate horizontal position
+        let dropdownLeft = left + textWidth - mentionMatch[0].length + window.scrollX;
+
+        // Ensure dropdown doesn't go off screen horizontally
+        if (dropdownLeft + DROPDOWN_WIDTH > window.innerWidth) {
+          dropdownLeft = window.innerWidth - DROPDOWN_WIDTH - SAFETY_MARGIN;
+        }
+
+        // Determine if should show dropdown above or below
+        const viewportHeight = window.innerHeight;
+        // Remove unused 'dropdownBottom' variable
+        const spaceBelow = viewportHeight - (top + height);
+
+        let dropdownTop;
+        let placement;
+
+        if (spaceBelow < DROPDOWN_HEIGHT + SAFETY_MARGIN && top > DROPDOWN_HEIGHT + SAFETY_MARGIN) {
+          // Not enough space below, but enough space above, so place it above
+          dropdownTop = top - DROPDOWN_HEIGHT + window.scrollY;
+          placement = 'top';
+        } else {
+          // Default: place below
+          dropdownTop = top + height + window.scrollY;
+          placement = 'bottom';
+        }
+
         setMentionPosition({
-          top: top + height + window.scrollY,
-          left: left + textWidth - mentionMatch[0].length + window.scrollX,
+          top: dropdownTop,
+          left: dropdownLeft,
+          placement,
         });
       }
 
@@ -130,7 +163,7 @@ const MentionTextarea: React.FC<MentionTextareaProps> = ({
         onChange(newValue);
 
         // Set cursor position after the inserted username
-        const newCursorPos = startPos + username.length + 2; // +2 for @ and space
+        const newCursorPos = startPos + username.length + 2;
         setTimeout(() => {
           if (textareaRef.current) {
             textareaRef.current.focus();
@@ -162,7 +195,9 @@ const MentionTextarea: React.FC<MentionTextareaProps> = ({
       {showMentionDropdown && (
         <div
           ref={dropdownRef}
-          className="fixed z-10 max-h-60 w-64 overflow-y-auto rounded-md border border-gray-200 bg-white shadow-lg"
+          className={`fixed z-10 max-h-60 w-64 overflow-y-auto rounded-md border border-gray-200 bg-white shadow-lg ${
+            mentionPosition.placement === 'top' ? 'origin-bottom' : 'origin-top'
+          }`}
           style={{
             top: `${mentionPosition.top}px`,
             left: `${mentionPosition.left}px`,

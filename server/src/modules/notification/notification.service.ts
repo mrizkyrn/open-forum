@@ -6,11 +6,11 @@ import { RedisChannels } from '../../core/redis/redis.constants';
 import { RedisService } from '../../core/redis/redis.service';
 import { WebsocketGateway } from '../../core/websocket/websocket.gateway';
 import { CommentService } from '../comment/comment.service';
-import { DiscussionService } from '../discussion/discussion.service';
 import { VoteEntityType, VoteValue } from '../vote/entities/vote.entity';
 import { BatchCreateNotificationDto, CreateNotificationDto } from './dto/create-notification.dto';
 import { NotificationQueryDto, NotificationResponseDto } from './dto/notification.dto';
 import { Notification, NotificationEntityType, NotificationType } from './entities/notification.entity';
+import { PushNotificationService } from './push-notification.service';
 
 @Injectable()
 export class NotificationService implements OnModuleInit {
@@ -23,8 +23,9 @@ export class NotificationService implements OnModuleInit {
     private readonly redisService: RedisService,
     @Inject(forwardRef(() => CommentService))
     private readonly commentService: CommentService,
-    @Inject(forwardRef(() => DiscussionService))
-    private readonly discussionService: DiscussionService,
+    // @Inject(forwardRef(() => DiscussionService))
+    // private readonly discussionService: DiscussionService,
+    private readonly pushNotificationService: PushNotificationService,
   ) {}
 
   onModuleInit() {
@@ -32,68 +33,6 @@ export class NotificationService implements OnModuleInit {
   }
 
   private subscribeToRedisEvents() {
-    // Add subscription for comment events
-    this.redisService
-      .subscribe(RedisChannels.COMMENT_CREATED, async (message) => {
-        try {
-          const data = JSON.parse(message);
-
-          const baseNotificationData = {
-            discussionId: data.discussionId,
-            commentId: data.commentId,
-            content: data.content,
-            spaceId: data.spaceId,
-          };
-
-          if (data.parentId) {
-            // This is a reply to another comment
-            const parentComment = await this.commentService.getCommentEntity(data.parentId);
-
-            if (parentComment && parentComment.authorId !== data.authorId) {
-              // Only notify if the parent author is different from current user
-              await this.createNotificationIfNotExists(
-                {
-                  recipientId: parentComment.authorId,
-                  actorId: data.authorId,
-                  type: NotificationType.NEW_REPLY,
-                  entityType: NotificationEntityType.COMMENT,
-                  entityId: data.commentId,
-                  data: {
-                    ...baseNotificationData,
-                    parentId: parentComment.authorId,
-                  },
-                },
-                5,
-              );
-            }
-          } else {
-            const discussion = await this.discussionService.getDiscussionEntity(data.discussionId);
-
-            // This is a comment on a discussion
-            if (discussion.authorId !== data.authorId) {
-              await this.createNotificationIfNotExists(
-                {
-                  recipientId: discussion.authorId,
-                  actorId: data.authorId,
-                  type: NotificationType.NEW_COMMENT,
-                  entityType: NotificationEntityType.COMMENT,
-                  entityId: data.commentId,
-                  data: baseNotificationData,
-                },
-                5,
-              );
-            }
-          }
-
-          this.logger.log(`Notifications processed for comment ID ${data.commentId}`);
-        } catch (error) {
-          this.logger.error(`Error processing notifications for comment: ${error.message}`, error.stack);
-        }
-      })
-      .catch((error) => {
-        this.logger.error(`Failed to subscribe to comment events: ${error.message}`);
-      });
-
     // Add subscription for vote events
     this.redisService
       .subscribe(RedisChannels.VOTE_UPDATED, async (message) => {
@@ -149,7 +88,6 @@ export class NotificationService implements OnModuleInit {
               entityType: notificationEntityType,
               entityId: data.entityId,
               data: notificationData,
-              clientRequestTime: data.clientRequestTime,
             },
             60, // Deduplicate within 1 hour window
           );
@@ -210,7 +148,7 @@ export class NotificationService implements OnModuleInit {
       const savedNotification = await this.notificationRepository.save(notification);
 
       // Notify the user through websocket
-      this.notifyRecipient(savedNotification, createDto.clientRequestTime);
+      this.notifyRecipient(savedNotification.id);
 
       return savedNotification;
     } catch (error) {
@@ -247,7 +185,7 @@ export class NotificationService implements OnModuleInit {
 
       // Notify each recipient through websocket
       savedNotifications.forEach((notification) => {
-        this.notifyRecipient(notification);
+        this.notifyRecipient(notification.id);
       });
 
       return savedNotifications;
@@ -469,7 +407,18 @@ export class NotificationService implements OnModuleInit {
 
   // ----- Helper Methods -----
 
-  private notifyRecipient(notification: Notification, clientRequestTime?: number): void {
+  private async notifyRecipient(notificationId: number): Promise<void> {
+    // Fetch the notification to get recipient details
+    const notification = await this.notificationRepository.findOne({
+      where: { id: notificationId },
+      relations: ['actor'],
+    });
+
+    if (!notification) {
+      this.logger.warn(`Notification with ID ${notificationId} not found`);
+      return;
+    }
+
     try {
       // Skip notification if it's a system notification
       if (!notification.recipientId) return;
@@ -484,7 +433,11 @@ export class NotificationService implements OnModuleInit {
         createdAt: notification.createdAt,
         isRead: notification.isRead,
         actorId: notification.actorId,
-        clientRequestTime,
+      });
+
+      // Send push notification if applicable
+      this.pushNotificationService.sendPushNotification(notification).catch((error) => {
+        this.logger.error(`Failed to send push notification for ${notification.id}: ${error.message}`, error.stack);
       });
     } catch (error) {
       // Log but don't throw - notification delivery should be best-effort

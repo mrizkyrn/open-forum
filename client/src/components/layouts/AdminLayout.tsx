@@ -4,14 +4,12 @@ import { UserRole } from '@/features/users/types';
 import { useSocket } from '@/hooks/useSocket';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import {
-  BarChart2,
   BookOpen,
   Building,
   Flag,
   FolderKanban,
   LayoutDashboard,
   MessagesSquare,
-  Settings,
   Users,
 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
@@ -81,8 +79,6 @@ const AdminLayout = () => {
     { icon: <MessagesSquare size={18} />, label: 'Discussions', path: '/admin/discussions' },
     { icon: <FolderKanban size={18} />, label: 'Spaces', path: '/admin/spaces' },
     { icon: <Flag size={18} />, label: 'Reports', path: '/admin/reports', badgeCount: reportStats?.pending },
-    { icon: <BarChart2 size={18} />, label: 'Analytics', path: '/admin/analytics' },
-    { icon: <Settings size={18} />, label: 'Settings', path: '/admin/settings' },
   ];
 
   // Handle navigation

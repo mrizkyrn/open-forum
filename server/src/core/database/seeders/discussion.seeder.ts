@@ -20,10 +20,8 @@ export async function seedDiscussions(dataSource: DataSource): Promise<void> {
 
   // Get non-admin, non-external users
   const eligibleUsers = await userRepository.find({
-    where: {
-      role: UserRole.STUDENT,
-      isExternalUser: false,
-    },
+    where: { role: UserRole.STUDENT, isExternalUser: false },
+    select: ['id'],
   });
 
   if (eligibleUsers.length === 0) {
@@ -48,10 +46,10 @@ export async function seedDiscussions(dataSource: DataSource): Promise<void> {
   const getRandomTags = (allTags: string[]): string[] => {
     // Randomly decide how many tags to use (0-5)
     const tagCount = Math.floor(Math.random() * 6); // 0-5
-    
+
     if (tagCount === 0) return [];
     if (tagCount >= allTags.length) return allTags;
-    
+
     // Randomly select tags without duplicates
     const shuffled = [...allTags].sort(() => 0.5 - Math.random());
     return shuffled.slice(0, tagCount);
@@ -245,7 +243,8 @@ export async function seedDiscussions(dataSource: DataSource): Promise<void> {
         tags: ['umpan balik', 'rapat', 'peningkatan', 'evaluasi', 'organisasi'],
       },
       {
-        content: 'Pemilihan untuk posisi pengurus baru akan diadakan bulan depan - pertimbangkan untuk mencalonkan diri!',
+        content:
+          'Pemilihan untuk posisi pengurus baru akan diadakan bulan depan - pertimbangkan untuk mencalonkan diri!',
         tags: ['pemilihan', 'kepemimpinan', 'posisi', 'organisasi', 'pengurus'],
       },
       {

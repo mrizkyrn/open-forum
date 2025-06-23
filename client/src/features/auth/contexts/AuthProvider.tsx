@@ -1,5 +1,6 @@
 import { authApi } from '@/features/auth/services/authApi';
 import { LoginRequest, RegisterRequest } from '@/features/auth/types';
+import { pushNotificationService } from '@/features/notifications/services/pushNotificationService';
 import { User } from '@/features/users/types';
 import { storageUtils } from '@/utils/storage';
 import { useQueryClient } from '@tanstack/react-query';
@@ -61,10 +62,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const { user, accessToken } = await authApi.login(credentials);
 
       storageUtils.setUser(user);
-
       dispatch({ type: 'AUTH_SUCCESS', payload: { user, accessToken } });
-
       queryClient.clear();
+
+      try {
+        if (pushNotificationService.isPushNotificationSupported()) {
+          const permission = await pushNotificationService.getNotificationPermission();
+          if (permission === 'granted') {
+            console.log('Reactivating push notifications after login');
+            await pushNotificationService.reactivateSubscription();
+          }
+        }
+      } catch (error) {
+        console.error('Failed to reactivate push notifications:', error);
+      }
 
       return user;
     } catch (error) {
@@ -95,6 +106,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const logout = async (): Promise<void> => {
     try {
+      try {
+        if (pushNotificationService.isPushNotificationSupported()) {
+          const permission = await pushNotificationService.getNotificationPermission();
+          if (permission === 'granted') {
+            console.log('Deactivating push notifications during logout');
+            await pushNotificationService.deactivateSubscription();
+          }
+        }
+      } catch (error) {
+        console.error('Failed to deactivate push notifications:', error);
+      }
+
       await authApi.logout();
     } finally {
       storageUtils.clearUser();

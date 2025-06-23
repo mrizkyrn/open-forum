@@ -80,7 +80,7 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
     });
   }
 
-  async publish(channel: string, message: any): Promise<number> {
+  async publish<T>(channel: string, message: T): Promise<number> {
     try {
       const serializedMessage = typeof message === 'string' ? message : JSON.stringify(message);
       return await this.publisher.publish(channel, serializedMessage);

@@ -2,6 +2,7 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Transform, Type } from 'class-transformer';
 import { IsArray, IsBoolean, IsInt, IsNumber, IsOptional, IsPositive, Min } from 'class-validator';
 import { NotificationEntityType, NotificationType } from '../entities/notification.entity';
+import { NotificationData } from '../interfaces/notification.interface';
 
 export class NotificationResponseDto {
   @ApiProperty({ description: 'Notification ID' })
@@ -31,7 +32,7 @@ export class NotificationResponseDto {
   isRead: boolean;
 
   @ApiProperty({ description: 'Additional data for the notification' })
-  data: Record<string, any>;
+  data: NotificationData | Record<string, any>;
 
   @ApiPropertyOptional({ description: 'User who triggered the notification' })
   actor?: {

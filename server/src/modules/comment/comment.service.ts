@@ -28,6 +28,7 @@ import { CreateCommentDto } from './dto/create-comment.dto';
 import { SearchCommentDto } from './dto/search-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 import { Comment } from './entities/comment.entity';
+import { CommentCreatedEvent } from 'src/core/redis/redis.interface';
 
 @Injectable()
 export class CommentService {
@@ -137,7 +138,7 @@ export class CommentService {
         await queryRunner.commitTransaction();
 
         // Publish to Redis
-        await this.redisService.publish(RedisChannels.COMMENT_CREATED, {
+        const commentEvent: CommentCreatedEvent = {
           commentId: savedComment.id,
           discussionId,
           spaceId: discussion.spaceId,
@@ -145,11 +146,11 @@ export class CommentService {
           content: this.truncateContent(savedComment.content, 100),
           parentId: savedComment.parentId,
           hasAttachments: files && files.length > 0,
-          clientRequestTime: createCommentDto.clientRequestTime || Date.now(),
-        });
+        }
+
+        await this.redisService.publish(RedisChannels.COMMENT_CREATED, commentEvent);
 
         const createdComment = await this.getCommentWithAttachmentById(savedComment.id);
-
         return CommentResponseDto.fromEntity(createdComment, null);
       } catch (error) {
         await queryRunner.rollbackTransaction();

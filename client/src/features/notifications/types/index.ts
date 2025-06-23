@@ -46,6 +46,51 @@ export interface Notification {
   actor?: NotificationActor;
 }
 
+export type NotificationData =
+  | NewCommentNotificationData
+  | NewDiscussionNotificationData
+  | NewReplyNotificationData
+  // | DiscussionUpvoteNotificationData
+  // | CommentUpvoteNotificationData
+  // | ReportReviewedNotificationData
+  // | UserMentionedNotificationData;
+
+export interface BaseNotificationData {
+  /** URL to navigate to when notification is clicked */
+  url: string;
+}
+
+/**
+ * Data for NEW_DISCUSSION notification type
+ */
+export interface NewDiscussionNotificationData extends BaseNotificationData {
+  discussionId: number;
+  spaceId?: number;
+  discussionPreview: string;
+  isAnonymous?: boolean;
+}
+
+/**
+ * Data for NEW_COMMENT notification type
+ */
+export interface NewCommentNotificationData extends BaseNotificationData {
+  discussionId: number;
+  commentId: number;
+  discussionPreview: string;
+  commentPreview: string;
+}
+
+/**
+ * Data for NEW_REPLY notification type
+ */
+export interface NewReplyNotificationData extends BaseNotificationData {
+  discussionId: number;
+  parentCommentId: number;
+  replyId: number;
+  parentCommentPreview: string;
+  replyPreview: string;
+}
+
 /**
  * Query parameters for fetching notifications
  */

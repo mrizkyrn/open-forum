@@ -20,7 +20,8 @@ export async function seedComments(dataSource: DataSource): Promise<void> {
 
   // Get all users who can comment
   const users = await userRepository.find({
-    where: { role: UserRole.STUDENT },
+    where: { role: UserRole.STUDENT, isExternalUser: false },
+    select: ['id'],
   });
 
   if (users.length === 0) {

@@ -8,3 +8,5 @@ export * from './redis/redis-config.type';
 export * from './redis/redis.config';
 export * from './externalApi/external-api-config.type';
 export * from './externalApi/external-api.config';
+export * from './push/push-config.type';
+export * from './push/push.config';

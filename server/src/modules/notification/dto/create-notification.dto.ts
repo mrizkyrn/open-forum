@@ -54,11 +54,6 @@ export class CreateNotificationDto {
   @IsObject()
   @IsOptional()
   data?: Record<string, any>;
-
-  @IsOptional()
-  @IsNumber()
-  @Transform(({ value }) => (value ? parseInt(value, 10) : undefined))
-  clientRequestTime?: number;
 }
 
 export class BatchCreateNotificationDto {

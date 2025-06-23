@@ -14,6 +14,7 @@ import { ReportReason } from '../../modules/report/entities/report-reason.entity
 import { Report } from '../../modules/report/entities/report.entity';
 import { User } from '../../modules/user/entities/user.entity';
 import { Vote } from '../../modules/vote/entities/vote.entity';
+import { PushSubscription } from '../../modules/notification/entities/push-subscription.entity';
 
 export default new DataSource({
   type: 'postgres',
@@ -39,6 +40,7 @@ export default new DataSource({
     UserActivity,
     Faculty,
     StudyProgram,
+    PushSubscription,
   ],
   migrations: ['src/core/database/migrations/*{.ts,.js}'],
   migrationsTableName: 'typeorm_migrations',
