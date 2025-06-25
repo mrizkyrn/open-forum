@@ -143,12 +143,12 @@ export class CommentService {
           discussionId,
           spaceId: discussion.spaceId,
           authorId: currentUser.id,
-          content: this.truncateContent(savedComment.content, 100),
+          content: savedComment.content,
           parentId: savedComment.parentId,
           hasAttachments: files && files.length > 0,
         }
 
-        await this.redisService.publish(RedisChannels.COMMENT_CREATED, commentEvent);
+        await this.redisService.publish(RedisChannels.COMMENT_CREATED, JSON.stringify(commentEvent));
 
         const createdComment = await this.getCommentWithAttachmentById(savedComment.id);
         return CommentResponseDto.fromEntity(createdComment, null);

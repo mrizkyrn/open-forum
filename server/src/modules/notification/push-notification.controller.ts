@@ -54,7 +54,7 @@ export class PushNotificationController {
   @ApiOperation({ summary: 'Reactivate push notifications during login' })
   @HttpCode(200)
   async reactivate(@ReqUser() user: User, @Body() dto: { endpoint: string }) {
-    await this.pushNotificationService.reactivateSubscription(user.id, dto.endpoint);
-    return { success: true };
+    const success = await this.pushNotificationService.reactivateSubscription(user.id, dto.endpoint);
+    return { success };
   }
 }

@@ -10,6 +10,7 @@ import { Discussion } from '../discussion/entities/discussion.entity';
 import { VoteDto } from './dto/vote-dto';
 import { VoteCountsDto, VoteResponseDto } from './dto/vote-response.dto';
 import { Vote, VoteEntityType, VoteValue } from './entities/vote.entity';
+import { VoteUpdatedEvent } from 'src/core/redis/redis.interface';
 
 @Injectable()
 export class VoteService {
@@ -201,7 +202,7 @@ export class VoteService {
       await queryRunner.commitTransaction();
 
       // Publish vote event to Redis
-      await this.redisService.publish(RedisChannels.VOTE_UPDATED, {
+      const voteEvent: VoteUpdatedEvent = {
         userId,
         recipientId,
         shouldNotify,
@@ -210,8 +211,8 @@ export class VoteService {
         voteAction,
         voteValue: value,
         discussionId,
-        clientRequestTime,
-      });
+      };
+      await this.redisService.publish(RedisChannels.VOTE_UPDATED, JSON.stringify(voteEvent));
 
       return result ? VoteResponseDto.fromEntity(result) : null;
     } catch (error) {

@@ -93,46 +93,6 @@ export class PushNotificationService implements OnModuleInit {
     }
   }
 
-  async validateSubscription(userId: number, endpoint: string): Promise<boolean> {
-    try {
-      const subscription = await this.pushSubscriptionRepository.findOne({
-        where: { userId, endpoint, active: true },
-      });
-
-      if (!subscription) {
-        this.logger.warn(`No active push subscription found for user ${userId} with endpoint ${endpoint}`);
-        return false;
-      }
-
-      // Test the subscription by sending a dummy notification
-      const payload = JSON.stringify({ title: 'Test', body: 'This is a test notification' });
-      const pushSubscription = {
-        endpoint: subscription.endpoint,
-        keys: {
-          p256dh: subscription.p256dh,
-          auth: subscription.auth,
-        },
-      };
-
-      try {
-        await webPush.sendNotification(pushSubscription, payload);
-        this.logger.debug(`Push subscription for user ${userId} is valid`);
-        return true;
-      } catch (error) {
-        if (error.statusCode === 410) {
-          // Subscription has expired or is no longer valid
-          await this.pushSubscriptionRepository.update({ id: subscription.id }, { active: false });
-          this.logger.warn(`Push subscription for user ${userId} is no longer valid`);
-          return false;
-        }
-        throw error;
-      }
-    } catch (error) {
-      this.logger.error(`Failed to validate push subscription: ${error.message}`, error.stack);
-      throw error;
-    }
-  }
-
   async deactivateSubscription(userId: number, endpoint: string): Promise<void> {
     try {
       const result = await this.pushSubscriptionRepository.update(
@@ -152,25 +112,26 @@ export class PushNotificationService implements OnModuleInit {
     }
   }
 
-  async reactivateSubscription(userId: number, endpoint: string): Promise<void> {
+  async reactivateSubscription(userId: number, endpoint: string): Promise<boolean> {
     try {
       // First check if the subscription exists
       const subscription = await this.pushSubscriptionRepository.findOne({
-        where: { endpoint },
+        where: { userId, endpoint, active: false },
       });
 
       if (subscription) {
-        // Update existing subscription
         subscription.userId = userId;
         subscription.active = true;
         await this.pushSubscriptionRepository.save(subscription);
         this.logger.debug(`Push subscription reactivated for user ${userId}`);
+        return true;
       } else {
         this.logger.warn(`No subscription found to reactivate for endpoint ${endpoint}`);
+        return false;
       }
     } catch (error) {
       this.logger.error(`Failed to reactivate push subscription: ${error.message}`, error.stack);
-      throw error;
+      return false;
     }
   }
 

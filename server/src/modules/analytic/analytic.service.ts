@@ -1,111 +1,19 @@
-import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Request } from 'express';
 import { Repository, SelectQueryBuilder } from 'typeorm';
 import { Pageable } from '../../common/interfaces/pageable.interface';
-import { RedisChannels } from '../../core/redis/redis.constants';
-import { RedisService } from '../../core/redis/redis.service';
-import { VoteEntityType } from '../vote/entities/vote.entity';
 import { ActivitySortBy, SearchActivityDto } from './dto/search-activity.dto';
 import { ActivityEntityType, ActivityType, UserActivity } from './entities/user-activity.entity';
 
 @Injectable()
-export class AnalyticService implements OnModuleInit {
+export class AnalyticService {
   private readonly logger = new Logger(AnalyticService.name);
 
   constructor(
     @InjectRepository(UserActivity)
     private readonly userActivityRepository: Repository<UserActivity>,
-    private readonly redisService: RedisService,
   ) {}
-
-  async onModuleInit() {
-    this.subscribeToRedisEvents();
-  }
-
-  private subscribeToRedisEvents() {
-    // Subscribe to discussion creation events
-    this.redisService
-      .subscribe(RedisChannels.DISCUSSION_CREATED, async (message) => {
-        try {
-          const data = JSON.parse(message);
-
-          // Record the activity
-          await this.recordActivity(
-            data.authorId,
-            ActivityType.CREATE_DISCUSSION,
-            ActivityEntityType.DISCUSSION,
-            data.discussionId,
-            {
-              spaceId: data.spaceId,
-              isAnonymous: data.isAnonymous,
-              hasTags: data.hasTags,
-              hasAttachments: data.hasAttachments,
-              content: data.content,
-            },
-          );
-        } catch (error) {
-          this.logger.error(`Error processing discussion created event for analytics: ${error.message}`);
-        }
-      })
-      .catch((error) => {
-        this.logger.error(`Failed to subscribe to discussion events in analytics: ${error.message}`);
-      });
-
-    // Subscribe to comment creation events
-    this.redisService
-      .subscribe(RedisChannels.COMMENT_CREATED, async (message) => {
-        try {
-          const data = JSON.parse(message);
-
-          // Record the activity
-          await this.recordActivity(
-            data.authorId,
-            ActivityType.CREATE_COMMENT,
-            ActivityEntityType.COMMENT,
-            data.commentId,
-            {
-              spaceId: data.spaceId,
-              discussionId: data.discussionId,
-              parentId: data.parentId,
-              content: data.content,
-              hasAttachments: data.hasAttachments,
-              isReply: data.isReply,
-            },
-          );
-        } catch (error) {
-          this.logger.error(`Error processing comment created event for analytics: ${error.message}`);
-        }
-      })
-      .catch((error) => {
-        this.logger.error(`Failed to subscribe to comment events in analytics: ${error.message}`);
-      });
-
-    // Subscribe to vote update events
-    this.redisService
-      .subscribe(RedisChannels.VOTE_UPDATED, async (message) => {
-        try {
-          const data = JSON.parse(message);
-          const activityType =
-            data.entityType === VoteEntityType.DISCUSSION ? ActivityType.VOTE_DISCUSSION : ActivityType.VOTE_COMMENT;
-          const activityEntityType =
-            data.entityType === VoteEntityType.DISCUSSION ? ActivityEntityType.DISCUSSION : ActivityEntityType.COMMENT;
-
-          // Record the activity
-          await this.recordActivity(data.userId, activityType, activityEntityType, data.entityId, {
-            voteValue: data.voteValue,
-            discussionId: data.discussionId,
-            recepentId: data.recipientId,
-            action: data.voteAction,
-          });
-        } catch (error) {
-          this.logger.error(`Error processing vote updated event for analytics: ${error.message}`);
-        }
-      })
-      .catch((error) => {
-        this.logger.error(`Failed to subscribe to vote events in analytics: ${error.message}`);
-      });
-  }
 
   // ----- Activity Recording Methods -----
 
@@ -131,7 +39,7 @@ export class AnalyticService implements OnModuleInit {
       return await this.userActivityRepository.save(activity);
     } catch (error) {
       this.logger.error(`Failed to record user activity: ${error.message}`, error.stack);
-      // Non-blocking - we don't want activity logging to prevent main operations
+      // Non-blocking
       return null;
     }
   }

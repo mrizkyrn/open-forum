@@ -1,5 +1,7 @@
 import { BadRequestException, ForbiddenException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ReportReviewedEvent } from 'src/core/redis/redis.interface';
+import { RedisService } from 'src/core/redis/redis.service';
 import { WebsocketGateway } from 'src/core/websocket/websocket.gateway';
 import { Between, FindOptionsWhere, Repository } from 'typeorm';
 import { Pageable } from '../../common/interfaces/pageable.interface';
@@ -16,6 +18,7 @@ import { ReportReasonResponseDto, ReportResponseDto, ReportStatsResponseDto } fr
 import { SearchReportDto } from './dto/search-report.dto';
 import { ReportReason } from './entities/report-reason.entity';
 import { Report, ReportStatus, ReportTargetType } from './entities/report.entity';
+import { RedisChannels } from 'src/core/redis/redis.constants';
 
 @Injectable()
 export class ReportService {
@@ -31,6 +34,7 @@ export class ReportService {
     private readonly notificationService: NotificationService,
     private readonly analyticService: AnalyticService,
     private readonly websocketGateway: WebsocketGateway,
+    private readonly redisService: RedisService,
   ) {}
 
   // ----- Report CRUD Operations -----
@@ -152,19 +156,24 @@ export class ReportService {
       // Save the updated report
       const updatedReport = await this.reportRepository.save(report);
 
-      // Send appropriate notifications using the unified method
-      await this.createReportNotification({
-        report: updatedReport,
+      // Publish the report handling event to WebSocket
+      const reportEvent: ReportReviewedEvent = {
+        reportId: report.id,
+        reportStatus: report.status,
+        reviewerId: report.reviewerId,
+        reporterId: report.reporterId,
         targetAuthorId,
+        targetType: report.targetType,
+        targetId: report.targetId,
         contentPreview: content,
         discussionId,
         isContentDeleted: handleDto.deleteContent,
-        options: {
-          note: handleDto.note,
-          notifyReporter: handleDto.notifyReporter,
-          notifyAuthor: handleDto.notifyAuthor,
-        },
-      });
+        note: handleDto.note || '',
+        reasonText: report.reason?.name || '',
+        notifyReporter: handleDto.notifyReporter,
+        notifyAuthor: handleDto.notifyAuthor,
+      };
+      await this.redisService.publish(RedisChannels.REPORT_REVIEWED, JSON.stringify(reportEvent));
 
       // Update response based on action taken
       if (handleDto.deleteContent) {
