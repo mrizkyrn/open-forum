@@ -8,10 +8,16 @@ import { Loader2 } from 'lucide-react';
 interface CommentRepliesSectionProps {
   comment: Comment;
   showReplies: boolean;
+  highlightedReplyId?: number | null;
   onToggleReply?: (commentId: number, replyToUsername?: string) => void;
 }
 
-const CommentRepliesSection: React.FC<CommentRepliesSectionProps> = ({ comment, showReplies, onToggleReply }) => {
+const CommentRepliesSection: React.FC<CommentRepliesSectionProps> = ({
+  comment,
+  showReplies,
+  highlightedReplyId,
+  onToggleReply,
+}) => {
   const {
     data: repliesData,
     fetchNextPage: fetchNextReplies,
@@ -21,7 +27,7 @@ const CommentRepliesSection: React.FC<CommentRepliesSectionProps> = ({ comment, 
     isError: isErrorReplies,
   } = useInfiniteQuery({
     queryKey: ['commentReplies', comment.id],
-    queryFn: ({ pageParam = 1 }) => commentApi.getCommentReplies(comment.id, pageParam, 3),
+    queryFn: ({ pageParam = 1 }) => commentApi.getCommentReplies(comment.id, pageParam, 15),
     getNextPageParam: (lastPage) => (lastPage.meta.hasNextPage ? lastPage.meta.currentPage + 1 : undefined),
     enabled: showReplies && comment.replyCount > 0,
     initialPageParam: 1,
@@ -35,6 +41,7 @@ const CommentRepliesSection: React.FC<CommentRepliesSectionProps> = ({ comment, 
   };
 
   const replies = repliesData?.pages.flatMap((page) => page.items) || [];
+
   if (isLoadingReplies && !isFetchingMoreReplies) {
     return <LoadingIndicator size="sm" fullWidth />;
   }
@@ -61,12 +68,15 @@ const CommentRepliesSection: React.FC<CommentRepliesSectionProps> = ({ comment, 
     <div className="mt-2 flex flex-col gap-2">
       {/* Display all replies from all pages */}
       {replies.map((reply) => (
-        <CommentCard
+        <div
           key={reply.id}
-          comment={reply}
-          isReply={true}
-          onToggleReply={() => handleNestedReply(reply.author.username)}
-        />
+          id={`comment-${reply.id}`}
+          className={`transition-all duration-300 ${
+            highlightedReplyId === reply.id ? 'rounded-lg bg-blue-50 px-2' : ''
+          }`}
+        >
+          <CommentCard comment={reply} isReply={true} onToggleReply={() => handleNestedReply(reply.author.username)} />
+        </div>
       ))}
 
       {/* Load more replies button */}

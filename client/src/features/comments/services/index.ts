@@ -25,6 +25,15 @@ export const commentApi = {
     }
   },
 
+  async getCommentById(commentId: number): Promise<Comment> {
+    try {
+      const response = await apiClient.get<ApiResponse<Comment>>(`/comments/${commentId}`);
+      return response.data.data;
+    } catch (error: any) {
+      throw handleApiError(error, 'Failed to fetch comment');
+    }
+  },
+
   async getCommentReplies(
     commentId: number,
     page: number,

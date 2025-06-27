@@ -204,7 +204,7 @@ const NotificationsPage: React.FC = () => {
 
     if (type === NotificationType.REPORT_REVIEWED) {
       if (data?.discussionId) {
-        return `/discussions/${data.discussionId}${data?.targetId && data?.targetType === 'comment' ? `?highlight=${data.targetId}` : ''}`;
+        return `/discussions/${data.discussionId}${data?.targetId && data?.targetType === 'comment' ? `?comment=${data.targetId}` : ''}`;
       }
       return '/reports';
     }
@@ -212,7 +212,7 @@ const NotificationsPage: React.FC = () => {
     if (entityType === NotificationEntityType.DISCUSSION) {
       return `/discussions/${entityId}`;
     } else if (entityType === NotificationEntityType.COMMENT) {
-      return `/discussions/${data.discussionId}?highlight=${entityId}`;
+      return `/discussions/${data.discussionId}?comment=${entityId}`;
     }
 
     return '#';

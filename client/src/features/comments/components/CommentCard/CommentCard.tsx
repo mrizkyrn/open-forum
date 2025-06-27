@@ -3,7 +3,7 @@ import { commentApi } from '@/features/comments/services';
 import { Comment } from '@/features/comments/types';
 import UserAvatar from '@/features/users/components/UserAvatar';
 import { useQueryClient } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import CommentForm from '../CommentForm/CommentForm';
 import CommentRepliesSection from '../CommentsSection/CommentRepliesSection';
@@ -16,6 +16,8 @@ interface CommentCardProps {
   isReply?: boolean;
   showReplyForm?: boolean;
   replyMention?: string | null;
+  forceShowReplies?: boolean;
+  highlightedReplyId?: number | null;
   onToggleReply?: (commentId: number, replyToUsername?: string) => void;
 }
 
@@ -24,14 +26,22 @@ const CommentCard: React.FC<CommentCardProps> = ({
   isReply = false,
   showReplyForm = false,
   replyMention = null,
+  forceShowReplies = false,
+  highlightedReplyId = null,
   onToggleReply,
 }) => {
-  const [showReplies, setShowReplies] = useState(false);
+  const [showReplies, setShowReplies] = useState<boolean>(forceShowReplies || false);
   const [isEditing, setIsEditing] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
   const queryClient = useQueryClient();
+
+  useEffect(() => {
+    if (forceShowReplies) {
+      setShowReplies(true);
+    }
+  }, [forceShowReplies]);
 
   const handleReplyClick = () => {
     if (onToggleReply) {
@@ -169,7 +179,12 @@ const CommentCard: React.FC<CommentCardProps> = ({
 
             {/* Replies section */}
             {showReplies && (
-              <CommentRepliesSection comment={comment} showReplies={showReplies} onToggleReply={onToggleReply} />
+              <CommentRepliesSection
+                comment={comment}
+                showReplies={showReplies}
+                onToggleReply={onToggleReply}
+                highlightedReplyId={highlightedReplyId}
+              />
             )}
           </div>
         </div>

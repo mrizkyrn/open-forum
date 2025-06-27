@@ -5,6 +5,7 @@ import { commentApi } from '@/features/comments/services';
 import UserAvatar from '@/features/users/components/UserAvatar';
 import { Attachment } from '@/types/AttachmentTypes';
 import { ALLOWED_FILE_TYPES, MAX_COMMENT_FILES, MAX_FILE_SIZE } from '@/utils/constants';
+import { getFromCurrentUrl } from '@/utils/helpers';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { ImagePlus } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
@@ -45,6 +46,7 @@ const CommentForm: React.FC<CommentFormProps> = ({
 
   const { user } = useAuth();
   const queryClient = useQueryClient();
+  const urlCommentId = getFromCurrentUrl('comment') ? Number(getFromCurrentUrl('comment')) : null;
 
   // Update textarea value when initialValue changes
   useEffect(() => {
@@ -94,6 +96,14 @@ const CommentForm: React.FC<CommentFormProps> = ({
 
       if (parentId) {
         queryClient.invalidateQueries({ queryKey: ['commentReplies', parentId] });
+
+        if (urlCommentId && parentId === urlCommentId) {
+          queryClient.invalidateQueries({ queryKey: ['comment', parentId] });
+        }
+      }
+
+      if (isEditing && commentId) {
+        queryClient.invalidateQueries({ queryKey: ['comment', commentId] });
       }
 
       // Reset form

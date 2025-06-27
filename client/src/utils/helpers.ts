@@ -27,3 +27,8 @@ export const truncateText = (text: string, maxLength: number) => {
   if (text.length <= maxLength) return text;
   return text.slice(0, maxLength) + '...';
 };
+
+export const getFromCurrentUrl = (key: string) => {
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get(key) || null;
+}

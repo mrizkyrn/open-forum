@@ -6,9 +6,10 @@ import { commentApi } from '@/features/comments/services';
 import { Comment, CommentSortBy } from '@/features/comments/types';
 import { useDropdown } from '@/hooks/useDropdown';
 import { SortOrder } from '@/types/SearchTypes';
-import { useInfiniteQuery } from '@tanstack/react-query';
+import { getFromCurrentUrl } from '@/utils/helpers';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { Calendar, ChevronDown, Loader2, MessageCircle, ThumbsUp } from 'lucide-react';
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 interface CommentsSectionProps {
   discussionId: number;
@@ -20,17 +21,79 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({ discussionId, comment
   const [replyMention, setReplyMention] = useState<string | null>(null);
   const [sortBy, setSortBy] = useState<CommentSortBy>(CommentSortBy.createdAt);
   const [sortOrder, setSortOrder] = useState<SortOrder>(SortOrder.ASC);
+  const [highlightedCommentId, setHighlightedCommentId] = useState<number | null>(null);
+  const [hasInitiallyHighlighted, setHasInitiallyHighlighted] = useState(false);
+  const [forceShowReplies, setForceShowReplies] = useState<number | null>(null);
 
   const sortDropdownRef = useRef<HTMLDivElement>(null);
   const sortDropdown = useDropdown(sortDropdownRef as React.RefObject<HTMLElement>);
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isError, refetch } = useInfiniteQuery({
+  const urlCommentId = getFromCurrentUrl('comment') ? Number(getFromCurrentUrl('comment')) : null;
+
+  // Fetch the specific comment from URL
+  const { data: specificComment, isLoading: isLoadingSpecific } = useQuery({
+    queryKey: ['comment', urlCommentId],
+    queryFn: () => commentApi.getCommentById(urlCommentId!),
+    enabled: !!urlCommentId,
+    staleTime: 1000 * 60 * 5,
+  });
+
+  // Fetch parent comment if the specific comment is a reply
+  const { data: parentComment, isLoading: isLoadingParent } = useQuery({
+    queryKey: ['comment', specificComment?.parentId],
+    queryFn: () => commentApi.getCommentById(specificComment!.parentId!),
+    enabled: !!specificComment?.parentId,
+    staleTime: 1000 * 60 * 5,
+  });
+
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading: isLoadingComments,
+    isError,
+    refetch,
+  } = useInfiniteQuery({
     queryKey: ['comments', discussionId, sortBy, sortOrder],
-    queryFn: ({ pageParam = 1 }) => commentApi.getCommentsByDiscussion(discussionId, pageParam, 25, sortBy, sortOrder),
+    queryFn: ({ pageParam = 1 }) => commentApi.getCommentsByDiscussion(discussionId, pageParam, 5, sortBy, sortOrder),
     getNextPageParam: (lastPage) => (lastPage.meta.hasNextPage ? lastPage.meta.currentPage + 1 : undefined),
     initialPageParam: 1,
     staleTime: 1000 * 60 * 5,
   });
+
+  // Set highlighted comment and scroll to it
+  useEffect(() => {
+    if (urlCommentId && specificComment && !hasInitiallyHighlighted) {
+      setHighlightedCommentId(urlCommentId);
+      setHasInitiallyHighlighted(true);
+
+      // If it's a reply comment, force show its parent's replies
+      if (specificComment.parentId && parentComment) {
+        setForceShowReplies(specificComment.parentId);
+      }
+
+      // Scroll to the comment after a short delay
+      setTimeout(() => {
+        const commentElement = document.getElementById(`comment-${urlCommentId}`);
+        if (commentElement) {
+          commentElement.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center',
+          });
+        }
+      }, 300);
+
+      // Remove highlight after 4 seconds
+      setTimeout(() => {
+        setHighlightedCommentId(null);
+      }, 4000);
+    }
+  }, [urlCommentId, specificComment, parentComment, hasInitiallyHighlighted]);
+
+  useEffect(() => {
+    setHasInitiallyHighlighted(false);
+  }, [urlCommentId]);
 
   const handleToggleReply = (commentId: number, mentionUsername?: string) => {
     setActiveReplyId((prev) => {
@@ -46,7 +109,30 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({ discussionId, comment
     });
   };
 
-  const comments = data?.pages.flatMap((page) => page.items) || [];
+  const regularComments = useMemo(() => data?.pages.flatMap((page) => page.items) || [], [data]);
+
+  // Combine specific comment with regular comments, handling replies
+  const allComments = useMemo(() => {
+    if (!specificComment) return regularComments;
+
+    if (specificComment.parentId && parentComment) {
+      const isParentInRegular = regularComments.some((comment) => comment.id === parentComment.id);
+
+      if (isParentInRegular) {
+        return regularComments;
+      } else {
+        return [parentComment, ...regularComments];
+      }
+    } else {
+      const isCommentInRegular = regularComments.some((comment) => comment.id === specificComment.id);
+
+      if (isCommentInRegular) {
+        return regularComments;
+      } else {
+        return [specificComment, ...regularComments];
+      }
+    }
+  }, [specificComment, parentComment, regularComments]);
 
   // Get the sort option display text
   const getSortOptionText = useMemo(() => {
@@ -70,6 +156,8 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({ discussionId, comment
     sortDropdown.close();
   };
 
+  const isLoading = isLoadingComments || (urlCommentId && (isLoadingSpecific || isLoadingParent));
+
   if (isLoading) {
     return <LoadingIndicator fullWidth />;
   }
@@ -85,7 +173,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({ discussionId, comment
         <h3 className="text-lg font-medium">Comments {commentCount > 0 && `(${commentCount})`}</h3>
 
         {/* Sort dropdown */}
-        {comments.length > 0 && (
+        {allComments.length > 0 && (
           <div ref={sortDropdownRef} className="relative">
             <MainButton onClick={sortDropdown.toggle} rightIcon={<ChevronDown size={14} />} variant="outline" size="sm">
               Sort: {getSortOptionText}
@@ -151,21 +239,30 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({ discussionId, comment
         )}
       </div>
 
-      {comments.length === 0 ? (
+      {allComments.length === 0 ? (
         <div className="rounded-lg bg-gray-50 p-4 text-center text-gray-500">
           No comments yet. Be the first to comment!
         </div>
       ) : (
         <>
           {/* Comments */}
-          {comments.map((comment: Comment) => (
-            <CommentCard
+          {allComments.map((comment: Comment) => (
+            <div
               key={comment.id}
-              comment={comment}
-              onToggleReply={handleToggleReply}
-              showReplyForm={activeReplyId === comment.id}
-              replyMention={activeReplyId === comment.id ? replyMention : null}
-            />
+              id={`comment-${comment.id}`}
+              className={`transition-all duration-300 ${
+                highlightedCommentId === comment.id ? 'rounded-lg bg-blue-50 px-2' : ''
+              }`}
+            >
+              <CommentCard
+                comment={comment}
+                onToggleReply={handleToggleReply}
+                showReplyForm={activeReplyId === comment.id}
+                replyMention={activeReplyId === comment.id ? replyMention : null}
+                forceShowReplies={forceShowReplies === comment.id}
+                highlightedReplyId={highlightedCommentId}
+              />
+            </div>
           ))}
 
           {/* Load more button */}
