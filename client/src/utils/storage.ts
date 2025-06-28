@@ -21,7 +21,6 @@ export const storageUtils = {
 
   // Clear user data
   clearUser(): void {
-    console.log('Clearing user data');
     localStorage.removeItem(USER_KEY);
   },
 };

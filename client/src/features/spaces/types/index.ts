@@ -1,4 +1,4 @@
-import { SearchDto } from '@/types/SearchTypes';
+import { SearchDto } from '@/shared/types/SearchTypes';
 
 // dto.id = space.id;
 //     dto.name = space.name;

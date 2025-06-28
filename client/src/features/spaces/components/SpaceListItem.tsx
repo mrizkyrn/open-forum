@@ -1,5 +1,5 @@
-import MainButton from '@/components/ui/buttons/MainButton';
 import { Space, SpaceType } from '@/features/spaces/types';
+import MainButton from '@/shared/components/ui/buttons/MainButton';
 import { getFileUrl } from '@/utils/helpers';
 import { Users } from 'lucide-react';
 import { Link } from 'react-router-dom';

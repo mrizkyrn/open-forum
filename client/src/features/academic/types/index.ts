@@ -1,4 +1,4 @@
-import { SearchDto } from '@/types/SearchTypes';
+import { SearchDto } from '@/shared/types/SearchTypes';
 
 export interface Faculty {
   id: number;

@@ -1,6 +1,6 @@
 import { handleApiError } from '@/utils/helpers';
-import { apiClient } from '@/services/client';
-import { ApiResponse } from '@/types/ResponseTypes';
+import { apiClient } from '@/shared/services/client';
+import { ApiResponse } from '@/shared/types/ResponseTypes';
 import {
   LoginRequest,
   LoginResponse,

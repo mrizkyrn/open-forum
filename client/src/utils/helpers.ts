@@ -3,9 +3,7 @@ import { formatDistanceToNow } from 'date-fns';
 export const handleApiError = (error: any, defaultMessage: string): never => {
   if (error.response) {
     const { data } = error.response;
-    console.error('API error:', data);
     if (data?.error && Array.isArray(data.error)) {
-      console.error('API error:', data.error[0]);
       throw new Error(data.error[0] || data.message || defaultMessage);
     } else {
       throw new Error(data?.message || defaultMessage);
@@ -31,4 +29,4 @@ export const truncateText = (text: string, maxLength: number) => {
 export const getFromCurrentUrl = (key: string) => {
   const urlParams = new URLSearchParams(window.location.search);
   return urlParams.get(key) || null;
-}
+};

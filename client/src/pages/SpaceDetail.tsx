@@ -1,23 +1,24 @@
-import FeedbackDisplay from '@/components/feedback/FeedbackDisplay';
-import LoadingIndicator from '@/components/feedback/LoadingIndicator';
-import BackButton from '@/components/ui/buttons/BackButton';
-import { DiscussionPost } from '@/features/discussions/components';
-import NewDiscussionButton from '@/features/discussions/components/DiscussionPost/NewDiscussionButton';
-import { useSpaceFollow } from '@/features/spaces/hooks/useSpaceFollow';
-import { spaceApi } from '@/features/spaces/services';
-import { useSocket } from '@/hooks/useSocket';
-import { getFileUrl } from '@/utils/helpers';
 import { useQuery } from '@tanstack/react-query';
 import { Users } from 'lucide-react';
 import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-const SpaceDetailPage = () => {
-  const { slug } = useParams<{ slug: string }>();
-  const navigate = useNavigate();
+import { DiscussionPost } from '@/features/discussions/components';
+import NewDiscussionButton from '@/features/discussions/components/DiscussionPost/NewDiscussionButton';
+import { useSpaceFollow } from '@/features/spaces/hooks/useSpaceFollow';
+import { spaceApi } from '@/features/spaces/services';
+import FeedbackDisplay from '@/shared/components/feedback/FeedbackDisplay';
+import LoadingIndicator from '@/shared/components/feedback/LoadingIndicator';
+import BackButton from '@/shared/components/ui/buttons/BackButton';
+import { useSocket } from '@/shared/hooks/useSocket';
+import { getFileUrl } from '@/utils/helpers';
 
+const SpaceDetailPage = () => {
+  const navigate = useNavigate();
+  const { slug } = useParams<{ slug: string }>();
   const { socket, isConnected } = useSocket();
   const { followSpace, unfollowSpace, followingMap } = useSpaceFollow();
+
   const { data: space, isLoading: spaceLoading } = useQuery({
     queryKey: ['space', slug],
     queryFn: () => spaceApi.getSpaceBySlug(slug as string),
@@ -26,19 +27,7 @@ const SpaceDetailPage = () => {
 
   const isFollowLoading = space ? followingMap[space.id] : false;
 
-  useEffect(() => {
-    if (!socket || !isConnected || !space?.id) return;
-
-    socket.emit('joinSpace', { spaceId: space.id });
-    console.log(`Joined space room: ${space.id}`);
-
-    return () => {
-      socket.emit('leaveSpace', { spaceId: space.id });
-      console.log(`Left space room: ${space.id}`);
-    };
-  }, [socket, isConnected, space?.id]);
-
-  const toggleFollow = () => {
+  const handleToggleFollow = () => {
     if (!space) return;
 
     if (!space.isFollowing) {
@@ -47,6 +36,16 @@ const SpaceDetailPage = () => {
       unfollowSpace(space.id);
     }
   };
+
+  useEffect(() => {
+    if (!socket || !isConnected || !space?.id) return;
+
+    socket.emit('joinSpace', { spaceId: space.id });
+
+    return () => {
+      socket.emit('leaveSpace', { spaceId: space.id });
+    };
+  }, [socket, isConnected, space?.id]);
 
   if (spaceLoading) {
     return <LoadingIndicator fullWidth />;
@@ -77,7 +76,6 @@ const SpaceDetailPage = () => {
 
       {/* Space header */}
       <div className="mb-4 rounded-lg border border-gray-100 bg-white sm:mb-6">
-        {/* Space Banner */}
         <div className="h-28 w-full overflow-hidden bg-gray-200 sm:h-36 md:h-44">
           {space.bannerUrl ? (
             <img src={getFileUrl(space.bannerUrl)} alt={space.name} className="h-full w-full object-cover" />
@@ -90,9 +88,8 @@ const SpaceDetailPage = () => {
 
         {/* Space Details */}
         <div className="p-3 sm:p-4 md:p-6">
-          {/* Responsive layout for small screens */}
-          <div className="flex flex-col gap-4 flex-wrap sm:flex-row sm:items-center sm:justify-between">
-            {/* Space Icon and Name */}
+          <div className="flex flex-col flex-wrap gap-4 sm:flex-row sm:items-center sm:justify-between">
+            {/* Space Icon and Info */}
             <div className="flex items-center gap-3 sm:gap-4">
               {space.iconUrl ? (
                 <img
@@ -118,7 +115,7 @@ const SpaceDetailPage = () => {
 
             {/* Follow button */}
             <button
-              onClick={toggleFollow}
+              onClick={handleToggleFollow}
               disabled={isFollowLoading}
               className={`self-start rounded-lg px-3 py-1.5 text-sm font-medium whitespace-nowrap sm:self-auto sm:px-4 sm:py-2 ${
                 isFollowLoading

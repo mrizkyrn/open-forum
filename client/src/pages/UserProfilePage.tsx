@@ -1,16 +1,32 @@
-import FeedbackDisplay from '@/components/feedback/FeedbackDisplay';
-import BackButton from '@/components/ui/buttons/BackButton';
+import { useQuery } from '@tanstack/react-query';
+import { format, formatDistanceToNow, isAfter, subMinutes } from 'date-fns';
+import { Calendar, Clock, MapPin, School, User, UserCheck } from 'lucide-react';
+import { useState } from 'react';
+import { useParams } from 'react-router-dom';
+
 import { useAuth } from '@/features/auth/hooks/useAuth';
 import { DiscussionPost } from '@/features/discussions/components';
 import AvatarUpload from '@/features/users/components/AvatarUpload';
 import UserAvatar from '@/features/users/components/UserAvatar';
 import { userApi } from '@/features/users/services';
 import { UserRole } from '@/features/users/types';
-import { useQuery } from '@tanstack/react-query';
-import { format, formatDistanceToNow, isAfter, subMinutes } from 'date-fns';
-import { Calendar, Clock, MapPin, School, User, UserCheck } from 'lucide-react';
-import { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import FeedbackDisplay from '@/shared/components/feedback/FeedbackDisplay';
+import LoadingIndicator from '@/shared/components/feedback/LoadingIndicator';
+import TabNavigation from '@/shared/components/layouts/TabNavigation';
+import BackButton from '@/shared/components/ui/buttons/BackButton';
+
+type ProfileTab = 'profile' | 'discussions';
+
+const TAB_CONFIG = {
+  profile: {
+    icon: <User size={16} />,
+    label: 'Profile',
+  },
+  discussions: {
+    icon: <Calendar size={16} />,
+    label: 'Discussions',
+  },
+} as const;
 
 const UserProfilePage = () => {
   const { username } = useParams<{ username: string }>();
@@ -29,12 +45,12 @@ const UserProfilePage = () => {
     enabled: !!username,
   });
 
+  const handleTabChange = (tab: ProfileTab) => {
+    setActiveTab(tab);
+  };
+
   if (isLoading) {
-    return (
-      <div className="flex h-48 w-full items-center justify-center">
-        <div className="border-primary h-8 w-8 animate-spin rounded-full border-4 border-t-transparent"></div>
-      </div>
-    );
+    return <LoadingIndicator fullWidth />;
   }
 
   if (error || !user || user.role === UserRole.ADMIN) {
@@ -50,17 +66,14 @@ const UserProfilePage = () => {
 
   return (
     <div className="space-y-4">
-      {/* Header with avatar and basic info */}
+      {/* Profile Header */}
       <div className="overflow-hidden rounded-lg border border-gray-100 bg-white">
         <div className="from-primary-lighter to-primary-dark relative h-32 bg-gradient-to-r">
-          {
-            // add back button if user is not current user
-            currentUser?.id !== user.id && (
-              <div className="absolute top-4 left-4 z-10">
-                <BackButton className="text-white" />
-              </div>
-            )
-          }
+          {currentUser?.id !== user.id && (
+            <div className="absolute top-4 left-4 z-10">
+              <BackButton className="text-white" />
+            </div>
+          )}
 
           <div className="absolute -bottom-12 left-6">
             <div className="relative">
@@ -103,29 +116,7 @@ const UserProfilePage = () => {
           </div>
         </div>
 
-        {/* Navigation Tabs */}
-        <div className="border-t border-gray-100">
-          <div className="flex">
-            <button
-              onClick={() => setActiveTab('profile')}
-              className={`flex-1 py-3 text-sm font-medium ${
-                activeTab === 'profile' ? 'border-primary text-primary border-b-2' : 'text-gray-500 hover:text-gray-700'
-              }`}
-            >
-              Profile
-            </button>
-            <button
-              onClick={() => setActiveTab('discussions')}
-              className={`flex-1 py-3 text-sm font-medium ${
-                activeTab === 'discussions'
-                  ? 'border-primary text-primary border-b-2'
-                  : 'text-gray-500 hover:text-gray-700'
-              }`}
-            >
-              Discussions
-            </button>
-          </div>
-        </div>
+        <TabNavigation tabs={TAB_CONFIG} activeTab={activeTab} onTabChange={handleTabChange} ariaLabel="Profile Tabs" />
       </div>
 
       {/* Details section */}

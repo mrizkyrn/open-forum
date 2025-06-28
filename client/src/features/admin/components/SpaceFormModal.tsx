@@ -3,11 +3,11 @@ import { Image, Upload, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
-import { Modal, ModalBody, ModalFooter, ModalHeader } from '@/components/modals/Modal';
-import MainButton from '@/components/ui/buttons/MainButton';
 import { academicApi } from '@/features/academic/services';
 import { adminApi } from '@/features/admin/services';
 import { CreateSpaceDto, Space, SpaceType, UpdateSpaceDto } from '@/features/spaces/types';
+import { Modal, ModalBody, ModalFooter, ModalHeader } from '@/shared/components/modals/Modal';
+import MainButton from '@/shared/components/ui/buttons/MainButton';
 import { getFileUrl } from '@/utils/helpers';
 
 interface SpaceFormModalProps {

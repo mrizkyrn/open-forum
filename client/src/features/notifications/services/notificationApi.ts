@@ -1,6 +1,6 @@
 import { handleApiError } from '@/utils/helpers';
-import { apiClient } from '@/services/client';
-import { ApiResponse, PaginatedResponse } from '@/types/ResponseTypes';
+import { apiClient } from '@/shared/services/client';
+import { ApiResponse, PaginatedResponse } from '@/shared/types/ResponseTypes';
 import { Notification, NotificationQueryParams, NotificationCountResponse, MarkNotificationsReadDto } from '../types';
 
 /**

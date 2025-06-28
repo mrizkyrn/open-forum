@@ -1,9 +1,9 @@
-import { Modal, ModalBody, ModalFooter, ModalHeader } from '@/components/modals/Modal';
-import MainButton from '@/components/ui/buttons/MainButton';
 import { discussionApi } from '@/features/discussions/services';
 import { Discussion, UpdateDiscussionDto } from '@/features/discussions/types';
-import { useFileHandling } from '@/hooks/useFileHandling';
-import { Attachment } from '@/types/AttachmentTypes';
+import { Modal, ModalBody, ModalFooter, ModalHeader } from '@/shared/components/modals/Modal';
+import MainButton from '@/shared/components/ui/buttons/MainButton';
+import { useFileHandling } from '@/shared/hooks/useFileHandling';
+import { Attachment } from '@/shared/types/AttachmentTypes';
 import { ALLOWED_FILE_TYPES, MAX_DISCUSSION_FILES, MAX_FILE_SIZE } from '@/utils/constants';
 import { getFileUrl } from '@/utils/helpers';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -236,7 +236,7 @@ const UpdateDiscussionModal: React.FC<UpdateDiscussionModalProps> = ({ isOpen, o
             Tags <span className="text-xs text-gray-500">(comma or enter to add)</span>
           </label>
           {formData.tags && formData.tags.length > 0 && (
-            <div className="flex flex-wrap gap-2 mb-2 ">
+            <div className="mb-2 flex flex-wrap gap-2">
               {formData.tags.map((tag, index) => (
                 <span
                   key={index}
@@ -263,13 +263,13 @@ const UpdateDiscussionModal: React.FC<UpdateDiscussionModalProps> = ({ isOpen, o
                 onChange={(e) => setTagInput(e.target.value)}
                 onKeyDown={handleTagKeyDown}
                 placeholder="Add tags..."
-                className="w-full h-10 rounded-md border border-gray-300 px-3 focus:ring-1 focus:ring-gray-500 focus:outline-none"
+                className="h-10 w-full rounded-md border border-gray-300 px-3 focus:ring-1 focus:ring-gray-500 focus:outline-none"
               />
               {tagInput && (
                 <button
                   type="button"
                   onClick={() => setTagInput('')}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  className="absolute top-1/2 right-2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
                   aria-label="Clear tag input"
                 >
                   <X size={16} />
@@ -279,7 +279,7 @@ const UpdateDiscussionModal: React.FC<UpdateDiscussionModalProps> = ({ isOpen, o
             <MainButton
               onClick={handleAddTag}
               disabled={!tagInput.trim()}
-              className="flex-shrink-0 h-10"
+              className="h-10 flex-shrink-0"
               leftIcon={<TagIcon size={16} />}
             >
               Add Tag

@@ -1,13 +1,14 @@
-import MainButton from '@/components/ui/buttons/MainButton';
 import { ArrowLeft, Home } from 'lucide-react';
 import { Link } from 'react-router-dom';
+
+import MainButton from '@/shared/components/ui/buttons/MainButton';
 
 const NotFound: React.FC = () => {
   return (
     <div className="flex min-h-screen items-center justify-center bg-white px-4">
       <div className="w-full max-w-md space-y-8 text-center">
         <div className="relative">
-          <h1 className="bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-9xl font-extrabold tracking-tighter text-transparent">
+          <h1 className="from-primary bg-gradient-to-r to-blue-600 bg-clip-text text-9xl font-extrabold tracking-tighter text-transparent">
             404
           </h1>
         </div>

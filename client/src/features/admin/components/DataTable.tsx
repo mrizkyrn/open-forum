@@ -1,5 +1,5 @@
-import FeedbackDisplay from '@/components/feedback/FeedbackDisplay';
-import LoadingIndicator from '@/components/feedback/LoadingIndicator';
+import FeedbackDisplay from '@/shared/components/feedback/FeedbackDisplay';
+import LoadingIndicator from '@/shared/components/feedback/LoadingIndicator';
 import { ReactNode } from 'react';
 
 interface Column<T> {

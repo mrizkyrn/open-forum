@@ -1,6 +1,6 @@
 import { discussionApi } from '@/features/discussions/services';
 import { DiscussionSortBy, SearchDiscussionDto } from '@/features/discussions/types';
-import { SortOrder } from '@/types/SearchTypes';
+import { SortOrder } from '@/shared/types/SearchTypes';
 import { useInfiniteQuery } from '@tanstack/react-query';
 
 export type DiscussionFeedType = 'regular' | 'bookmarked';

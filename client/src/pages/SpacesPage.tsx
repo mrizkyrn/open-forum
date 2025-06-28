@@ -1,25 +1,29 @@
-import FeedbackDisplay from '@/components/feedback/FeedbackDisplay';
-import LoadingIndicator from '@/components/feedback/LoadingIndicator';
-import MainButton from '@/components/ui/buttons/MainButton';
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { RefreshCw } from 'lucide-react';
+import { useEffect, useState } from 'react';
+
 import SpacesList from '@/features/spaces/components/SpaceList';
 import SpaceSearchBar from '@/features/spaces/components/SpaceSearchBar';
 import { useSpaceFollow } from '@/features/spaces/hooks/useSpaceFollow';
 import { spaceApi } from '@/features/spaces/services';
 import { SpaceSortBy, SpaceType } from '@/features/spaces/types';
-import { useDebounce } from '@/hooks/useDebounce';
-import { SortOrder } from '@/types/SearchTypes';
-import { useInfiniteQuery } from '@tanstack/react-query';
-import { RefreshCw } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import FeedbackDisplay from '@/shared/components/feedback/FeedbackDisplay';
+import LoadingIndicator from '@/shared/components/feedback/LoadingIndicator';
+import MainButton from '@/shared/components/ui/buttons/MainButton';
+import { useDebounce } from '@/shared/hooks/useDebounce';
+import { SortOrder } from '@/shared/types/SearchTypes';
+
+const SPACES_PER_PAGE = 6;
+const SEARCH_DEBOUNCE_DELAY = 500;
 
 const SpacesPage = () => {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [searchTerm, setSearchTerm] = useState('');
-  const debouncedSearch = useDebounce(searchTerm, 500);
   const [sortBy, setSortBy] = useState<SpaceSortBy>(SpaceSortBy.followerCount);
   const [sortOrder, setSortOrder] = useState<SortOrder>(SortOrder.DESC);
   const [selectedType, setSelectedType] = useState<SpaceType | null>(null);
 
+  const debouncedSearch = useDebounce(searchTerm, SEARCH_DEBOUNCE_DELAY);
   const { followSpace, unfollowSpace, isLoading: followLoading, followingMap } = useSpaceFollow();
 
   const { data, isLoading, isError, fetchNextPage, hasNextPage, isFetchingNextPage, refetch } = useInfiniteQuery({
@@ -27,7 +31,7 @@ const SpacesPage = () => {
     queryFn: ({ pageParam = 1 }) =>
       spaceApi.getSpaces({
         page: pageParam,
-        limit: 6,
+        limit: SPACES_PER_PAGE,
         search: debouncedSearch,
         sortBy,
         sortOrder,
@@ -36,10 +40,6 @@ const SpacesPage = () => {
     initialPageParam: 1,
     getNextPageParam: (lastPage) => (lastPage.meta.hasNextPage ? lastPage.meta.currentPage + 1 : undefined),
   });
-
-  useEffect(() => {
-    refetch();
-  }, [debouncedSearch, sortBy, sortOrder, selectedType, refetch]);
 
   const spaces = data?.pages.flatMap((page) => page.items) || [];
 
@@ -58,6 +58,11 @@ const SpacesPage = () => {
   const handleLoadMore = () => {
     fetchNextPage();
   };
+
+  // Refetch when filters change
+  useEffect(() => {
+    refetch();
+  }, [debouncedSearch, sortBy, sortOrder, selectedType, refetch]);
 
   return (
     <div className="flex flex-col">

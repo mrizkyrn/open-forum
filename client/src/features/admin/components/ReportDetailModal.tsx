@@ -1,10 +1,10 @@
-import ConfirmationModal from '@/components/modals/ConfirmationModal';
-import { ModalBody, ModalFooter, ModalHeader } from '@/components/modals/Modal';
-import Modal from '@/components/modals/Modal/Modal';
-import MainButton from '@/components/ui/buttons/MainButton';
 import { adminApi } from '@/features/admin/services';
 import { Report, ReportStatus, ReportTargetType } from '@/features/reports/types';
 import UserAvatar from '@/features/users/components/UserAvatar';
+import ConfirmationModal from '@/shared/components/modals/ConfirmationModal';
+import { ModalBody, ModalFooter, ModalHeader } from '@/shared/components/modals/Modal';
+import Modal from '@/shared/components/modals/Modal/Modal';
+import MainButton from '@/shared/components/ui/buttons/MainButton';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns';
 import { AlertTriangle, CheckCircle, ExternalLink, Trash2, XCircle } from 'lucide-react';

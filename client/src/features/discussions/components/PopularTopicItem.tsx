@@ -15,7 +15,7 @@ const PopularTopicItem: React.FC<PopularTopicItemProps> = ({ tag, count }) => {
 
   return (
     <div
-      className="group cursor-pointer flex items-center justify-between rounded-lg px-2 py-2.5 transition-colors hover:bg-green-50"
+      className="group flex cursor-pointer items-center justify-between rounded-lg px-2 py-2.5 transition-colors hover:bg-green-50"
       onClick={handleTagClick}
       role="button"
     >
@@ -32,4 +32,22 @@ const PopularTopicItem: React.FC<PopularTopicItemProps> = ({ tag, count }) => {
   );
 };
 
+const PopularTopicItemSkeleton = () => {
+  return (
+    <div className="flex items-center justify-between rounded-lg px-2 py-2.5">
+      <div className="flex items-center">
+        <div className="mr-2 h-4 w-4 animate-pulse rounded bg-gray-200" />
+
+        <div className="space-y-1">
+          <div className="h-4 w-16 animate-pulse rounded bg-gray-200 sm:w-20 md:w-24" />
+          <div className="h-3 w-14 animate-pulse rounded bg-gray-200" />
+        </div>
+      </div>
+
+      <div className="h-3.5 w-3.5 animate-pulse rounded bg-gray-200" />
+    </div>
+  );
+};
+
 export default PopularTopicItem;
+export { PopularTopicItemSkeleton };

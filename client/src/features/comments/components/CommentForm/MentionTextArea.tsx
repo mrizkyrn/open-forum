@@ -1,7 +1,7 @@
 import UserAvatar from '@/features/users/components/UserAvatar';
 import { userApi } from '@/features/users/services';
 import { User } from '@/features/users/types';
-import { useDebounce } from '@/hooks/useDebounce';
+import { useDebounce } from '@/shared/hooks/useDebounce';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useRef, useState } from 'react';
 

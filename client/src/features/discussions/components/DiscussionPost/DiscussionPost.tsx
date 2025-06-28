@@ -1,11 +1,11 @@
-import FeedbackDisplay from '@/components/feedback/FeedbackDisplay';
-import LoadingIndicator from '@/components/feedback/LoadingIndicator';
 import { useAuth } from '@/features/auth/hooks/useAuth';
 import { CreateDiscussionModal, DiscussionCard } from '@/features/discussions/components';
 import { DiscussionFeedType, useInfiniteDiscussions } from '@/features/discussions/hooks/useInfiniteDiscussions';
 import { SearchDiscussionDto } from '@/features/discussions/types';
-import { useIntersectionObserver } from '@/hooks/useIntersectionObserver';
-import { useSocket } from '@/hooks/useSocket';
+import FeedbackDisplay from '@/shared/components/feedback/FeedbackDisplay';
+import LoadingIndicator from '@/shared/components/feedback/LoadingIndicator';
+import { useIntersectionObserver } from '@/shared/hooks/useIntersectionObserver';
+import { useSocket } from '@/shared/hooks/useSocket';
 import { ArrowUp } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import DiscussionPostSkeleton from './DiscussionPostSkeleton';

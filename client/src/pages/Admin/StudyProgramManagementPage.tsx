@@ -12,8 +12,8 @@ import PageHeader from '@/features/admin/components/PageHeader';
 import Pagination from '@/features/admin/components/Pagination';
 import SelectFilter from '@/features/admin/components/SelectFilter';
 import { adminApi } from '@/features/admin/services';
-import { useDebounce } from '@/hooks/useDebounce';
-import { SortOrder } from '@/types/SearchTypes';
+import { useDebounce } from '@/shared/hooks/useDebounce';
+import { SortOrder } from '@/shared/types/SearchTypes';
 
 const EDUCATION_LEVELS = [
   { label: 'S1', value: 'S1' },
@@ -120,8 +120,8 @@ const StudyProgramManagementPage = () => {
   };
 
   const handleExportStudyPrograms = () => {
-    console.log('Export study programs');
-    // Implementation for exporting study programs
+    toast.info('Export functionality is not implemented yet');
+    // TODO: Implement export functionality
   };
 
   // Table columns

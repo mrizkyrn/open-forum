@@ -1,7 +1,7 @@
-import LoadingIndicator from '@/components/feedback/LoadingIndicator';
 import { CommentCard } from '@/features/comments/components';
 import { commentApi } from '@/features/comments/services';
 import { Comment } from '@/features/comments/types';
+import LoadingIndicator from '@/shared/components/feedback/LoadingIndicator';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { Loader2 } from 'lucide-react';
 

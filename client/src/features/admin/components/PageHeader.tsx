@@ -1,4 +1,4 @@
-import MainButton from '@/components/ui/buttons/MainButton';
+import MainButton from '@/shared/components/ui/buttons/MainButton';
 import { Download, UserCheck } from 'lucide-react';
 import { ReactNode } from 'react';
 

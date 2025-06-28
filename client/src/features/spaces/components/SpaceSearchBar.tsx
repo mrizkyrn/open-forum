@@ -1,7 +1,7 @@
-import { SortButton } from '@/components/ui/buttons/SortButton';
-import SearchInput from '@/components/ui/inputs/SearchInput';
+import SortButton from '@/shared/components/ui/buttons/SortButton';
+import SearchInput from '@/shared/components/ui/inputs/SearchInput';
 import { SpaceSortBy, SpaceType } from '@/features/spaces/types';
-import { SortOrder } from '@/types/SearchTypes';
+import { SortOrder } from '@/shared/types/SearchTypes';
 import { BookOpen, Building, Clock, Grid, Landmark, List, School, SortAsc, Tag, UserCheck } from 'lucide-react';
 
 interface SpaceSearchBarProps {

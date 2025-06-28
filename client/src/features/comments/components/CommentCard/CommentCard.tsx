@@ -1,7 +1,7 @@
-import ConfirmationModal from '@/components/modals/ConfirmationModal';
 import { commentApi } from '@/features/comments/services';
 import { Comment } from '@/features/comments/types';
 import UserAvatar from '@/features/users/components/UserAvatar';
+import ConfirmationModal from '@/shared/components/modals/ConfirmationModal';
 import { useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';

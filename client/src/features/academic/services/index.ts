@@ -1,6 +1,6 @@
-import { apiClient } from '@/services/client';
-import { ApiResponse, PaginatedResponse } from '@/types/ResponseTypes';
-import { SearchDto } from '@/types/SearchTypes';
+import { apiClient } from '@/shared/services/client';
+import { ApiResponse, PaginatedResponse } from '@/shared/types/ResponseTypes';
+import { SearchDto } from '@/shared/types/SearchTypes';
 import { handleApiError } from '@/utils/helpers';
 import { Faculty, StudyProgram } from '../types';
 

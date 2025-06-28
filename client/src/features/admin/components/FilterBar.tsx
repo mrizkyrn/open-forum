@@ -1,5 +1,5 @@
-import MainButton from '@/components/ui/buttons/MainButton';
-import SearchInput from '@/components/ui/inputs/SearchInput';
+import MainButton from '@/shared/components/ui/buttons/MainButton';
+import SearchInput from '@/shared/components/ui/inputs/SearchInput';
 import { ChevronDown, ChevronUp, RefreshCw } from 'lucide-react';
 import { ReactNode, useState } from 'react';
 

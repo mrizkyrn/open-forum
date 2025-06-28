@@ -1,12 +1,3 @@
-import FeedbackDisplay from '@/components/feedback/FeedbackDisplay';
-import LoadingIndicator from '@/components/feedback/LoadingIndicator';
-import ConfirmationModal from '@/components/modals/ConfirmationModal';
-import NotificationActionBar from '@/features/notifications/components/NotificatinoActionBar';
-import NotificationFilter from '@/features/notifications/components/NotificationFilter';
-import NotificationSection from '@/features/notifications/components/NotificationSection';
-import { notificationApi } from '@/features/notifications/services/notificationApi';
-import { Notification, NotificationEntityType, NotificationType } from '@/features/notifications/types';
-import { useIntersectionObserver } from '@/hooks/useIntersectionObserver';
 import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { isThisWeek, isToday, isYesterday } from 'date-fns';
 import { RefreshCw } from 'lucide-react';
@@ -14,9 +5,19 @@ import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
+import NotificationActionBar from '@/features/notifications/components/NotificatinoActionBar';
+import NotificationFilter from '@/features/notifications/components/NotificationFilter';
+import NotificationSection from '@/features/notifications/components/NotificationSection';
+import { notificationApi } from '@/features/notifications/services/notificationApi';
+import { Notification, NotificationEntityType, NotificationType } from '@/features/notifications/types';
+import FeedbackDisplay from '@/shared/components/feedback/FeedbackDisplay';
+import LoadingIndicator from '@/shared/components/feedback/LoadingIndicator';
+import ConfirmationModal from '@/shared/components/modals/ConfirmationModal';
+import { useIntersectionObserver } from '@/shared/hooks/useIntersectionObserver';
+
+const NOTIFICATIONS_PER_PAGE = 10;
+
 const NotificationsPage: React.FC = () => {
-  const queryClient = useQueryClient();
-  const navigate = useNavigate();
   const [filter, setFilter] = useState<'all' | 'read' | 'unread'>('all');
   const [initialLoadTime] = useState(new Date());
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -24,14 +25,15 @@ const NotificationsPage: React.FC = () => {
   const [deletingId, setDeletingId] = useState<number | undefined>();
   const [markingReadId, setMarkingReadId] = useState<number | undefined>();
 
-  const limit = 10;
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   const { data, isLoading, isError, refetch, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery({
-    queryKey: ['notifications', 'infinite', limit, filter],
+    queryKey: ['notifications', 'infinite', NOTIFICATIONS_PER_PAGE, filter],
     queryFn: async ({ pageParam = 1 }) => {
       return notificationApi.getNotifications({
         page: pageParam,
-        limit,
+        limit: NOTIFICATIONS_PER_PAGE,
         ...(filter !== 'all' ? { isRead: filter === 'read' } : {}),
       });
     },
@@ -43,7 +45,6 @@ const NotificationsPage: React.FC = () => {
     refetchOnMount: true,
   });
 
-  // Setup intersection observer for infinite scrolling
   const { entry, observerRef } = useIntersectionObserver({
     threshold: 0.5,
     enabled: !!hasNextPage && !isFetchingNextPage,
@@ -77,7 +78,6 @@ const NotificationsPage: React.FC = () => {
     }
   }, [allNotifications, initialLoadTime]);
 
-  // Mark as read mutation
   const markAsReadMutation = useMutation({
     mutationFn: (ids: number[]) => notificationApi.markAsRead(ids),
     onMutate: (ids) => {
@@ -94,7 +94,6 @@ const NotificationsPage: React.FC = () => {
     },
   });
 
-  // Mark all as read mutation
   const markAllAsReadMutation = useMutation({
     mutationFn: () => notificationApi.markAllAsRead(),
     onSuccess: () => {
@@ -104,7 +103,6 @@ const NotificationsPage: React.FC = () => {
     onError: () => toast.error('Failed to mark all notifications as read'),
   });
 
-  // Delete notification mutation
   const deleteNotificationMutation = useMutation({
     mutationFn: (id: number) => notificationApi.deleteNotification(id),
     onMutate: (id) => {
@@ -121,7 +119,6 @@ const NotificationsPage: React.FC = () => {
     },
   });
 
-  // Delete all notifications mutation
   const deleteAllNotificationsMutation = useMutation({
     mutationFn: () => notificationApi.deleteAllNotifications(),
     onSuccess: () => {

@@ -1,8 +1,8 @@
-import { apiClient } from '@/services/client';
-import { ApiResponse, PaginatedResponse } from '@/types/ResponseTypes';
+import { apiClient } from '@/shared/services/client';
+import { ApiResponse, PaginatedResponse } from '@/shared/types/ResponseTypes';
 import { handleApiError } from '@/utils/helpers';
 import { Comment, CommentSortBy } from '../types';
-import { SortOrder } from '@/types/SearchTypes';
+import { SortOrder } from '@/shared/types/SearchTypes';
 
 export const commentApi = {
   async getCommentsByDiscussion(

@@ -1,5 +1,5 @@
 import { User } from '@/features/users/types';
-import { SearchDto } from '@/types/SearchTypes';
+import { SearchDto } from '@/shared/types/SearchTypes';
 
 export interface Report {
   id: number;

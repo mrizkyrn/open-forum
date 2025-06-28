@@ -1,5 +1,5 @@
-import MainButton from '@/components/ui/buttons/MainButton';
 import { Space, SpaceType } from '@/features/spaces/types';
+import MainButton from '@/shared/components/ui/buttons/MainButton';
 import { getFileUrl } from '@/utils/helpers';
 import { Users } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -37,7 +37,7 @@ const SpaceCard: React.FC<SpaceCardProps> = ({ space, onFollowToggle, isFollowLo
         {space.bannerUrl ? (
           <img src={getFileUrl(space.bannerUrl)} alt={space.name} className="h-full w-full object-cover" />
         ) : (
-          <div className="flex h-full items-center justify-center bg-gradient-to-r font-bold text-lg from-green-400 to-green-600 px-2 text-white/50">
+          <div className="flex h-full items-center justify-center bg-gradient-to-r from-green-400 to-green-600 px-2 text-lg font-bold text-white/50">
             {space.name}
           </div>
         )}

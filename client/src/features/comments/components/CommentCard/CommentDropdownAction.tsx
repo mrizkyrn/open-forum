@@ -1,9 +1,9 @@
-import { useRef } from 'react';
-import { MoreVertical, Flag, Edit, Trash } from 'lucide-react';
 import { useAuth } from '@/features/auth/hooks/useAuth';
 import { useReport } from '@/features/reports/hooks/useReport';
 import { ReportTargetType } from '@/features/reports/types';
-import { useDropdown } from '@/hooks/useDropdown';
+import { useDropdown } from '@/shared/hooks/useDropdown';
+import { Edit, Flag, MoreVertical, Trash } from 'lucide-react';
+import { useRef } from 'react';
 
 interface DiscussionDropdownActionProps {
   commentId: number;

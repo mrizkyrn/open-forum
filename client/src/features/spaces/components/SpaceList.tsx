@@ -1,5 +1,5 @@
-import FeedbackDisplay from '@/components/feedback/FeedbackDisplay';
 import { Space } from '@/features/spaces/types';
+import FeedbackDisplay from '@/shared/components/feedback/FeedbackDisplay';
 import SpaceCard from './SpaceCard';
 import SpaceListItem from './SpaceListItem';
 
@@ -32,7 +32,7 @@ const SpacesList: React.FC<SpacesListProps> = ({
   }
 
   return viewMode === 'grid' ? (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 ">
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3">
       {spaces.map((space) => (
         <SpaceCard
           key={space.id}

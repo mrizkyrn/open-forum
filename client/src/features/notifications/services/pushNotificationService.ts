@@ -1,4 +1,4 @@
-import { apiClient } from '@/services/client';
+import { apiClient } from '@/shared/services/client';
 
 class PushNotificationService {
   private vapidPublicKey: string | null = null;

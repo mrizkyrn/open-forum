@@ -1,6 +1,6 @@
 import { SearchUserParams, User, UserDetail } from '@/features/users/types';
-import { apiClient } from '@/services/client';
-import { ApiResponse, PaginatedResponse } from '@/types/ResponseTypes';
+import { apiClient } from '@/shared/services/client';
+import { ApiResponse, PaginatedResponse } from '@/shared/types/ResponseTypes';
 import { handleApiError } from '@/utils/helpers';
 
 // User API service with comprehensive error handling

@@ -1,9 +1,9 @@
-import MainButton from '@/components/ui/buttons/MainButton';
-import FilePreview from '@/components/ui/file-displays/FilePreview';
+import MainButton from '@/shared/components/ui/buttons/MainButton';
+import FilePreview from '@/shared/components/ui/file-displays/FilePreview';
 import { useAuth } from '@/features/auth/hooks/useAuth';
 import { commentApi } from '@/features/comments/services';
 import UserAvatar from '@/features/users/components/UserAvatar';
-import { Attachment } from '@/types/AttachmentTypes';
+import { Attachment } from '@/shared/types/AttachmentTypes';
 import { ALLOWED_FILE_TYPES, MAX_COMMENT_FILES, MAX_FILE_SIZE } from '@/utils/constants';
 import { getFromCurrentUrl } from '@/utils/helpers';
 import { useMutation, useQueryClient } from '@tanstack/react-query';

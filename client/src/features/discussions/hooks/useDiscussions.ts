@@ -1,4 +1,4 @@
-import { SortOrder } from '@/types/SearchTypes';
+import { SortOrder } from '@/shared/types/SearchTypes';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { discussionApi } from '../services';
@@ -64,7 +64,8 @@ export const useDiscussions = (initialFilters: DiscussionsFilters = {}) => {
     setFilters((prev) => ({
       ...prev,
       sortBy: sortBy as DiscussionSortBy,
-      sortOrder: prev.sortBy === sortBy ? (prev.sortOrder === SortOrder.ASC ? SortOrder.DESC : SortOrder.ASC) : SortOrder.ASC,
+      sortOrder:
+        prev.sortBy === sortBy ? (prev.sortOrder === SortOrder.ASC ? SortOrder.DESC : SortOrder.ASC) : SortOrder.ASC,
     }));
   };
 
@@ -81,7 +82,7 @@ export const useDiscussions = (initialFilters: DiscussionsFilters = {}) => {
       sortBy: DiscussionSortBy.createdAt,
       sortOrder: SortOrder.DESC,
     }));
-  }
+  };
 
   return {
     discussions: data?.items || [],

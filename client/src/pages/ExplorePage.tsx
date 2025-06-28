@@ -1,29 +1,19 @@
-import LoadingIndicator from '@/components/feedback/LoadingIndicator';
-import { SearchInput } from '@/components/ui/inputs/SearchInput';
-import PopularTopicItem from '@/features/discussions/components/PopularTopicItem';
-import { discussionApi } from '@/features/discussions/services';
-import { useIntersectionObserver } from '@/hooks/useIntersectionObserver';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import PopularTopicItem, { PopularTopicItemSkeleton } from '@/features/discussions/components/PopularTopicItem';
+import { discussionApi } from '@/features/discussions/services';
+import LoadingIndicator from '@/shared/components/feedback/LoadingIndicator';
+import SearchInput from '@/shared/components/ui/inputs/SearchInput';
+import { useIntersectionObserver } from '@/shared/hooks/useIntersectionObserver';
+
+const TAGS_PER_PAGE = 10;
+
 const ExplorePage = () => {
-  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
-  const TAGS_PER_PAGE = 10;
+  const navigate = useNavigate();
 
-  // Handle search input
-  const handleSearch = (value: string) => {
-    setSearchTerm(value);
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && searchTerm.trim()) {
-      navigate(`/search?q=${encodeURIComponent(searchTerm.trim())}`);
-    }
-  };
-
-  // Fetch popular tags with infinite scroll
   const {
     data: tagsData,
     fetchNextPage,
@@ -50,14 +40,61 @@ const ExplorePage = () => {
     enabled: !!hasNextPage && !isFetchingNextPage,
   });
 
+  const handleSearch = (value: string) => {
+    setSearchTerm(value);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && searchTerm.trim()) {
+      navigate(`/search?q=${encodeURIComponent(searchTerm.trim())}`);
+    }
+  };
+
   useEffect(() => {
     if (entry?.isIntersecting && hasNextPage) {
       fetchNextPage();
     }
   }, [entry, fetchNextPage, hasNextPage]);
 
-  // Flatten the pages of tags
   const allTags = tagsData?.pages ? tagsData.pages.flatMap((page) => page.items).filter((tag) => tag.tag !== '') : [];
+
+  const renderTagsContent = () => {
+    if (isLoading) {
+      return (
+        <div className="space-y-0">
+          {[...Array(10)].map((_, i) => (
+            <PopularTopicItemSkeleton key={i} />
+          ))}
+        </div>
+      );
+    }
+
+    if (isError) {
+      return <div className="p-6 text-center text-gray-500"> Failed to load topics. Please try again later.</div>;
+    }
+
+    if (allTags.length === 0) {
+      return <div className="p-6 text-center text-gray-500"> No popular topics found at the moment.</div>;
+    }
+
+    return (
+      <>
+        {allTags.map((topic, index) => (
+          <PopularTopicItem key={index} tag={topic.tag} count={topic.count} />
+        ))}
+
+        {/* Loading more indicator */}
+        {isFetchingNextPage && (
+          <div className="p-4">
+            <LoadingIndicator text="Loading more topics..." fullWidth />
+          </div>
+        )}
+
+        {/* Invisible element for intersection observer */}
+        {hasNextPage && <div ref={observerRef} className="h-5" />}
+      </>
+    );
+  };
 
   return (
     <div className="w-full">
@@ -78,37 +115,7 @@ const ExplorePage = () => {
 
         {/* Popular Tags Section */}
         <div className="rounded-lg border border-gray-200 bg-white">
-          <div className="divide-y divide-gray-100 p-2">
-            {isLoading ? (
-              <div className="flex flex-col space-y-3 p-4">
-                {[...Array(5)].map((_, i) => (
-                  <div key={i} className="flex animate-pulse items-center">
-                    <div className="h-5 w-5 rounded-full bg-gray-200"></div>
-                    <div className="ml-2 space-y-1">
-                      <div className="h-4 w-32 rounded bg-gray-200"></div>
-                      <div className="h-3 w-24 rounded bg-gray-200"></div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : isError ? (
-              <div className="p-6 text-center text-gray-500">Failed to load topics. Please try again later.</div>
-            ) : allTags.length === 0 ? (
-              <div className="p-6 text-center text-gray-500">No popular topics found at the moment.</div>
-            ) : (
-              <>
-                {allTags.map((topic, index) => (
-                  <PopularTopicItem key={index} tag={topic.tag} count={topic.count} />
-                ))}
-
-                {/* Loading more indicator */}
-                {isFetchingNextPage && <LoadingIndicator text="Loading more topics..." />}
-
-                {/* Invisible element for intersection observer */}
-                {hasNextPage && <div ref={observerRef} className="h-5" />}
-              </>
-            )}
-          </div>
+          <div className="divide-y divide-gray-100 p-2">{renderTagsContent()}</div>
         </div>
       </div>
     </div>

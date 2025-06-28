@@ -1,24 +1,32 @@
-import BackButton from '@/components/ui/buttons/BackButton';
-import { DiscussionPost, DiscussionSearchBar } from '@/features/discussions/components';
-import { DiscussionSortBy, SearchDiscussionDto } from '@/features/discussions/types';
-import UsersList from '@/features/users/components/UsersList';
-import { SortOrder } from '@/types/SearchTypes';
 import { MessageSquare, User } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
+import { DiscussionPost, DiscussionSearchBar } from '@/features/discussions/components';
+import { DiscussionSortBy, SearchDiscussionDto } from '@/features/discussions/types';
+import UsersList from '@/features/users/components/UsersList';
+import TabNavigation from '@/shared/components/layouts/TabNavigation';
+import BackButton from '@/shared/components/ui/buttons/BackButton';
+import { SortOrder } from '@/shared/types/SearchTypes';
+
 type SearchTab = 'discussions' | 'users';
 
+const TAB_CONFIG = {
+  discussions: {
+    icon: <MessageSquare size={16} />,
+    label: 'Discussions',
+  },
+  users: {
+    icon: <User size={16} />,
+    label: 'Users',
+  },
+} as const;
+
 const SearchPage = () => {
-  const navigate = useNavigate();
-  const [filterParams, setFilterParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState<SearchTab>('discussions');
 
-  useEffect(() => {
-    if (!filterParams.get('q') && !filterParams.get('tags')) {
-      navigate('/explore', { replace: true });
-    }
-  }, [filterParams, navigate]);
+  const [filterParams, setFilterParams] = useSearchParams();
+  const navigate = useNavigate();
 
   const searchTerm = filterParams.get('q') || '';
 
@@ -70,43 +78,33 @@ const SearchPage = () => {
     setFilterParams(newParams);
   }, [searchTerm, filters.tags, setFilterParams]);
 
+  const handleTabChange = (tab: SearchTab) => {
+    setActiveTab(tab);
+  };
+
+  // Redirect to explore if no search params
+  useEffect(() => {
+    if (!filterParams.get('q') && !filterParams.get('tags')) {
+      navigate('/explore', { replace: true });
+    }
+  }, [filterParams, navigate]);
+
   return (
     <div className="w-full">
-      {/* Back to explore link */}
+      {/* Back Button */}
       {searchTerm ? (
         <BackButton backTo="/explore" text={`Results for "${searchTerm}"`} />
       ) : (
         <BackButton backTo="/explore" text="Explore" />
       )}
 
-      <div className="mb-4 border-b border-gray-200 bg-white">
-        <nav className="flex" aria-label="Search Tabs">
-          <button
-            className={`flex w-full items-center justify-center border-b-2 px-1 py-3 text-sm font-medium whitespace-nowrap ${
-              activeTab === 'discussions'
-                ? 'border-green-600 text-green-600'
-                : 'border-transparent text-gray-500 hover:border-gray-300 hover:bg-gray-100 hover:text-gray-700'
-            }`}
-            onClick={() => setActiveTab('discussions')}
-            aria-current={activeTab === 'discussions' ? 'page' : undefined}
-          >
-            <MessageSquare size={16} className="mr-2" />
-            Discussions
-          </button>
-          <button
-            className={`flex w-full items-center justify-center border-b-2 px-1 py-3 text-sm font-medium whitespace-nowrap ${
-              activeTab === 'users'
-                ? 'border-green-600 text-green-600'
-                : 'border-transparent text-gray-500 hover:border-gray-300 hover:bg-gray-100 hover:text-gray-700'
-            }`}
-            onClick={() => setActiveTab('users')}
-            aria-current={activeTab === 'users' ? 'page' : undefined}
-          >
-            <User size={16} className="mr-2" />
-            Users
-          </button>
-        </nav>
-      </div>
+      <TabNavigation
+        tabs={TAB_CONFIG}
+        activeTab={activeTab}
+        onTabChange={handleTabChange}
+        className="mb-4"
+        ariaLabel="Search Tabs"
+      />
 
       {activeTab === 'discussions' && (
         <>

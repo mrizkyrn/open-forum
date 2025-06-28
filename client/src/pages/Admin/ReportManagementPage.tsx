@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { format } from 'date-fns';
 import { AlertTriangle, CheckCircle, Flag, MessageCircle, X } from 'lucide-react';
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 
 import { DataTable } from '@/features/admin/components/DataTable';
 import FilterBar from '@/features/admin/components/FilterBar';
@@ -50,8 +51,8 @@ const ReportManagementPage = () => {
   };
 
   const handleExportDiscussions = () => {
-    console.log('Exporting discussions...');
-    // Implement export functionality here
+    toast.info('Export functionality is not implemented yet');
+    // TODO: Implement export functionality
   };
 
   const columns = [

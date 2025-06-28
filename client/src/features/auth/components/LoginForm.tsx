@@ -1,7 +1,7 @@
-import MainButton from '@/components/ui/buttons/MainButton';
 import { useAuth } from '@/features/auth/hooks/useAuth';
 import { LoginRequest } from '@/features/auth/types';
 import { UserRole } from '@/features/users/types';
+import MainButton from '@/shared/components/ui/buttons/MainButton';
 import { Eye, EyeOff } from 'lucide-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -25,7 +25,7 @@ const LoginForm: React.FC = () => {
   };
 
   const togglePasswordVisibility = () => {
-    setShowPassword(prev => !prev);
+    setShowPassword((prev) => !prev);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -99,7 +99,7 @@ const LoginForm: React.FC = () => {
           </label>
           <div className="relative">
             <input
-              type={showPassword ? "text" : "password"}
+              type={showPassword ? 'text' : 'password'}
               id="password"
               name="password"
               value={formData.password}
@@ -110,15 +110,11 @@ const LoginForm: React.FC = () => {
             />
             <button
               type="button"
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              className="absolute top-1/2 right-3 -translate-y-1/2 text-gray-400 hover:text-gray-600"
               onClick={togglePasswordVisibility}
               tabIndex={-1}
             >
-              {showPassword ? (
-                <EyeOff size={20} strokeWidth={1.5} />
-              ) : (
-                <Eye size={20} strokeWidth={1.5} />
-              )}
+              {showPassword ? <EyeOff size={20} strokeWidth={1.5} /> : <Eye size={20} strokeWidth={1.5} />}
             </button>
           </div>
         </div>

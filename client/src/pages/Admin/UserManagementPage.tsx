@@ -4,7 +4,6 @@ import { Edit, MoreHorizontal, Trash2, UserCheck, Users } from 'lucide-react';
 import { useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 
-import ConfirmationModal from '@/components/modals/ConfirmationModal';
 import { DataTable } from '@/features/admin/components/DataTable';
 import FilterBar from '@/features/admin/components/FilterBar';
 import PageHeader from '@/features/admin/components/PageHeader';
@@ -16,7 +15,8 @@ import UserAvatar from '@/features/users/components/UserAvatar';
 import UserFormModal from '@/features/users/components/UserFormModal';
 import { useUsers } from '@/features/users/hooks/useUsers';
 import { User, UserRole } from '@/features/users/types';
-import { useDropdown } from '@/hooks/useDropdown';
+import ConfirmationModal from '@/shared/components/modals/ConfirmationModal';
+import { useDropdown } from '@/shared/hooks/useDropdown';
 
 const UserManagementPage = () => {
   const queryClient = useQueryClient();
@@ -111,8 +111,8 @@ const UserManagementPage = () => {
   };
 
   const handleExportUsers = () => {
-    console.log('Export users');
-    // Implementation for exporting users
+    toast.info('Export functionality is not implemented yet');
+    // TODO: Implement export functionality
   };
 
   const columns = [

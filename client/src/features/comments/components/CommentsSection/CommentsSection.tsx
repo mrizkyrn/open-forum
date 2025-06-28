@@ -1,11 +1,11 @@
-import ErrorFetching from '@/components/feedback/ErrorFetching';
-import LoadingIndicator from '@/components/feedback/LoadingIndicator';
-import MainButton from '@/components/ui/buttons/MainButton';
 import { CommentCard } from '@/features/comments/components';
 import { commentApi } from '@/features/comments/services';
 import { Comment, CommentSortBy } from '@/features/comments/types';
-import { useDropdown } from '@/hooks/useDropdown';
-import { SortOrder } from '@/types/SearchTypes';
+import ErrorFetching from '@/shared/components/feedback/ErrorFetching';
+import LoadingIndicator from '@/shared/components/feedback/LoadingIndicator';
+import MainButton from '@/shared/components/ui/buttons/MainButton';
+import { useDropdown } from '@/shared/hooks/useDropdown';
+import { SortOrder } from '@/shared/types/SearchTypes';
 import { getFromCurrentUrl } from '@/utils/helpers';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { Calendar, ChevronDown, Loader2, MessageCircle, ThumbsUp } from 'lucide-react';

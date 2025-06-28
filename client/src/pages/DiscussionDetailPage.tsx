@@ -1,38 +1,44 @@
-import FeedbackDisplay from '@/components/feedback/FeedbackDisplay';
-import LoadingIndicator from '@/components/feedback/LoadingIndicator';
-import BackButton from '@/components/ui/buttons/BackButton';
-import { CommentForm, CommentsSection } from '@/features/comments/components';
-import { DiscussionCard, UpdateDiscussionModal } from '@/features/discussions/components';
-import { discussionApi } from '@/features/discussions/services';
-import { useSocket } from '@/hooks/useSocket';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-const DiscussionDetailPage = () => {
-  const { id } = useParams<{ id: string }>();
-  const queryClient = useQueryClient();
+import { CommentForm, CommentsSection } from '@/features/comments/components';
+import { DiscussionCard, UpdateDiscussionModal } from '@/features/discussions/components';
+import { discussionApi } from '@/features/discussions/services';
+import FeedbackDisplay from '@/shared/components/feedback/FeedbackDisplay';
+import LoadingIndicator from '@/shared/components/feedback/LoadingIndicator';
+import BackButton from '@/shared/components/ui/buttons/BackButton';
+import { useSocket } from '@/shared/hooks/useSocket';
 
+const DiscussionDetailPage = () => {
   const [showEditModal, setShowEditModal] = useState(false);
 
+  const { id } = useParams<{ id: string }>();
   const { socket, isConnected } = useSocket();
+  const queryClient = useQueryClient();
 
   const discussionId = parseInt(id || '0', 10);
+
+  const {
+    data: discussion,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ['discussion', discussionId],
+    queryFn: () => discussionApi.getDiscussionById(discussionId),
+    enabled: !!discussionId && !isNaN(discussionId),
+  });
 
   useEffect(() => {
     if (!socket || !isConnected || !discussionId || isNaN(discussionId)) return;
 
     socket.emit('joinDiscussion', { discussionId });
-    console.log(`Joined discussion room: ${discussionId}`);
 
-    const handleDiscussionUpdate = (data: any) => {
-      console.log('Discussion updated:', data);
+    const handleDiscussionUpdate = () => {
       queryClient.invalidateQueries({ queryKey: ['discussions', discussionId] });
     };
 
     const handleNewComment = (data: any) => {
-      console.log('New comment added', data);
-
       queryClient.invalidateQueries({ queryKey: ['comments', discussionId] });
 
       if (data && data.parentId) {
@@ -52,25 +58,14 @@ const DiscussionDetailPage = () => {
 
     return () => {
       socket.emit('leaveDiscussion', { discussionId });
-      console.log(`Left discussion room: ${discussionId}`);
 
       socket.off('discussionUpdate', handleDiscussionUpdate);
       socket.off('newComment', handleNewComment);
     };
   }, [socket, isConnected, discussionId, queryClient]);
 
-  const {
-    data: discussion,
-    isLoading,
-    isError,
-  } = useQuery({
-    queryKey: ['discussion', discussionId],
-    queryFn: () => discussionApi.getDiscussionById(discussionId),
-    enabled: !!discussionId && !isNaN(discussionId),
-  });
-
   if (isLoading) {
-    return <LoadingIndicator fullWidth/>;
+    return <LoadingIndicator fullWidth />;
   }
 
   if (isError || !discussion) {
@@ -87,25 +82,19 @@ const DiscussionDetailPage = () => {
   return (
     <>
       <div className="w-full">
-        {/* Back button */}
         <BackButton />
 
-        {/* Main discussion card */}
         <DiscussionCard discussion={discussion} disableNavigation={true} />
 
-        {/* Comments section */}
         <div className="mt-4 rounded-xl border border-gray-100 bg-white p-4">
-          {/* Comment form */}
           <div className="mb-3">
             <CommentForm discussionId={discussion.id} />
           </div>
 
-          {/* Comments list */}
           <CommentsSection discussionId={discussion.id} commentCount={discussion.commentCount} />
         </div>
       </div>
 
-      {/* Edit discussion modal */}
       <UpdateDiscussionModal isOpen={showEditModal} onClose={() => setShowEditModal(false)} discussion={discussion} />
     </>
   );

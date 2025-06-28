@@ -4,7 +4,6 @@ import { Boxes, Edit, MoreHorizontal, Plus, Trash2, Type } from 'lucide-react';
 import { useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 
-import ConfirmationModal from '@/components/modals/ConfirmationModal';
 import { DataTable } from '@/features/admin/components/DataTable';
 import FilterBar from '@/features/admin/components/FilterBar';
 import PageHeader from '@/features/admin/components/PageHeader';
@@ -14,17 +13,18 @@ import SpaceFormModal from '@/features/admin/components/SpaceFormModal';
 import { adminApi } from '@/features/admin/services';
 import { useSpaces } from '@/features/spaces/hooks/useSpaces';
 import { Space, SpaceType } from '@/features/spaces/types';
-import { useDropdown } from '@/hooks/useDropdown';
+import ConfirmationModal from '@/shared/components/modals/ConfirmationModal';
+import { useDropdown } from '@/shared/hooks/useDropdown';
 import { getFileUrl } from '@/utils/helpers';
 
 const SpaceManagementPage = () => {
-  const queryClient = useQueryClient();
   const [isSpaceModalOpen, setIsSpaceModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [selectedSpace, setSelectedSpace] = useState<Space | null>(null);
   const [activeDropdownId, setActiveDropdownId] = useState<number | null>(null);
-
+  
+  const queryClient = useQueryClient();
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const {
@@ -114,8 +114,8 @@ const SpaceManagementPage = () => {
   };
 
   const handleExportSpaces = () => {
-    console.log('Export spaces');
-    // Implementation for exporting spaces
+    toast.info('Export functionality is not implemented yet');
+    // TODO: Implement export functionality
   };
 
   const columns = [

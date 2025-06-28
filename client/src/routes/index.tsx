@@ -1,13 +1,17 @@
-import ErrorBoundary from '@/components/feedback/ErrorBoundary';
-import LoadingIndicator from '@/components/feedback/LoadingIndicator';
-import AdminLayout from '@/components/layouts/AdminLayout';
-import MainLayout from '@/components/layouts/MainLayout';
 import { lazy, Suspense } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 
-// Lazy-loaded components
+import ErrorBoundary from '@/shared/components/feedback/ErrorBoundary';
+import LoadingIndicator from '@/shared/components/feedback/LoadingIndicator';
+import AdminLayout from '@/shared/components/layouts/AdminLayout';
+import MainLayout from '@/shared/components/layouts/MainLayout';
+
+// Public pages
 const HomePage = lazy(() => import('@/pages/HomePage'));
 const LoginPage = lazy(() => import('@/pages/LoginPage'));
+const NotFound = lazy(() => import('@/pages/NotFound'));
+
+// Main app pages
 const DiscussionDetailPage = lazy(() => import('@/pages/DiscussionDetailPage'));
 const SpacesPage = lazy(() => import('@/pages/SpacesPage'));
 const SpaceDetailPage = lazy(() => import('@/pages/SpaceDetail'));
@@ -16,6 +20,8 @@ const SearchPage = lazy(() => import('@/pages/SearchPage'));
 const NotificationsPage = lazy(() => import('@/pages/NotificationsPage'));
 const UserProfilePage = lazy(() => import('@/pages/UserProfilePage'));
 const BookmarksPage = lazy(() => import('@/pages/BookmarksPage'));
+
+// Admin pages
 const OverviewPage = lazy(() => import('@/pages/Admin/OverviewPage'));
 const UserManagementPage = lazy(() => import('@/pages/Admin/UserManagementPage'));
 const FacultyManagementPage = lazy(() => import('@/pages/Admin/FacultyManagementPage'));
@@ -23,11 +29,9 @@ const StudyProgramManagementPage = lazy(() => import('@/pages/Admin/StudyProgram
 const DiscussionManagementPage = lazy(() => import('@/pages/Admin/DiscussionManagementPage'));
 const SpaceManagementPage = lazy(() => import('@/pages/Admin/SpaceManagementPage'));
 const ReportManagementPage = lazy(() => import('@/pages/Admin/ReportManagementPage'));
-const NotFound = lazy(() => import('@/pages/NotFound'));
 
-// Wrap Suspense in a reusable function
 const lazyLoad = (Component: React.ComponentType) => (
-  <Suspense fallback={<LoadingIndicator fullscreen fullWidth/>}>
+  <Suspense fallback={<LoadingIndicator fullscreen fullWidth />}>
     <Component />
   </Suspense>
 );

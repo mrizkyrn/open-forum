@@ -5,7 +5,6 @@ import { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-import ConfirmationModal from '@/components/modals/ConfirmationModal';
 import { DataTable } from '@/features/admin/components/DataTable';
 import FilterBar from '@/features/admin/components/FilterBar';
 import PageHeader from '@/features/admin/components/PageHeader';
@@ -16,25 +15,25 @@ import { discussionApi } from '@/features/discussions/services';
 import { Discussion } from '@/features/discussions/types';
 import { useSpaces } from '@/features/spaces/hooks/useSpaces';
 import UserAvatar from '@/features/users/components/UserAvatar';
-import { useDropdown } from '@/hooks/useDropdown';
+import ConfirmationModal from '@/shared/components/modals/ConfirmationModal';
+import { useDropdown } from '@/shared/hooks/useDropdown';
 import { truncateText } from '@/utils/helpers';
 
 const DiscussionManagementPage = () => {
-  const queryClient = useQueryClient();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [selectedDiscussion, setSelectedDiscussion] = useState<Discussion | null>(null);
   const [activeDropdownId, setActiveDropdownId] = useState<number | null>(null);
-
+  
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const queryClient = useQueryClient();
+  const { spaces } = useSpaces();
 
   const {
     isOpen: isDropdownOpen,
     toggle: toggleDropdown,
     close: closeDropdown,
   } = useDropdown(dropdownRef as React.RefObject<HTMLElement>);
-
-  const { spaces } = useSpaces();
 
   const {
     discussions,
@@ -90,8 +89,8 @@ const DiscussionManagementPage = () => {
   };
 
   const handleExportDiscussions = () => {
-    console.log('Export discussions');
-    // Implementation for exporting discussions
+    toast.info('Export functionality is not implemented yet');
+    // TODO: Implement export functionality
   };
 
   const getAllUniqueTags = () => {

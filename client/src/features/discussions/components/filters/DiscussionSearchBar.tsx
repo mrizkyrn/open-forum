@@ -1,8 +1,7 @@
-import { Dropdown, DropdownButton, DropdownItem } from '@/components/ui/buttons/DropdownButton';
-import MainButton from '@/components/ui/buttons/MainButton';
-import { SortButton } from '@/components/ui/buttons/SortButton';
 import { DiscussionSortBy, SearchDiscussionDto } from '@/features/discussions/types';
-import { SortOrder } from '@/types/SearchTypes';
+import MainButton from '@/shared/components/ui/buttons/MainButton';
+import SortButton from '@/shared/components/ui/buttons/SortButton';
+import { SortOrder } from '@/shared/types/SearchTypes';
 import {
   Calendar,
   ChevronDown,
@@ -107,41 +106,18 @@ const DiscussionSearchBar: React.FC<DiscussionSearchBarProps> = ({
                 </div>
               </div>
 
-              <Dropdown
-                trigger={({ isOpen, toggle }) => (
-                  <DropdownButton
-                    onClick={toggle}
-                    isOpen={isOpen}
-                    variant="filter"
-                    size="sm"
-                    showActiveState={currentFilters.isAnonymous !== undefined}
-                    className="w-full sm:w-auto"
-                  >
-                    <User
-                      size={14}
-                      className={currentFilters.isAnonymous !== undefined ? 'text-green-600' : 'text-gray-400'}
-                    />
-                    <span className="ml-1">Author</span>
-                  </DropdownButton>
-                )}
-                align="left"
+              {/* Anonymity Toggle */}
+              <button
+                onClick={() => handleAnonymityChange(!currentFilters.isAnonymous)}
+                className={`inline-flex h-8 items-center gap-1.5 rounded border px-2 text-xs transition-all ${
+                  currentFilters.isAnonymous
+                    ? 'border-green-200 bg-green-50 text-green-700'
+                    : 'border-gray-200 bg-gray-50 text-gray-600 hover:bg-gray-100'
+                }`}
               >
-                <DropdownItem
-                  onClick={() => handleAnonymityChange(undefined)}
-                  active={currentFilters.isAnonymous === undefined}
-                >
-                  All discussions
-                </DropdownItem>
-                <DropdownItem
-                  onClick={() => handleAnonymityChange(false)}
-                  active={currentFilters.isAnonymous === false}
-                >
-                  Named authors only
-                </DropdownItem>
-                <DropdownItem onClick={() => handleAnonymityChange(true)} active={currentFilters.isAnonymous === true}>
-                  Anonymous only
-                </DropdownItem>
-              </Dropdown>
+                <User size={14} />
+                <span>Anonymous</span>
+              </button>
             </div>
 
             {/* Clear All Button */}

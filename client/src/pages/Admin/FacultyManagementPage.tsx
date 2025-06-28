@@ -10,7 +10,7 @@ import FilterBar from '@/features/admin/components/FilterBar';
 import PageHeader from '@/features/admin/components/PageHeader';
 import Pagination from '@/features/admin/components/Pagination';
 import { adminApi } from '@/features/admin/services';
-import { useDebounce } from '@/hooks/useDebounce';
+import { useDebounce } from '@/shared/hooks/useDebounce';
 
 interface Faculty {
   id: number;
@@ -27,21 +27,8 @@ interface Faculty {
 
 const FacultyManagementPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
+  const [filters, setFilters] = useState({ page: 1, limit: 10, search: '' });
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
-
-  const [filters, setFilters] = useState({
-    page: 1,
-    limit: 10,
-    search: '',
-  });
-
-  useEffect(() => {
-    setFilters((prev) => ({
-      ...prev,
-      page: 1,
-      search: debouncedSearchTerm,
-    }));
-  }, [debouncedSearchTerm]);
 
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ['faculties', filters],
@@ -77,9 +64,17 @@ const FacultyManagementPage = () => {
   };
 
   const handleExportFaculties = () => {
-    console.log('Export faculties');
-    // Implementation for exporting faculties
+    toast.info('Export functionality is not implemented yet');
+    // TODO: Implement export functionality
   };
+
+  useEffect(() => {
+    setFilters((prev) => ({
+      ...prev,
+      page: 1,
+      search: debouncedSearchTerm,
+    }));
+  }, [debouncedSearchTerm]);
 
   // Table columns
   const columns = [

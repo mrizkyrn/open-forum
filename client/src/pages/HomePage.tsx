@@ -1,9 +1,24 @@
-import DiscussionPost from '@/features/discussions/components/DiscussionPost/DiscussionPost';
-import NewDiscussionButton from '@/features/discussions/components/DiscussionPost/NewDiscussionButton';
 import { Clock, Star } from 'lucide-react';
 import { useState } from 'react';
 
+import DiscussionPost from '@/features/discussions/components/DiscussionPost/DiscussionPost';
+import NewDiscussionButton from '@/features/discussions/components/DiscussionPost/NewDiscussionButton';
+import TabNavigation from '@/shared/components/layouts/TabNavigation';
+
 type HomeTab = 'latest' | 'following';
+
+const TAB_CONFIG = {
+  latest: {
+    icon: <Clock size={16} />,
+    label: 'Latest',
+    searchProps: {},
+  },
+  following: {
+    icon: <Star size={16} />,
+    label: 'Following',
+    searchProps: { onlyFollowedSpaces: true },
+  },
+} as const;
 
 const HomePage = () => {
   const [activeTab, setActiveTab] = useState<HomeTab>('latest');
@@ -14,39 +29,16 @@ const HomePage = () => {
 
   return (
     <div className="flex w-full flex-col">
-      {/* Tab Navigation */}
-      <div className="border border-b-0 border-gray-100 bg-white">
-        <nav className="flex" aria-label="Home Tabs">
-          <button
-            className={`flex w-full items-center justify-center border-b-2 px-1 py-2 sm:py-3 text-sm font-medium whitespace-nowrap ${
-              activeTab === 'latest'
-                ? 'border-green-600 bg-gray-50 text-green-600'
-                : 'border-transparent text-gray-500 hover:border-gray-300 hover:bg-gray-100 hover:text-gray-700'
-            }`}
-            onClick={() => handleTabChange('latest')}
-            aria-current={activeTab === 'latest' ? 'page' : undefined}
-          >
-            <Clock size={16} className="mr-2" />
-            Latest
-          </button>
-          <button
-            className={`flex w-full items-center justify-center border-b-2 px-1 py-2 sm:py-3 text-sm font-medium whitespace-nowrap ${
-              activeTab === 'following'
-                ? 'border-green-600 bg-gray-50 text-green-600'
-                : 'border-transparent text-gray-500 hover:border-gray-300 hover:bg-gray-100 hover:text-gray-700'
-            }`}
-            onClick={() => handleTabChange('following')}
-            aria-current={activeTab === 'following' ? 'page' : undefined}
-          >
-            <Star size={16} className="mr-2" />
-            Following
-          </button>
-        </nav>
-      </div>
+      <TabNavigation
+        tabs={TAB_CONFIG}
+        activeTab={activeTab}
+        onTabChange={handleTabChange}
+        className="border border-b-0 border-gray-100"
+        ariaLabel="Home Tabs"
+      />
 
-      <NewDiscussionButton className="rounded-b-none mb-4" />
+      <NewDiscussionButton className="mb-4 rounded-b-none" />
 
-      {/* Discussion Content based on active tab */}
       <DiscussionPost search={activeTab === 'following' ? { onlyFollowedSpaces: true } : {}} />
     </div>
   );

@@ -1,8 +1,8 @@
 import { ReportStatus } from '@/features/reports/types';
 import { CreateSpaceDto, Space, UpdateSpaceDto } from '@/features/spaces/types';
 import { CreateUserDto, UpdateUserDto, User, UserRole } from '@/features/users/types';
-import { apiClient } from '@/services/client';
-import { ApiResponse } from '@/types/ResponseTypes';
+import { apiClient } from '@/shared/services/client';
+import { ApiResponse } from '@/shared/types/ResponseTypes';
 import { handleApiError } from '@/utils/helpers';
 import { ActivityData, ActivityDataParams, DashboardStats, StatsParams } from '../types';
 

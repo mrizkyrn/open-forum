@@ -1,6 +1,6 @@
 import { User } from '@/features/users/types';
-import { Attachment } from '@/types/AttachmentTypes';
-import { SearchDto } from '@/types/SearchTypes';
+import { Attachment } from '@/shared/types/AttachmentTypes';
+import { SearchDto } from '@/shared/types/SearchTypes';
 
 export interface Discussion {
   id: number;

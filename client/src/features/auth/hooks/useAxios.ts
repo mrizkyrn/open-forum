@@ -1,6 +1,6 @@
+import { apiClient } from '@/shared/services/client';
 import { AxiosInstance } from 'axios';
 import { useEffect, useRef } from 'react';
-import { apiClient } from '@/services/client';
 import { useAuth } from './useAuth';
 
 export const useAxios = (): AxiosInstance => {

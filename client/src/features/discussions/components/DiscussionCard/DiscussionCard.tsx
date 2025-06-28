@@ -1,7 +1,7 @@
-import ConfirmationModal from '@/components/modals/ConfirmationModal';
 import { UpdateDiscussionModal } from '@/features/discussions/components';
 import { discussionApi } from '@/features/discussions/services';
 import { Discussion } from '@/features/discussions/types';
+import ConfirmationModal from '@/shared/components/modals/ConfirmationModal';
 import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';

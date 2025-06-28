@@ -1,4 +1,4 @@
-import { SortOrder } from '@/types/SearchTypes';
+import { SortOrder } from '@/shared/types/SearchTypes';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { reportApi } from '../services';

@@ -1,9 +1,9 @@
-import { Modal, ModalBody, ModalFooter, ModalHeader } from '@/components/modals/Modal';
-import MainButton from '@/components/ui/buttons/MainButton';
-import FilePreview from '@/components/ui/file-displays/FilePreview';
 import { discussionApi } from '@/features/discussions/services';
 import { spaceApi } from '@/features/spaces/services';
-import { useFileHandling } from '@/hooks/useFileHandling';
+import { Modal, ModalBody, ModalFooter, ModalHeader } from '@/shared/components/modals/Modal';
+import MainButton from '@/shared/components/ui/buttons/MainButton';
+import FilePreview from '@/shared/components/ui/file-displays/FilePreview';
+import { useFileHandling } from '@/shared/hooks/useFileHandling';
 import { ALLOWED_FILE_TYPES, MAX_DISCUSSION_FILES, MAX_FILE_SIZE } from '@/utils/constants';
 import { getFileUrl } from '@/utils/helpers';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';

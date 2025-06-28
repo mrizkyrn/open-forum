@@ -1,7 +1,7 @@
 import { handleApiError } from '@/utils/helpers';
-import { apiClient } from '@/services/client';
+import { apiClient } from '@/shared/services/client';
 import { Discussion } from '@/features/discussions/types';
-import { ApiResponse } from '@/types/ResponseTypes';
+import { ApiResponse } from '@/shared/types/ResponseTypes';
 
 export type VoteValue = -1 | 1;
 

@@ -2,10 +2,12 @@ import App from '@/App.tsx';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { AuthProvider } from './features/auth/contexts/AuthProvider';
-import { pushNotificationService } from './features/notifications/services/pushNotificationService';
-import { SocketProvider } from './hooks/useSocket';
 
+import { AuthProvider } from '@/features/auth/contexts/AuthProvider';
+import { pushNotificationService } from '@/features/notifications/services/pushNotificationService';
+import { SocketProvider } from '@/shared/hooks/useSocket';
+
+// QueryClient configuration
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -15,6 +17,7 @@ const queryClient = new QueryClient({
   },
 });
 
+// Register service worker for push notifications
 if ('serviceWorker' in navigator) {
   pushNotificationService
     .registerServiceWorker()
