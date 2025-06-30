@@ -1,8 +1,8 @@
-import { SortOrder } from '@/shared/types/SearchTypes';
+import { SortOrder } from '@/shared/types/RequestTypes';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { spaceApi } from '../services';
-import { SearchSpaceDto, SpaceSortBy, SpaceType } from '../types';
+import { SpaceQueryParams, SpaceSortBy, SpaceType } from '../types';
 
 export interface SpaceFilters {
   page: number;
@@ -14,7 +14,7 @@ export interface SpaceFilters {
 }
 
 export const useSpaces = (initialFilters = {}) => {
-  const [filters, setFilters] = useState<SearchSpaceDto>({
+  const [filters, setFilters] = useState<SpaceQueryParams>({
     page: 1,
     limit: 10,
     search: '',

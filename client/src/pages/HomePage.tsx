@@ -1,8 +1,7 @@
 import { Clock, Star } from 'lucide-react';
 import { useState } from 'react';
 
-import DiscussionPost from '@/features/discussions/components/DiscussionPost/DiscussionPost';
-import NewDiscussionButton from '@/features/discussions/components/DiscussionPost/NewDiscussionButton';
+import { DiscussionFeed, NewDiscussionButton } from '@/features/discussions/components';
 import TabNavigation from '@/shared/components/layouts/TabNavigation';
 
 type HomeTab = 'latest' | 'following';
@@ -39,7 +38,7 @@ const HomePage = () => {
 
       <NewDiscussionButton className="mb-4 rounded-b-none" />
 
-      <DiscussionPost search={activeTab === 'following' ? { onlyFollowedSpaces: true } : {}} />
+      <DiscussionFeed search={activeTab === 'following' ? { onlyFollowedSpaces: true } : {}} />
     </div>
   );
 };

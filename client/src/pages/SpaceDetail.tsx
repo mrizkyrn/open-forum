@@ -3,8 +3,7 @@ import { Users } from 'lucide-react';
 import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { DiscussionPost } from '@/features/discussions/components';
-import NewDiscussionButton from '@/features/discussions/components/DiscussionPost/NewDiscussionButton';
+import { DiscussionFeed, NewDiscussionButton } from '@/features/discussions/components';
 import { useSpaceFollow } from '@/features/spaces/hooks/useSpaceFollow';
 import { spaceApi } from '@/features/spaces/services';
 import FeedbackDisplay from '@/shared/components/feedback/FeedbackDisplay';
@@ -148,7 +147,7 @@ const SpaceDetailPage = () => {
       {/* Discussions Section */}
       <div className="flex w-full flex-col">
         <NewDiscussionButton preselectedSpaceId={space.id} className="mb-4" />
-        <DiscussionPost preselectedSpaceId={space.id} search={{ spaceId: space.id }} />
+        <DiscussionFeed preselectedSpaceId={space.id} search={{ spaceId: space.id }} />
       </div>
     </div>
   );

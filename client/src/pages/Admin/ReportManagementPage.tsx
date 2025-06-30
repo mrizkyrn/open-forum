@@ -4,14 +4,16 @@ import { AlertTriangle, CheckCircle, Flag, MessageCircle, X } from 'lucide-react
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 
-import { DataTable } from '@/features/admin/components/DataTable';
-import FilterBar from '@/features/admin/components/FilterBar';
-import PageHeader from '@/features/admin/components/PageHeader';
-import Pagination from '@/features/admin/components/Pagination';
-import ReportDetailModal from '@/features/admin/components/ReportDetailModal';
-import SelectFilter from '@/features/admin/components/SelectFilter';
-import StatsCard from '@/features/admin/components/StatsCard';
-import StatusBadge from '@/features/admin/components/StatusBadge';
+import {
+  DataTable,
+  FilterBar,
+  PageHeader,
+  Pagination,
+  ReportDetailModal,
+  SelectFilter,
+  StatsCard,
+  StatusBadge,
+} from '@/features/admin/components';
 import { useReports } from '@/features/reports/hooks/useReports';
 import { reportApi } from '@/features/reports/services';
 import { Report, ReportStatus, ReportTargetType } from '@/features/reports/types';
@@ -36,9 +38,9 @@ const ReportManagementPage = () => {
     handleResetFilters,
   } = useReports();
 
-  const { data: reportStats } = useQuery({
-    queryKey: ['reportStats'],
-    queryFn: reportApi.getReportStats,
+  const { data: ReportStatsResponse } = useQuery({
+    queryKey: ['ReportStatsResponse'],
+    queryFn: reportApi.getReportStatsResponse,
   });
 
   const handleViewReport = (report: Report) => {
@@ -146,28 +148,28 @@ const ReportManagementPage = () => {
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatsCard
           title="Total Reports"
-          value={reportStats?.total || 0}
+          value={ReportStatsResponse?.total || 0}
           icon={<Flag size={20} />}
           iconBgColor="bg-blue-50"
           iconColor="text-blue-600"
         />
         <StatsCard
           title="Pending"
-          value={reportStats?.pending || 0}
+          value={ReportStatsResponse?.pending || 0}
           icon={<AlertTriangle size={20} />}
           iconBgColor="bg-yellow-50"
           iconColor="text-yellow-600"
         />
         <StatsCard
           title="Resolved"
-          value={reportStats?.resolved || 0}
+          value={ReportStatsResponse?.resolved || 0}
           icon={<CheckCircle size={20} />}
           iconBgColor="bg-green-50"
           iconColor="text-green-600"
         />
         <StatsCard
           title="Dismissed"
-          value={reportStats?.dismissed || 0}
+          value={ReportStatsResponse?.dismissed || 0}
           icon={<X size={20} />}
           iconBgColor="bg-gray-50"
           iconColor="text-gray-600"

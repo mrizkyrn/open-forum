@@ -1,13 +1,13 @@
+import { DiscussionQueryParams } from '@/features/discussions/types';
 import { X } from 'lucide-react';
-import { SearchDiscussionDto } from '@/features/discussions/types';
 
 interface ActiveFiltersProps {
-  currentFilters: SearchDiscussionDto;
-  onFilterChange: (filter: Partial<SearchDiscussionDto>) => void;
+  currentFilters: DiscussionQueryParams;
+  onFilterChange: (filter: Partial<DiscussionQueryParams>) => void;
   onClearAll: () => void;
 }
 
-const ActiveFilters: React.FC<ActiveFiltersProps> = ({ currentFilters, onFilterChange, onClearAll }) => {
+const ActiveFilters = ({ currentFilters, onFilterChange, onClearAll }: ActiveFiltersProps) => {
   // Check if there are any active filters
   const hasActiveFilters =
     !!currentFilters.search ||

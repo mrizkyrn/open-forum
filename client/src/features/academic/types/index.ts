@@ -1,4 +1,6 @@
-import { SearchDto } from '@/shared/types/SearchTypes';
+import { BaseQueryParams } from '@/shared/types/RequestTypes';
+
+// ===== CORE ENTITIES =====
 
 export interface Faculty {
   id: number;
@@ -24,14 +26,18 @@ export interface StudyProgram {
   updatedAt: Date;
 }
 
+// ===== QUERY PARAMETERS =====
+
+export interface StudyProgramQueryParams extends BaseQueryParams {
+  facultyId?: number;
+  educationLevel?: string;
+  sortBy?: StudyProgramSortBy;
+}
+
+// ===== ENUMS =====
+
 export enum StudyProgramSortBy {
   studyProgramName = 'studyProgramName',
   studyProgramCode = 'studyProgramCode',
   educationLevel = 'educationLevel',
-}
-
-export interface SearchStudyProgramDto extends SearchDto {
-  facultyId?: number;
-  educationLevel?: string;
-  sortBy?: StudyProgramSortBy;
 }

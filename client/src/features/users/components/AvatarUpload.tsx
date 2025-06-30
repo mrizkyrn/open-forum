@@ -1,10 +1,11 @@
-import { useAuth } from '@/features/auth/hooks/useAuth';
-import { userApi } from '@/features/users/services';
-import { getFileUrl } from '@/utils/helpers';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Camera, Trash2, User as UserIcon } from 'lucide-react';
 import { useRef, useState } from 'react';
 import { toast } from 'react-toastify';
+
+import { useAuth } from '@/features/auth/hooks/useAuth';
+import { userApi } from '@/features/users/services';
+import { getFileUrl } from '@/utils/helpers';
 
 interface AvatarUploadProps {
   currentAvatarUrl: string | null;

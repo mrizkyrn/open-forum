@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { useAuth } from '@/features/auth/hooks/useAuth';
-import { DiscussionPost } from '@/features/discussions/components';
+import { DiscussionFeed } from '@/features/discussions/components';
 import AvatarUpload from '@/features/users/components/AvatarUpload';
 import UserAvatar from '@/features/users/components/UserAvatar';
 import { userApi } from '@/features/users/services';
@@ -209,7 +209,7 @@ const UserProfilePage = () => {
           </div>
         </>
       ) : (
-        <DiscussionPost search={{ authorId: user.id }} />
+        <DiscussionFeed search={{ authorId: user.id }} />
       )}
     </div>
   );

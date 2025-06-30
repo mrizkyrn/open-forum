@@ -4,12 +4,14 @@ import { Boxes, Edit, MoreHorizontal, Plus, Trash2, Type } from 'lucide-react';
 import { useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 
-import { DataTable } from '@/features/admin/components/DataTable';
-import FilterBar from '@/features/admin/components/FilterBar';
-import PageHeader from '@/features/admin/components/PageHeader';
-import Pagination from '@/features/admin/components/Pagination';
-import SelectFilter from '@/features/admin/components/SelectFilter';
-import SpaceFormModal from '@/features/admin/components/SpaceFormModal';
+import {
+  DataTable,
+  FilterBar,
+  PageHeader,
+  Pagination,
+  SelectFilter,
+  SpaceFormModal,
+} from '@/features/admin/components';
 import { adminApi } from '@/features/admin/services';
 import { useSpaces } from '@/features/spaces/hooks/useSpaces';
 import { Space, SpaceType } from '@/features/spaces/types';
@@ -23,7 +25,7 @@ const SpaceManagementPage = () => {
   const [isDeleting, setIsDeleting] = useState(false);
   const [selectedSpace, setSelectedSpace] = useState<Space | null>(null);
   const [activeDropdownId, setActiveDropdownId] = useState<number | null>(null);
-  
+
   const queryClient = useQueryClient();
   const dropdownRef = useRef<HTMLDivElement>(null);
 

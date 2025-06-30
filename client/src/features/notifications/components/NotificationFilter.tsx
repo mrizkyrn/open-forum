@@ -1,5 +1,4 @@
 import { RefreshCw } from 'lucide-react';
-import React from 'react';
 
 type FilterType = 'all' | 'read' | 'unread';
 
@@ -10,12 +9,7 @@ interface NotificationFilterProps {
   unreadCount: number;
 }
 
-const NotificationFilter: React.FC<NotificationFilterProps> = ({
-  selectedFilter,
-  onFilterChange,
-  onRefresh,
-  unreadCount,
-}) => {
+const NotificationFilter = ({ selectedFilter, onFilterChange, onRefresh, unreadCount }: NotificationFilterProps) => {
   return (
     <div className="mb-6 flex flex-col space-y-4 sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
       <div>

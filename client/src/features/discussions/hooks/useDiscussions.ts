@@ -1,8 +1,8 @@
-import { SortOrder } from '@/shared/types/SearchTypes';
+import { SortOrder } from '@/shared/types/RequestTypes';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { discussionApi } from '../services';
-import { DiscussionSortBy, SearchDiscussionDto } from '../types';
+import { DiscussionQueryParams, DiscussionSortBy } from '../types';
 
 interface DiscussionsFilters {
   page?: number;
@@ -17,7 +17,7 @@ interface DiscussionsFilters {
 }
 
 export const useDiscussions = (initialFilters: DiscussionsFilters = {}) => {
-  const [filters, setFilters] = useState<SearchDiscussionDto>({
+  const [filters, setFilters] = useState<DiscussionQueryParams>({
     page: 1,
     limit: 10,
     search: '',

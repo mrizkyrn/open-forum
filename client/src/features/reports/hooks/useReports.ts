@@ -1,8 +1,8 @@
-import { SortOrder } from '@/shared/types/SearchTypes';
+import { SortOrder } from '@/shared/types/RequestTypes';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { reportApi } from '../services';
-import { ReportSortBy, ReportStatus, ReportTargetType, SearchReportDto } from '../types';
+import { ReportQueryParams, ReportSortBy, ReportStatus, ReportTargetType } from '../types';
 
 interface ReportsFilters {
   page?: number;
@@ -15,7 +15,7 @@ interface ReportsFilters {
 }
 
 export const useReports = (initialFilters: ReportsFilters = {}) => {
-  const [filters, setFilters] = useState<SearchReportDto>({
+  const [filters, setFilters] = useState<ReportQueryParams>({
     page: 1,
     limit: 10,
     search: '',

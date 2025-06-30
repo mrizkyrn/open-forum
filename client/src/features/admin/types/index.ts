@@ -39,7 +39,7 @@ export interface DiscussionStats {
   change: number;
 }
 
-export interface ReportStats {
+export interface ReportStatsResponse {
   active: number;
   new: number;
   change: number;
@@ -54,7 +54,7 @@ export interface EngagementStats {
 export interface DashboardStats {
   users: UserStats;
   discussions: DiscussionStats;
-  reports: ReportStats;
+  reports: ReportStatsResponse;
   engagement: EngagementStats;
   metadata: StatsMetadata;
 }

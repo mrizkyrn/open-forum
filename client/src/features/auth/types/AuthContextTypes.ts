@@ -1,5 +1,5 @@
 import { User } from '@/features/users/types';
-import { LoginRequest, RegisterRequest } from './AuthRequestTypes';
+import { LoginRequest } from './AuthTypes';
 
 export interface AuthState {
   user: User | null;
@@ -22,7 +22,6 @@ export type AuthAction =
 export interface AuthContextType extends AuthState {
   login: (credentials: LoginRequest) => Promise<User>;
   logout: () => void;
-  register: (userData: RegisterRequest) => Promise<void>;
   updateUser: (userData: Partial<User>) => void;
   clearError: () => void;
   refreshToken: () => Promise<string>;

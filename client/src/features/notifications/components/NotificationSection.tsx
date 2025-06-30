@@ -1,5 +1,4 @@
 import { Notification } from '@/features/notifications/types';
-import React from 'react';
 import NotificationItem from './NotificationItem';
 
 interface NotificationSectionProps {
@@ -13,7 +12,7 @@ interface NotificationSectionProps {
   isMarkingReadId?: number;
 }
 
-const NotificationSection: React.FC<NotificationSectionProps> = ({
+const NotificationSection = ({
   title,
   notifications,
   onRead,
@@ -22,7 +21,7 @@ const NotificationSection: React.FC<NotificationSectionProps> = ({
   newNotifications = {},
   isDeletingId,
   isMarkingReadId,
-}) => {
+}: NotificationSectionProps) => {
   if (notifications.length === 0) return null;
 
   return (

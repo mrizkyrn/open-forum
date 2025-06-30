@@ -8,16 +8,10 @@ interface UserAvatarProps {
   avatarUrl?: string | null;
   size?: AvatarSize;
   className?: string;
-  username?: string; // If provided, the avatar becomes clickable
+  username?: string;
 }
 
-const UserAvatar: React.FC<UserAvatarProps> = ({
-  fullName = 'Anonymous',
-  avatarUrl,
-  size = 'md',
-  className = '',
-  username,
-}) => {
+const UserAvatar = ({ fullName = 'Anonymous', avatarUrl, size = 'md', className = '', username }: UserAvatarProps) => {
   const [imgSrc, setImgSrc] = useState<string | null>(null);
   const [hasError, setHasError] = useState(false);
 

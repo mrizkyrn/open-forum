@@ -1,16 +1,16 @@
 import { apiClient } from '@/shared/services/client';
 import { ApiResponse, PaginatedResponse } from '@/shared/types/ResponseTypes';
 import { handleApiError } from '@/utils/helpers';
-import { SearchSpaceDto, Space } from '../types';
+import { Space, SpaceQueryParams } from '../types';
 
 export const spaceApi = {
-  async getSpaces(search: SearchSpaceDto): Promise<PaginatedResponse<Space>> {
+  async getSpaces(search: SpaceQueryParams): Promise<PaginatedResponse<Space>> {
     try {
       const response = await apiClient.get<ApiResponse<PaginatedResponse<Space>>>('/spaces', {
         params: search,
       });
       return response.data.data;
-    } catch (error: any) {
+    } catch (error) {
       return handleApiError(error, 'Failed to fetch spaces');
     }
   },
@@ -19,7 +19,7 @@ export const spaceApi = {
     try {
       const response = await apiClient.get<ApiResponse<Space>>(`/spaces/${id}`);
       return response.data.data;
-    } catch (error: any) {
+    } catch (error) {
       return handleApiError(error, 'Failed to fetch space');
     }
   },
@@ -28,7 +28,7 @@ export const spaceApi = {
     try {
       const response = await apiClient.get<ApiResponse<Space>>(`/spaces/slug/${slug}`);
       return response.data.data;
-    } catch (error: any) {
+    } catch (error) {
       return handleApiError(error, 'Failed to fetch space');
     }
   },
@@ -39,7 +39,7 @@ export const spaceApi = {
         params: { limit },
       });
       return response.data.data;
-    } catch (error: any) {
+    } catch (error) {
       return handleApiError(error, 'Failed to fetch popular spaces');
     }
   },
@@ -48,7 +48,7 @@ export const spaceApi = {
     try {
       const response = await apiClient.get<ApiResponse<void>>(`/spaces/${id}/is-following`);
       return response.data.data;
-    } catch (error: any) {
+    } catch (error) {
       return handleApiError(error, 'Failed to check if following space');
     }
   },
@@ -56,7 +56,7 @@ export const spaceApi = {
   async followSpace(id: number): Promise<void> {
     try {
       await apiClient.post<ApiResponse<void>>(`/spaces/${id}/follow`);
-    } catch (error: any) {
+    } catch (error) {
       throw handleApiError(error, 'Failed to follow space');
     }
   },
@@ -64,7 +64,7 @@ export const spaceApi = {
   async unfollowSpace(id: number): Promise<void> {
     try {
       await apiClient.post<ApiResponse<void>>(`/spaces/${id}/unfollow`);
-    } catch (error: any) {
+    } catch (error) {
       throw handleApiError(error, 'Failed to unfollow space');
     }
   },

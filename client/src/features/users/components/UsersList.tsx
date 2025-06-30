@@ -1,19 +1,20 @@
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { UserIcon } from 'lucide-react';
+import { useEffect } from 'react';
+import { Link } from 'react-router-dom';
+
 import UserAvatar from '@/features/users/components/UserAvatar';
 import { userApi } from '@/features/users/services';
 import { SearchUserParams } from '@/features/users/types';
 import FeedbackDisplay from '@/shared/components/feedback/FeedbackDisplay';
 import LoadingIndicator from '@/shared/components/feedback/LoadingIndicator';
 import { useIntersectionObserver } from '@/shared/hooks/useIntersectionObserver';
-import { useInfiniteQuery } from '@tanstack/react-query';
-import { UserIcon } from 'lucide-react';
-import { useEffect } from 'react';
-import { Link } from 'react-router-dom';
 
 interface UsersListProps {
   searchTerm: string;
 }
 
-const UsersList: React.FC<UsersListProps> = ({ searchTerm }) => {
+const UsersList = ({ searchTerm }: UsersListProps) => {
   const {
     data: usersData,
     fetchNextPage,

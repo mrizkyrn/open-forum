@@ -1,11 +1,12 @@
-import { ReportReason, ReportTargetType } from '@/features/reports/types';
-import { ModalBody, ModalFooter, ModalHeader } from '@/shared/components/modals/Modal';
-import Modal from '@/shared/components/modals/Modal/Modal';
-import MainButton from '@/shared/components/ui/buttons/MainButton';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Loader2 } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
+
+import { ReportReason, ReportTargetType } from '@/features/reports/types';
+import { ModalBody, ModalFooter, ModalHeader } from '@/shared/components/modals/Modal';
+import Modal from '@/shared/components/modals/Modal/Modal';
+import MainButton from '@/shared/components/ui/buttons/MainButton';
 import { reportApi } from '../services';
 
 interface ReportModalProps {
@@ -16,7 +17,7 @@ interface ReportModalProps {
   contentPreview?: string;
 }
 
-const ReportModal: React.FC<ReportModalProps> = ({ isOpen, onClose, targetType, targetId, contentPreview }) => {
+const ReportModal = ({ isOpen, onClose, targetType, targetId, contentPreview }: ReportModalProps) => {
   const [selectedReason, setSelectedReason] = useState<number | null>(null);
   const [description, setDescription] = useState('');
   const [validationError, setValidationError] = useState<string | null>(null);
@@ -85,20 +86,6 @@ const ReportModal: React.FC<ReportModalProps> = ({ isOpen, onClose, targetType, 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="lg">
       <ModalHeader title={`Report ${getTargetName()}`} onClose={onClose} />
-      {/* <div onClick={(e) => e.stopPropagation()}>
-        <div className="mb-4 flex items-center justify-between">
-          <h3 className="flex items-center text-lg font-medium text-gray-900">
-            <Flag size={18} className="mr-2 text-red-500" />
-            Report {getTargetName()}
-          </h3>
-          <button
-            onClick={onClose}
-            className="rounded-md p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-500"
-            disabled={isSubmitting}
-          >
-            <X size={20} />
-          </button>
-        </div> */}
 
       <ModalBody>
         {contentPreview && (

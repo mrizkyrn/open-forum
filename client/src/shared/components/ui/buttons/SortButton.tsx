@@ -1,4 +1,4 @@
-import { SortOrder } from '@/shared/types/SearchTypes';
+import { SortOrder } from '@/shared/types/RequestTypes';
 import { ArrowDown, ArrowUp } from 'lucide-react';
 
 export interface SortButtonProps<T extends string | number> {

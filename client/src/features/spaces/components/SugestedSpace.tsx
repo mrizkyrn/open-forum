@@ -1,7 +1,7 @@
-import { getFileUrl } from '@/utils/helpers';
 import { Loader2 } from 'lucide-react';
 
 import { Space } from '@/features/spaces/types';
+import { getFileUrl } from '@/utils/helpers';
 
 interface SuggestedSpaceProps {
   space: Space;

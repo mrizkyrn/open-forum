@@ -1,34 +1,35 @@
 import { apiClient } from '@/shared/services/client';
 import { ApiResponse, PaginatedResponse } from '@/shared/types/ResponseTypes';
 import { handleApiError } from '@/utils/helpers';
-import { Report, ReportReason, SearchReportDto } from '../types';
+import { CreateReportRequest, Report, ReportQueryParams, ReportReason, ReportStatsResponse } from '../types';
 
 export const reportApi = {
-  async createReport(report: any): Promise<void> {
+  async createReport(report: CreateReportRequest): Promise<Report> {
     try {
-      await apiClient.post<ApiResponse<void>>('/reports', report);
-    } catch (error: any) {
+      const response = await apiClient.post<ApiResponse<Report>>('/reports', report);
+      return response.data.data;
+    } catch (error) {
       return handleApiError(error, 'Failed to submit report');
     }
   },
 
-  async getReports(search: SearchReportDto): Promise<PaginatedResponse<Report>> {
+  async getReports(search: ReportQueryParams): Promise<PaginatedResponse<Report>> {
     try {
       const response = await apiClient.get<ApiResponse<PaginatedResponse<Report>>>('/reports', {
         params: search,
       });
       return response.data.data;
-    } catch (error: any) {
+    } catch (error) {
       return handleApiError(error, 'Failed to fetch reports');
     }
   },
 
-  async getReportStats(): Promise<any> {
+  async getReportById(id: number): Promise<Report> {
     try {
-      const response = await apiClient.get<ApiResponse<any>>('/reports/stats');
+      const response = await apiClient.get<ApiResponse<Report>>(`/reports/${id}`);
       return response.data.data;
-    } catch (error: any) {
-      return handleApiError(error, 'Failed to fetch report statistics');
+    } catch (error) {
+      return handleApiError(error, 'Failed to fetch report details');
     }
   },
 
@@ -36,8 +37,17 @@ export const reportApi = {
     try {
       const response = await apiClient.get<ApiResponse<ReportReason[]>>('/reports/reasons');
       return response.data.data;
-    } catch (error: any) {
+    } catch (error) {
       return handleApiError(error, 'Failed to fetch report reasons');
+    }
+  },
+
+  async getReportStatsResponse(): Promise<ReportStatsResponse> {
+    try {
+      const response = await apiClient.get<ApiResponse<ReportStatsResponse>>('/reports/stats');
+      return response.data.data;
+    } catch (error) {
+      return handleApiError(error, 'Failed to fetch report statistics');
     }
   },
 };

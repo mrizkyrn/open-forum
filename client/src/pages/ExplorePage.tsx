@@ -2,7 +2,9 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import PopularTopicItem, { PopularTopicItemSkeleton } from '@/features/discussions/components/PopularTopicItem';
+import PopularTopicItem, {
+  PopularTopicItemSkeleton,
+} from '@/features/discussions/components/displays/PopularTopicItem';
 import { discussionApi } from '@/features/discussions/services';
 import LoadingIndicator from '@/shared/components/feedback/LoadingIndicator';
 import SearchInput from '@/shared/components/ui/inputs/SearchInput';

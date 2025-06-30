@@ -1,5 +1,4 @@
 import { CheckCircle, Loader2, Trash2 } from 'lucide-react';
-import React from 'react';
 import NotificationSettings from './NotificationSetting';
 
 interface NotificationActionBarProps {
@@ -11,14 +10,14 @@ interface NotificationActionBarProps {
   unreadCount: number;
 }
 
-const NotificationActionBar: React.FC<NotificationActionBarProps> = ({
+const NotificationActionBar = ({
   onMarkAllAsRead,
   onClearAll,
   isMarkingAllAsRead,
   isDeletingAll,
   hasNotifications,
   unreadCount,
-}) => {
+}: NotificationActionBarProps) => {
   return (
     <div className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-gray-200 bg-white p-4">
       <NotificationSettings />

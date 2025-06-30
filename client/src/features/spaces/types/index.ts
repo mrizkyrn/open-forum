@@ -1,28 +1,6 @@
-import { SearchDto } from '@/shared/types/SearchTypes';
+import { BaseQueryParams } from '@/shared/types/RequestTypes';
 
-// dto.id = space.id;
-//     dto.name = space.name;
-//     dto.description = space.description;
-//     dto.slug = space.slug;
-//     dto.creatorId = space.creatorId;
-//     dto.spaceType = space.spaceType;
-//     dto.facultyId = space.facultyId;
-//     dto.studyProgramId = space.studyProgramId;
-//     dto.iconUrl = space.iconUrl;
-//     dto.bannerUrl = space.bannerUrl;
-//     dto.followerCount = space.followerCount ?? 0;
-//     dto.isFollowing = isFollowing;
-//     dto.createdAt = space.createdAt;
-//     dto.updatedAt = space.updatedAt;
-
-export enum SpaceType {
-  ACADEMIC = 'academic',
-  FACULTY = 'faculty',
-  STUDY_PROGRAM = 'study_program',
-  ORGANIZATION = 'organization',
-  CAMPUS = 'campus',
-  OTHER = 'other',
-}
+// ===== CORE ENTITIES =====
 
 export interface Space {
   id: number;
@@ -41,23 +19,9 @@ export interface Space {
   updatedAt: Date;
 }
 
-export enum SpaceSortBy {
-  name = 'name',
-  createdAt = 'createdAt',
-  updatedAt = 'updatedAt',
-  followerCount = 'followerCount',
-}
+// ===== REQUEST TYPES =====
 
-export interface SearchSpaceDto extends SearchDto {
-  creatorId?: number;
-  spaceType?: SpaceType | null;
-  facultyId?: number | null;
-  studyProgramId?: number | null;
-  following?: boolean;
-  sortBy: SpaceSortBy;
-}
-
-export interface CreateSpaceDto {
+export interface CreateSpaceRequest {
   name: string;
   description: string;
   slug: string;
@@ -68,7 +32,7 @@ export interface CreateSpaceDto {
   banner?: File;
 }
 
-export interface UpdateSpaceDto {
+export interface UpdateSpaceRequest {
   name?: string;
   description?: string;
   slug?: string;
@@ -79,4 +43,33 @@ export interface UpdateSpaceDto {
   banner?: File;
   removeIcon?: boolean;
   removeBanner?: boolean;
+}
+
+// ===== QUERY PARAMETERS =====
+
+export interface SpaceQueryParams extends BaseQueryParams {
+  creatorId?: number;
+  spaceType?: SpaceType | null;
+  facultyId?: number | null;
+  studyProgramId?: number | null;
+  following?: boolean;
+  sortBy: SpaceSortBy;
+}
+
+// ===== ENUMS =====
+
+export enum SpaceType {
+  ACADEMIC = 'academic',
+  FACULTY = 'faculty',
+  STUDY_PROGRAM = 'study_program',
+  ORGANIZATION = 'organization',
+  CAMPUS = 'campus',
+  OTHER = 'other',
+}
+
+export enum SpaceSortBy {
+  name = 'name',
+  createdAt = 'createdAt',
+  updatedAt = 'updatedAt',
+  followerCount = 'followerCount',
 }

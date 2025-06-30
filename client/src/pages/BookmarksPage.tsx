@@ -1,4 +1,4 @@
-import { DiscussionPost } from '@/features/discussions/components';
+import { DiscussionFeed } from '@/features/discussions/components';
 
 const BookmarksPage = () => {
   return (
@@ -8,7 +8,7 @@ const BookmarksPage = () => {
         <p className="mt-1 text-sm text-gray-500">Save discussions to read later</p>
       </div>
 
-      <DiscussionPost feedType="bookmarked" />
+      <DiscussionFeed feedType="bookmarked" />
     </div>
   );
 };

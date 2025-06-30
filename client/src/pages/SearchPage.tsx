@@ -2,12 +2,12 @@ import { MessageSquare, User } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
-import { DiscussionPost, DiscussionSearchBar } from '@/features/discussions/components';
-import { DiscussionSortBy, SearchDiscussionDto } from '@/features/discussions/types';
+import { DiscussionFeed, DiscussionFilters } from '@/features/discussions/components';
+import { DiscussionQueryParams, DiscussionSortBy } from '@/features/discussions/types';
 import UsersList from '@/features/users/components/UsersList';
 import TabNavigation from '@/shared/components/layouts/TabNavigation';
 import BackButton from '@/shared/components/ui/buttons/BackButton';
-import { SortOrder } from '@/shared/types/SearchTypes';
+import { SortOrder } from '@/shared/types/RequestTypes';
 
 type SearchTab = 'discussions' | 'users';
 
@@ -42,7 +42,7 @@ const SearchPage = () => {
   );
 
   const applyFilters = useCallback(
-    (filters: Partial<SearchDiscussionDto>) => {
+    (filters: Partial<DiscussionQueryParams>) => {
       const newParams = new URLSearchParams(filterParams);
 
       Object.entries(filters).forEach(([key, value]) => {
@@ -109,10 +109,10 @@ const SearchPage = () => {
       {activeTab === 'discussions' && (
         <>
           <div className="mb-3 flex flex-col gap-4 rounded-lg">
-            <DiscussionSearchBar currentFilters={filters} onFilterChange={applyFilters} onReset={resetAllFilters} />
+            <DiscussionFilters currentFilters={filters} onFilterChange={applyFilters} onReset={resetAllFilters} />
           </div>
 
-          <DiscussionPost search={filters} />
+          <DiscussionFeed search={filters} />
         </>
       )}
 

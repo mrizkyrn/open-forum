@@ -11,7 +11,7 @@ import FeedbackDisplay from '@/shared/components/feedback/FeedbackDisplay';
 import LoadingIndicator from '@/shared/components/feedback/LoadingIndicator';
 import MainButton from '@/shared/components/ui/buttons/MainButton';
 import { useDebounce } from '@/shared/hooks/useDebounce';
-import { SortOrder } from '@/shared/types/SearchTypes';
+import { SortOrder } from '@/shared/types/RequestTypes';
 
 const SPACES_PER_PAGE = 6;
 const SEARCH_DEBOUNCE_DELAY = 500;

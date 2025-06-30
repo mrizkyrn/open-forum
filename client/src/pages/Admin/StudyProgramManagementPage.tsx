@@ -6,14 +6,10 @@ import { toast } from 'react-toastify';
 
 import { academicApi } from '@/features/academic/services';
 import { StudyProgram, StudyProgramSortBy } from '@/features/academic/types';
-import { DataTable } from '@/features/admin/components/DataTable';
-import FilterBar from '@/features/admin/components/FilterBar';
-import PageHeader from '@/features/admin/components/PageHeader';
-import Pagination from '@/features/admin/components/Pagination';
-import SelectFilter from '@/features/admin/components/SelectFilter';
+import { DataTable, FilterBar, PageHeader, Pagination, SelectFilter } from '@/features/admin/components';
 import { adminApi } from '@/features/admin/services';
 import { useDebounce } from '@/shared/hooks/useDebounce';
-import { SortOrder } from '@/shared/types/SearchTypes';
+import { SortOrder } from '@/shared/types/RequestTypes';
 
 const EDUCATION_LEVELS = [
   { label: 'S1', value: 'S1' },

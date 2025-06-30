@@ -26,9 +26,9 @@ const AdminLayout = () => {
   const location = useLocation();
   const queryClient = useQueryClient();
 
-  const { data: reportStats } = useQuery({
-    queryKey: ['reportStats'],
-    queryFn: reportApi.getReportStats,
+  const { data: ReportStatsResponse } = useQuery({
+    queryKey: ['ReportStatsResponse'],
+    queryFn: reportApi.getReportStatsResponse,
     enabled: isAuthenticated && user?.role === UserRole.ADMIN,
   });
 
@@ -39,7 +39,7 @@ const AdminLayout = () => {
     { icon: <BookOpen size={20} />, label: 'Study Programs', path: '/admin/study-programs' },
     { icon: <MessagesSquare size={18} />, label: 'Discussions', path: '/admin/discussions' },
     { icon: <FolderKanban size={18} />, label: 'Spaces', path: '/admin/spaces' },
-    { icon: <Flag size={18} />, label: 'Reports', path: '/admin/reports', badgeCount: reportStats?.pending },
+    { icon: <Flag size={18} />, label: 'Reports', path: '/admin/reports', badgeCount: ReportStatsResponse?.pending },
   ];
 
   const handleNavigation = (path: string) => {

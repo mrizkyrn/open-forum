@@ -1,17 +1,19 @@
-import { ReportStatus } from '@/features/reports/types';
-import { CreateSpaceDto, Space, UpdateSpaceDto } from '@/features/spaces/types';
-import { CreateUserDto, UpdateUserDto, User, UserRole } from '@/features/users/types';
+import { HandleReportRequest, Report } from '@/features/reports/types';
+import { CreateSpaceRequest, Space, UpdateSpaceRequest } from '@/features/spaces/types';
+import { CreateUserRequest, UpdateUserRequest, User } from '@/features/users/types';
 import { apiClient } from '@/shared/services/client';
 import { ApiResponse } from '@/shared/types/ResponseTypes';
 import { handleApiError } from '@/utils/helpers';
 import { ActivityData, ActivityDataParams, DashboardStats, StatsParams } from '../types';
 
 export const adminApi = {
+  // ===== DASHBOARD OPERATIONS =====
+
   async getDashboardStats(params: StatsParams): Promise<DashboardStats> {
     try {
       const response = await apiClient.get<ApiResponse<DashboardStats>>('/admin/dashboard', { params });
       return response.data.data;
-    } catch (error: any) {
+    } catch (error) {
       throw handleApiError(error, 'Failed to fetch dashboard stats');
     }
   },
@@ -20,25 +22,27 @@ export const adminApi = {
     try {
       const response = await apiClient.get<ApiResponse<ActivityData>>('/admin/dashboard/activity', { params });
       return response.data.data;
-    } catch (error: any) {
+    } catch (error) {
       throw handleApiError(error, 'Failed to fetch activity data');
     }
   },
 
-  async createUser(userData: CreateUserDto): Promise<User> {
+  // ===== USER OPERATIONS =====
+
+  async createUser(userData: CreateUserRequest): Promise<User> {
     try {
       const response = await apiClient.post<ApiResponse<User>>('/admin/users', userData);
       return response.data.data;
-    } catch (error: any) {
+    } catch (error) {
       throw handleApiError(error, 'Failed to create user');
     }
   },
 
-  async updateUser(id: number, userData: UpdateUserDto): Promise<User> {
+  async updateUser(id: number, userData: UpdateUserRequest): Promise<User> {
     try {
       const response = await apiClient.put<ApiResponse<User>>(`/admin/users/${id}`, userData);
       return response.data.data;
-    } catch (error: any) {
+    } catch (error) {
       throw handleApiError(error, 'Failed to update user');
     }
   },
@@ -46,58 +50,37 @@ export const adminApi = {
   async deleteUser(id: number): Promise<void> {
     try {
       await apiClient.delete<ApiResponse<void>>(`/admin/users/${id}`);
-    } catch (error: any) {
+    } catch (error) {
       throw handleApiError(error, 'Failed to delete user');
     }
   },
 
-  async changeUserRole(id: number, role: UserRole): Promise<User> {
-    try {
-      const response = await apiClient.put<ApiResponse<User>>(`/admin/users/${id}/role`, { role });
-      return response.data.data;
-    } catch (error: any) {
-      throw handleApiError(error, 'Failed to change user role');
-    }
-  },
+  // ===== SPACE OPERATIONS =====
 
-  async getUserActivity(id: number, days: number = 30): Promise<any> {
+  async createSpace(data: CreateSpaceRequest): Promise<Space> {
     try {
-      const response = await apiClient.get<ApiResponse<any>>(`/admin/users/${id}/activity`, {
-        params: { days },
-      });
-      return response.data.data;
-    } catch (error: any) {
-      return handleApiError(error, 'Failed to fetch user activity');
-    }
-  },
-
-  async createSpace(data: CreateSpaceDto): Promise<Space> {
-    try {
-      // Always use FormData for consistency with file uploads
       const formData = new FormData();
 
-      // Append basic space information
+      // Required fields
       formData.append('name', data.name.trim());
       formData.append('slug', data.slug.trim());
       formData.append('spaceType', data.spaceType);
 
+      // Optional fields
       if (data.facultyId) {
         formData.append('facultyId', data.facultyId.toString());
       }
-
       if (data.studyProgramId) {
         formData.append('studyProgramId', data.studyProgramId.toString());
       }
-
       if (data.description) {
         formData.append('description', data.description.trim());
       }
 
-      // Append files if they exist
+      // File uploads
       if (data.icon instanceof File) {
         formData.append('icon', data.icon);
       }
-
       if (data.banner instanceof File) {
         formData.append('banner', data.banner);
       }
@@ -107,12 +90,12 @@ export const adminApi = {
       });
 
       return response.data.data;
-    } catch (error: any) {
+    } catch (error) {
       throw handleApiError(error, 'Failed to create space');
     }
   },
 
-  async updateSpace(spaceId: number, data: UpdateSpaceDto): Promise<Space> {
+  async updateSpace(spaceId: number, data: UpdateSpaceRequest): Promise<Space> {
     try {
       const formData = new FormData();
 
@@ -120,41 +103,34 @@ export const adminApi = {
       if (data.name !== undefined) {
         formData.append('name', data.name.trim());
       }
-
       if (data.slug !== undefined) {
         formData.append('slug', data.slug.trim());
       }
-
       if (data.description !== undefined) {
         formData.append('description', data.description.trim());
       }
-
       if (data.spaceType !== undefined) {
         formData.append('spaceType', data.spaceType);
       }
-
       if (data.facultyId !== undefined) {
         formData.append('facultyId', data.facultyId?.toString() || '');
       }
-
       if (data.studyProgramId !== undefined) {
         formData.append('studyProgramId', data.studyProgramId?.toString() || '');
       }
 
-      // Append files if they exist
+      // File uploads
       if (data.icon instanceof File) {
         formData.append('icon', data.icon);
       }
-
       if (data.banner instanceof File) {
         formData.append('banner', data.banner);
       }
 
-      // If icon or banner should be removed, send a special flag
+      // File removal flags
       if (data.removeIcon) {
         formData.append('removeIcon', 'true');
       }
-
       if (data.removeBanner) {
         formData.append('removeBanner', 'true');
       }
@@ -164,7 +140,7 @@ export const adminApi = {
       });
 
       return response.data.data;
-    } catch (error: any) {
+    } catch (error) {
       throw handleApiError(error, 'Failed to update space');
     }
   },
@@ -172,32 +148,28 @@ export const adminApi = {
   async deleteSpace(spaceId: number): Promise<void> {
     try {
       await apiClient.delete<ApiResponse<void>>(`/admin/spaces/${spaceId}`);
-    } catch (error: any) {
+    } catch (error) {
       throw handleApiError(error, 'Failed to delete space');
     }
   },
 
-  async handleReport(
-    id: number,
-    data: {
-      status: ReportStatus;
-      deleteContent: boolean;
-      note?: string;
-      notifyReporter?: boolean;
-      notifyAuthor?: boolean;
-    },
-  ): Promise<void> {
+  // ===== REPORT OPERATIONS =====
+
+  async handleReport(id: number, data: HandleReportRequest): Promise<Report> {
     try {
-      await apiClient.post<ApiResponse<void>>(`/admin/reports/${id}/handle`, data);
-    } catch (error: any) {
+      const response = await apiClient.post<ApiResponse<Report>>(`/admin/reports/${id}/handle`, data);
+      return response.data.data;
+    } catch (error) {
       throw handleApiError(error, 'Failed to update report status');
     }
   },
 
+  // ===== ACADEMIC OPERATIONS =====
+
   async syncFaculties(): Promise<void> {
     try {
       await apiClient.post<ApiResponse<void>>('/admin/academic/sync-faculties');
-    } catch (error: any) {
+    } catch (error) {
       throw handleApiError(error, 'Failed to sync faculties');
     }
   },
@@ -205,7 +177,7 @@ export const adminApi = {
   async syncStudyPrograms(): Promise<void> {
     try {
       await apiClient.post<ApiResponse<void>>('/admin/academic/sync-study-programs');
-    } catch (error: any) {
+    } catch (error) {
       throw handleApiError(error, 'Failed to sync study programs');
     }
   },

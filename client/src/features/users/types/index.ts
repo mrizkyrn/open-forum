@@ -1,10 +1,7 @@
 import { Faculty, StudyProgram } from '@/features/academic/types';
+import { BaseQueryParams } from '@/shared/types/RequestTypes';
 
-export enum UserRole {
-  ADMIN = 'admin',
-  STUDENT = 'student',
-  LECTURER = 'lecturer',
-}
+// ===== CORE ENTITIES =====
 
 export interface User {
   id: number;
@@ -37,6 +34,35 @@ export interface UserDetail {
   updatedAt: Date;
 }
 
+// ===== REQUEST TYPES =====
+
+export interface CreateUserRequest {
+  username: string;
+  password: string;
+  fullName: string;
+  role: UserRole;
+}
+
+export interface UpdateUserRequest {
+  fullName?: string;
+  role?: UserRole;
+}
+
+// ===== QUERY PARAMETERS =====
+
+export interface SearchUserParams extends BaseQueryParams {
+  role?: UserRole;
+  sortBy?: UserSortBy;
+}
+
+// ===== ENUMS =====
+
+export enum UserRole {
+  ADMIN = 'admin',
+  STUDENT = 'student',
+  LECTURER = 'lecturer',
+}
+
 export enum UserSortBy {
   createdAt = 'createdAt',
   updatedAt = 'updatedAt',
@@ -49,25 +75,4 @@ export enum UserSortBy {
 export enum SortOrder {
   ASC = 'ASC',
   DESC = 'DESC',
-}
-
-export interface SearchUserParams {
-  page: number;
-  limit: number;
-  search?: string;
-  sortOrder?: SortOrder;
-  role?: UserRole;
-  sortBy?: UserSortBy;
-}
-
-export interface CreateUserDto {
-  username: string;
-  password: string;
-  fullName: string;
-  role: UserRole;
-}
-
-export interface UpdateUserDto {
-  fullName?: string;
-  role?: UserRole;
 }

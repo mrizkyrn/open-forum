@@ -2,7 +2,9 @@ import { useQuery } from '@tanstack/react-query';
 import { ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
-import PopularTopicItem, { PopularTopicItemSkeleton } from '@/features/discussions/components/PopularTopicItem';
+import PopularTopicItem, {
+  PopularTopicItemSkeleton,
+} from '@/features/discussions/components/displays/PopularTopicItem';
 import { discussionApi } from '@/features/discussions/services';
 import SuggestedSpace, { SuggestedSpaceSkeleton } from '@/features/spaces/components/SugestedSpace';
 import { useSpaceFollow } from '@/features/spaces/hooks/useSpaceFollow';

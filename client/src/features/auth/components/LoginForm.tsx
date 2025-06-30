@@ -1,22 +1,23 @@
-import { useAuth } from '@/features/auth/hooks/useAuth';
-import { LoginRequest } from '@/features/auth/types';
-import { UserRole } from '@/features/users/types';
-import MainButton from '@/shared/components/ui/buttons/MainButton';
 import { Eye, EyeOff } from 'lucide-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const LoginForm: React.FC = () => {
-  const navigate = useNavigate();
-  const { login, isLoading, error } = useAuth();
-  const [showPassword, setShowPassword] = useState(false);
+import { useAuth } from '@/features/auth/hooks/useAuth';
+import { LoginRequest } from '@/features/auth/types';
+import { UserRole } from '@/features/users/types';
+import MainButton from '@/shared/components/ui/buttons/MainButton';
 
+const LoginForm: React.FC = () => {
+  const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState<LoginRequest>({
     username: '',
     password: '',
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const navigate = useNavigate();
+  const { login, isLoading, error } = useAuth();
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -87,7 +88,7 @@ const LoginForm: React.FC = () => {
             id="username"
             name="username"
             value={formData.username}
-            onChange={handleChange}
+            onChange={handleInputChange}
             className="focus:ring-primary-dark w-full rounded-lg border border-gray-300 px-4 py-3 focus:ring-1 focus:outline-none"
             placeholder="Type here"
             required
@@ -103,7 +104,7 @@ const LoginForm: React.FC = () => {
               id="password"
               name="password"
               value={formData.password}
-              onChange={handleChange}
+              onChange={handleInputChange}
               className="focus:ring-primary-dark w-full rounded-lg border border-gray-300 px-4 py-3 focus:ring-1 focus:outline-none"
               placeholder="Type here"
               required

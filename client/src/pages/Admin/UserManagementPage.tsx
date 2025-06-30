@@ -4,12 +4,7 @@ import { Edit, MoreHorizontal, Trash2, UserCheck, Users } from 'lucide-react';
 import { useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 
-import { DataTable } from '@/features/admin/components/DataTable';
-import FilterBar from '@/features/admin/components/FilterBar';
-import PageHeader from '@/features/admin/components/PageHeader';
-import Pagination from '@/features/admin/components/Pagination';
-import SelectFilter from '@/features/admin/components/SelectFilter';
-import StatusBadge from '@/features/admin/components/StatusBadge';
+import { DataTable, FilterBar, PageHeader, Pagination, SelectFilter, StatusBadge } from '@/features/admin/components';
 import { adminApi } from '@/features/admin/services';
 import UserAvatar from '@/features/users/components/UserAvatar';
 import UserFormModal from '@/features/users/components/UserFormModal';

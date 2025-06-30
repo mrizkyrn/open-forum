@@ -1,8 +1,9 @@
+import { Users } from 'lucide-react';
+import { Link } from 'react-router-dom';
+
 import { Space, SpaceType } from '@/features/spaces/types';
 import MainButton from '@/shared/components/ui/buttons/MainButton';
 import { getFileUrl } from '@/utils/helpers';
-import { Users } from 'lucide-react';
-import { Link } from 'react-router-dom';
 
 interface SpaceListItemProps {
   space: Space;
@@ -11,7 +12,7 @@ interface SpaceListItemProps {
   followingMap: Record<number, boolean>;
 }
 
-const SpaceListItem: React.FC<SpaceListItemProps> = ({ space, onFollowToggle, isFollowLoading, followingMap }) => {
+const SpaceListItem = ({ space, onFollowToggle, isFollowLoading, followingMap }: SpaceListItemProps) => {
   const colors: Record<SpaceType, { bg: string; text: string }> = {
     [SpaceType.ACADEMIC]: { bg: 'bg-blue-100', text: 'text-blue-700' },
     [SpaceType.FACULTY]: { bg: 'bg-purple-100', text: 'text-purple-700' },

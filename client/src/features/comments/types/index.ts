@@ -1,7 +1,9 @@
 import { User } from '@/features/users/types';
 import { VoteValue } from '@/features/votes/services/voteApi';
 import { Attachment } from '@/shared/types/AttachmentTypes';
-import { SearchDto } from '@/shared/types/SearchTypes';
+import { BaseQueryParams } from '@/shared/types/RequestTypes';
+
+// ===== CORE ENTITIES =====
 
 export interface Comment {
   id: number;
@@ -21,24 +23,31 @@ export interface Comment {
   isDeleted?: boolean;
 }
 
-export interface CreateCommentDto {
+// ===== REQUEST TYPES =====
+
+export interface CreateCommentRequest {
   content: string;
-  discussionId: number;
   parentId?: number | null;
+  files?: File[];
 }
 
-export interface UpdateCommentDto {
+export interface UpdateCommentRequest {
   content: string;
   attachmentsToRemove: number[];
+  files?: File[];
 }
+
+// ===== QUERY PARAMETERS =====
+
+export interface CommentQueryParams extends BaseQueryParams {
+  sortBy?: CommentSortBy;
+}
+
+// ===== ENUMS =====
 
 export enum CommentSortBy {
   createdAt = 'createdAt',
   updatedAt = 'updatedAt',
   upvoteCount = 'upvoteCount',
   replyCount = 'replyCount',
-}
-
-export interface SearchCommentDto extends SearchDto {
-  sortBy: CommentSortBy;
 }

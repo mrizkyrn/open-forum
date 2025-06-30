@@ -1,3 +1,2 @@
-export * from './AuthRequestTypes';
-export * from './AuthResponseTypes';
+export * from './AuthTypes';
 export * from './AuthContextTypes';

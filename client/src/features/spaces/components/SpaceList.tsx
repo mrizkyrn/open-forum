@@ -12,14 +12,14 @@ interface SpacesListProps {
   searchTerm?: string;
 }
 
-const SpacesList: React.FC<SpacesListProps> = ({
+const SpacesList = ({
   spaces,
   viewMode,
   onFollowToggle,
   isFollowLoading,
   followingMap,
   searchTerm,
-}) => {
+}: SpacesListProps) => {
   if (spaces.length === 0) {
     return (
       <FeedbackDisplay

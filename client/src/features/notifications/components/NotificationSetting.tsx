@@ -1,12 +1,11 @@
 import { usePushNotifications } from '@/features/notifications/hooks/usePushNotifications';
 import { Bell, BellOff, Loader2 } from 'lucide-react';
-import React from 'react';
 
 interface NotificationSettingsProps {
   className?: string;
 }
 
-const NotificationSettings: React.FC<NotificationSettingsProps> = ({ className }) => {
+const NotificationSettings = ({ className }: NotificationSettingsProps) => {
   const { isSupported, permission, subscription, subscribe, unsubscribe, loading } = usePushNotifications();
 
   if (!isSupported) {

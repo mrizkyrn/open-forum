@@ -1,9 +1,8 @@
-import { SearchUserParams, User, UserDetail } from '@/features/users/types';
 import { apiClient } from '@/shared/services/client';
 import { ApiResponse, PaginatedResponse } from '@/shared/types/ResponseTypes';
 import { handleApiError } from '@/utils/helpers';
+import { SearchUserParams, User, UserDetail } from '../types';
 
-// User API service with comprehensive error handling
 export const userApi = {
   async getUsers(params: SearchUserParams): Promise<PaginatedResponse<User>> {
     try {
@@ -11,8 +10,17 @@ export const userApi = {
         params,
       });
       return response.data.data;
-    } catch (error: any) {
+    } catch (error) {
       return handleApiError(error, 'Failed to fetch users');
+    }
+  },
+
+  async getCurrentUser(): Promise<UserDetail> {
+    try {
+      const response = await apiClient.get<ApiResponse<UserDetail>>('/users/me');
+      return response.data.data;
+    } catch (error) {
+      return handleApiError(error, 'Failed to fetch current user profile');
     }
   },
 
@@ -20,7 +28,7 @@ export const userApi = {
     try {
       const response = await apiClient.get<ApiResponse<User>>(`/users/${id}`);
       return response.data.data;
-    } catch (error: any) {
+    } catch (error) {
       return handleApiError(error, 'Failed to fetch user details');
     }
   },
@@ -29,17 +37,8 @@ export const userApi = {
     try {
       const response = await apiClient.get<ApiResponse<UserDetail>>(`/users/username/${username}`);
       return response.data.data;
-    } catch (error: any) {
+    } catch (error) {
       return handleApiError(error, 'Failed to fetch user by username');
-    }
-  },
-
-  async getCurrentUser(): Promise<UserDetail> {
-    try {
-      const response = await apiClient.get<ApiResponse<UserDetail>>('/users/me');
-      return response.data.data;
-    } catch (error: any) {
-      return handleApiError(error, 'Failed to fetch current user profile');
     }
   },
 
@@ -54,7 +53,7 @@ export const userApi = {
         },
       });
       return response.data.data;
-    } catch (error: any) {
+    } catch (error) {
       throw handleApiError(error, 'Failed to upload avatar');
     }
   },
@@ -63,7 +62,7 @@ export const userApi = {
     try {
       const response = await apiClient.delete<ApiResponse<User>>('/users/me/avatar');
       return response.data.data;
-    } catch (error: any) {
+    } catch (error) {
       throw handleApiError(error, 'Failed to remove avatar');
     }
   },

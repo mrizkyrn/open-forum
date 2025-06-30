@@ -1,12 +1,13 @@
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { Loader2, UserCheck } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+
 import { adminApi } from '@/features/admin/services';
 import { User, UserRole } from '@/features/users/types';
 import { ModalBody, ModalFooter, ModalHeader } from '@/shared/components/modals/Modal';
 import Modal from '@/shared/components/modals/Modal/Modal';
 import MainButton from '@/shared/components/ui/buttons/MainButton';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Loader2, UserCheck } from 'lucide-react';
-import { useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
 
 interface UserFormModalProps {
   isOpen: boolean;
@@ -14,10 +15,8 @@ interface UserFormModalProps {
   user: User | null;
 }
 
-const UserFormModal: React.FC<UserFormModalProps> = ({ isOpen, onClose, user }) => {
-  const queryClient = useQueryClient();
-  const isEditMode = !!user;
-
+const UserFormModal = ({ isOpen, onClose, user }: UserFormModalProps) => {
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [formData, setFormData] = useState({
     username: '',
     fullName: '',
@@ -25,8 +24,10 @@ const UserFormModal: React.FC<UserFormModalProps> = ({ isOpen, onClose, user }) 
     confirmPassword: '',
     role: UserRole.STUDENT,
   });
+  
+  const queryClient = useQueryClient();
+  const isEditMode = !!user;
 
-  const [errors, setErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
     if (user) {

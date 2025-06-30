@@ -1,5 +1,7 @@
 import { User } from '@/features/users/types';
-import { SearchDto } from '@/shared/types/SearchTypes';
+import { BaseQueryParams } from '@/shared/types/RequestTypes';
+
+// ===== CORE ENTITIES =====
 
 export interface Report {
   id: number;
@@ -23,12 +25,50 @@ export interface Report {
   reviewedAt: string | null;
 }
 
-export interface CretaReportDto {
+export interface ReportReason {
+  id: number;
+  name: string;
+  description: string;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// ===== REQUEST TYPES =====
+
+export interface CreateReportRequest {
   targetType: ReportTargetType;
   targetId: number;
   reasonId: number;
   description?: string;
 }
+
+export interface HandleReportRequest {
+  status: ReportStatus;
+  deleteContent: boolean;
+  note?: string;
+  notifyReporter?: boolean;
+  notifyAuthor?: boolean;
+}
+
+// ===== RESPONSE TYPES =====
+
+export interface ReportStatsResponse {
+  total: number;
+  pending: number;
+  resolved: number;
+  dismissed: number;
+}
+
+// ===== QUERY PARAMETERS =====
+
+export interface ReportQueryParams extends BaseQueryParams {
+  status?: ReportStatus;
+  targetType?: ReportTargetType;
+  sortBy?: ReportSortBy;
+}
+
+// ===== ENUMS =====
 
 export enum ReportTargetType {
   DISCUSSION = 'discussion',
@@ -41,23 +81,8 @@ export enum ReportStatus {
   DISMISSED = 'dismissed',
 }
 
-export interface ReportReason {
-  id: number;
-  name: string;
-  description: string;
-  isActive: boolean;
-  createdAt: string;
-  updatedAt: string;
-}
-
 export enum ReportSortBy {
   createdAt = 'createdAt',
   updatedAt = 'updatedAt',
   reviewedAt = 'reviewedAt',
-}
-
-export interface SearchReportDto extends SearchDto {
-  status?: ReportStatus;
-  targetType?: ReportTargetType;
-  sortBy?: ReportSortBy;
 }

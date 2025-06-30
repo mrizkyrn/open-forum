@@ -1,5 +1,3 @@
-import { Notification, NotificationType } from '@/features/notifications/types';
-import UserAvatar from '@/features/users/components/UserAvatar';
 import { formatDistanceToNow } from 'date-fns';
 import {
   AlertTriangle,
@@ -14,7 +12,9 @@ import {
   ThumbsUp,
   Trash2,
 } from 'lucide-react';
-import React from 'react';
+
+import { Notification, NotificationType } from '@/features/notifications/types';
+import UserAvatar from '@/features/users/components/UserAvatar';
 
 interface NotificationItemProps {
   notification: Notification;
@@ -26,7 +26,7 @@ interface NotificationItemProps {
   isMarkingAsRead?: boolean;
 }
 
-const NotificationItem: React.FC<NotificationItemProps> = ({
+const NotificationItem = ({
   notification,
   isNew = false,
   onRead,
@@ -34,7 +34,7 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
   onClick,
   isDeleting = false,
   isMarkingAsRead = false,
-}) => {
+}: NotificationItemProps) => {
   const isReportNotification = notification.type === NotificationType.REPORT_REVIEWED;
 
   // Determine the highlight color based on notification type and status
@@ -90,9 +90,7 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
             )}
 
             <div className="mt-1 flex items-center gap-2">
-              <span className="text-xs text-gray-500">
-                {formatDistanceToNow(new Date(notification.createdAt))}
-              </span>
+              <span className="text-xs text-gray-500">{formatDistanceToNow(new Date(notification.createdAt))}</span>
 
               {/* Report status badge */}
               {isReportNotification && notification.data?.status && (
@@ -121,7 +119,6 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
                   </span>
                 </>
               )}
-
             </div>
           </div>
         </div>

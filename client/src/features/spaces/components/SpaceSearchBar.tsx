@@ -1,8 +1,9 @@
+import { BookOpen, Building, Clock, Grid, Landmark, List, School, SortAsc, Tag, UserCheck } from 'lucide-react';
+
+import { SpaceSortBy, SpaceType } from '@/features/spaces/types';
 import SortButton from '@/shared/components/ui/buttons/SortButton';
 import SearchInput from '@/shared/components/ui/inputs/SearchInput';
-import { SpaceSortBy, SpaceType } from '@/features/spaces/types';
-import { SortOrder } from '@/shared/types/SearchTypes';
-import { BookOpen, Building, Clock, Grid, Landmark, List, School, SortAsc, Tag, UserCheck } from 'lucide-react';
+import { SortOrder } from '@/shared/types/RequestTypes';
 
 interface SpaceSearchBarProps {
   searchTerm: string;
@@ -17,7 +18,7 @@ interface SpaceSearchBarProps {
   onTypeFilterChange: (type: SpaceType | null) => void;
 }
 
-const SpaceSearchBar: React.FC<SpaceSearchBarProps> = ({
+const SpaceSearchBar = ({
   searchTerm,
   onSearchChange,
   sortBy,
@@ -28,7 +29,7 @@ const SpaceSearchBar: React.FC<SpaceSearchBarProps> = ({
   onViewModeChange,
   selectedType,
   onTypeFilterChange,
-}) => {
+}: SpaceSearchBarProps) => {
   // Handle sort change with direction toggle
   const handleSortChange = (newSortBy: SpaceSortBy) => {
     if (sortBy === newSortBy) {
@@ -72,7 +73,7 @@ const SpaceSearchBar: React.FC<SpaceSearchBarProps> = ({
           <button
             onClick={() => onViewModeChange('grid')}
             className={`flex h-full items-center justify-center rounded-l-md px-2 text-xs sm:px-3 ${
-              viewMode === 'grid' ? 'bg-gray-100 text-gray-800' : 'text-gray-500 bg-white'
+              viewMode === 'grid' ? 'bg-gray-100 text-gray-800' : 'bg-white text-gray-500'
             }`}
             aria-label="Grid view"
             title="Grid view"
@@ -82,7 +83,7 @@ const SpaceSearchBar: React.FC<SpaceSearchBarProps> = ({
           <button
             onClick={() => onViewModeChange('list')}
             className={`flex h-full items-center justify-center rounded-r-md px-2 text-xs sm:px-3 ${
-              viewMode === 'list' ? 'bg-gray-100 text-gray-800' : 'text-gray-500 bg-white'
+              viewMode === 'list' ? 'bg-gray-100 text-gray-800' : 'bg-white text-gray-500'
             }`}
             aria-label="List view"
             title="List view"
@@ -132,21 +133,21 @@ const SpaceSearchBar: React.FC<SpaceSearchBarProps> = ({
       {/* Type filter - new row */}
       <div className="flex flex-wrap items-center gap-1.5">
         <span className="text-xs text-gray-400">Type:</span>
-        
+
         <div className="flex flex-wrap items-center gap-1">
           {/* All types (reset) button */}
           <button
             onClick={() => onTypeFilterChange(null)}
             className={`flex items-center gap-1 rounded-md px-2 py-1 text-xs ${
               selectedType === null || selectedType === undefined
-                ? 'bg-gray-100 text-gray-800 font-medium'
-                : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'
+                ? 'bg-gray-100 font-medium text-gray-800'
+                : 'border border-gray-200 bg-white text-gray-600 hover:bg-gray-50'
             }`}
           >
             <Tag size={14} />
             <span>All</span>
           </button>
-          
+
           {/* Type filter buttons */}
           {Object.values(SpaceType).map((type) => (
             <button
@@ -154,8 +155,8 @@ const SpaceSearchBar: React.FC<SpaceSearchBarProps> = ({
               onClick={() => onTypeFilterChange(type)}
               className={`flex items-center gap-1 rounded-md px-2 py-1 text-xs ${
                 selectedType === type
-                  ? 'bg-gray-100 text-gray-800 font-medium'
-                  : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'
+                  ? 'bg-gray-100 font-medium text-gray-800'
+                  : 'border border-gray-200 bg-white text-gray-600 hover:bg-gray-50'
               }`}
             >
               {typeIcons[type]}

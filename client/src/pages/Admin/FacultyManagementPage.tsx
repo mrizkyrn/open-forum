@@ -5,10 +5,7 @@ import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import { academicApi } from '@/features/academic/services';
-import { DataTable } from '@/features/admin/components/DataTable';
-import FilterBar from '@/features/admin/components/FilterBar';
-import PageHeader from '@/features/admin/components/PageHeader';
-import Pagination from '@/features/admin/components/Pagination';
+import { DataTable, FilterBar, PageHeader, Pagination } from '@/features/admin/components';
 import { adminApi } from '@/features/admin/services';
 import { useDebounce } from '@/shared/hooks/useDebounce';
 

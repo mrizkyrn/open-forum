@@ -5,11 +5,7 @@ import { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-import { DataTable } from '@/features/admin/components/DataTable';
-import FilterBar from '@/features/admin/components/FilterBar';
-import PageHeader from '@/features/admin/components/PageHeader';
-import Pagination from '@/features/admin/components/Pagination';
-import SelectFilter from '@/features/admin/components/SelectFilter';
+import { DataTable, FilterBar, PageHeader, Pagination, SelectFilter } from '@/features/admin/components';
 import { useDiscussions } from '@/features/discussions/hooks/useDiscussions';
 import { discussionApi } from '@/features/discussions/services';
 import { Discussion } from '@/features/discussions/types';
@@ -24,7 +20,7 @@ const DiscussionManagementPage = () => {
   const [isDeleting, setIsDeleting] = useState(false);
   const [selectedDiscussion, setSelectedDiscussion] = useState<Discussion | null>(null);
   const [activeDropdownId, setActiveDropdownId] = useState<number | null>(null);
-  
+
   const dropdownRef = useRef<HTMLDivElement>(null);
   const queryClient = useQueryClient();
   const { spaces } = useSpaces();

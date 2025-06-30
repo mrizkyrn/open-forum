@@ -1,6 +1,8 @@
 import { User } from '@/features/users/types';
 import { Attachment } from '@/shared/types/AttachmentTypes';
-import { SearchDto } from '@/shared/types/SearchTypes';
+import { BaseQueryParams } from '@/shared/types/RequestTypes';
+
+// ===== CORE ENTITIES =====
 
 export interface Discussion {
   id: number;
@@ -24,7 +26,9 @@ export interface Discussion {
   voteStatus?: number | null;
 }
 
-export interface CreateDiscussionDto {
+// ===== REQUEST TYPES =====
+
+export interface CreateDiscussionRequest {
   content: string;
   isAnonymous: boolean;
   tags: string[];
@@ -32,7 +36,7 @@ export interface CreateDiscussionDto {
   spaceId: number;
 }
 
-export interface UpdateDiscussionDto {
+export interface UpdateDiscussionRequest {
   content?: string;
   isAnonymous?: boolean;
   tags?: string[];
@@ -40,18 +44,29 @@ export interface UpdateDiscussionDto {
   attachmentsToRemove: number[];
 }
 
-export enum DiscussionSortBy {
-  createdAt = 'createdAt',
-  updatedAt = 'updatedAt',
-  commentCount = 'commentCount',
-  voteCount = 'voteCount',
+// ===== RESPONSE TYPES =====
+
+export interface PopularTagsResponse {
+  tag: string;
+  count: number;
 }
 
-export interface SearchDiscussionDto extends SearchDto {
+// ===== QUERY PARAMETERS =====
+
+export interface DiscussionQueryParams extends BaseQueryParams {
   tags?: string[];
   sortBy?: DiscussionSortBy;
   authorId?: number;
   isAnonymous?: boolean;
   spaceId?: number;
   onlyFollowedSpaces?: boolean;
+}
+
+// ===== ENUMS =====
+
+export enum DiscussionSortBy {
+  createdAt = 'createdAt',
+  updatedAt = 'updatedAt',
+  commentCount = 'commentCount',
+  voteCount = 'voteCount',
 }

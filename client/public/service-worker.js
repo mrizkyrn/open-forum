@@ -7,7 +7,6 @@ self.addEventListener('push', function (event) {
 
   try {
     const payload = event.data.json();
-    console.log('Push event received:', payload);
 
     const notificationOptions = {
       body: payload.body,

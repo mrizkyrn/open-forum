@@ -1,11 +1,11 @@
 import { discussionApi } from '@/features/discussions/services';
-import { DiscussionSortBy, SearchDiscussionDto } from '@/features/discussions/types';
-import { SortOrder } from '@/shared/types/SearchTypes';
+import { DiscussionQueryParams, DiscussionSortBy } from '@/features/discussions/types';
+import { SortOrder } from '@/shared/types/RequestTypes';
 import { useInfiniteQuery } from '@tanstack/react-query';
 
 export type DiscussionFeedType = 'regular' | 'bookmarked';
 
-export interface UseInfiniteDiscussionsOptions extends Partial<SearchDiscussionDto> {
+export interface UseInfiniteDiscussionsOptions extends Partial<DiscussionQueryParams> {
   feedType?: DiscussionFeedType;
 }
 
@@ -30,7 +30,7 @@ export function useInfiniteDiscussions(options: UseInfiniteDiscussionsOptions = 
       { limit, tags, spaceId, search, sortBy, sortOrder, authorId, isAnonymous, onlyFollowedSpaces },
     ],
     queryFn: async ({ pageParam = 1 }) => {
-      const params: SearchDiscussionDto = {
+      const params: DiscussionQueryParams = {
         page: pageParam,
         limit,
         tags,

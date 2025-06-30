@@ -21,9 +21,6 @@ const queryClient = new QueryClient({
 if ('serviceWorker' in navigator) {
   pushNotificationService
     .registerServiceWorker()
-    .then((registration) => {
-      console.log('Service Worker registered successfully:', registration);
-    })
     .catch((error) => {
       console.error('Service Worker registration failed:', error);
     });
