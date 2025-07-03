@@ -3,12 +3,16 @@ import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { Request, Response } from 'express';
 import { AppModule } from './app.module';
 import { ExceptionsFilter } from './common/filters/execption.filter';
 import { TransformInterceptor } from './common/interceptors/transform.interceptor';
+import { createWinstonLogger } from './core/winston/winston.config';
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
+    logger: createWinstonLogger(process.env.NODE_ENV === 'development'),
+  });
   const configService = app.get(ConfigService);
 
   // Add global validation pipe
@@ -31,6 +35,11 @@ async function bootstrap() {
   app.enableCors({
     origin: configService.get('app.cors.origin'),
     credentials: configService.get('app.cors.credentials'),
+  });
+
+  // Simple health check endpoint
+  app.getHttpAdapter().get('/health', (req: Request, res: Response) => {
+    res.status(200).json({ status: 'ok', timestamp: new Date().toISOString(), uptime: process.uptime() });
   });
 
   // API prefix

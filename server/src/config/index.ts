@@ -10,3 +10,5 @@ export * from './externalApi/external-api-config.type';
 export * from './externalApi/external-api.config';
 export * from './push/push-config.type';
 export * from './push/push.config';
+export * from './logger/logger-config.type';
+export * from './logger/logger.config';

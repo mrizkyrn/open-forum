@@ -59,6 +59,10 @@ export class AuthService {
         ...tokens,
       };
     } catch (error) {
+      if (error instanceof UnauthorizedException) {
+        throw error;
+      }
+
       this.logger.error(`External authentication failed: ${error.message}`);
       throw new UnauthorizedException('Incorrect username or password');
     }
@@ -114,6 +118,31 @@ export class AuthService {
         role: UserRole.STUDENT,
       });
     } catch (error) {
+      if (error.code === 'ENOTFOUND') {
+        this.logger.error(
+          `External API DNS resolution failed for ${this.apiConfig.baseUrl}: ${error.message}`,
+          error.stack,
+        );
+        throw new UnauthorizedException(
+          'Authentication service is currently unavailable. Please try again later or contact support.',
+        );
+      }
+
+      if (error.code === 'ECONNREFUSED') {
+        this.logger.error(`External API connection refused: ${error.message}`, error.stack);
+        throw new UnauthorizedException('Authentication service is not responding. Please try again later.');
+      }
+
+      if (error.code === 'ETIMEDOUT' || error.name === 'TimeoutError') {
+        this.logger.error(`External API timeout: ${error.message}`, error.stack);
+        throw new UnauthorizedException('Authentication service is taking too long to respond. Please try again.');
+      }
+
+      if (error.code === 'ECONNRESET') {
+        this.logger.error(`External API connection reset: ${error.message}`, error.stack);
+        throw new UnauthorizedException('Connection to authentication service was interrupted. Please try again.');
+      }
+
       this.logger.error(`External API authentication error: ${error.message}`, error.stack);
       throw new UnauthorizedException('External authentication failed');
     }

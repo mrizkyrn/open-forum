@@ -190,7 +190,6 @@ export class NotificationEventService implements OnModuleInit {
             },
             60, // Deduplicate within 1 hour window
           );
-          this.logger.log(`Vote notification processed for ${data.entityType} ID ${data.entityId}`);
         } catch (error) {
           this.logger.error(`Error processing vote notification: ${error.message}`, error.stack);
         }
@@ -209,10 +208,6 @@ export class NotificationEventService implements OnModuleInit {
         try {
           const data = JSON.parse(message);
 
-          this.logger.debug(
-            `Processing mention notification for ${data.userIds.length} users in comment ${data.commentId}`,
-          );
-
           // Create notification for each mentioned user
           await this.notificationService.createBatchNotifications(
             {
@@ -230,8 +225,6 @@ export class NotificationEventService implements OnModuleInit {
             },
             undefined, // No transaction needed here
           );
-
-          this.logger.debug(`Mention notifications created for comment ${data.commentId}`);
         } catch (error) {
           this.logger.error(`Error processing mention notification: ${error.message}`, error.stack);
         }
@@ -325,7 +318,6 @@ export class NotificationEventService implements OnModuleInit {
           // Execute all notification promises in parallel
           if (notifications.length > 0) {
             await Promise.all(notifications);
-            this.logger.log(`Created ${notifications.length} notifications for report #${data.reportId}`);
           }
         } catch (error) {
           this.logger.error(`Error processing report notification: ${error.message}`, error.stack);

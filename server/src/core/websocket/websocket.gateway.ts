@@ -37,7 +37,6 @@ export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection, OnG
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
     private readonly userService: UserService,
-    private readonly redisService: RedisService,
   ) {}
 
   afterInit(server: Server) {
@@ -79,7 +78,6 @@ export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection, OnG
       // Join admin room if user is an admin
       if (user.role === 'admin') {
         client.join('admins');
-        this.logger.log(`Client connected to admin room: ${client.id}`);
       }
       // Join user-specific room for notifications
       client.join(`user:${user.id}`);
@@ -92,8 +90,6 @@ export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection, OnG
       }
 
       this.onlineUsers.get(user.id)!.push(client);
-
-      this.logger.log(`Client connected: ${client.id} (User: ${user.id})`);
     } catch (error) {
       this.logger.error(`Connection error: ${error.message}`);
       client.disconnect();
@@ -118,8 +114,6 @@ export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection, OnG
         this.onlineUsers.set(userId, remainingConnections);
       }
     }
-
-    this.logger.log(`Client disconnected: ${client.id}`);
   }
 
   // Space management
@@ -131,7 +125,6 @@ export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection, OnG
     const roomName = `space:${spaceId}`;
 
     client.join(roomName);
-    this.logger.log(`User ${userId} joined space ${spaceId}`);
     return { success: true, spaceId };
   }
 
@@ -143,7 +136,6 @@ export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection, OnG
     const roomName = `space:${spaceId}`;
 
     client.leave(roomName);
-    this.logger.log(`User ${userId} left space ${spaceId}`);
     return { success: true, spaceId };
   }
 
@@ -157,7 +149,6 @@ export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection, OnG
 
     client.join(roomName);
 
-    this.logger.log(`User ${userId} joined discussion ${discussionId}`);
     return { success: true, discussionId };
   }
 
@@ -170,7 +161,6 @@ export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection, OnG
 
     client.leave(roomName);
 
-    this.logger.log(`User ${userId} left discussion ${discussionId}`);
     return { success: true, discussionId };
   }
 

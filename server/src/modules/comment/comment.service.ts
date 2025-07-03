@@ -10,6 +10,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import * as fs from 'fs';
 import * as path from 'path';
+import { CommentCreatedEvent } from 'src/core/redis/redis.interface';
 import { Between, Brackets, EntityManager, Repository } from 'typeorm';
 import { Pageable } from '../../common/interfaces/pageable.interface';
 import { RedisChannels } from '../../core/redis/redis.constants';
@@ -28,7 +29,6 @@ import { CreateCommentDto } from './dto/create-comment.dto';
 import { SearchCommentDto } from './dto/search-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 import { Comment } from './entities/comment.entity';
-import { CommentCreatedEvent } from 'src/core/redis/redis.interface';
 
 @Injectable()
 export class CommentService {
@@ -60,6 +60,7 @@ export class CommentService {
     }
 
     const createdFilePaths: string[] = [];
+    let parentCommentAuthorId: number | undefined;
 
     try {
       // Check if discussion exists
@@ -83,6 +84,8 @@ export class CommentService {
         if (parentComment.parentId) {
           throw new BadRequestException('Nested replies are not allowed. You can only reply to top-level comments.');
         }
+
+        parentCommentAuthorId = parentComment.authorId;
       }
 
       // Limit attachments
@@ -113,6 +116,7 @@ export class CommentService {
           savedComment.id,
           discussionId,
           currentUser.id,
+          parentCommentAuthorId,
           queryRunner.manager,
         );
 
@@ -146,7 +150,7 @@ export class CommentService {
           content: savedComment.content,
           parentId: savedComment.parentId,
           hasAttachments: files && files.length > 0,
-        }
+        };
 
         await this.redisService.publish(RedisChannels.COMMENT_CREATED, JSON.stringify(commentEvent));
 
@@ -292,6 +296,14 @@ export class CommentService {
 
       this.verifyCommentAuthor(comment, currentUser.id);
 
+      let parentCommentAuthorId: number | undefined;
+      if (comment.parentId) {
+        const parentComment = await this.commentRepository.findOne({
+          where: { id: comment.parentId },
+        });
+        parentCommentAuthorId = parentComment?.authorId;
+      }
+
       // Get existing attachments
       const existingAttachments = await this.attachmentService.getAttachmentsByEntity(AttachmentType.COMMENT, id);
       const attachmentsToRemoveCount = updateCommentDto.attachmentsToRemove?.length || 0;
@@ -329,6 +341,7 @@ export class CommentService {
             comment.id,
             comment.discussionId,
             currentUser.id,
+            parentCommentAuthorId,
             queryRunner.manager,
           );
         }
@@ -575,7 +588,6 @@ export class CommentService {
       try {
         if (fs.existsSync(filePath)) {
           await fs.promises.unlink(filePath);
-          this.logger.log(`Cleaned up file: ${filePath}`);
         }
       } catch (error) {
         this.logger.warn(`Failed to clean up file ${filePath}`, error);

@@ -22,6 +22,7 @@ export class CommentMentionService {
     commentId: number,
     discussionId: number,
     authorId: number,
+    parentCommentAuthorId?: number,
     entityManager?: EntityManager,
   ): Promise<void> {
     // Extract usernames from @mentions in the comment
@@ -34,8 +35,16 @@ export class CommentMentionService {
       // Find existing users with the mentioned usernames
       const mentionedUsers = await this.findMentionedUsers(mentionedUsernames);
 
-      // Filter out the author from mentions (don't notify yourself)
-      const filteredUsers = mentionedUsers.filter((user) => user.id !== authorId);
+      // Filter out the author from mentions
+      const filteredUsers = mentionedUsers.filter((user) => {
+        // Don't mention yourself
+        if (user.id === authorId) return false;
+
+        // Don't mention the person you're replying to (they'll get a reply notification)
+        if (parentCommentAuthorId && user.id === parentCommentAuthorId) return false;
+
+        return true;
+      });
 
       if (filteredUsers.length === 0) {
         return;
@@ -72,6 +81,7 @@ export class CommentMentionService {
     commentId: number,
     discussionId: number,
     authorId: number,
+    parentCommentAuthorId?: number,
     entityManager?: EntityManager,
   ): Promise<void> {
     const manager = entityManager || this.mentionRepository.manager;
@@ -79,7 +89,7 @@ export class CommentMentionService {
     await manager.delete(CommentMention, { commentId });
 
     // Process new mentions
-    await this.processMentions(content, commentId, discussionId, authorId, manager);
+    await this.processMentions(content, commentId, discussionId, authorId, parentCommentAuthorId, manager);
   }
 
   private extractMentions(content: string): string[] {

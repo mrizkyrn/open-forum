@@ -63,7 +63,6 @@ export class WebsocketEventService implements OnModuleInit {
 
           // Validate event using type guard
           if (!isCommentCreatedEvent(data)) {
-            this.logger.warn('Invalid comment event data received');
             return;
           }
 

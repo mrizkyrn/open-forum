@@ -693,7 +693,6 @@ export class DiscussionService {
       try {
         if (fs.existsSync(filePath)) {
           await fs.promises.unlink(filePath);
-          this.logger.debug(`Cleaned up file: ${filePath}`);
         }
       } catch (error) {
         this.logger.warn(`Failed to clean up file ${filePath}:`, error);
