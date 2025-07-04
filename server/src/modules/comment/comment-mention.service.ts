@@ -22,6 +22,7 @@ export class CommentMentionService {
     commentId: number,
     discussionId: number,
     authorId: number,
+    parentId?: number,
     parentCommentAuthorId?: number,
     entityManager?: EntityManager,
   ): Promise<void> {
@@ -68,6 +69,7 @@ export class CommentMentionService {
         userIds: filteredUsers.map((user) => user.id),
         discussionId,
         commentId,
+        parentId,
         authorId,
       });
     } catch (error) {
@@ -81,6 +83,7 @@ export class CommentMentionService {
     commentId: number,
     discussionId: number,
     authorId: number,
+    parentId?: number,
     parentCommentAuthorId?: number,
     entityManager?: EntityManager,
   ): Promise<void> {
@@ -89,7 +92,7 @@ export class CommentMentionService {
     await manager.delete(CommentMention, { commentId });
 
     // Process new mentions
-    await this.processMentions(content, commentId, discussionId, authorId, parentCommentAuthorId, manager);
+    await this.processMentions(content, commentId, discussionId, authorId, parentId, parentCommentAuthorId, manager);
   }
 
   private extractMentions(content: string): string[] {

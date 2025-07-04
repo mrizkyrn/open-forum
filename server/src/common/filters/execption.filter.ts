@@ -13,10 +13,12 @@ export class ExceptionsFilter implements ExceptionFilter {
     const request = ctx.getRequest<Request>();
 
     // Log the error with details for debugging
-    this.logger.error(
-      `Exception occurred during ${request.method} ${request.url}: ${exception.message}`,
-      exception.stack,
-    );
+    if (exception.message !== 'Unauthorized') {
+      this.logger.error(
+        `Exception occurred during ${request.method} ${request.url}: ${exception.message}`,
+        exception.stack,
+      );
+    }
 
     let status: number;
     let errorMessage: string | string[];

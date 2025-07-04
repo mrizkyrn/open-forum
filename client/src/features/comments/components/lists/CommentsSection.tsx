@@ -17,13 +17,14 @@ interface CommentsSectionProps {
   commentCount: number;
 }
 
+const MAX_COMMENTS_PER_PAGE = 10;
+
 const CommentsSection = ({ discussionId, commentCount }: CommentsSectionProps) => {
   const [activeReplyId, setActiveReplyId] = useState<number | null>(null);
   const [replyMention, setReplyMention] = useState<string | null>(null);
   const [sortBy, setSortBy] = useState<CommentSortBy>(CommentSortBy.createdAt);
   const [sortOrder, setSortOrder] = useState<SortOrder>(SortOrder.ASC);
   const [highlightedCommentId, setHighlightedCommentId] = useState<number | null>(null);
-  const [hasInitiallyHighlighted, setHasInitiallyHighlighted] = useState(false);
   const [forceShowReplies, setForceShowReplies] = useState<number | null>(null);
 
   const sortDropdownRef = useRef<HTMLDivElement>(null);
@@ -56,44 +57,16 @@ const CommentsSection = ({ discussionId, commentCount }: CommentsSectionProps) =
   } = useInfiniteQuery({
     queryKey: ['comments', discussionId, sortBy, sortOrder],
     queryFn: ({ pageParam = 1 }) =>
-      commentApi.getCommentsByDiscussionId(discussionId, { page: pageParam, limit: 5, sortBy, sortOrder }),
+      commentApi.getCommentsByDiscussionId(discussionId, {
+        page: pageParam,
+        limit: MAX_COMMENTS_PER_PAGE,
+        sortBy,
+        sortOrder,
+      }),
     getNextPageParam: (lastPage) => (lastPage.meta.hasNextPage ? lastPage.meta.currentPage + 1 : undefined),
     initialPageParam: 1,
     staleTime: 1000 * 60 * 5,
   });
-
-  // Set highlighted comment and scroll to it
-  useEffect(() => {
-    if (urlCommentId && specificComment && !hasInitiallyHighlighted) {
-      setHighlightedCommentId(urlCommentId);
-      setHasInitiallyHighlighted(true);
-
-      // If it's a reply comment, force show its parent's replies
-      if (specificComment.parentId && parentComment) {
-        setForceShowReplies(specificComment.parentId);
-      }
-
-      // Scroll to the comment after a short delay
-      setTimeout(() => {
-        const commentElement = document.getElementById(`comment-${urlCommentId}`);
-        if (commentElement) {
-          commentElement.scrollIntoView({
-            behavior: 'smooth',
-            block: 'center',
-          });
-        }
-      }, 300);
-
-      // Remove highlight after 4 seconds
-      setTimeout(() => {
-        setHighlightedCommentId(null);
-      }, 4000);
-    }
-  }, [urlCommentId, specificComment, parentComment, hasInitiallyHighlighted]);
-
-  useEffect(() => {
-    setHasInitiallyHighlighted(false);
-  }, [urlCommentId]);
 
   const handleToggleReply = (commentId: number, mentionUsername?: string) => {
     setActiveReplyId((prev) => {
@@ -157,6 +130,47 @@ const CommentsSection = ({ discussionId, commentCount }: CommentsSectionProps) =
   };
 
   const isLoading = isLoadingComments || (urlCommentId && (isLoadingSpecific || isLoadingParent));
+
+  // Set highlighted comment and scroll to it
+  useEffect(() => {
+    if (urlCommentId && specificComment && !isLoading) {
+      setHighlightedCommentId(urlCommentId);
+
+      // If it's a reply comment, force show its parent's replies
+      if (specificComment.parentId && parentComment) {
+        setForceShowReplies(specificComment.parentId);
+      }
+
+      // Handle scrolling directly here
+      requestAnimationFrame(() => {
+        setTimeout(() => {
+          const commentElement = document.getElementById(`comment-${urlCommentId}`);
+          if (commentElement) {
+            commentElement.scrollIntoView({
+              behavior: 'smooth',
+              block: 'center',
+            });
+          } else {
+            // If comment not found, retry after a short delay
+            setTimeout(() => {
+              const retryElement = document.getElementById(`comment-${urlCommentId}`);
+              if (retryElement) {
+                retryElement.scrollIntoView({
+                  behavior: 'smooth',
+                  block: 'center',
+                });
+              }
+            }, 100);
+          }
+        }, 300);
+      });
+
+      // Remove highlight after 4 seconds
+      setTimeout(() => {
+        setHighlightedCommentId(null);
+      }, 4000);
+    }
+  }, [urlCommentId, specificComment, parentComment, isLoading]);
 
   if (isLoading) {
     return <LoadingIndicator fullWidth />;

@@ -39,7 +39,7 @@ export const createWinstonLogger = (isDevelopment: boolean = false) => {
       datePattern: 'YYYY-MM-DD',
       zippedArchive: true,
       maxSize: process.env.LOG_MAX_SIZE || '20m',
-      maxFiles: process.env.LOG_MAX_FILES || '30d',
+      maxFiles: process.env.LOG_ERROR_MAX_FILES || '30d',
       level: 'error',
       format: combine(timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }), logFormat),
     }),

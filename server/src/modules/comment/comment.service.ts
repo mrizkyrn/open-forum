@@ -116,6 +116,7 @@ export class CommentService {
           savedComment.id,
           discussionId,
           currentUser.id,
+          createCommentDto.parentId,
           parentCommentAuthorId,
           queryRunner.manager,
         );
@@ -341,6 +342,7 @@ export class CommentService {
             comment.id,
             comment.discussionId,
             currentUser.id,
+            comment.parentId || undefined,
             parentCommentAuthorId,
             queryRunner.manager,
           );

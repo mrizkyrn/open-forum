@@ -218,6 +218,7 @@ export class NotificationEventService implements OnModuleInit {
               entityId: data.commentId,
               data: {
                 discussionId: data.discussionId,
+                parentCommentId: data.parentId,
                 commentId: data.commentId,
                 contentPreview: this.truncateContent(data.content, 75),
                 url: `/discussions/${data.discussionId}?comment=${data.commentId}`,

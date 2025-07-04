@@ -7,7 +7,7 @@ import { Request, Response } from 'express';
 import { AppModule } from './app.module';
 import { ExceptionsFilter } from './common/filters/execption.filter';
 import { TransformInterceptor } from './common/interceptors/transform.interceptor';
-import { createWinstonLogger } from './core/winston/winston.config';
+import { createWinstonLogger } from './core/logger/winston.config';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {

@@ -162,16 +162,24 @@ const MainLayout = () => {
   // Listen for new notifications via socket
   useEffect(() => {
     if (!socket || !isConnected || !user?.id) return;
-
+    console.log('Socket connected, listening for new notifications...');
     const handleNewNotification = (notification: any) => {
       refetchUnreadCount();
       setNewNotificationReceived(true);
+      console.log('New notification received:', notification);
       queryClient.invalidateQueries({ queryKey: ['notifications'] });
 
       if (notification.entityType === 'report' && notification.data.isContentDeleted) {
         if (notification.data.targetType === 'discussion') {
           queryClient.invalidateQueries({ queryKey: ['discussion', notification.data.targetId] });
         }
+      }
+
+      if (notification.type === 'new_comment') {
+        queryClient.invalidateQueries({ queryKey: ['comments', notification.data.discussionId] });
+      }
+      if (notification.type === 'new_reply' || notification.type === 'user_mentioned') {
+        queryClient.invalidateQueries({ queryKey: ['commentReplies', notification.data.parentCommentId] });
       }
     };
 

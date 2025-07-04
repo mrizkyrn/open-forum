@@ -147,7 +147,10 @@ const CommentForm = ({
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = Array.from(e.target.files || []);
 
-    if (existingAttachments.length + selectedFiles.length > MAX_COMMENT_FILES) {
+    const remainingExistingFiles = existingAttachments.length - attachmentsToRemove.length;
+    const totalFilesAfterUpload = remainingExistingFiles + files.length + selectedFiles.length;
+
+    if (totalFilesAfterUpload > MAX_COMMENT_FILES) {
       setFileErrors(`You can upload a maximum of ${MAX_COMMENT_FILES} files.`);
       return;
     }
@@ -247,7 +250,7 @@ const CommentForm = ({
                 type="button"
                 variant="outline"
                 onClick={() => fileInputRef.current?.click()}
-                disabled={files.length >= MAX_COMMENT_FILES}
+                disabled={existingAttachments.length - attachmentsToRemove.length + files.length >= MAX_COMMENT_FILES}
                 className={`!px-2 ${files.length >= MAX_COMMENT_FILES ? 'bg-gray-100' : 'cursor-pointer bg-white'}`}
                 leftIcon={<ImagePlus size={16} className="text-primary" />}
                 size="sm"

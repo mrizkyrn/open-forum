@@ -647,7 +647,9 @@ export class DiscussionService {
 
     if (searchDto.authorId) {
       queryBuilder.andWhere('discussion.authorId = :authorId', { authorId: searchDto.authorId });
-      queryBuilder.andWhere('discussion.isAnonymous = false');
+      if (currentUser && currentUser.id !== searchDto.authorId) {
+        queryBuilder.andWhere('discussion.isAnonymous = false');
+      }
     }
 
     if (searchDto.isAnonymous !== undefined) {
