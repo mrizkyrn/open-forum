@@ -31,7 +31,7 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
     }
 
     // Create socket connection with auth token
-    const socketInstance = io(`${import.meta.env.VITE_API_URL}/events`, {
+    const socketInstance = io(`${import.meta.env.VITE_BASE_API_URL}/events`, {
       auth: { token: accessToken },
       withCredentials: true,
       reconnection: true,

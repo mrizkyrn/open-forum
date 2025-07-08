@@ -20,7 +20,7 @@ export async function seedDiscussions(dataSource: DataSource): Promise<void> {
 
   // Get non-admin, non-external users
   const eligibleUsers = await userRepository.find({
-    where: { role: UserRole.STUDENT, isExternalUser: false },
+    where: { role: UserRole.STUDENT },
     select: ['id'],
   });
 
@@ -139,90 +139,6 @@ export async function seedDiscussions(dataSource: DataSource): Promise<void> {
       {
         content: 'Strategi apa yang efektif untuk membaca dan memahami paper ilmiah yang kompleks?',
         tags: ['paper', 'penelitian', 'strategi', 'pemahaman', 'literatur'],
-      },
-    ],
-    [SpaceType.FACULTY]: [
-      {
-        content: 'Mata kuliah pilihan apa di fakultas kita yang kalian rekomendasikan untuk semester depan?',
-        tags: ['mata kuliah', 'pilihan', 'rekomendasi', 'semester', 'fakultas'],
-      },
-      {
-        content: 'Apakah ada yang tertarik membentuk kelompok belajar untuk kelas Teori Lanjutan Pak Budi?',
-        tags: ['kelompok belajar', 'kelas', 'kolaborasi', 'teori lanjutan', 'studi'],
-      },
-      {
-        content: 'Website fakultas belum diperbarui dengan penawaran mata kuliah baru. Ada yang punya informasi?',
-        tags: ['mata kuliah', 'informasi', 'website', 'fakultas', 'pembaruan'],
-      },
-      {
-        content: 'Apakah fakultas sudah mengumumkan tanggal untuk rangkaian seminar departemen?',
-        tags: ['seminar', 'acara', 'departemen', 'jadwal', 'fakultas'],
-      },
-      {
-        content: 'Mencari umpan balik tentang perubahan kurikulum baru yang diterapkan tahun ini.',
-        tags: ['kurikulum', 'umpan balik', 'perubahan', 'pendidikan', 'evaluasi'],
-      },
-      {
-        content: 'Bagaimana pengalaman magang di perusahaan yang bekerjasama dengan fakultas kita?',
-        tags: ['magang', 'kerjasama', 'pengalaman', 'perusahaan', 'profesional'],
-      },
-      {
-        content: 'Persiapan apa yang perlu dilakukan untuk sidang skripsi di fakultas kita?',
-        tags: ['sidang', 'skripsi', 'persiapan', 'presentasi', 'tugas akhir'],
-      },
-      {
-        content: 'Apakah ada rencana untuk mengadakan temu alumni fakultas tahun ini?',
-        tags: ['alumni', 'acara', 'jaringan', 'fakultas', 'networking'],
-      },
-      {
-        content: 'Apa pendapat kalian tentang penerapan kurikulum berbasis MBKM di fakultas kita?',
-        tags: ['mbkm', 'kurikulum', 'pendapat', 'merdeka belajar', 'pendidikan'],
-      },
-      {
-        content: 'Siapa dosen pembimbing yang paling responsif dan membantu di fakultas kita?',
-        tags: ['dosen', 'pembimbing', 'saran', 'akademik', 'rekomendasi'],
-      },
-    ],
-    [SpaceType.STUDY_PROGRAM]: [
-      {
-        content: 'Ada senior yang bersedia berbagi pengalaman tentang persyaratan proyek akhir?',
-        tags: ['proyek akhir', 'pengalaman', 'tips', 'senior', 'persyaratan'],
-      },
-      {
-        content: 'Apakah ada yang telah menyelesaikan magang di Tech Corp? Bagaimana pengalamanmu?',
-        tags: ['magang', 'pengalaman', 'karir', 'perusahaan', 'praktik'],
-      },
-      {
-        content: 'Apakah ada beasiswa khusus program studi yang perlu kita ketahui?',
-        tags: ['beasiswa', 'pendanaan', 'kesempatan', 'finansial', 'program studi'],
-      },
-      {
-        content: 'Jalur spesialisasi apa yang kalian rekomendasikan untuk seseorang yang tertarik dengan AI?',
-        tags: ['spesialisasi', 'karir', 'saran', 'AI', 'teknologi'],
-      },
-      {
-        content: 'Apakah ada yang memiliki silabus untuk mata kuliah wajib semester depan?',
-        tags: ['silabus', 'mata kuliah', 'perencanaan', 'wajib', 'akademik'],
-      },
-      {
-        content: 'Bagaimana cara menyeimbangkan tugas kuliah dengan kegiatan organisasi di program studi kita?',
-        tags: ['manajemen waktu', 'organisasi', 'kuliah', 'keseimbangan', 'produktivitas'],
-      },
-      {
-        content: 'Ada rekomendasi topik skripsi yang relevan dengan kebutuhan industri saat ini?',
-        tags: ['skripsi', 'industri', 'topik', 'relevansi', 'penelitian'],
-      },
-      {
-        content: 'Apakah program studi kita menyediakan pelatihan sertifikasi tambahan? Mana yang paling bermanfaat?',
-        tags: ['sertifikasi', 'pelatihan', 'pengembangan', 'keahlian', 'profesional'],
-      },
-      {
-        content: 'Peluang penelitian apa yang tersedia untuk mahasiswa S1 di program studi kita?',
-        tags: ['penelitian', 'sarjana', 'kesempatan', 'akademik', 'S1'],
-      },
-      {
-        content: 'Bagaimana prospek kerja untuk lulusan program studi kita dalam 5 tahun ke depan?',
-        tags: ['karir', 'lulusan', 'prospek', 'masa depan', 'lapangan kerja'],
       },
     ],
     [SpaceType.ORGANIZATION]: [

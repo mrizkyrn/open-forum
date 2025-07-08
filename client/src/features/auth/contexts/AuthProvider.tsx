@@ -6,6 +6,7 @@ import { authReducer, initialState } from './reducer';
 import { authApi } from '@/features/auth/services';
 import { LoginRequest } from '@/features/auth/types';
 import { pushNotificationService } from '@/features/notifications/services/pushNotificationService';
+import { userApi } from '@/features/users/services';
 import { User } from '@/features/users/types';
 import { storageUtils } from '@/utils/storage';
 
@@ -31,6 +32,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     (userData: Partial<User>) => {
       if (state.user) {
         const updatedUser = { ...state.user, ...userData };
+        console.log('Updating user in AuthProvider:', updatedUser);
         storageUtils.setUser(updatedUser);
         dispatch({
           type: 'UPDATE_USER',
@@ -100,6 +102,38 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const OAuthLogin = useCallback(
+    async (accessToken: string): Promise<void> => {
+      try {
+        dispatch({ type: 'AUTH_START' });
+
+        const user = await userApi.getCurrentUser(accessToken);
+
+        storageUtils.setUser(user);
+        dispatch({ type: 'AUTH_SUCCESS', payload: { user, accessToken } });
+        queryClient.clear();
+
+        try {
+          if (pushNotificationService.isPushNotificationSupported()) {
+            const permission = await pushNotificationService.getNotificationPermission();
+            if (permission === 'granted') {
+              await pushNotificationService.reactivateSubscription();
+            }
+          }
+        } catch (error) {
+          console.error('Failed to reactivate push notifications:', error);
+        }
+      } catch (error) {
+        dispatch({
+          type: 'AUTH_FAILURE',
+          payload: error instanceof Error ? error.message : 'OAuth login failed',
+        });
+        throw error;
+      }
+    },
+    [queryClient],
+  );
+
   const logout = async (): Promise<void> => {
     try {
       try {
@@ -138,6 +172,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     updateUser,
     clearError,
     refreshToken,
+    OAuthLogin,
   };
 
   return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>;

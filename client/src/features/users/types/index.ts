@@ -7,8 +7,6 @@ export interface User {
   id: number;
   username: string;
   fullName: string;
-  gender: string;
-  batchYear: string;
   role: UserRole;
   avatarUrl?: string | null;
   lastActiveAt?: Date;

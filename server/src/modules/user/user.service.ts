@@ -5,7 +5,6 @@ import { UserRole } from 'src/common/enums/user-role.enum';
 import { Between, Repository, SelectQueryBuilder } from 'typeorm';
 import { Pageable } from '../../common/interfaces/pageable.interface';
 import { FileService } from '../../core/file/file.service';
-import { CreateExternalUserDto } from './dto/create-external-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { SearchUserDto } from './dto/search-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -26,67 +25,39 @@ export class UserService {
 
   // ----- Core CRUD Operations -----
 
-  async create(createUserDto: CreateUserDto): Promise<UserResponseDto> {
+  async create(createUserDto: CreateUserDto): Promise<User> {
+    const normalizedUsername = createUserDto.username.toLowerCase().trim();
+
     const existingUser = await this.userRepository.findOne({
-      where: { username: createUserDto.username },
+      where: { username: normalizedUsername },
     });
 
     if (existingUser) {
       throw new ConflictException('Username already exists');
     }
 
+    // Check if email already exists (only if email is provided)
+    if (createUserDto.email) {
+      const existingEmailUser = await this.userRepository.findOne({
+        where: { email: createUserDto.email },
+      });
+
+      if (existingEmailUser) {
+        throw new ConflictException('Email already exists');
+      }
+    }
+
     const hashedPassword = await this.hashPassword(createUserDto.password);
     const newUser = this.userRepository.create({
-      username: createUserDto.username,
+      username: normalizedUsername,
       password: hashedPassword,
       fullName: createUserDto.fullName,
+      email: createUserDto.email,
       role: createUserDto.role,
     });
 
     const savedUser = await this.userRepository.save(newUser);
-    return UserResponseDto.fromEntity(savedUser);
-  }
-
-  async createExternalUser(userData: CreateExternalUserDto): Promise<User> {
-    if (!userData.username) {
-      throw new BadRequestException('Username is required');
-    }
-    let user = await this.userRepository.findOne({
-      where: { username: userData.username },
-    });
-
-    if (user) {
-      Object.assign(user, {
-        fullName: userData.fullName,
-        gender: userData.gender,
-        batchYear: userData.batchYear,
-        educationLevel: userData.educationLevel,
-        studyProgramId: userData.studyProgramId,
-        email: userData.email || user.email,
-        phone: userData.phone || user.phone,
-      });
-    } else {
-      user = this.userRepository.create({
-        username: userData.username,
-        fullName: userData.fullName,
-        gender: userData.gender,
-        batchYear: userData.batchYear,
-        educationLevel: userData.educationLevel,
-        studyProgramId: userData.studyProgramId,
-        email: userData.email,
-        phone: userData.phone,
-        role: UserRole.STUDENT,
-        password: null,
-        isExternalUser: true,
-      });
-    }
-
-    try {
-      return await this.userRepository.save(user);
-    } catch (error) {
-      this.logger.error(`Failed to create/update user from external data: ${error.message}`, error.stack);
-      throw new BadRequestException('Failed to create user from external data');
-    }
+    return savedUser;
   }
 
   async findAll(searchDto: SearchUserDto, currentUser?: User): Promise<Pageable<UserResponseDto>> {
@@ -100,14 +71,13 @@ export class UserService {
   }
 
   async findById(id: number): Promise<UserDetailResponseDto> {
-    const user = await this.getUserEntity(id, ['studyProgram', 'studyProgram.faculty']);
+    const user = await this.getUserEntity(id);
     return UserDetailResponseDto.fromEntity(user);
   }
 
   async findByUsername(username: string): Promise<UserDetailResponseDto> {
     const user = await this.userRepository.findOne({
       where: { username },
-      relations: ['studyProgram', 'studyProgram.faculty'],
     });
 
     if (!user) {
@@ -128,10 +98,6 @@ export class UserService {
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<UserResponseDto> {
     const user = await this.getUserEntityById(id);
-
-    if (user.isExternalUser) {
-      throw new BadRequestException('Cannot update external user');
-    }
 
     if (updateUserDto.fullName) user.fullName = updateUserDto.fullName;
     if (updateUserDto.role !== undefined) user.role = updateUserDto.role;
@@ -190,10 +156,11 @@ export class UserService {
   // ----- Authentication Related -----
 
   async getUserWithCredentials(username: string): Promise<User | null> {
+    const normalizedUsername = username.toLowerCase().trim();
     return this.userRepository
       .createQueryBuilder('user')
       .addSelect('user.password')
-      .where('user.username = :username', { username })
+      .where('user.username = :username', { username: normalizedUsername })
       .getOne();
   }
 
@@ -349,5 +316,44 @@ export class UserService {
         hasPreviousPage: page > 1,
       },
     };
+  }
+
+  async findUserByEmail(email: string): Promise<User | null> {
+    return await this.userRepository.findOne({
+      where: { email },
+    });
+  }
+
+  async createOAuthUser(userData: {
+    email: string;
+    fullName: string;
+    avatarUrl?: string;
+    provider: string;
+    role: UserRole;
+    username?: string;
+  }): Promise<User> {
+    const newUser = this.userRepository.create({
+      username: userData.username || userData.email.toLowerCase().trim(),
+      fullName: userData.fullName,
+      email: userData.email.toLowerCase().trim(),
+      avatarUrl: userData.avatarUrl,
+      oauthProvider: userData.provider,
+      role: userData.role,
+    });
+
+    return await this.userRepository.save(newUser);
+  }
+
+  async updateUser(id: number, updateData: Partial<User>): Promise<User> {
+    await this.userRepository.update(id, updateData);
+    return await this.getUserEntity(id);
+  }
+
+  async isUsernameExists(username: string): Promise<boolean> {
+    const normalizedUsername = username.toLowerCase().trim();
+    const user = await this.userRepository.findOne({
+      where: { username: normalizedUsername },
+    });
+    return !!user;
   }
 }

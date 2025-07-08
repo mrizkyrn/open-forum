@@ -15,9 +15,17 @@ export const userApi = {
     }
   },
 
-  async getCurrentUser(): Promise<UserDetail> {
+  async getCurrentUser(accessToken?: string): Promise<UserDetail> {
     try {
-      const response = await apiClient.get<ApiResponse<UserDetail>>('/users/me');
+      const config: any = {};
+      
+      if (accessToken) {
+        config.headers = {
+          'Authorization': `Bearer ${accessToken}`
+        };
+      }
+      
+      const response = await apiClient.get<ApiResponse<UserDetail>>('/users/me', config);
       return response.data.data;
     } catch (error) {
       return handleApiError(error, 'Failed to fetch current user profile');

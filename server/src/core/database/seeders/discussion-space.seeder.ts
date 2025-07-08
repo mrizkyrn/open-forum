@@ -1,6 +1,4 @@
 import { DataSource } from 'typeorm';
-import { Faculty } from '../../../modules/academic/entity/faculty.entity';
-import { StudyProgram } from '../../../modules/academic/entity/study-program.entity';
 import { DiscussionSpace, SpaceType } from '../../../modules/discussion/entities/discussion-space.entity';
 import { User } from '../../../modules/user/entities/user.entity';
 
@@ -33,8 +31,6 @@ export async function seedDiscussionSpaces(dataSource: DataSource, users: User[]
     spaceType: SpaceType;
     iconUrl?: string;
     bannerUrl?: string;
-    facultyId?: number;
-    studyProgramId?: number;
   }> = [];
 
   // 1. CAMPUS spaces
@@ -171,33 +167,6 @@ export async function seedDiscussionSpaces(dataSource: DataSource, users: User[]
       spaceType: SpaceType.OTHER,
     },
   );
-
-  // 5. FACULTY spaces - create for each faculty
-  const faculties = await dataSource.getRepository(Faculty).find();
-  for (const faculty of faculties) {
-    spaces.push({
-      name: faculty.facultyName,
-      description: `Official discussion space for ${faculty.facultyName}`,
-      slug: `faculty-${faculty.facultyAbbreviation.toLowerCase().replace(/\s+/g, '-')}`,
-      creatorId: adminUser.id,
-      spaceType: SpaceType.FACULTY,
-      facultyId: faculty.id,
-    });
-  }
-
-  // 6. STUDY PROGRAM spaces - create for each study program
-  const studyPrograms = await dataSource.getRepository(StudyProgram).find();
-  for (const program of studyPrograms) {
-    spaces.push({
-      name: program.studyProgramName,
-      description: `Official space for ${program.studyProgramName} students and faculty`,
-      slug: `program-${program.studyProgramCode.toLowerCase().replace(/\s+/g, '-')}`,
-      creatorId: adminUser.id,
-      spaceType: SpaceType.STUDY_PROGRAM,
-      studyProgramId: program.id,
-      facultyId: program.facultyId,
-    });
-  }
 
   // Save spaces
   const savedSpaces = await spaceRepository.save(spaces);

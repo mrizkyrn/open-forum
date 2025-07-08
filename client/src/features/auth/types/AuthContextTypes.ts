@@ -25,4 +25,5 @@ export interface AuthContextType extends AuthState {
   updateUser: (userData: Partial<User>) => void;
   clearError: () => void;
   refreshToken: () => Promise<string>;
+  OAuthLogin: (accessToken: string) => Promise<void>;
 }

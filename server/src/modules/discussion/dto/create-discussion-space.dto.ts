@@ -34,26 +34,4 @@ export class CreateDiscussionSpaceDto {
   @IsEnum(SpaceType)
   @IsNotEmpty()
   spaceType: SpaceType;
-
-  @ApiPropertyOptional({
-    description: 'Faculty ID (required for FACULTY and STUDY_PROGRAM space types)',
-    example: 1,
-  })
-  @IsNumber()
-  @IsOptional()
-  @ValidateIf((o) => o.spaceType === SpaceType.FACULTY || o.spaceType === SpaceType.STUDY_PROGRAM)
-  @IsNotEmpty({ message: 'Faculty ID is required for FACULTY and STUDY_PROGRAM space types' })
-  @Transform(({ value }) => (value ? parseInt(value, 10) : null))
-  facultyId?: number;
-
-  @ApiPropertyOptional({
-    description: 'Study Program ID (required for STUDY_PROGRAM space type)',
-    example: 1,
-  })
-  @IsNumber()
-  @IsOptional()
-  @ValidateIf((o) => o.spaceType === SpaceType.STUDY_PROGRAM)
-  @IsNotEmpty({ message: 'Study Program ID is required for STUDY_PROGRAM space type' })
-  @Transform(({ value }) => (value ? parseInt(value, 10) : null))
-  studyProgramId?: number;
 }

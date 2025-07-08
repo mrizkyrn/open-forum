@@ -1,42 +1,54 @@
-import { HttpService } from '@nestjs/axios';
 import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { lastValueFrom } from 'rxjs';
 import { UserRole } from '../../common/enums/user-role.enum';
-import { ExternalApiConfig, JWTConfig } from '../../config';
-import { AcademicService } from '../academic/academic.service';
+import { JWTConfig } from '../../config';
 import { UserResponseDto } from '../user/dto/user-response.dto';
 import { User } from '../user/entities/user.entity';
 import { UserService } from '../user/user.service';
 import { LoginDto } from './dto/login.dto';
+import { RegisterDto } from './dto/register.dto';
 import { JwtPayload } from './interfaces/jwt-payload.interface';
 
 @Injectable()
 export class AuthService {
   private readonly logger = new Logger(AuthService.name);
   private readonly jwtConfig: JWTConfig;
-  private readonly apiConfig: ExternalApiConfig;
 
   constructor(
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
-    private readonly httpService: HttpService,
-    private readonly academicService: AcademicService,
   ) {
     this.jwtConfig = this.configService.get<JWTConfig>('jwt')!;
-    this.apiConfig = this.configService.get<ExternalApiConfig>('externalApi')!;
+  }
+
+  async register(registerDto: RegisterDto): Promise<{ message: string }> {
+    try {
+      await this.userService.create({
+        username: registerDto.username,
+        password: registerDto.password,
+        fullName: registerDto.fullName,
+        email: registerDto.email,
+        role: UserRole.STUDENT,
+      });
+
+      return {
+        message: 'Registration successful! You can now log in.',
+      };
+    } catch (error) {
+      this.logger.warn(`Failed registration attempt for username ${registerDto.username}: ${error.message}`);
+      throw error;
+    }
   }
 
   async login(loginDto: LoginDto) {
-    const user = await this.userService.getUserWithCredentials(loginDto.username);
-
-    // If user exists and is not an external user, check password
-    if (user && !user.isExternalUser) {
-      if (!user.password) {
+    try {
+      const user = await this.userService.getUserWithCredentials(loginDto.username);
+      if (!user || !user.password) {
         throw new UnauthorizedException('Incorrect username or password');
       }
+
       const isPasswordValid = await this.userService.verifyPassword(loginDto.password, user.password);
       if (!isPasswordValid) {
         throw new UnauthorizedException('Incorrect username or password');
@@ -47,104 +59,9 @@ export class AuthService {
         user: UserResponseDto.fromEntity(user),
         ...tokens,
       };
-    }
-
-    // If is an external user or user not found, authenticate with external API
-    try {
-      const authenticatedUser = await this.authenticateWithExternalApi(loginDto);
-      const tokens = await this.generateAuthTokens(authenticatedUser);
-
-      return {
-        user: UserResponseDto.fromEntity(authenticatedUser),
-        ...tokens,
-      };
     } catch (error) {
-      if (error instanceof UnauthorizedException) {
-        throw error;
-      }
-
-      this.logger.error(`External authentication failed: ${error.message}`);
-      throw new UnauthorizedException('Incorrect username or password');
-    }
-  }
-
-  private async authenticateWithExternalApi(loginDto: LoginDto): Promise<User> {
-    try {
-      const { data } = await lastValueFrom(
-        this.httpService.post<any>(
-          `${this.apiConfig.baseUrl}/data/auth_mahasiswa`,
-          new URLSearchParams({
-            username: loginDto.username,
-            password: loginDto.password,
-          }).toString(),
-          {
-            auth: {
-              username: this.apiConfig.username,
-              password: this.apiConfig.password,
-            },
-            headers: {
-              API_KEY_NAME: this.apiConfig.keyName,
-              API_KEY_SECRET: this.apiConfig.keySecret,
-            },
-          },
-        ),
-      );
-
-      if (!data || !data.data) {
-        throw new UnauthorizedException('Authentication failed');
-      }
-
-      const studentData = data.data;
-
-      // Find study program by code
-      const studyProgram = await this.academicService.findStudyProgramByCode(studentData.kode_program_studi);
-
-      if (!studyProgram) {
-        this.logger.warn(
-          `Study program with code ${studentData.kode_program_studi} not found for student ${studentData.nim}`,
-        );
-      }
-
-      // Create or update user with external data
-      return await this.userService.createExternalUser({
-        username: studentData.nim,
-        fullName: studentData.nama,
-        gender: studentData.jeniskelamin,
-        batchYear: studentData.angkatan,
-        educationLevel: studentData.program_pendidikan,
-        email: studentData.email,
-        phone: studentData.hp,
-        studyProgramId: studyProgram?.id || null,
-        role: UserRole.STUDENT,
-      });
-    } catch (error) {
-      if (error.code === 'ENOTFOUND') {
-        this.logger.error(
-          `External API DNS resolution failed for ${this.apiConfig.baseUrl}: ${error.message}`,
-          error.stack,
-        );
-        throw new UnauthorizedException(
-          'Authentication service is currently unavailable. Please try again later or contact support.',
-        );
-      }
-
-      if (error.code === 'ECONNREFUSED') {
-        this.logger.error(`External API connection refused: ${error.message}`, error.stack);
-        throw new UnauthorizedException('Authentication service is not responding. Please try again later.');
-      }
-
-      if (error.code === 'ETIMEDOUT' || error.name === 'TimeoutError') {
-        this.logger.error(`External API timeout: ${error.message}`, error.stack);
-        throw new UnauthorizedException('Authentication service is taking too long to respond. Please try again.');
-      }
-
-      if (error.code === 'ECONNRESET') {
-        this.logger.error(`External API connection reset: ${error.message}`, error.stack);
-        throw new UnauthorizedException('Connection to authentication service was interrupted. Please try again.');
-      }
-
-      this.logger.error(`External API authentication error: ${error.message}`, error.stack);
-      throw new UnauthorizedException('External authentication failed');
+      this.logger.warn(`Failed login attempt for username ${loginDto.username}: ${error.message}`);
+      throw error;
     }
   }
 
@@ -179,6 +96,98 @@ export class AuthService {
     return {
       accessToken,
       refreshToken,
+    };
+  }
+
+  async validateOAuthUser(profile: any, provider: string): Promise<User> {
+    const { email, firstName, lastName, avatarUrl } = profile;
+
+    // Check if user already exists
+    let user = await this.userService.findUserByEmail(email);
+
+    if (user) {
+      // Update user with OAuth info if needed
+      this.logger.debug(`Found existing user: ${avatarUrl}`);
+      if (!user.avatarUrl && avatarUrl) {
+        user.avatarUrl = avatarUrl;
+        await this.userService.updateUser(user.id, { avatarUrl: avatarUrl });
+      }
+      return user;
+    }
+
+    // Create new user from OAuth profile
+    const fullName = `${firstName} ${lastName}`.trim();
+    const generatedUsername = await this.generateUniqueUsername(firstName, lastName, email);
+
+    this.logger.debug(
+      `Creating new user from OAuth profile: ${avatarUrl} (${email}) with username: ${generatedUsername}`,
+    );
+    return await this.userService.createOAuthUser({
+      email,
+      fullName: fullName || email.split('@')[0],
+      avatarUrl: avatarUrl,
+      provider,
+      role: UserRole.STUDENT,
+      username: generatedUsername,
+    });
+  }
+
+  private async generateUniqueUsername(firstName: string, lastName: string, email: string): Promise<string> {
+    // Strategy 1: Use first name + last name (e.g., johnsmith)
+    let baseUsername = '';
+
+    if (firstName && lastName) {
+      baseUsername = `${firstName}${lastName}`.toLowerCase().replace(/[^a-z0-9]/g, '');
+    } else if (firstName) {
+      baseUsername = firstName.toLowerCase().replace(/[^a-z0-9]/g, '');
+    } else {
+      // Fallback to email prefix
+      baseUsername = email
+        .split('@')[0]
+        .toLowerCase()
+        .replace(/[^a-z0-9]/g, '');
+    }
+
+    // Ensure minimum length
+    if (baseUsername.length < 3) {
+      baseUsername = email
+        .split('@')[0]
+        .toLowerCase()
+        .replace(/[^a-z0-9]/g, '');
+    }
+
+    // Limit length to reasonable size
+    if (baseUsername.length > 15) {
+      baseUsername = baseUsername.substring(0, 15);
+    }
+
+    // Check if username is available
+    let finalUsername = baseUsername;
+    let counter = 1;
+
+    while (await this.userService.isUsernameExists(finalUsername)) {
+      // Strategy 2: Add numbers (e.g., johnsmith1, johnsmith2)
+      if (counter <= 99) {
+        finalUsername = `${baseUsername}${counter}`;
+      } else {
+        // Strategy 3: Add random suffix for very common names
+        const randomSuffix = Math.floor(Math.random() * 9999)
+          .toString()
+          .padStart(4, '0');
+        finalUsername = `${baseUsername}${randomSuffix}`;
+        break; // Exit to avoid infinite loop
+      }
+      counter++;
+    }
+
+    return finalUsername;
+  }
+
+  async oauthLogin(user: User) {
+    const tokens = await this.generateAuthTokens(user);
+    return {
+      user: UserResponseDto.fromEntity(user),
+      ...tokens,
     };
   }
 }

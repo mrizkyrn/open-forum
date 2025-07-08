@@ -78,7 +78,7 @@ const UserProfilePage = () => {
           <div className="absolute -bottom-12 left-6">
             <div className="relative">
               {currentUser?.id === user.id ? (
-                <AvatarUpload currentAvatarUrl={user.avatarUrl ?? null} size="24" onSuccess={() => {}} />
+                <AvatarUpload currentAvatarUrl={user.avatarUrl ?? null} fullName={user.fullName} size="24" onSuccess={() => {}} />
               ) : (
                 <UserAvatar
                   fullName={user.fullName}

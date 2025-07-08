@@ -6,6 +6,7 @@ import { useAuth } from '@/features/auth/hooks/useAuth';
 import { LoginRequest } from '@/features/auth/types';
 import { UserRole } from '@/features/users/types';
 import MainButton from '@/shared/components/ui/buttons/MainButton';
+import { GoogleOAuthButton } from './OAuthButtons';
 
 const LoginForm: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -21,7 +22,7 @@ const LoginForm: React.FC = () => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: name === 'username' ? value.toLowerCase().trim() : value,
     }));
   };
 
@@ -45,7 +46,7 @@ const LoginForm: React.FC = () => {
   };
 
   return (
-    <div className="relative flex w-full max-w-sm flex-col gap-7 rounded-2xl bg-white px-6 py-8">
+    <div className="relative flex w-full max-w-sm flex-col gap-5 rounded-2xl bg-white px-6 py-8">
       <div className="bg-primary absolute top-0 right-0 h-1.5 w-full rounded-t-2xl" />
 
       {/* Logo */}
@@ -80,8 +81,8 @@ const LoginForm: React.FC = () => {
       {/* Form */}
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="space-y-2">
-          <label htmlFor="username" className="block text-xs font-semibold text-gray-600">
-            NIM
+          <label htmlFor="username" className="block text-xs md:text-sm font-semibold text-gray-600">
+            Username
           </label>
           <input
             type="text"
@@ -89,14 +90,14 @@ const LoginForm: React.FC = () => {
             name="username"
             value={formData.username}
             onChange={handleInputChange}
-            className="focus:ring-primary-dark w-full rounded-lg border border-gray-300 px-4 py-3 focus:ring-1 focus:outline-none"
+            className="focus:ring-primary-dark w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-1 focus:outline-none"
             placeholder="Type here"
             required
           />
         </div>
         <div className="space-y-2">
-          <label htmlFor="password" className="block text-xs font-semibold text-gray-600">
-            PASSWORD
+          <label htmlFor="password" className="block text-xs md:text-sm font-semibold text-gray-600">
+            Password
           </label>
           <div className="relative">
             <input
@@ -105,7 +106,7 @@ const LoginForm: React.FC = () => {
               name="password"
               value={formData.password}
               onChange={handleInputChange}
-              className="focus:ring-primary-dark w-full rounded-lg border border-gray-300 px-4 py-3 focus:ring-1 focus:outline-none"
+              className="focus:ring-primary-dark w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-1 focus:outline-none"
               placeholder="Type here"
               required
             />
@@ -120,11 +121,40 @@ const LoginForm: React.FC = () => {
           </div>
         </div>
         <div className="mt-6">
-          <MainButton type="submit" isLoading={isLoading} fullWidth size="xl">
+          <MainButton type="submit" isLoading={isLoading} fullWidth size="lg">
             Login
           </MainButton>
         </div>
       </form>
+
+      {/* Register Link */}
+      <div className="text-center">
+        <p className="text-sm text-gray-600">
+          Don't have an account?{' '}
+          <button
+            type="button"
+            onClick={() => navigate('/register')}
+            className="text-primary hover:text-primary-dark font-semibold"
+          >
+            Register here
+          </button>
+        </p>
+      </div>
+
+      {/* OAuth Section */}
+      <div className="space-y-4">
+        <div className="relative">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-gray-300" />
+          </div>
+          <div className="relative flex justify-center text-sm">
+            <span className="bg-white px-2 text-gray-500">Or continue with</span>
+          </div>
+        </div>
+        <div className="space-y-3">
+          <GoogleOAuthButton />
+        </div>
+      </div>
     </div>
   );
 };

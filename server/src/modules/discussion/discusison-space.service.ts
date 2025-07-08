@@ -11,8 +11,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Pageable } from '../../common/interfaces/pageable.interface';
 import { FileService } from '../../core/file/file.service';
-import { Faculty } from '../academic/entity/faculty.entity';
-import { StudyProgram } from '../academic/entity/study-program.entity';
 import { AnalyticService } from '../analytic/analytic.service';
 import { ActivityEntityType, ActivityType } from '../analytic/entities/user-activity.entity';
 import { User } from '../user/entities/user.entity';
@@ -45,33 +43,6 @@ export class DiscussionSpaceService {
       throw new ConflictException(`Space with slug "${createDto.slug}" already exists`);
     }
 
-    // Validate space type and associated IDs
-    if (createDto.spaceType === SpaceType.STUDY_PROGRAM) {
-      if (!createDto.studyProgramId) {
-        throw new BadRequestException('Study Program ID is required for study program spaces');
-      }
-
-      const studyProgram = await this.spaceRepository.manager.findOne(StudyProgram, {
-        where: { id: createDto.studyProgramId },
-      });
-      if (!studyProgram) {
-        throw new BadRequestException(`Study Program with ID ${createDto.studyProgramId} not found`);
-      }
-
-      createDto.facultyId = studyProgram.facultyId;
-    } else if (createDto.spaceType === SpaceType.FACULTY) {
-      if (!createDto.facultyId) {
-        throw new BadRequestException('Faculty ID is required for faculty spaces');
-      }
-
-      const faculty = await this.spaceRepository.manager.findOne(Faculty, {
-        where: { id: createDto.facultyId },
-      });
-      if (!faculty) {
-        throw new BadRequestException(`Faculty with ID ${createDto.facultyId} not found`);
-      }
-    }
-
     const queryRunner = this.spaceRepository.manager.connection.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
@@ -87,8 +58,6 @@ export class DiscussionSpaceService {
         slug: createDto.slug,
         creatorId: currentUser.id,
         spaceType: createDto.spaceType,
-        facultyId: createDto.facultyId || null,
-        studyProgramId: createDto.studyProgramId || null,
         followerCount: 0,
       });
 
@@ -186,8 +155,6 @@ export class DiscussionSpaceService {
       !updateDto.description &&
       !updateDto.slug &&
       !updateDto.spaceType &&
-      !updateDto.facultyId &&
-      !updateDto.studyProgramId &&
       !files?.icon &&
       !files?.banner
     ) {
@@ -198,63 +165,12 @@ export class DiscussionSpaceService {
     this.verifyCreator(space, currentUser.id);
     await this.validateSlugUniqueness(updateDto.slug, space.slug, id);
 
-    if (updateDto.spaceType) {
-      // When changing space type, set appropriate faculty and study program values
-      switch (updateDto.spaceType) {
-        case SpaceType.STUDY_PROGRAM:
-          // Study program spaces need both study program and faculty IDs
-          const studyProgramId = updateDto.studyProgramId ?? space.studyProgramId;
-          if (!studyProgramId) {
-            throw new BadRequestException('Study Program ID is required for study program spaces');
-          }
-
-          const studyProgram = await this.spaceRepository.manager.findOne(StudyProgram, {
-            where: { id: studyProgramId },
-          });
-          if (!studyProgram) {
-            throw new BadRequestException(`Study Program with ID ${studyProgramId} not found`);
-          }
-
-          // Set faculty ID from study program
-          updateDto.facultyId = studyProgram.facultyId;
-          break;
-
-        case SpaceType.FACULTY:
-          // Faculty spaces need faculty ID but not study program ID
-          if (!updateDto.facultyId && !space.facultyId) {
-            throw new BadRequestException('Faculty ID is required for faculty spaces');
-          }
-
-          updateDto.studyProgramId = null;
-          break;
-
-        case SpaceType.ACADEMIC:
-        case SpaceType.ORGANIZATION:
-        case SpaceType.CAMPUS:
-        case SpaceType.OTHER:
-          updateDto.facultyId = null;
-          updateDto.studyProgramId = null;
-          break;
-      }
-    } else if (updateDto.studyProgramId) {
-      // If changing only study program without changing type, get faculty from study program
-      const studyProgram = await this.spaceRepository.manager.findOne(StudyProgram, {
-        where: { id: updateDto.studyProgramId },
-      });
-      if (!studyProgram) {
-        throw new BadRequestException(`Study Program with ID ${updateDto.studyProgramId} not found`);
-      }
-      updateDto.facultyId = studyProgram.facultyId;
-    }
-
-    // Handle faculty changes (validation only if setting a non-null value)
-    if (updateDto.facultyId && updateDto.facultyId !== space.facultyId) {
-      const faculty = await this.spaceRepository.manager.findOne(Faculty, {
-        where: { id: updateDto.facultyId },
-      });
-      if (!faculty) {
-        throw new BadRequestException(`Faculty with ID ${updateDto.facultyId} not found`);
-      }
+    switch (updateDto.spaceType) {
+      case SpaceType.ACADEMIC:
+      case SpaceType.ORGANIZATION:
+      case SpaceType.CAMPUS:
+      case SpaceType.OTHER:
+        break;
     }
 
     const queryRunner = this.spaceRepository.manager.connection.createQueryRunner();
@@ -266,9 +182,6 @@ export class DiscussionSpaceService {
       if (updateDto.description !== undefined) space.description = updateDto.description;
       if (updateDto.slug) space.slug = updateDto.slug;
       if (updateDto.spaceType) space.spaceType = updateDto.spaceType;
-
-      space.facultyId = updateDto.facultyId !== undefined ? updateDto.facultyId : space.facultyId;
-      space.studyProgramId = updateDto.studyProgramId !== undefined ? updateDto.studyProgramId : space.studyProgramId;
 
       // Handle icon update/removal
       if (files?.icon && files.icon.length > 0) {
@@ -514,19 +427,6 @@ export class DiscussionSpaceService {
       });
     }
 
-    // Filter by faculty
-    if (searchDto.facultyId) {
-      queryBuilder = queryBuilder.andWhere('space.facultyId = :facultyId', {
-        facultyId: searchDto.facultyId,
-      });
-    }
-
-    // Filter by study program
-    if (searchDto.studyProgramId) {
-      queryBuilder = queryBuilder.andWhere('space.studyProgramId = :studyProgramId', {
-        studyProgramId: searchDto.studyProgramId,
-      });
-    }
     // Filter by followed spaces
     if (searchDto.following && currentUser) {
       queryBuilder = queryBuilder

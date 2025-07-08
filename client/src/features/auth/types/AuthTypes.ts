@@ -7,11 +7,21 @@ export interface LoginRequest {
   password: string;
 }
 
+export interface RegisterRequest {
+  username: string;
+  password: string;
+  fullName: string;
+}
+
 // ===== RESPONSE TYPES =====
 
 export interface LoginResponse {
   user: User;
   accessToken: string;
+}
+
+export interface RegisterResponse {
+  message: string;
 }
 
 export interface RefreshTokenResponse {

@@ -22,7 +22,7 @@ export async function seedReports(dataSource: DataSource): Promise<void> {
 
   // Get available users (reporters)
   const users = await userRepository.find({
-    where: { role: UserRole.STUDENT, isExternalUser: false },
+    where: { role: UserRole.STUDENT },
     select: ['id'],
   });
 

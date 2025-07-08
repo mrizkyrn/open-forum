@@ -10,9 +10,10 @@ import { TransformInterceptor } from './common/interceptors/transform.intercepto
 import { createWinstonLogger } from './core/logger/winston.config';
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
-    logger: createWinstonLogger(process.env.NODE_ENV === 'development'),
-  });
+  // const app = await NestFactory.create<NestExpressApplication>(AppModule, {
+  //   logger: createWinstonLogger(process.env.NODE_ENV === 'development'),
+  // });
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const configService = app.get(ConfigService);
 
   // Add global validation pipe

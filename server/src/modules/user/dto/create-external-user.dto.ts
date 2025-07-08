@@ -1,4 +1,4 @@
-import { IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString, MaxLength } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-validator';
 import { UserRole } from '../../../common/enums/user-role.enum';
 
 export class CreateExternalUserDto {
@@ -12,29 +12,8 @@ export class CreateExternalUserDto {
 
   @IsString()
   @IsOptional()
-  gender?: string;
-
-  @IsString()
-  @IsOptional()
-  batchYear?: string;
-
-  @IsString()
-  @IsOptional()
-  educationLevel?: string;
-
-  @IsNumber()
-  @IsOptional()
-  studyProgramId?: number | null;
-
-  @IsString()
-  @IsOptional()
   @MaxLength(100)
   email?: string;
-
-  @IsString()
-  @IsOptional()
-  @MaxLength(20)
-  phone?: string;
 
   @IsEnum(UserRole)
   @IsOptional()

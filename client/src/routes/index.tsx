@@ -9,7 +9,9 @@ import MainLayout from '@/shared/components/layouts/MainLayout';
 // Public pages
 const HomePage = lazy(() => import('@/pages/HomePage'));
 const LoginPage = lazy(() => import('@/pages/LoginPage'));
+const RegisterPage = lazy(() => import('@/pages/RegisterPage'));
 const NotFound = lazy(() => import('@/pages/NotFound'));
+const OAuthSuccessPage = lazy(() => import('@/pages/OAuthSuccessPage'));
 
 // Main app pages
 const DiscussionDetailPage = lazy(() => import('@/pages/DiscussionDetailPage'));
@@ -117,6 +119,14 @@ const routes = [
   {
     path: '/login',
     element: lazyLoad(LoginPage),
+  },
+  {
+    path: '/register',
+    element: lazyLoad(RegisterPage),
+  },
+  {
+    path: '/auth/oauth-success',
+    element: lazyLoad(OAuthSuccessPage),
   },
   {
     path: '*',

@@ -2,7 +2,8 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { UserActivityInterceptor } from './common/interceptors/user-activity.interceptor';
-import { appConfig, databaseConfig, jwtConfig, redisConfig, externalApiConfig, pushConfig } from './config';
+import { appConfig, databaseConfig, externalApiConfig, jwtConfig, pushConfig, redisConfig } from './config';
+import { googleOAuthConfig } from './config/google/google-oauth.config';
 import { DatabaseModule } from './core/database/database.module';
 import { FileModule } from './core/file/file.module';
 import { RedisModule } from './core/redis/redis.module';
@@ -17,13 +18,12 @@ import { NotificationModule } from './modules/notification/notification.module';
 import { ReportModule } from './modules/report/report.module';
 import { UserModule } from './modules/user/user.module';
 import { VoteModule } from './modules/vote/vote.module';
-import { AcademicModule } from './modules/academic/academic.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [databaseConfig, appConfig, jwtConfig, redisConfig, externalApiConfig, pushConfig],
+      load: [databaseConfig, appConfig, jwtConfig, redisConfig, externalApiConfig, pushConfig, googleOAuthConfig],
     }),
     DatabaseModule,
     AuthModule,
@@ -39,7 +39,6 @@ import { AcademicModule } from './modules/academic/academic.module';
     NotificationModule,
     AnalyticModule,
     RedisModule,
-    AcademicModule,
   ],
   providers: [
     {

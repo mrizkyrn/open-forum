@@ -27,34 +27,12 @@ export class SearchSpaceDto extends SearchDto {
     description: 'Filter by space type',
     required: false,
     enum: SpaceType,
-    example: SpaceType.FACULTY,
+    example: SpaceType.ACADEMIC,
   })
   @IsOptional()
   @IsEnum(SpaceType)
   @Type(() => String)
   spaceType?: SpaceType;
-
-  @ApiProperty({
-    description: 'Filter by faculty ID',
-    required: false,
-    type: Number,
-    example: 1,
-  })
-  @IsOptional()
-  @IsNumber()
-  @Type(() => Number)
-  facultyId?: number;
-
-  @ApiProperty({
-    description: 'Filter by study program ID',
-    required: false,
-    type: Number,
-    example: 1,
-  })
-  @IsOptional()
-  @IsNumber()
-  @Type(() => Number)
-  studyProgramId?: number;
 
   @ApiProperty({
     description: 'Show only spaces followed by the current user',

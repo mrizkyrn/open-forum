@@ -14,7 +14,6 @@ interface UserAvatarProps {
 const UserAvatar = ({ fullName = 'Anonymous', avatarUrl, size = 'md', className = '', username }: UserAvatarProps) => {
   const [imgSrc, setImgSrc] = useState<string | null>(null);
   const [hasError, setHasError] = useState(false);
-
   const isAnonymous = fullName.toLowerCase().includes('anonymous');
 
   const getSizeValue = (): { width: string; height: string; sizeClass: string } => {
@@ -57,7 +56,7 @@ const UserAvatar = ({ fullName = 'Anonymous', avatarUrl, size = 'md', className 
     if (avatarUrl.startsWith('http')) {
       return avatarUrl;
     } else {
-      const baseUrl = import.meta.env.VITE_API_URL || '';
+      const baseUrl = import.meta.env.VITE_BASE_API_URL || '';
       return `${baseUrl}${avatarUrl.startsWith('/') ? avatarUrl : `/${avatarUrl}`}`;
     }
   };
