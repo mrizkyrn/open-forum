@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy, VerifyCallback } from 'passport-google-oauth20';
-import { googleOAuthConfig } from 'src/config/google/google-oauth.config';
+import { googleOAuthConfig } from '../../../config';
 import { AuthService } from '../auth.service';
 
 @Injectable()
@@ -21,17 +21,30 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
   }
 
   async validate(accessToken: string, refreshToken: string, profile: any, done: VerifyCallback): Promise<any> {
-    const { name, emails, photos } = profile;
-    const user = {
-      email: emails[0].value,
-      firstName: name.givenName,
-      lastName: name.familyName,
-      avatarUrl: photos[0].value,
-      accessToken,
-      refreshToken,
-    };
+    try {
+      const { name, emails, photos } = profile;
 
-    const validatedUser = await this.authService.validateOAuthUser(user, 'google');
-    done(null, validatedUser);
+      if (!emails || !emails[0] || !emails[0].value) {
+        throw new Error('Google OAuth profile missing email information');
+      }
+
+      if (!name || !name.givenName || !name.familyName) {
+        throw new Error('Google OAuth profile missing name information');
+      }
+
+      const user = {
+        email: emails[0].value,
+        firstName: name.givenName,
+        lastName: name.familyName,
+        avatarUrl: photos && photos[0] ? photos[0].value : null,
+        accessToken,
+        refreshToken,
+      };
+
+      const validatedUser = await this.authService.validateOAuthUser(user, 'google');
+      done(null, validatedUser);
+    } catch (error) {
+      done(error, false);
+    }
   }
 }

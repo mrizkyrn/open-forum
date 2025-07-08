@@ -14,9 +14,6 @@ import { WsJwtGuard } from '../../common/guards/ws-jwt.guard';
 import { JWTConfig } from '../../config';
 import { JwtPayload } from '../../modules/auth/interfaces/jwt-payload.interface';
 import { UserService } from '../../modules/user/user.service';
-import { RedisChannels } from '../redis/redis.constants';
-import { isCommentCreatedEvent } from '../redis/redis.interface';
-import { RedisService } from '../redis/redis.service';
 
 @WebSocketGateway({
   cors: {
@@ -190,8 +187,8 @@ export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection, OnG
     return this.onlineUsers.has(userId);
   }
 
-  notifyNewDiscussion(authorId: number, discussionId: number) {
-    this.server.emit('newDiscussion', { authorId, discussionId });
+  notifyNewDiscussion(authorId: number, discussionId: number, spaceId: number) {
+    this.server.emit('newDiscussion', { authorId, discussionId, spaceId });
     return true;
   }
 

@@ -1,9 +1,9 @@
-import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { Inject, Injectable, Logger, OnModuleInit } from '@nestjs/common';
+import { ConfigType } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as webPush from 'web-push';
-import { PushConfig } from '../../config';
+import { appConfig, pushConfig } from '../../config';
 import { Notification, NotificationType } from './entities/notification.entity';
 import { PushSubscription } from './entities/push-subscription.entity';
 
@@ -12,24 +12,31 @@ export class PushNotificationService implements OnModuleInit {
   private readonly logger = new Logger(PushNotificationService.name);
 
   constructor(
-    private readonly configService: ConfigService,
+    @Inject(pushConfig.KEY)
+    private readonly pushConfigService: ConfigType<typeof pushConfig>,
+    @Inject(appConfig.KEY)
+    private readonly appConfigService: ConfigType<typeof appConfig>,
     @InjectRepository(PushSubscription)
     private readonly pushSubscriptionRepository: Repository<PushSubscription>,
   ) {}
 
   onModuleInit() {
-    const pushConfig = this.configService.get<PushConfig>('push');
-
-    if (!pushConfig?.publicKey || !pushConfig?.privateKey) {
+    if (!this.pushConfigService.publicKey || !this.pushConfigService.privateKey) {
       this.logger.warn('VAPID keys not configured. Push notifications will not work.');
       return;
     }
 
-    webPush.setVapidDetails(pushConfig.subject, pushConfig.publicKey, pushConfig.privateKey);
+    webPush.setVapidDetails(
+      this.pushConfigService.subject,
+      this.pushConfigService.publicKey,
+      this.pushConfigService.privateKey,
+    );
+
+    this.logger.log('Push notifications configured successfully');
   }
 
   async getVapidPublicKey(): Promise<string> {
-    return this.configService.get<PushConfig>('push')?.publicKey || '';
+    return this.pushConfigService.publicKey;
   }
 
   async saveSubscription(userId: number, subscription: any, userAgent?: string): Promise<PushSubscription> {
@@ -226,7 +233,7 @@ export class PushNotificationService implements OnModuleInit {
   }
 
   private getNotificationUrl(notification: Notification): string {
-    const baseUrl = this.configService.get('app.clientUrl') || 'http://localhost:3000';
+    const baseUrl = this.appConfigService.clientUrl;
     const discussionId = notification.data?.discussionId;
     const commentId = notification.data?.commentId;
 

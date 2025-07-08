@@ -10,16 +10,16 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import * as fs from 'fs';
 import * as path from 'path';
-import { CommentCreatedEvent } from 'src/core/redis/redis.interface';
 import { Between, Brackets, EntityManager, Repository } from 'typeorm';
 import { Pageable } from '../../common/interfaces/pageable.interface';
-import { RedisChannels } from '../../core/redis/redis.constants';
-import { RedisService } from '../../core/redis/redis.service';
+import { WebsocketGateway } from '../../core/websocket/websocket.gateway';
 import { AnalyticService } from '../analytic/analytic.service';
 import { ActivityEntityType, ActivityType } from '../analytic/entities/user-activity.entity';
 import { AttachmentService } from '../attachment/attachment.service';
 import { AttachmentType } from '../attachment/entities/attachment.entity';
 import { DiscussionService } from '../discussion/discussion.service';
+import { NotificationEntityType, NotificationType } from '../notification/entities/notification.entity';
+import { NotificationService } from '../notification/notification.service';
 import { User } from '../user/entities/user.entity';
 import { VoteEntityType } from '../vote/entities/vote.entity';
 import { VoteService } from '../vote/vote.service';
@@ -29,6 +29,16 @@ import { CreateCommentDto } from './dto/create-comment.dto';
 import { SearchCommentDto } from './dto/search-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 import { Comment } from './entities/comment.entity';
+
+export interface CommentCreatedEventData {
+  commentId: number;
+  discussionId: number;
+  spaceId: number;
+  authorId: number;
+  content: string;
+  parentId?: number | null;
+  hasAttachments?: boolean;
+}
 
 @Injectable()
 export class CommentService {
@@ -44,7 +54,8 @@ export class CommentService {
     @Inject(forwardRef(() => VoteService))
     private readonly voteService: VoteService,
     private readonly analyticService: AnalyticService,
-    private readonly redisService: RedisService,
+    private readonly webSocketGateway: WebsocketGateway,
+    private readonly notificationService: NotificationService,
   ) {}
 
   // ----- Core CRUD Operations -----
@@ -63,7 +74,6 @@ export class CommentService {
     let parentCommentAuthorId: number | undefined;
 
     try {
-      // Check if discussion exists
       const discussion = await this.discussionService.getDiscussionEntity(discussionId);
 
       // Check parent comment if this is a reply
@@ -142,18 +152,77 @@ export class CommentService {
         // Commit the transaction
         await queryRunner.commitTransaction();
 
-        // Publish to Redis
-        const commentEvent: CommentCreatedEvent = {
-          commentId: savedComment.id,
-          discussionId,
-          spaceId: discussion.spaceId,
-          authorId: currentUser.id,
-          content: savedComment.content,
-          parentId: savedComment.parentId,
-          hasAttachments: files && files.length > 0,
-        };
+        // Handle Websocket
+        await this.webSocketGateway.notifyNewComment({
+          id: savedComment.id,
+          discussionId: discussionId,
+          parentId: savedComment.parentId || null,
+        });
 
-        await this.redisService.publish(RedisChannels.COMMENT_CREATED, JSON.stringify(commentEvent));
+        // Handle notifications
+        if (savedComment.parentId) {
+          // This is a reply to another comment
+          const parentComment = await this.commentRepository.findOne({
+            where: { id: savedComment.parentId },
+            relations: ['author'],
+          });
+
+          if (parentComment && parentComment.authorId !== currentUser.id) {
+            await this.notificationService.createNotificationIfNotExists(
+              {
+                recipientId: parentComment.authorId,
+                actorId: currentUser.id,
+                type: NotificationType.NEW_REPLY,
+                entityType: NotificationEntityType.COMMENT,
+                entityId: savedComment.id,
+                data: {
+                  discussionId,
+                  parentCommentId: parentComment.id,
+                  replyId: savedComment.id,
+                  contentPreview: this.truncateContent(savedComment.content, 75),
+                  url: `/discussions/${discussionId}?comment=${savedComment.id}`,
+                },
+              },
+              5,
+            );
+          }
+        } else {
+          // Comment on a discussion
+          if (discussion.authorId !== currentUser.id) {
+            await this.notificationService.createNotificationIfNotExists(
+              {
+                recipientId: discussion.authorId,
+                actorId: currentUser.id,
+                type: NotificationType.NEW_COMMENT,
+                entityType: NotificationEntityType.COMMENT,
+                entityId: savedComment.id,
+                data: {
+                  discussionId,
+                  commentId: savedComment.id,
+                  contentPreview: this.truncateContent(savedComment.content, 75),
+                  url: `/discussions/${discussionId}?comment=${savedComment.id}`,
+                },
+              },
+              5,
+            );
+          }
+        }
+
+        // Record the activity
+        await this.analyticService.recordActivity(
+          currentUser.id,
+          ActivityType.CREATE_COMMENT,
+          ActivityEntityType.COMMENT,
+          savedComment.id,
+          {
+            spaceId: discussion.spaceId,
+            discussionId: discussionId,
+            parentId: savedComment.parentId,
+            content: savedComment.content,
+            hasAttachments: createdFilePaths.length > 0,
+            isReply: !!savedComment.parentId,
+          },
+        );
 
         const createdComment = await this.getCommentWithAttachmentById(savedComment.id);
         return CommentResponseDto.fromEntity(createdComment, null);

@@ -13,8 +13,7 @@ import * as path from 'path';
 import { Between, EntityManager, Repository } from 'typeorm';
 import { UserRole } from '../../common/enums/user-role.enum';
 import { Pageable } from '../../common/interfaces/pageable.interface';
-import { RedisChannels } from '../../core/redis/redis.constants';
-import { RedisService } from '../../core/redis/redis.service';
+import { WebsocketGateway } from '../../core/websocket/websocket.gateway';
 import { AnalyticService } from '../analytic/analytic.service';
 import { ActivityEntityType, ActivityType } from '../analytic/entities/user-activity.entity';
 import { AttachmentService } from '../attachment/attachment.service';
@@ -45,7 +44,7 @@ export class DiscussionService {
     @Inject(forwardRef(() => VoteService))
     private readonly voteService: VoteService,
     private readonly analyticService: AnalyticService,
-    private readonly redisService: RedisService,
+    private readonly webSocketGateway: WebsocketGateway,
   ) {}
 
   // ------ Discussion CRUD Operations ------
@@ -110,16 +109,22 @@ export class DiscussionService {
 
         await queryRunner.commitTransaction();
 
-        await this.redisService.publish(RedisChannels.DISCUSSION_CREATED, {
-          authorId: currentUser.id,
-          discussionId: savedDiscussion.id,
-          spaceId: savedDiscussion.spaceId,
-          isAnonymous: savedDiscussion.isAnonymous,
-          hasTags: (discussion.tags?.length || 0) > 0,
-          hasAttachments: files && files.length > 0,
-          content: this.truncateContent(savedDiscussion.content, 100),
-          clientRequestTime: clientRequestTime || Date.now(),
-        });
+        // Handle websocket
+        this.webSocketGateway.notifyNewDiscussion(currentUser.id, savedDiscussion.id, savedDiscussion.spaceId);
+
+        // Handle record activity
+        await this.analyticService.recordActivity(
+          currentUser.id,
+          ActivityType.CREATE_DISCUSSION,
+          ActivityEntityType.DISCUSSION,
+          savedDiscussion.id,
+          {
+            spaceId: savedDiscussion.spaceId,
+            isAnonymous: savedDiscussion.isAnonymous,
+            hasTags: (discussion.tags?.length || 0) > 0,
+            hasAttachments: files && files.length > 0,
+          },
+        );
 
         const createdDiscussion = await this.getDiscussionById(savedDiscussion.id);
 

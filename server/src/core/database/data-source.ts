@@ -1,5 +1,6 @@
 import 'dotenv/config';
 import { DataSource } from 'typeorm';
+import { databaseConfig } from '../../config';
 import { UserActivity } from '../../modules/analytic/entities/user-activity.entity';
 import { Attachment } from '../../modules/attachment/entities/attachment.entity';
 import { CommentMention } from '../../modules/comment/entities/comment-mention.entity';
@@ -15,14 +16,15 @@ import { User } from '../../modules/user/entities/user.entity';
 import { Vote } from '../../modules/vote/entities/vote.entity';
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
+const dbConfig = databaseConfig();
 
 export default new DataSource({
   type: 'postgres',
-  host: process.env.DB_HOST || 'localhost',
-  port: parseInt(process.env.DB_PORT || '5432', 10),
-  username: process.env.DB_USER || 'postgres',
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME || 'open_forum',
+  host: dbConfig.host,
+  port: dbConfig.port,
+  username: dbConfig.username,
+  password: dbConfig.password,
+  database: dbConfig.database,
   synchronize: isDevelopment,
   logging: false,
   entities: [

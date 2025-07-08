@@ -1,8 +1,8 @@
-import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { Inject, Injectable, Logger, UnauthorizedException } from '@nestjs/common';
+import { ConfigType } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { UserRole } from '../../common/enums/user-role.enum';
-import { JWTConfig } from '../../config';
+import { jwtConfig } from '../../config';
 import { UserResponseDto } from '../user/dto/user-response.dto';
 import { User } from '../user/entities/user.entity';
 import { UserService } from '../user/user.service';
@@ -13,15 +13,13 @@ import { JwtPayload } from './interfaces/jwt-payload.interface';
 @Injectable()
 export class AuthService {
   private readonly logger = new Logger(AuthService.name);
-  private readonly jwtConfig: JWTConfig;
 
   constructor(
+    @Inject(jwtConfig.KEY)
+    private readonly jwtConfigService: ConfigType<typeof jwtConfig>,
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
-    private readonly configService: ConfigService,
-  ) {
-    this.jwtConfig = this.configService.get<JWTConfig>('jwt')!;
-  }
+  ) {}
 
   async register(registerDto: RegisterDto): Promise<{ message: string }> {
     try {
@@ -84,12 +82,12 @@ export class AuthService {
 
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(payload, {
-        secret: this.jwtConfig.accessTokenSecret,
-        expiresIn: this.jwtConfig.accessTokenExpires,
+        secret: this.jwtConfigService.accessTokenSecret,
+        expiresIn: this.jwtConfigService.accessTokenExpires,
       }),
       this.jwtService.signAsync(payload, {
-        secret: this.jwtConfig.refreshTokenSecret,
-        expiresIn: this.jwtConfig.refreshTokenExpires,
+        secret: this.jwtConfigService.refreshTokenSecret,
+        expiresIn: this.jwtConfigService.refreshTokenExpires,
       }),
     ]);
 

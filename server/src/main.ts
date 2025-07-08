@@ -7,13 +7,12 @@ import { Request, Response } from 'express';
 import { AppModule } from './app.module';
 import { ExceptionsFilter } from './common/filters/execption.filter';
 import { TransformInterceptor } from './common/interceptors/transform.interceptor';
-import { createWinstonLogger } from './core/logger/winston.config';
+import { createLoggerForApp } from './core/logger/winston.config';
 
 async function bootstrap() {
-  // const app = await NestFactory.create<NestExpressApplication>(AppModule, {
-  //   logger: createWinstonLogger(process.env.NODE_ENV === 'development'),
-  // });
-  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
+    logger: createLoggerForApp(),
+  });
   const configService = app.get(ConfigService);
 
   // Add global validation pipe

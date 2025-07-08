@@ -1,17 +1,18 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import { CanActivate, ExecutionContext, Inject, Injectable } from '@nestjs/common';
+import { ConfigType } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { WsException } from '@nestjs/websockets';
 import { Socket } from 'socket.io';
-import { ConfigService } from '@nestjs/config';
-import { UserService } from '../../modules/user/user.service';
+import { jwtConfig } from '../../config';
 import { JwtPayload } from '../../modules/auth/interfaces/jwt-payload.interface';
-import { JWTConfig } from 'src/config';
+import { UserService } from '../../modules/user/user.service';
 
 @Injectable()
 export class WsJwtGuard implements CanActivate {
   constructor(
+    @Inject(jwtConfig.KEY)
+    private readonly jwtConfigService: ConfigType<typeof jwtConfig>,
     private readonly jwtService: JwtService,
-    private readonly configService: ConfigService,
     private readonly userService: UserService,
   ) {}
 
@@ -33,7 +34,7 @@ export class WsJwtGuard implements CanActivate {
 
       // Verify the token
       const payload = await this.jwtService.verifyAsync<JwtPayload>(token, {
-        secret: this.configService.get<JWTConfig>('jwt')!.accessTokenSecret,
+        secret: this.jwtConfigService.accessTokenSecret,
       });
 
       // Check if user exists

@@ -1,10 +1,8 @@
 import { BadRequestException, ForbiddenException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ReportReviewedEvent } from 'src/core/redis/redis.interface';
-import { RedisService } from 'src/core/redis/redis.service';
-import { WebsocketGateway } from 'src/core/websocket/websocket.gateway';
 import { Between, FindOptionsWhere, Repository } from 'typeorm';
 import { Pageable } from '../../common/interfaces/pageable.interface';
+import { WebsocketGateway } from '../../core/websocket/websocket.gateway';
 import { AnalyticService } from '../analytic/analytic.service';
 import { ActivityEntityType, ActivityType } from '../analytic/entities/user-activity.entity';
 import { CommentService } from '../comment/comment.service';
@@ -18,7 +16,6 @@ import { ReportReasonResponseDto, ReportResponseDto, ReportStatsResponseDto } fr
 import { SearchReportDto } from './dto/search-report.dto';
 import { ReportReason } from './entities/report-reason.entity';
 import { Report, ReportStatus, ReportTargetType } from './entities/report.entity';
-import { RedisChannels } from 'src/core/redis/redis.constants';
 
 @Injectable()
 export class ReportService {
@@ -34,7 +31,6 @@ export class ReportService {
     private readonly notificationService: NotificationService,
     private readonly analyticService: AnalyticService,
     private readonly websocketGateway: WebsocketGateway,
-    private readonly redisService: RedisService,
   ) {}
 
   // ----- Report CRUD Operations -----
@@ -156,24 +152,76 @@ export class ReportService {
       // Save the updated report
       const updatedReport = await this.reportRepository.save(report);
 
-      // Publish the report handling event to WebSocket
-      const reportEvent: ReportReviewedEvent = {
-        reportId: report.id,
-        reportStatus: report.status,
-        reviewerId: report.reviewerId,
-        reporterId: report.reporterId,
-        targetAuthorId,
-        targetType: report.targetType,
-        targetId: report.targetId,
-        contentPreview: content,
-        discussionId,
-        isContentDeleted: handleDto.deleteContent,
-        note: handleDto.note || '',
-        reasonText: report.reason?.name || '',
-        notifyReporter: handleDto.notifyReporter,
-        notifyAuthor: handleDto.notifyAuthor,
-      };
-      await this.redisService.publish(RedisChannels.REPORT_REVIEWED, JSON.stringify(reportEvent));
+      const notifications: Promise<any>[] = [];
+
+      // 1. Notify content author if requested and if we have their ID
+      if (targetAuthorId && handleDto.notifyAuthor) {
+        const authorMessage = this.getReportAuthorMessage(handleDto.deleteContent, report.status);
+
+        notifications.push(
+          this.notificationService.createNotificationIfNotExists(
+            {
+              recipientId: targetAuthorId,
+              actorId: report.reviewerId,
+              type: NotificationType.REPORT_REVIEWED,
+              entityType: NotificationEntityType.REPORT,
+              entityId: report.id,
+              data: {
+                reportId: report.id,
+                discussionId: discussionId,
+                status: report.status,
+                targetType: report.targetType,
+                targetId: report.targetId,
+                contentPreview: this.truncateContent(content, 75),
+                isContentDeleted: handleDto.deleteContent,
+                note: handleDto.note || '',
+                reasonText: report.reason?.name || '',
+                message: authorMessage,
+                recipientType: 'content_author',
+                url: discussionId ? `/discussions/${discussionId}` : '/notifications',
+              },
+            },
+            10, // 10-minute deduplication window
+          ),
+        );
+      }
+
+      // 2. Notify reporter if requested and not the same as author
+      if (handleDto.notifyReporter && report.id !== targetAuthorId) {
+        const reporterMessage = this.getReportReporterMessage(handleDto.deleteContent);
+
+        notifications.push(
+          this.notificationService.createNotificationIfNotExists(
+            {
+              recipientId: report.reporterId,
+              actorId: report.reviewerId,
+              type: NotificationType.REPORT_REVIEWED,
+              entityType: NotificationEntityType.REPORT,
+              entityId: report.id,
+              data: {
+                reportId: report.id,
+                discussionId: discussionId,
+                status: report.status,
+                targetType: report.targetType,
+                targetId: report.targetId,
+                contentPreview: this.truncateContent(content, 75),
+                isContentDeleted: handleDto.deleteContent,
+                note: handleDto.note || '',
+                reasonText: report.reason?.name || '',
+                message: reporterMessage,
+                recipientType: 'reporter',
+                url: discussionId ? `/discussions/${discussionId}` : '/notifications',
+              },
+            },
+            10, // 10-minute deduplication window
+          ),
+        );
+      }
+
+      // Execute all notification promises in parallel
+      if (notifications.length > 0) {
+        await Promise.all(notifications);
+      }
 
       // Update response based on action taken
       if (handleDto.deleteContent) {
@@ -455,102 +503,20 @@ export class ReportService {
     }
   }
 
-  private async createReportNotification(params: {
-    report: Report;
-    targetAuthorId: number | null;
-    contentPreview: string;
-    discussionId: number | null;
-    isContentDeleted: boolean;
-    options: {
-      note?: string;
-      notifyReporter?: boolean;
-      notifyAuthor?: boolean;
-    };
-  }): Promise<void> {
-    const { report, targetAuthorId, contentPreview, discussionId, isContentDeleted, options } = params;
-    const { note, notifyReporter = true, notifyAuthor = true } = options;
-
-    try {
-      const notifications: Promise<any>[] = [];
-
-      // Common notification data
-      const baseNotificationData = {
-        reportId: report.id,
-        discussionId,
-        status: report.status,
-        targetType: report.targetType,
-        targetId: report.targetId,
-        contentPreview,
-        isContentDeleted,
-        note: note || '',
-        reasonText: report.reason?.name || '',
-      };
-
-      // 1. Notify content author if requested and if we have their ID
-      if (targetAuthorId && notifyAuthor) {
-        const authorMessage = this.getAuthorMessage(isContentDeleted, report.targetType);
-
-        notifications.push(
-          this.notificationService.createNotificationIfNotExists(
-            {
-              recipientId: targetAuthorId,
-              actorId: report.reviewerId,
-              type: NotificationType.REPORT_REVIEWED,
-              entityType: NotificationEntityType.REPORT,
-              entityId: report.id,
-              data: {
-                ...baseNotificationData,
-                message: authorMessage,
-                recipientType: 'content_author',
-              },
-            },
-            10,
-          ), // 10-minute deduplication window
-        );
-      }
-
-      // 2. Notify reporter if requested and not the same as author
-      if (notifyReporter && report.reporterId !== targetAuthorId) {
-        const reporterMessage = this.getReporterMessage(isContentDeleted);
-
-        notifications.push(
-          this.notificationService.createNotificationIfNotExists(
-            {
-              recipientId: report.reporterId,
-              actorId: report.reviewerId,
-              type: NotificationType.REPORT_REVIEWED,
-              entityType: NotificationEntityType.REPORT,
-              entityId: report.id,
-              data: {
-                ...baseNotificationData,
-                message: reporterMessage,
-                recipientType: 'reporter',
-              },
-            },
-            10,
-          ), // 10-minute deduplication window
-        );
-      }
-
-      // Execute all notification promises in parallel
-      if (notifications.length > 0) {
-        await Promise.all(notifications);
-      }
-    } catch (error) {
-      this.logger.error(`Error sending report notifications: ${error.message}`, error.stack);
-      // Non-critical failure - don't throw the error
-    }
-  }
-
-  private getAuthorMessage(isContentDeleted: boolean, contentType: string): string {
+  private getReportAuthorMessage(isContentDeleted: boolean, contentType: string): string {
     return isContentDeleted
       ? `Your ${contentType} has been removed for violating our community guidelines.`
       : `Your ${contentType} was reported and has been reviewed by our moderators.`;
   }
 
-  private getReporterMessage(isContentDeleted: boolean): string {
+  private getReportReporterMessage(isContentDeleted: boolean): string {
     return isContentDeleted
       ? 'Thank you for your report. The content has been removed.'
       : 'Your report has been reviewed.';
+  }
+
+  private truncateContent(content: string, maxLength: number): string {
+    if (!content) return '';
+    return content.length > maxLength ? `${content.substring(0, maxLength)}...` : content;
   }
 }

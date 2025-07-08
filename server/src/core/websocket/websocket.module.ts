@@ -4,7 +4,6 @@ import { JwtModule } from '@nestjs/jwt';
 import { JWTConfig } from '../../config';
 import { UserModule } from '../../modules/user/user.module';
 import { WebsocketGateway } from './websocket.gateway';
-import { WebsocketEventService } from './websocket-event.servcie';
 
 @Module({
   imports: [
@@ -19,7 +18,7 @@ import { WebsocketEventService } from './websocket-event.servcie';
     }),
     UserModule,
   ],
-  providers: [WebsocketGateway, WebsocketEventService],
+  providers: [WebsocketGateway],
   exports: [WebsocketGateway],
 })
 export class WebsocketModule {}

@@ -1,10 +1,8 @@
-import { forwardRef, Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, In, MoreThan, Repository } from 'typeorm';
 import { Pageable } from '../../common/interfaces/pageable.interface';
-import { RedisService } from '../../core/redis/redis.service';
 import { WebsocketGateway } from '../../core/websocket/websocket.gateway';
-import { CommentService } from '../comment/comment.service';
 import { BatchCreateNotificationDto, CreateNotificationDto } from './dto/create-notification.dto';
 import { NotificationQueryDto, NotificationResponseDto } from './dto/notification.dto';
 import { Notification, NotificationEntityType, NotificationType } from './entities/notification.entity';

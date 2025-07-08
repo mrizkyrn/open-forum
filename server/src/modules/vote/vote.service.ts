@@ -1,16 +1,17 @@
 import { forwardRef, Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { RedisChannels } from 'src/core/redis/redis.constants';
-import { RedisService } from 'src/core/redis/redis.service';
 import { Between, Repository } from 'typeorm';
+import { AnalyticService } from '../analytic/analytic.service';
+import { ActivityEntityType, ActivityType } from '../analytic/entities/user-activity.entity';
 import { CommentService } from '../comment/comment.service';
 import { Comment } from '../comment/entities/comment.entity';
 import { DiscussionService } from '../discussion/discussion.service';
 import { Discussion } from '../discussion/entities/discussion.entity';
+import { NotificationEntityType, NotificationType } from '../notification/entities/notification.entity';
+import { NotificationService } from '../notification/notification.service';
 import { VoteDto } from './dto/vote-dto';
 import { VoteCountsDto, VoteResponseDto } from './dto/vote-response.dto';
 import { Vote, VoteEntityType, VoteValue } from './entities/vote.entity';
-import { VoteUpdatedEvent } from 'src/core/redis/redis.interface';
 
 @Injectable()
 export class VoteService {
@@ -23,17 +24,18 @@ export class VoteService {
     private readonly discussionService: DiscussionService,
     @Inject(forwardRef(() => CommentService))
     private readonly commentService: CommentService,
-    private readonly redisService: RedisService,
+    private readonly notificationService: NotificationService,
+    private readonly analyticService: AnalyticService,
   ) {}
 
   // ----- Core Vote Operations -----
 
   async voteDiscussion(userId: number, discussionId: number, voteDto: VoteDto): Promise<VoteResponseDto | null> {
-    return this.voteEntity(userId, VoteEntityType.DISCUSSION, discussionId, voteDto.value, voteDto.clientRequestTime);
+    return this.voteEntity(userId, VoteEntityType.DISCUSSION, discussionId, voteDto.value);
   }
 
   async voteComment(userId: number, commentId: number, voteDto: VoteDto): Promise<VoteResponseDto | null> {
-    return this.voteEntity(userId, VoteEntityType.COMMENT, commentId, voteDto.value, voteDto.clientRequestTime);
+    return this.voteEntity(userId, VoteEntityType.COMMENT, commentId, voteDto.value);
   }
 
   async getUserVoteStatus(userId: number, entityType: VoteEntityType, entityId: number): Promise<number | null> {
@@ -106,7 +108,6 @@ export class VoteService {
     entityType: VoteEntityType,
     entityId: number,
     value: VoteValue,
-    clientRequestTime?: number,
   ): Promise<VoteResponseDto | null> {
     const queryRunner = this.voteRepository.manager.connection.createQueryRunner();
 
@@ -143,7 +144,6 @@ export class VoteService {
       });
 
       let result: Vote | null = null;
-      let shouldNotify = false;
       let voteAction: 'added' | 'removed' | 'changed' = 'added';
       let oldVoteValue: VoteValue | null = null;
 
@@ -172,7 +172,6 @@ export class VoteService {
           if (value === VoteValue.UPVOTE) {
             await service.incrementUpvoteCount(entityId, queryRunner.manager);
             await service.decrementDownvoteCount(entityId, queryRunner.manager);
-            shouldNotify = true;
           } else {
             await service.incrementDownvoteCount(entityId, queryRunner.manager);
             await service.decrementUpvoteCount(entityId, queryRunner.manager);
@@ -193,7 +192,6 @@ export class VoteService {
         // Update counts
         if (value === VoteValue.UPVOTE) {
           await service.incrementUpvoteCount(entityId, queryRunner.manager);
-          shouldNotify = true;
         } else {
           await service.incrementDownvoteCount(entityId, queryRunner.manager);
         }
@@ -201,18 +199,77 @@ export class VoteService {
 
       await queryRunner.commitTransaction();
 
-      // Publish vote event to Redis
-      const voteEvent: VoteUpdatedEvent = {
-        userId,
-        recipientId,
-        shouldNotify,
-        entityType,
-        entityId,
-        voteAction,
+      // Handle notifications
+      if (value === VoteValue.UPVOTE || recipientId !== userId) {
+        // Define notification types based on entity
+        const notificationType =
+          entityType === VoteEntityType.DISCUSSION
+            ? NotificationType.DISCUSSION_UPVOTE
+            : NotificationType.COMMENT_UPVOTE;
+
+        const notificationEntityType =
+          entityType === VoteEntityType.DISCUSSION ? NotificationEntityType.DISCUSSION : NotificationEntityType.COMMENT;
+
+        // Prepare notification data
+        const notificationData: Record<string, any> = {};
+
+        // Add entity-specific data
+        if (entityType === VoteEntityType.DISCUSSION) {
+          // For discussions, just include the discussion ID
+          notificationData.discussionId = entityId;
+          notificationData.url = `/discussions/${entityId}`;
+
+          // Optionally fetch the discussion to include content preview
+          try {
+            const discussion = await this.discussionService.getDiscussionEntity(entityId);
+            if (discussion?.content) {
+              notificationData.contentPreview = this.truncateContent(discussion.content, 75);
+            }
+          } catch (discussionError) {
+            this.logger.warn(`Could not fetch discussion ${entityId} for notification: ${discussionError.message}`);
+          }
+        } else {
+          // For comments, include both comment and discussion IDs
+          notificationData.commentId = entityId;
+          notificationData.discussionId = discussionId;
+          notificationData.url = `/discussions/${discussionId}?comment=${entityId}`;
+
+          // Fetch the comment to include content preview
+          try {
+            const comment = await this.commentService.getCommentEntity(entityId);
+            if (comment?.content) {
+              notificationData.contentPreview = this.truncateContent(comment.content, 75);
+            }
+          } catch (commentError) {
+            this.logger.warn(`Could not fetch comment ${entityId} for notification: ${commentError.message}`);
+          }
+        }
+
+        // Create the notification
+        await this.notificationService.createNotificationIfNotExists(
+          {
+            recipientId: recipientId,
+            actorId: userId,
+            type: notificationType,
+            entityType: notificationEntityType,
+            entityId: entityId,
+            data: notificationData,
+          },
+          60, // Deduplicate within 1 hour window
+        );
+      }
+
+      // Record analytic
+      const activityType =
+        entityType === VoteEntityType.DISCUSSION ? ActivityType.VOTE_DISCUSSION : ActivityType.VOTE_COMMENT;
+      const activityEntityType =
+        entityType === VoteEntityType.DISCUSSION ? ActivityEntityType.DISCUSSION : ActivityEntityType.COMMENT;
+      await this.analyticService.recordActivity(userId, activityType, activityEntityType, entityId, {
         voteValue: value,
-        discussionId,
-      };
-      await this.redisService.publish(RedisChannels.VOTE_UPDATED, JSON.stringify(voteEvent));
+        discussionId: discussionId,
+        recipientId: recipientId,
+        action: voteAction,
+      });
 
       return result ? VoteResponseDto.fromEntity(result) : null;
     } catch (error) {
@@ -222,5 +279,10 @@ export class VoteService {
     } finally {
       await queryRunner.release();
     }
+  }
+
+  private truncateContent(content: string, maxLength: number): string {
+    if (!content) return '';
+    return content.length > maxLength ? `${content.substring(0, maxLength)}...` : content;
   }
 }

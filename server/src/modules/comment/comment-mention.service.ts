@@ -1,8 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { RedisChannels } from 'src/core/redis/redis.constants';
 import { EntityManager, Repository } from 'typeorm';
-import { RedisService } from '../../core/redis/redis.service';
+import { NotificationEntityType, NotificationType } from '../notification/entities/notification.entity';
+import { NotificationService } from '../notification/notification.service';
 import { UserService } from '../user/user.service';
 import { CommentMention } from './entities/comment-mention.entity';
 
@@ -14,7 +14,7 @@ export class CommentMentionService {
     @InjectRepository(CommentMention)
     private readonly mentionRepository: Repository<CommentMention>,
     private readonly userService: UserService,
-    private readonly redisService: RedisService,
+    private readonly notificationService: NotificationService,
   ) {}
 
   async processMentions(
@@ -63,15 +63,23 @@ export class CommentMentionService {
       const manager = entityManager || this.mentionRepository.manager;
       await manager.save(CommentMention, mentions);
 
-      // Notify mentioned users via Redis (for realtime notifications)
-      await this.redisService.publish(RedisChannels.USER_MENTIONED, {
-        content,
-        userIds: filteredUsers.map((user) => user.id),
-        discussionId,
-        commentId,
-        parentId,
-        authorId,
-      });
+      await this.notificationService.createBatchNotifications(
+        {
+          recipientIds: filteredUsers.map((user) => user.id),
+          actorId: authorId,
+          type: NotificationType.USER_MENTIONED,
+          entityType: NotificationEntityType.COMMENT,
+          entityId: commentId,
+          data: {
+            discussionId: discussionId,
+            parentCommentId: parentId,
+            commentId: commentId,
+            contentPreview: this.truncateContent(content, 75),
+            url: `/discussions/${discussionId}?comment=${commentId}`,
+          },
+        },
+        undefined, // No transaction needed here
+      );
     } catch (error) {
       this.logger.error(`Error processing mentions: ${error.message}`, error.stack);
       throw error; // Re-throw to propagate to transaction
@@ -116,5 +124,10 @@ export class CommentMentionService {
       relations: ['comment', 'comment.author'],
       order: { createdAt: 'DESC' },
     });
+  }
+
+  private truncateContent(content: string, maxLength: number): string {
+    if (!content) return '';
+    return content.length > maxLength ? `${content.substring(0, maxLength)}...` : content;
   }
 }

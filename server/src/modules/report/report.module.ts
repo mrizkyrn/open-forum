@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { WebsocketModule } from '../../core/websocket/websocket.module';
 import { AnalyticModule } from '../analytic/analytic.module';
 import { CommentModule } from '../comment/comment.module';
 import { DiscussionModule } from '../discussion/discussion.module';
@@ -8,7 +9,6 @@ import { ReportReason } from './entities/report-reason.entity';
 import { Report } from './entities/report.entity';
 import { ReportController } from './report.controller';
 import { ReportService } from './report.service';
-import { WebsocketModule } from 'src/core/websocket/websocket.module';
 
 @Module({
   imports: [
@@ -18,6 +18,7 @@ import { WebsocketModule } from 'src/core/websocket/websocket.module';
     NotificationModule,
     AnalyticModule,
     WebsocketModule,
+    NotificationModule,
   ],
   providers: [ReportService],
   controllers: [ReportController],
