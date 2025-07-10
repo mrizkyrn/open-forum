@@ -3,7 +3,7 @@ import { DiscussionQueryParams, DiscussionSortBy } from '@/features/discussions/
 import { SortOrder } from '@/shared/types/RequestTypes';
 import { useInfiniteQuery } from '@tanstack/react-query';
 
-export type DiscussionFeedType = 'regular' | 'bookmarked';
+export type DiscussionFeedType = 'regular' | 'bookmarked' | 'space';
 
 export interface UseInfiniteDiscussionsOptions extends Partial<DiscussionQueryParams> {
   feedType?: DiscussionFeedType;

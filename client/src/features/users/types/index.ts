@@ -1,10 +1,10 @@
-import { Faculty, StudyProgram } from '@/features/academic/types';
 import { BaseQueryParams } from '@/shared/types/RequestTypes';
 
 // ===== CORE ENTITIES =====
 
 export interface User {
   id: number;
+  email?: string | null;
   username: string;
   fullName: string;
   role: UserRole;
@@ -16,17 +16,12 @@ export interface User {
 
 export interface UserDetail {
   id: number;
+  email: string;
   username: string;
   fullName: string;
-  gender: string;
-  batchYear: string;
-  educationLevel: string;
-  studyProgram: StudyProgram;
-  faculty: Faculty;
-  email: string;
-  phone: string;
   role: UserRole;
   avatarUrl?: string | null;
+  oauthProvider?: string | null;
   lastActiveAt?: Date;
   createdAt: Date;
   updatedAt: Date;
@@ -35,14 +30,17 @@ export interface UserDetail {
 // ===== REQUEST TYPES =====
 
 export interface CreateUserRequest {
+  email?: string;
   username: string;
-  password: string;
   fullName: string;
-  role: UserRole;
+  password: string;
+  role?: UserRole;
 }
 
 export interface UpdateUserRequest {
+  email?: string | null;
   fullName?: string;
+  password?: string;
   role?: UserRole;
 }
 
@@ -57,8 +55,7 @@ export interface SearchUserParams extends BaseQueryParams {
 
 export enum UserRole {
   ADMIN = 'admin',
-  STUDENT = 'student',
-  LECTURER = 'lecturer',
+  USER = 'user',
 }
 
 export enum UserSortBy {

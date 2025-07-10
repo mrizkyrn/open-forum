@@ -7,6 +7,9 @@ export class UserResponseDto {
   @ApiProperty({ description: 'User ID', example: 1 })
   id: number;
 
+  @ApiProperty({ description: 'Email address', example: 'johndoe@example.com', nullable: true })
+  email?: string | null;
+
   @ApiProperty({ description: 'Username', example: '2110511091' })
   username: string;
 
@@ -25,6 +28,9 @@ export class UserResponseDto {
 
   @ApiProperty({ description: 'User last active date', example: '2021-09-01T00:00:00.000Z' })
   lastActiveAt?: Date | null;
+
+  @ApiProperty({ description: 'OAuth provider', example: 'google', nullable: true })
+  oauthProvider?: string | null;
 
   @ApiProperty({ description: 'Creation date of the user account', example: '2021-09-01T00:00:00.000Z' })
   createdAt: Date;

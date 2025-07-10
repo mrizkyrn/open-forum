@@ -147,7 +147,7 @@ const SpaceDetailPage = () => {
       {/* Discussions Section */}
       <div className="flex w-full flex-col">
         <NewDiscussionButton preselectedSpaceId={space.id} className="mb-4" />
-        <DiscussionFeed preselectedSpaceId={space.id} search={{ spaceId: space.id }} />
+        <DiscussionFeed preselectedSpaceId={space.id} search={{ spaceId: space.id }} feedType="space" />
       </div>
     </div>
   );

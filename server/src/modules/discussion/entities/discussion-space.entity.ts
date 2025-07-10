@@ -4,6 +4,7 @@ import { User } from '../../user/entities/user.entity';
 import { Discussion } from './discussion.entity';
 
 export enum SpaceType {
+  GENERAL = 'general',
   ACADEMIC = 'academic',
   ORGANIZATION = 'organization',
   CAMPUS = 'campus',

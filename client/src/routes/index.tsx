@@ -26,8 +26,6 @@ const BookmarksPage = lazy(() => import('@/pages/BookmarksPage'));
 // Admin pages
 const OverviewPage = lazy(() => import('@/pages/Admin/OverviewPage'));
 const UserManagementPage = lazy(() => import('@/pages/Admin/UserManagementPage'));
-const FacultyManagementPage = lazy(() => import('@/pages/Admin/FacultyManagementPage'));
-const StudyProgramManagementPage = lazy(() => import('@/pages/Admin/StudyProgramManagementPage'));
 const DiscussionManagementPage = lazy(() => import('@/pages/Admin/DiscussionManagementPage'));
 const SpaceManagementPage = lazy(() => import('@/pages/Admin/SpaceManagementPage'));
 const ReportManagementPage = lazy(() => import('@/pages/Admin/ReportManagementPage'));
@@ -93,14 +91,6 @@ const routes = [
       {
         path: 'users',
         element: lazyLoad(UserManagementPage),
-      },
-      {
-        path: 'faculties',
-        element: lazyLoad(FacultyManagementPage),
-      },
-      {
-        path: 'study-programs',
-        element: lazyLoad(StudyProgramManagementPage),
       },
       {
         path: 'discussions',

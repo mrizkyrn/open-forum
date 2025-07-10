@@ -7,6 +7,8 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
+    "type-check": "tsc --noEmit --project ./tsconfig.app.json",
+    "check-all": "npm run type-check && npm run lint",
     "preview": "vite preview"
   },
   "dependencies": {

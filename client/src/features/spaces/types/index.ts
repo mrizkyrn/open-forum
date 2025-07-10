@@ -9,8 +9,6 @@ export interface Space {
   slug: string;
   creatorId: number;
   spaceType: SpaceType;
-  facultyId: number | null;
-  studyProgramId: number | null;
   iconUrl?: string | null;
   bannerUrl?: string | null;
   followerCount: number;
@@ -26,8 +24,6 @@ export interface CreateSpaceRequest {
   description: string;
   slug: string;
   spaceType: SpaceType;
-  facultyId?: number | null;
-  studyProgramId?: number | null;
   icon?: File;
   banner?: File;
 }
@@ -37,8 +33,6 @@ export interface UpdateSpaceRequest {
   description?: string;
   slug?: string;
   spaceType?: SpaceType;
-  facultyId?: number | null;
-  studyProgramId?: number | null;
   icon?: File;
   banner?: File;
   removeIcon?: boolean;
@@ -50,8 +44,6 @@ export interface UpdateSpaceRequest {
 export interface SpaceQueryParams extends BaseQueryParams {
   creatorId?: number;
   spaceType?: SpaceType | null;
-  facultyId?: number | null;
-  studyProgramId?: number | null;
   following?: boolean;
   sortBy: SpaceSortBy;
 }
@@ -60,8 +52,6 @@ export interface SpaceQueryParams extends BaseQueryParams {
 
 export enum SpaceType {
   ACADEMIC = 'academic',
-  FACULTY = 'faculty',
-  STUDY_PROGRAM = 'study_program',
   ORGANIZATION = 'organization',
   CAMPUS = 'campus',
   OTHER = 'other',

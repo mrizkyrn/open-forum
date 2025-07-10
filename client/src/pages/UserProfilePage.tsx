@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { format, formatDistanceToNow, isAfter, subMinutes } from 'date-fns';
-import { Calendar, Clock, MapPin, School, User, UserCheck } from 'lucide-react';
+import { Calendar, Clock, User, UserCheck } from 'lucide-react';
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -78,7 +78,12 @@ const UserProfilePage = () => {
           <div className="absolute -bottom-12 left-6">
             <div className="relative">
               {currentUser?.id === user.id ? (
-                <AvatarUpload currentAvatarUrl={user.avatarUrl ?? null} fullName={user.fullName} size="24" onSuccess={() => {}} />
+                <AvatarUpload
+                  currentAvatarUrl={user.avatarUrl ?? null}
+                  fullName={user.fullName}
+                  size="24"
+                  onSuccess={() => {}}
+                />
               ) : (
                 <UserAvatar
                   fullName={user.fullName}
@@ -125,63 +130,7 @@ const UserProfilePage = () => {
           {/* Academic Information */}
           <div className="rounded-lg border border-gray-100 bg-white p-6">
             <h2 className="text-lg font-medium text-gray-900">Academic Information</h2>
-            <div className="mt-4 grid gap-6 sm:grid-cols-2">
-              <div className="space-y-4">
-                {user.faculty && (
-                  <div className="flex items-start gap-3">
-                    <MapPin className="mt-0.5 h-5 w-5 text-gray-400" />
-                    <div>
-                      <div className="text-sm font-medium text-gray-700">Faculty</div>
-                      <div className="text-sm text-gray-600">{user.faculty.facultyName}</div>
-                    </div>
-                  </div>
-                )}
-
-                {user.studyProgram && (
-                  <div className="flex items-start gap-3">
-                    <School className="mt-0.5 h-5 w-5 text-gray-400" />
-                    <div>
-                      <div className="text-sm font-medium text-gray-700">Study Program</div>
-                      <div className="text-sm text-gray-600">{user.studyProgram.studyProgramName}</div>
-                    </div>
-                  </div>
-                )}
-
-                {user.educationLevel && (
-                  <div className="flex items-start gap-3">
-                    <User className="mt-0.5 h-5 w-5 text-gray-400" />
-                    <div>
-                      <div className="text-sm font-medium text-gray-700">Education Level</div>
-                      <div className="text-sm text-gray-600">{user.educationLevel}</div>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              <div className="space-y-4">
-                {user.batchYear && (
-                  <div className="flex items-start gap-3">
-                    <Calendar className="mt-0.5 h-5 w-5 text-gray-400" />
-                    <div>
-                      <div className="text-sm font-medium text-gray-700">Batch Year</div>
-                      <div className="text-sm text-gray-600">{user.batchYear}</div>
-                    </div>
-                  </div>
-                )}
-
-                {user.gender && (
-                  <div className="flex items-start gap-3">
-                    <User className="mt-0.5 h-5 w-5 text-gray-400" />
-                    <div>
-                      <div className="text-sm font-medium text-gray-700">Gender</div>
-                      <div className="text-sm text-gray-600">
-                        {user.gender === 'L' ? 'Male' : user.gender === 'P' ? 'Female' : user.gender}
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
+            <div className="mt-4 grid gap-6 sm:grid-cols-2"></div>
           </div>
 
           {/* Account Information */}

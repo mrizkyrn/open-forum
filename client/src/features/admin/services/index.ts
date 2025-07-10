@@ -67,12 +67,6 @@ export const adminApi = {
       formData.append('spaceType', data.spaceType);
 
       // Optional fields
-      if (data.facultyId) {
-        formData.append('facultyId', data.facultyId.toString());
-      }
-      if (data.studyProgramId) {
-        formData.append('studyProgramId', data.studyProgramId.toString());
-      }
       if (data.description) {
         formData.append('description', data.description.trim());
       }
@@ -111,12 +105,6 @@ export const adminApi = {
       }
       if (data.spaceType !== undefined) {
         formData.append('spaceType', data.spaceType);
-      }
-      if (data.facultyId !== undefined) {
-        formData.append('facultyId', data.facultyId?.toString() || '');
-      }
-      if (data.studyProgramId !== undefined) {
-        formData.append('studyProgramId', data.studyProgramId?.toString() || '');
       }
 
       // File uploads
@@ -161,24 +149,6 @@ export const adminApi = {
       return response.data.data;
     } catch (error) {
       throw handleApiError(error, 'Failed to update report status');
-    }
-  },
-
-  // ===== ACADEMIC OPERATIONS =====
-
-  async syncFaculties(): Promise<void> {
-    try {
-      await apiClient.post<ApiResponse<void>>('/admin/academic/sync-faculties');
-    } catch (error) {
-      throw handleApiError(error, 'Failed to sync faculties');
-    }
-  },
-
-  async syncStudyPrograms(): Promise<void> {
-    try {
-      await apiClient.post<ApiResponse<void>>('/admin/academic/sync-study-programs');
-    } catch (error) {
-      throw handleApiError(error, 'Failed to sync study programs');
     }
   },
 };

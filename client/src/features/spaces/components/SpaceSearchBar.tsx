@@ -1,4 +1,4 @@
-import { BookOpen, Building, Clock, Grid, Landmark, List, School, SortAsc, Tag, UserCheck } from 'lucide-react';
+import { BookOpen, Clock, Grid, Landmark, List, School, SortAsc, Tag, UserCheck } from 'lucide-react';
 
 import { SpaceSortBy, SpaceType } from '@/features/spaces/types';
 import SortButton from '@/shared/components/ui/buttons/SortButton';
@@ -43,8 +43,6 @@ const SpaceSearchBar = ({
   // Type icons mapping
   const typeIcons = {
     [SpaceType.ACADEMIC]: <BookOpen size={14} />,
-    [SpaceType.FACULTY]: <Building size={14} />,
-    [SpaceType.STUDY_PROGRAM]: <School size={14} />,
     [SpaceType.ORGANIZATION]: <Landmark size={14} />,
     [SpaceType.CAMPUS]: <School size={14} />,
     [SpaceType.OTHER]: <Tag size={14} />,
@@ -53,8 +51,6 @@ const SpaceSearchBar = ({
   // Type labels for display
   const typeLabels = {
     [SpaceType.ACADEMIC]: 'Academic',
-    [SpaceType.FACULTY]: 'Faculty',
-    [SpaceType.STUDY_PROGRAM]: 'Program',
     [SpaceType.ORGANIZATION]: 'Organization',
     [SpaceType.CAMPUS]: 'Campus',
     [SpaceType.OTHER]: 'Other',

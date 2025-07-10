@@ -51,8 +51,6 @@ const SpaceManagementPage = () => {
 
   const labels: Record<SpaceType, string> = {
     [SpaceType.ACADEMIC]: 'Academic',
-    [SpaceType.FACULTY]: 'Faculty',
-    [SpaceType.STUDY_PROGRAM]: 'Study Program',
     [SpaceType.ORGANIZATION]: 'Organization',
     [SpaceType.CAMPUS]: 'Campus',
     [SpaceType.OTHER]: 'Other',
@@ -60,8 +58,6 @@ const SpaceManagementPage = () => {
 
   const colors: Record<SpaceType, { bg: string; text: string }> = {
     [SpaceType.ACADEMIC]: { bg: 'bg-blue-100', text: 'text-blue-700' },
-    [SpaceType.FACULTY]: { bg: 'bg-purple-100', text: 'text-purple-700' },
-    [SpaceType.STUDY_PROGRAM]: { bg: 'bg-indigo-100', text: 'text-indigo-700' },
     [SpaceType.ORGANIZATION]: { bg: 'bg-orange-100', text: 'text-orange-700' },
     [SpaceType.CAMPUS]: { bg: 'bg-teal-100', text: 'text-teal-700' },
     [SpaceType.OTHER]: { bg: 'bg-gray-100', text: 'text-gray-700' },

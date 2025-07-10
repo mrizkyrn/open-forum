@@ -96,10 +96,8 @@ const UserManagementPage = () => {
     switch (role) {
       case UserRole.ADMIN:
         return 'red';
-      case UserRole.LECTURER:
+      case UserRole.USER:
         return 'blue';
-      case UserRole.STUDENT:
-        return 'green';
       default:
         return 'gray';
     }
@@ -205,8 +203,7 @@ const UserManagementPage = () => {
         <SelectFilter
           options={[
             { label: 'Admin', value: UserRole.ADMIN },
-            { label: 'Lecturer', value: UserRole.LECTURER },
-            { label: 'Student', value: UserRole.STUDENT },
+            { label: 'User', value: UserRole.USER },
           ]}
           value={filters.role || ''}
           placeholder="All Roles"

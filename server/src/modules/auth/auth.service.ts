@@ -28,7 +28,7 @@ export class AuthService {
         password: registerDto.password,
         fullName: registerDto.fullName,
         email: registerDto.email,
-        role: UserRole.STUDENT,
+        role: UserRole.USER,
       });
 
       return {
@@ -61,6 +61,14 @@ export class AuthService {
       this.logger.warn(`Failed login attempt for username ${loginDto.username}: ${error.message}`);
       throw error;
     }
+  }
+
+  async oauthLogin(user: User) {
+    const tokens = await this.generateAuthTokens(user);
+    return {
+      user: UserResponseDto.fromEntity(user),
+      ...tokens,
+    };
   }
 
   async refreshToken(userId: number) {
@@ -125,25 +133,75 @@ export class AuthService {
       fullName: fullName || email.split('@')[0],
       avatarUrl: avatarUrl,
       provider,
-      role: UserRole.STUDENT,
+      role: UserRole.USER,
       username: generatedUsername,
     });
   }
 
   private async generateUniqueUsername(firstName: string, lastName: string, email: string): Promise<string> {
-    // Strategy 1: Use first name + last name (e.g., johnsmith)
     let baseUsername = '';
 
     if (firstName && lastName) {
-      baseUsername = `${firstName}${lastName}`.toLowerCase().replace(/[^a-z0-9]/g, '');
+      // Split names into individual words and clean them
+      const firstNameWords = firstName
+        .toLowerCase()
+        .split(/\s+/)
+        .filter((word) => word.length > 0);
+      const lastNameWords = lastName
+        .toLowerCase()
+        .split(/\s+/)
+        .filter((word) => word.length > 0);
+
+      // Combine all words in order
+      const allWords = [...firstNameWords, ...lastNameWords];
+
+      // Build username word by word until we hit the 15 character limit
+      let currentUsername = '';
+      for (const word of allWords) {
+        const cleanWord = word.replace(/[^a-z0-9]/g, '');
+        const testUsername = currentUsername + cleanWord;
+
+        if (testUsername.length <= 15) {
+          currentUsername = testUsername;
+        } else {
+          // If this is the first word and it's too long, truncate it
+          if (currentUsername === '' && cleanWord.length > 15) {
+            currentUsername = cleanWord.substring(0, 15);
+          }
+          break;
+        }
+      }
+
+      baseUsername = currentUsername;
     } else if (firstName) {
-      baseUsername = firstName.toLowerCase().replace(/[^a-z0-9]/g, '');
+      // Just first name, same logic
+      const words = firstName
+        .toLowerCase()
+        .split(/\s+/)
+        .filter((word) => word.length > 0);
+      let currentUsername = '';
+      for (const word of words) {
+        const cleanWord = word.replace(/[^a-z0-9]/g, '');
+        const testUsername = currentUsername + cleanWord;
+
+        if (testUsername.length <= 15) {
+          currentUsername = testUsername;
+        } else {
+          // If this is the first word and it's too long, truncate it
+          if (currentUsername === '' && cleanWord.length > 15) {
+            currentUsername = cleanWord.substring(0, 15);
+          }
+          break;
+        }
+      }
+      baseUsername = currentUsername;
     } else {
       // Fallback to email prefix
       baseUsername = email
         .split('@')[0]
         .toLowerCase()
-        .replace(/[^a-z0-9]/g, '');
+        .replace(/[^a-z0-9]/g, '')
+        .substring(0, 15);
     }
 
     // Ensure minimum length
@@ -151,12 +209,8 @@ export class AuthService {
       baseUsername = email
         .split('@')[0]
         .toLowerCase()
-        .replace(/[^a-z0-9]/g, '');
-    }
-
-    // Limit length to reasonable size
-    if (baseUsername.length > 15) {
-      baseUsername = baseUsername.substring(0, 15);
+        .replace(/[^a-z0-9]/g, '')
+        .substring(0, 15);
     }
 
     // Check if username is available
@@ -164,28 +218,25 @@ export class AuthService {
     let counter = 1;
 
     while (await this.userService.isUsernameExists(finalUsername)) {
-      // Strategy 2: Add numbers (e.g., johnsmith1, johnsmith2)
+      // Add numbers (e.g., mochamadrizky1, mochamadrizky2)
       if (counter <= 99) {
-        finalUsername = `${baseUsername}${counter}`;
+        const suffix = counter.toString();
+        const maxBaseLength = 15 - suffix.length;
+        const truncatedBase = baseUsername.substring(0, maxBaseLength);
+        finalUsername = `${truncatedBase}${suffix}`;
       } else {
-        // Strategy 3: Add random suffix for very common names
+        // Add random suffix for very common names
         const randomSuffix = Math.floor(Math.random() * 9999)
           .toString()
           .padStart(4, '0');
-        finalUsername = `${baseUsername}${randomSuffix}`;
-        break; // Exit to avoid infinite loop
+        const maxBaseLength = 15 - randomSuffix.length;
+        const truncatedBase = baseUsername.substring(0, maxBaseLength);
+        finalUsername = `${truncatedBase}${randomSuffix}`;
+        break;
       }
       counter++;
     }
 
     return finalUsername;
-  }
-
-  async oauthLogin(user: User) {
-    const tokens = await this.generateAuthTokens(user);
-    return {
-      user: UserResponseDto.fromEntity(user),
-      ...tokens,
-    };
   }
 }

@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import { adminApi } from '@/features/admin/services';
-import { User, UserRole } from '@/features/users/types';
+import { CreateUserRequest, UpdateUserRequest, User, UserRole } from '@/features/users/types';
 import { ModalBody, ModalFooter, ModalHeader } from '@/shared/components/modals/Modal';
 import Modal from '@/shared/components/modals/Modal/Modal';
 import MainButton from '@/shared/components/ui/buttons/MainButton';
@@ -18,20 +18,21 @@ interface UserFormModalProps {
 const UserFormModal = ({ isOpen, onClose, user }: UserFormModalProps) => {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [formData, setFormData] = useState({
+    email: '',
     username: '',
     fullName: '',
     password: '',
     confirmPassword: '',
-    role: UserRole.STUDENT,
+    role: UserRole.USER,
   });
-  
+
   const queryClient = useQueryClient();
   const isEditMode = !!user;
-
 
   useEffect(() => {
     if (user) {
       setFormData({
+        email: user.email || '',
         username: user.username,
         fullName: user.fullName,
         password: '',
@@ -40,11 +41,12 @@ const UserFormModal = ({ isOpen, onClose, user }: UserFormModalProps) => {
       });
     } else {
       setFormData({
+        email: '',
         username: '',
         fullName: '',
         password: '',
         confirmPassword: '',
-        role: UserRole.STUDENT,
+        role: UserRole.USER,
       });
     }
     setErrors({});
@@ -101,22 +103,40 @@ const UserFormModal = ({ isOpen, onClose, user }: UserFormModalProps) => {
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
 
+    // Email validation (optional)
+    if (formData.email && formData.email.trim()) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(formData.email)) {
+        newErrors.email = 'Please enter a valid email address';
+      } else if (formData.email.length > 100) {
+        newErrors.email = 'Email must be less than 100 characters';
+      }
+    }
+
+    // Username validation
     if (!formData.username.trim()) {
       newErrors.username = 'Username is required';
     } else if (formData.username.length < 3) {
       newErrors.username = 'Username must be at least 3 characters';
+    } else if (formData.username.length > 25) {
+      newErrors.username = 'Username must be less than 25 characters';
     }
 
+    // Full name validation
     if (!formData.fullName.trim()) {
       newErrors.fullName = 'Full name is required';
+    } else if (formData.fullName.length > 100) {
+      newErrors.fullName = 'Full name must be less than 100 characters';
     }
 
-    // Only validate password for new users or if password field is filled
+    // Password validation - only for new users or if password field is filled
     if (!isEditMode || formData.password) {
       if (!formData.password.trim() && !isEditMode) {
         newErrors.password = 'Password is required';
       } else if (formData.password && formData.password.length < 8) {
         newErrors.password = 'Password must be at least 8 characters';
+      } else if (formData.password && formData.password.length > 100) {
+        newErrors.password = 'Password must be less than 100 characters';
       } else if (formData.password && !formData.password.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d\W]{8,}$/)) {
         newErrors.password = 'Password must include upper and lowercase letters and numbers';
       }
@@ -136,10 +156,15 @@ const UserFormModal = ({ isOpen, onClose, user }: UserFormModalProps) => {
     if (!validateForm()) return;
 
     if (isEditMode && user) {
-      const updateData: any = {
+      const updateData: UpdateUserRequest = {
         fullName: formData.fullName,
         role: formData.role,
       };
+
+      // Include email if provided (even if empty string to clear it)
+      if (formData.email !== user.email) {
+        updateData.email = formData.email || null;
+      }
 
       if (formData.password) {
         updateData.password = formData.password;
@@ -147,12 +172,19 @@ const UserFormModal = ({ isOpen, onClose, user }: UserFormModalProps) => {
 
       updateMutation.mutate({ id: user.id, data: updateData });
     } else {
-      createMutation.mutate({
-        username: formData.username,
+      const createData: CreateUserRequest = {
+        username: formData.username.toLowerCase().trim(),
         fullName: formData.fullName,
         password: formData.password,
         role: formData.role,
-      });
+      };
+
+      // Include email only if provided
+      if (formData.email && formData.email.trim()) {
+        createData.email = formData.email.trim();
+      }
+
+      createMutation.mutate(createData);
     }
   };
 
@@ -164,10 +196,27 @@ const UserFormModal = ({ isOpen, onClose, user }: UserFormModalProps) => {
 
       <ModalBody>
         <form id="userForm" onSubmit={handleSubmit} className="space-y-4">
+          {/* Email field */}
+          <div>
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+              Email (optional)
+            </label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              placeholder="john.doe@example.com"
+              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 focus:border-green-500 focus:ring-1 focus:ring-green-500 focus:outline-none"
+            />
+            {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email}</p>}
+          </div>
+
           {/* Username field */}
           <div>
             <label htmlFor="username" className="block text-sm font-medium text-gray-700">
-              Username/NIM
+              Username
             </label>
             <input
               type="text"
@@ -175,6 +224,7 @@ const UserFormModal = ({ isOpen, onClose, user }: UserFormModalProps) => {
               name="username"
               value={formData.username}
               onChange={handleChange}
+              placeholder='john_doe'
               disabled={isEditMode}
               className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 focus:border-green-500 focus:ring-1 focus:ring-green-500 focus:outline-none disabled:bg-gray-100 disabled:text-gray-500"
             />
@@ -192,6 +242,7 @@ const UserFormModal = ({ isOpen, onClose, user }: UserFormModalProps) => {
               name="fullName"
               value={formData.fullName}
               onChange={handleChange}
+              placeholder="John Doe"
               className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 focus:border-green-500 focus:ring-1 focus:ring-green-500 focus:outline-none"
             />
             {errors.fullName && <p className="mt-1 text-sm text-red-600">{errors.fullName}</p>}
@@ -209,8 +260,7 @@ const UserFormModal = ({ isOpen, onClose, user }: UserFormModalProps) => {
               onChange={handleChange}
               className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 focus:border-green-500 focus:ring-1 focus:ring-green-500 focus:outline-none"
             >
-              <option value={UserRole.STUDENT}>Student</option>
-              <option value={UserRole.LECTURER}>Lecturer</option>
+              <option value={UserRole.USER}>Student</option>
               <option value={UserRole.ADMIN}>Admin</option>
             </select>
           </div>
@@ -226,6 +276,7 @@ const UserFormModal = ({ isOpen, onClose, user }: UserFormModalProps) => {
               name="password"
               value={formData.password}
               onChange={handleChange}
+              placeholder="StrongP@ssw0rd"
               className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 focus:border-green-500 focus:ring-1 focus:ring-green-500 focus:outline-none"
             />
             {errors.password && <p className="mt-1 text-sm text-red-600">{errors.password}</p>}
@@ -242,6 +293,7 @@ const UserFormModal = ({ isOpen, onClose, user }: UserFormModalProps) => {
               name="confirmPassword"
               value={formData.confirmPassword}
               onChange={handleChange}
+              placeholder="Re-enter Password"
               className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 focus:border-green-500 focus:ring-1 focus:ring-green-500 focus:outline-none"
             />
             {errors.confirmPassword && <p className="mt-1 text-sm text-red-600">{errors.confirmPassword}</p>}

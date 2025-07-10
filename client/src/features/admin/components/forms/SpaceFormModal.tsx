@@ -1,9 +1,8 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Image, Upload, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
-import { academicApi } from '@/features/academic/services';
 import { adminApi } from '@/features/admin/services';
 import { CreateSpaceRequest, Space, SpaceType, UpdateSpaceRequest } from '@/features/spaces/types';
 import { Modal, ModalBody, ModalFooter, ModalHeader } from '@/shared/components/modals/Modal';
@@ -27,32 +26,10 @@ const SpaceFormModal = ({ isOpen, onClose, space }: SpaceFormModalProps) => {
     description: '',
     slug: '',
     spaceType: SpaceType.OTHER,
-    facultyId: null,
-    studyProgramId: null,
   });
 
   const queryClient = useQueryClient();
   const isEditMode = !!space;
-
-  const { data: facultiesData } = useQuery({
-    queryKey: ['faculties'],
-    queryFn: () => academicApi.getFaculties({ page: 1, limit: 100 }),
-    enabled: isOpen && formData.spaceType === SpaceType.FACULTY,
-  });
-
-  const { data: studyProgramsData } = useQuery({
-    queryKey: ['studyPrograms', formData.facultyId],
-    queryFn: () =>
-      academicApi.getStudyPrograms({
-        page: 1,
-        limit: 100,
-        ...(formData.facultyId && { facultyId: formData.facultyId }),
-      }),
-    enabled: isOpen && formData.spaceType === SpaceType.STUDY_PROGRAM,
-  });
-
-  const faculties = facultiesData?.items || [];
-  const studyPrograms = studyProgramsData?.items || [];
 
   // Reset form when modal opens/closes or space changes
   useEffect(() => {
@@ -63,8 +40,6 @@ const SpaceFormModal = ({ isOpen, onClose, space }: SpaceFormModalProps) => {
           description: space.description || '',
           slug: space.slug || '',
           spaceType: space.spaceType,
-          facultyId: space.facultyId,
-          studyProgramId: space.studyProgramId,
         });
         setIconPreview(space.iconUrl ? getFileUrl(space.iconUrl) : null);
         setBannerPreview(space.bannerUrl ? getFileUrl(space.bannerUrl) : null);
@@ -74,8 +49,6 @@ const SpaceFormModal = ({ isOpen, onClose, space }: SpaceFormModalProps) => {
           description: '',
           slug: '',
           spaceType: SpaceType.OTHER,
-          facultyId: null,
-          studyProgramId: null,
         });
         setIconPreview(null);
         setBannerPreview(null);
@@ -135,41 +108,15 @@ const SpaceFormModal = ({ isOpen, onClose, space }: SpaceFormModalProps) => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
 
-    if (name === 'spaceType') {
-      // Reset faculty and study program when space type changes
-      const spaceType = value as SpaceType;
-      const shouldResetFaculty = spaceType !== SpaceType.FACULTY;
-      const shouldResetStudyProgram = spaceType !== SpaceType.STUDY_PROGRAM;
+    setFormData((prev) => ({ ...prev, [name]: value }));
 
-      setFormData((prev) => ({
-        ...prev,
-        spaceType,
-        facultyId: shouldResetFaculty ? null : prev.facultyId,
-        studyProgramId: shouldResetStudyProgram ? null : prev.studyProgramId,
-      }));
-    } else if (name === 'facultyId') {
-      const facultyId = value ? parseInt(value) : null;
-      setFormData((prev) => ({
-        ...prev,
-        facultyId,
-      }));
-    } else if (name === 'studyProgramId') {
-      const studyProgramId = value ? parseInt(value) : null;
-      setFormData((prev) => ({
-        ...prev,
-        studyProgramId,
-      }));
-    } else {
-      setFormData((prev) => ({ ...prev, [name]: value }));
-
-      // Auto-generate slug from name if in create mode and slug hasn't been manually edited
-      if (name === 'name' && !isEditMode && !formData.slug) {
-        const slugValue = value
-          .toLowerCase()
-          .replace(/[^a-z0-9]+/g, '-')
-          .replace(/^-+|-+$/g, '');
-        setFormData((prev) => ({ ...prev, slug: slugValue }));
-      }
+    // Auto-generate slug from name if in create mode and slug hasn't been manually edited
+    if (name === 'name' && !isEditMode && !formData.slug) {
+      const slugValue = value
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+      setFormData((prev) => ({ ...prev, slug: slugValue }));
     }
 
     // Clear error when field is edited
@@ -217,16 +164,6 @@ const SpaceFormModal = ({ isOpen, onClose, space }: SpaceFormModalProps) => {
       newErrors.spaceType = 'Space type is required';
     }
 
-    if (formData.spaceType === SpaceType.FACULTY && !formData.facultyId) {
-      newErrors.facultyId = 'Faculty is required for faculty spaces';
-    }
-
-    if (formData.spaceType === SpaceType.STUDY_PROGRAM) {
-      if (!formData.studyProgramId) {
-        newErrors.studyProgramId = 'Study program is required';
-      }
-    }
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -240,8 +177,6 @@ const SpaceFormModal = ({ isOpen, onClose, space }: SpaceFormModalProps) => {
         description: formData.description,
         slug: formData.slug,
         spaceType: formData.spaceType,
-        facultyId: formData.facultyId,
-        studyProgramId: formData.studyProgramId,
       };
 
       // Handle icon
@@ -265,8 +200,6 @@ const SpaceFormModal = ({ isOpen, onClose, space }: SpaceFormModalProps) => {
         description: formData.description || '',
         slug: formData.slug || '',
         spaceType: formData.spaceType as SpaceType,
-        facultyId: formData.facultyId,
-        studyProgramId: formData.studyProgramId,
       };
 
       if (iconFile) createData.icon = iconFile;
@@ -359,69 +292,12 @@ const SpaceFormModal = ({ isOpen, onClose, space }: SpaceFormModalProps) => {
               } px-3 py-2 focus:border-green-500 focus:ring-green-500 focus:outline-none sm:text-sm`}
             >
               <option value={SpaceType.ACADEMIC}>Academic</option>
-              <option value={SpaceType.FACULTY}>Faculty</option>
-              <option value={SpaceType.STUDY_PROGRAM}>Study Program</option>
               <option value={SpaceType.ORGANIZATION}>Organization</option>
               <option value={SpaceType.CAMPUS}>Campus</option>
               <option value={SpaceType.OTHER}>Other</option>
             </select>
             {errors.spaceType && <p className="mt-1 text-sm text-red-600">{errors.spaceType}</p>}
           </div>
-
-          {/* Faculty (only shown for FACULTY type) */}
-          {formData.spaceType === SpaceType.FACULTY && (
-            <div>
-              <label htmlFor="facultyId" className="block text-sm font-medium text-gray-700">
-                Faculty <span className="text-red-500">*</span>
-              </label>
-              <select
-                id="facultyId"
-                name="facultyId"
-                value={formData.facultyId || ''}
-                onChange={handleInputChange}
-                className={`mt-1 block w-full rounded-md border ${
-                  errors.facultyId ? 'border-red-300' : 'border-gray-300'
-                } px-3 py-2 focus:border-green-500 focus:ring-green-500 focus:outline-none sm:text-sm`}
-              >
-                <option value="">Select a faculty</option>
-                {faculties.map((faculty) => (
-                  <option key={faculty.id} value={faculty.id}>
-                    {faculty.facultyName}
-                  </option>
-                ))}
-              </select>
-              {errors.facultyId && <p className="mt-1 text-sm text-red-600">{errors.facultyId}</p>}
-            </div>
-          )}
-
-          {/* Study Program (only shown for STUDY_PROGRAM type) */}
-          {formData.spaceType === SpaceType.STUDY_PROGRAM && (
-            <div>
-              <label htmlFor="studyProgramId" className="block text-sm font-medium text-gray-700">
-                Study Program <span className="text-red-500">*</span>
-              </label>
-              <select
-                id="studyProgramId"
-                name="studyProgramId"
-                value={formData.studyProgramId || ''}
-                onChange={handleInputChange}
-                className={`mt-1 block w-full rounded-md border ${
-                  errors.studyProgramId ? 'border-red-300' : 'border-gray-300'
-                } px-3 py-2 focus:border-green-500 focus:ring-green-500 focus:outline-none sm:text-sm`}
-              >
-                <option value="">Select a study program</option>
-                {studyPrograms.map((program) => (
-                  <option key={program.id} value={program.id}>
-                    {program.studyProgramName}
-                  </option>
-                ))}
-              </select>
-              {errors.studyProgramId && <p className="mt-1 text-sm text-red-600">{errors.studyProgramId}</p>}
-              {studyPrograms.length === 0 && (
-                <p className="mt-1 text-sm text-amber-600">No study programs found for this faculty</p>
-              )}
-            </div>
-          )}
 
           {/* Icon Upload */}
           <div>

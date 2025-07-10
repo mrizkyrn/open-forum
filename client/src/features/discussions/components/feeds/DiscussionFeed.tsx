@@ -39,25 +39,20 @@ const DiscussionFeed = ({ search, preselectedSpaceId, feedType = 'regular' }: Di
 
     // Handle global new discussions (only if we're on the home feed without a space filter)
     const handleNewDiscussion = (data: any) => {
+      console.log('New discussion received:', data);
+      console.log('Preselected space ID:', preselectedSpaceId);
       if (feedType === 'regular' && !preselectedSpaceId && data.authorId !== user?.id) {
         setNewDiscussions((prev) => prev + 1);
-      }
-    };
-
-    // Handle space-specific new discussions
-    const handleNewSpaceDiscussion = (data: any) => {
-      if (preselectedSpaceId && data.spaceId === preselectedSpaceId && data.authorId !== user?.id) {
+      } else if (feedType === 'space' && data.spaceId === preselectedSpaceId && data.authorId !== user?.id) {
         setNewDiscussions((prev) => prev + 1);
       }
     };
 
     // Register event listeners
     socket.on('newDiscussion', handleNewDiscussion);
-    socket.on('newSpaceDiscussion', handleNewSpaceDiscussion);
 
     return () => {
       socket.off('newDiscussion', handleNewDiscussion);
-      socket.off('newSpaceDiscussion', handleNewSpaceDiscussion);
     };
   }, [socket, isConnected, preselectedSpaceId, search?.spaceId, user?.id, feedType]);
 

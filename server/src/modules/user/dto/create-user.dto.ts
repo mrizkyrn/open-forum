@@ -27,6 +27,16 @@ export class CreateUserDto {
   username: string;
 
   @ApiProperty({
+    description: 'Full name of the user',
+    example: 'John Doe',
+    maxLength: 100,
+  })
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(100)
+  fullName: string;
+
+  @ApiProperty({
     description: 'User password (will be hashed)',
     example: 'StrongP@ssw0rd',
     minLength: 8,
@@ -40,24 +50,14 @@ export class CreateUserDto {
   })
   password: string;
 
-  @ApiProperty({
-    description: 'Full name of the user',
-    example: 'John Doe',
-    maxLength: 100,
-  })
-  @IsString()
-  @IsNotEmpty()
-  @MaxLength(100)
-  fullName: string;
-
   @ApiPropertyOptional({
     description: 'User role',
     enum: UserRole,
     enumName: 'UserRole',
-    default: UserRole.STUDENT,
-    example: UserRole.STUDENT,
+    default: UserRole.USER,
+    example: UserRole.USER,
   })
   @IsOptional()
   @IsEnum(UserRole)
-  role?: UserRole = UserRole.STUDENT;
+  role?: UserRole = UserRole.USER;
 }
