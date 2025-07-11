@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { UserRole } from 'src/common/enums/user-role.enum';
 import { PaginationMetaDto } from '../../../common/dto/pagination-meta.dto';
+import { UserRole } from '../../../common/enums/user-role.enum';
 import { AttachmentResponseDto } from '../../../modules/attachment/dto/attachment-response.dto';
 import { UserResponseDto } from '../../user/dto/user-response.dto';
 import { User } from '../../user/entities/user.entity';
@@ -192,4 +192,3 @@ export class PopularTagsResponseDto {
   @ApiProperty({ description: 'Number of times the tag is used', example: 42 })
   count: number;
 }
-

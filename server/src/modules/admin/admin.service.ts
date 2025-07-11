@@ -245,9 +245,9 @@ export class AdminService {
     const [currentPeriodComments, currentPeriodVotes, previousPeriodComments, previousPeriodVotes, totalUsers] =
       await Promise.all([
         this.commentService.countByDateRange(periods.current.start, periods.current.end),
-        this.voteService.countByDateRange(periods.current.start, periods.current.end),
+        this.voteService.getVoteCountByDateRange(periods.current.start, periods.current.end),
         this.commentService.countByDateRange(periods.previous.start, periods.previous.end),
-        this.voteService.countByDateRange(periods.previous.start, periods.previous.end),
+        this.voteService.getVoteCountByDateRange(periods.previous.start, periods.previous.end),
         this.userService.getTotalUserCount(),
       ]);
 
