@@ -1,34 +1,45 @@
+import { ApiPropertyOptional } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import { IsEnum, IsOptional } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
-import { UserRole } from '../../../common/enums/user-role.enum';
 import { SearchDto } from '../../../common/dto/search.dto';
+import { UserRole } from '../../../common/enums/user-role.enum';
 
+/**
+ * Available fields for sorting users
+ */
 export enum UserSortBy {
-  createdAt = 'createdAt',
-  updatedAt = 'updatedAt',
-  username = 'username',
-  fullName = 'fullName',
-  role = 'role',
-  lastActiveAt = 'lastActiveAt',
+  CREATED_AT = 'createdAt',
+  UPDATED_AT = 'updatedAt',
+  USERNAME = 'username',
+  FULL_NAME = 'fullName',
+  ROLE = 'role',
+  LAST_ACTIVE_AT = 'lastActiveAt',
 }
 
+/**
+ * DTO for searching and filtering users with pagination
+ */
 export class SearchUserDto extends SearchDto {
-  @ApiProperty({
-    description: 'Filter by user role',
+  @ApiPropertyOptional({
+    description: 'Filter users by role',
     enum: UserRole,
-    required: false,
+    enumName: 'UserRole',
+    example: UserRole.USER,
   })
   @IsOptional()
-  @IsEnum(UserRole)
+  @IsEnum(UserRole, { message: 'Role must be a valid user role' })
+  @Type(() => String)
   role?: UserRole;
 
-  @ApiProperty({
-    description: 'Field to sort by',
+  @ApiPropertyOptional({
+    description: 'Field to sort users by',
     enum: UserSortBy,
-    default: UserSortBy.createdAt,
-    required: false,
+    enumName: 'UserSortBy',
+    default: UserSortBy.CREATED_AT,
+    example: UserSortBy.CREATED_AT,
   })
   @IsOptional()
-  @IsEnum(UserSortBy)
-  sortBy: UserSortBy = UserSortBy.createdAt;
+  @IsEnum(UserSortBy, { message: 'Sort field must be a valid user field' })
+  @Type(() => String)
+  sortBy: UserSortBy = UserSortBy.CREATED_AT;
 }

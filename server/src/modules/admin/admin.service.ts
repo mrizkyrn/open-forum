@@ -200,10 +200,10 @@ export class AdminService {
 
   private async getUserStats(periods: PeriodRanges): Promise<any> {
     const [totalUsers, newUsers, previousPeriodNewUsers, activeUsers] = await Promise.all([
-      this.userService.countTotal(),
-      this.userService.countByDateRange(periods.current.start, periods.current.end),
-      this.userService.countByDateRange(periods.previous.start, periods.previous.end),
-      this.userService.countActiveSince(periods.current.start),
+      this.userService.getTotalUserCount(),
+      this.userService.getUserCountByDateRange(periods.current.start, periods.current.end),
+      this.userService.getUserCountByDateRange(periods.previous.start, periods.previous.end),
+      this.userService.getActiveUserCount(periods.current.start),
     ]);
 
     return {
@@ -248,7 +248,7 @@ export class AdminService {
         this.voteService.countByDateRange(periods.current.start, periods.current.end),
         this.commentService.countByDateRange(periods.previous.start, periods.previous.end),
         this.voteService.countByDateRange(periods.previous.start, periods.previous.end),
-        this.userService.countTotal(),
+        this.userService.getTotalUserCount(),
       ]);
 
     // Calculate engagement rates
