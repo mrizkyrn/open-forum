@@ -22,6 +22,7 @@ const SearchPage = lazy(() => import('@/pages/SearchPage'));
 const NotificationsPage = lazy(() => import('@/pages/NotificationsPage'));
 const UserProfilePage = lazy(() => import('@/pages/UserProfilePage'));
 const BookmarksPage = lazy(() => import('@/pages/BookmarksPage'));
+const BugReportsPage = lazy(() => import('@/pages/BugReportsPage'));
 
 // Admin pages
 const OverviewPage = lazy(() => import('@/pages/Admin/OverviewPage'));
@@ -29,6 +30,7 @@ const UserManagementPage = lazy(() => import('@/pages/Admin/UserManagementPage')
 const DiscussionManagementPage = lazy(() => import('@/pages/Admin/DiscussionManagementPage'));
 const SpaceManagementPage = lazy(() => import('@/pages/Admin/SpaceManagementPage'));
 const ReportManagementPage = lazy(() => import('@/pages/Admin/ReportManagementPage'));
+const BugReportManagementPage = lazy(() => import('@/pages/Admin/BugReportManagementPage'));
 
 const lazyLoad = (Component: React.ComponentType) => (
   <Suspense fallback={<LoadingIndicator fullscreen fullWidth />}>
@@ -78,6 +80,10 @@ const routes = [
         path: '/bookmarks',
         element: lazyLoad(BookmarksPage),
       },
+      {
+        path: '/bug-reports',
+        element: lazyLoad(BugReportsPage),
+      },
     ],
   },
   {
@@ -103,6 +109,10 @@ const routes = [
       {
         path: 'reports',
         element: lazyLoad(ReportManagementPage),
+      },
+      {
+        path: 'bug-reports',
+        element: lazyLoad(BugReportManagementPage),
       },
     ],
   },

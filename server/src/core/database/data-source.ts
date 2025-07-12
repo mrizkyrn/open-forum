@@ -3,6 +3,7 @@ import { DataSource } from 'typeorm';
 import { databaseConfig } from '../../config';
 import { UserActivity } from '../../modules/analytic/entities/user-activity.entity';
 import { Attachment } from '../../modules/attachment/entities/attachment.entity';
+import { BugReport } from '../../modules/bug-report/entities/bug-report.entity';
 import { CommentMention } from '../../modules/comment/entities/comment-mention.entity';
 import { Comment } from '../../modules/comment/entities/comment.entity';
 import { Bookmark } from '../../modules/discussion/entities/bookmark.entity';
@@ -31,6 +32,7 @@ export default new DataSource({
     User,
     UserActivity,
     Attachment,
+    BugReport,
     CommentMention,
     Comment,
     Bookmark,

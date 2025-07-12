@@ -7,7 +7,7 @@ import { User } from '../user/entities/user.entity';
 import { COOKIE_OPTIONS } from './auth.constants';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { ChangePasswordDto, LoginDto, LoginResponseDto, LogoutResponseDto, RegisterDto, TokenResponseDto } from './dto';
+import { ChangePasswordDto, LoginDto, LoginResponseDto, LogoutResponseDto, RegisterDto } from './dto';
 
 /**
  * Mock factory for creating User entities
@@ -208,11 +208,7 @@ describe('AuthController', () => {
         tokenType: 'Bearer',
       });
       expect(authService.login).toHaveBeenCalledWith(mockLoginDto);
-      expect(mockResponse.cookie).toHaveBeenCalledWith(
-        'refreshToken',
-        'mock-refresh-token',
-        COOKIE_OPTIONS,
-      );
+      expect(mockResponse.cookie).toHaveBeenCalledWith('refreshToken', 'mock-refresh-token', COOKIE_OPTIONS);
     });
 
     it('should handle login with email instead of username', async () => {
@@ -231,9 +227,7 @@ describe('AuthController', () => {
     it('should throw UnauthorizedException for invalid credentials', async () => {
       authService.login.mockRejectedValue(new UnauthorizedException('Invalid credentials'));
 
-      await expect(controller.login(mockLoginDto, mockResponse as Response)).rejects.toThrow(
-        UnauthorizedException,
-      );
+      await expect(controller.login(mockLoginDto, mockResponse as Response)).rejects.toThrow(UnauthorizedException);
       expect(authService.login).toHaveBeenCalledWith(mockLoginDto);
       expect(mockResponse.cookie).not.toHaveBeenCalled();
     });
@@ -261,21 +255,20 @@ describe('AuthController', () => {
 
       const result = await controller.refreshToken(mockUser, mockResponse as Response);
 
-      expect(result).toEqual(TokenResponseDto.create('new-access-token', 3600));
+      expect(result).toMatchObject({
+        accessToken: 'new-access-token',
+        expiresIn: 3600,
+        tokenType: 'Bearer',
+      });
+      expect(result.issuedAt).toBeInstanceOf(Date);
       expect(authService.refreshToken).toHaveBeenCalledWith(mockUser.id);
-      expect(mockResponse.cookie).toHaveBeenCalledWith(
-        'refreshToken',
-        'new-refresh-token',
-        COOKIE_OPTIONS,
-      );
+      expect(mockResponse.cookie).toHaveBeenCalledWith('refreshToken', 'new-refresh-token', COOKIE_OPTIONS);
     });
 
     it('should handle refresh token failure', async () => {
       authService.refreshToken.mockRejectedValue(new UnauthorizedException('Token refresh failed'));
 
-      await expect(controller.refreshToken(mockUser, mockResponse as Response)).rejects.toThrow(
-        UnauthorizedException,
-      );
+      await expect(controller.refreshToken(mockUser, mockResponse as Response)).rejects.toThrow(UnauthorizedException);
       expect(authService.refreshToken).toHaveBeenCalledWith(mockUser.id);
       expect(mockResponse.cookie).not.toHaveBeenCalled();
     });
@@ -283,9 +276,7 @@ describe('AuthController', () => {
     it('should handle user not found during token refresh', async () => {
       authService.refreshToken.mockRejectedValue(new BadRequestException('User not found'));
 
-      await expect(controller.refreshToken(mockUser, mockResponse as Response)).rejects.toThrow(
-        BadRequestException,
-      );
+      await expect(controller.refreshToken(mockUser, mockResponse as Response)).rejects.toThrow(BadRequestException);
     });
   });
 
@@ -304,9 +295,7 @@ describe('AuthController', () => {
     it('should handle logout service errors', async () => {
       authService.logout.mockRejectedValue(new BadRequestException('Logout failed'));
 
-      await expect(controller.logout(mockUser, mockResponse as Response)).rejects.toThrow(
-        BadRequestException,
-      );
+      await expect(controller.logout(mockUser, mockResponse as Response)).rejects.toThrow(BadRequestException);
       expect(mockResponse.clearCookie).toHaveBeenCalledWith('refreshToken');
     });
 
@@ -332,13 +321,9 @@ describe('AuthController', () => {
     });
 
     it('should throw UnauthorizedException for incorrect current password', async () => {
-      authService.changePassword.mockRejectedValue(
-        new UnauthorizedException('Current password is incorrect'),
-      );
+      authService.changePassword.mockRejectedValue(new UnauthorizedException('Current password is incorrect'));
 
-      await expect(controller.changePassword(mockChangePasswordDto, mockUser)).rejects.toThrow(
-        UnauthorizedException,
-      );
+      await expect(controller.changePassword(mockChangePasswordDto, mockUser)).rejects.toThrow(UnauthorizedException);
       expect(authService.changePassword).toHaveBeenCalledWith(mockUser.id, mockChangePasswordDto);
     });
 
@@ -349,9 +334,7 @@ describe('AuthController', () => {
       };
       authService.changePassword.mockRejectedValue(new BadRequestException('Password too weak'));
 
-      await expect(controller.changePassword(weakPasswordDto, mockUser)).rejects.toThrow(
-        BadRequestException,
-      );
+      await expect(controller.changePassword(weakPasswordDto, mockUser)).rejects.toThrow(BadRequestException);
     });
 
     it('should handle same current and new password', async () => {
@@ -363,9 +346,7 @@ describe('AuthController', () => {
         new BadRequestException('New password must be different from current password'),
       );
 
-      await expect(controller.changePassword(samePasswordDto, mockUser)).rejects.toThrow(
-        BadRequestException,
-      );
+      await expect(controller.changePassword(samePasswordDto, mockUser)).rejects.toThrow(BadRequestException);
     });
   });
 
@@ -393,17 +374,10 @@ describe('AuthController', () => {
       const mockOAuthRequest = createMockRequest({ user: oauthUser });
       authService.oauthLogin.mockResolvedValue(mockLoginResponse);
 
-      await controller.googleAuthRedirect(
-        mockOAuthRequest as Request,
-        mockResponse as Response,
-      );
+      await controller.googleAuthRedirect(mockOAuthRequest as Request, mockResponse as Response);
 
       expect(authService.oauthLogin).toHaveBeenCalledWith(oauthUser);
-      expect(mockResponse.cookie).toHaveBeenCalledWith(
-        'refreshToken',
-        'mock-refresh-token',
-        COOKIE_OPTIONS,
-      );
+      expect(mockResponse.cookie).toHaveBeenCalledWith('refreshToken', 'mock-refresh-token', COOKIE_OPTIONS);
       expect(mockResponse.redirect).toHaveBeenCalledWith(
         'http://localhost:3000/auth/oauth-success?token=mock-access-token',
       );
@@ -412,10 +386,7 @@ describe('AuthController', () => {
     it('should handle OAuth callback without user', async () => {
       const mockOAuthRequest = createMockRequest({ user: undefined });
 
-      await controller.googleAuthRedirect(
-        mockOAuthRequest as Request,
-        mockResponse as Response,
-      );
+      await controller.googleAuthRedirect(mockOAuthRequest as Request, mockResponse as Response);
 
       expect(authService.oauthLogin).not.toHaveBeenCalled();
       expect(mockResponse.redirect).toHaveBeenCalledWith(
@@ -428,10 +399,7 @@ describe('AuthController', () => {
       const mockOAuthRequest = createMockRequest({ user: oauthUser });
       authService.oauthLogin.mockRejectedValue(new Error('OAuth service error'));
 
-      await controller.googleAuthRedirect(
-        mockOAuthRequest as Request,
-        mockResponse as Response,
-      );
+      await controller.googleAuthRedirect(mockOAuthRequest as Request, mockResponse as Response);
 
       expect(mockResponse.redirect).toHaveBeenCalledWith(
         'http://localhost:3000/auth/oauth-error?message=OAuth%20service%20error',
@@ -444,10 +412,7 @@ describe('AuthController', () => {
       const mockOAuthRequest = createMockRequest({ user: oauthUser });
       authService.oauthLogin.mockResolvedValue(mockLoginResponse);
 
-      await controller.googleAuthRedirect(
-        mockOAuthRequest as Request,
-        mockResponse as Response,
-      );
+      await controller.googleAuthRedirect(mockOAuthRequest as Request, mockResponse as Response);
 
       expect(mockResponse.redirect).toHaveBeenCalledWith(
         'http://localhost:3000/auth/oauth-success?token=mock-access-token',
@@ -462,10 +427,7 @@ describe('AuthController', () => {
       const mockOAuthRequest = createMockRequest({ user: existingUser });
       authService.oauthLogin.mockResolvedValue(mockLoginResponse);
 
-      await controller.googleAuthRedirect(
-        mockOAuthRequest as Request,
-        mockResponse as Response,
-      );
+      await controller.googleAuthRedirect(mockOAuthRequest as Request, mockResponse as Response);
 
       expect(authService.oauthLogin).toHaveBeenCalledWith(existingUser);
       expect(mockResponse.redirect).toHaveBeenCalledWith(
@@ -488,18 +450,14 @@ describe('AuthController', () => {
       const serviceError = new Error('Database connection failed');
       authService.login.mockRejectedValue(serviceError);
 
-      await expect(controller.login(mockLoginDto, mockResponse as Response)).rejects.toThrow(
-        serviceError,
-      );
+      await expect(controller.login(mockLoginDto, mockResponse as Response)).rejects.toThrow(serviceError);
     });
 
     it('should propagate service errors correctly in changePassword', async () => {
       const serviceError = new Error('Password update failed');
       authService.changePassword.mockRejectedValue(serviceError);
 
-      await expect(controller.changePassword(mockChangePasswordDto, mockUser)).rejects.toThrow(
-        serviceError,
-      );
+      await expect(controller.changePassword(mockChangePasswordDto, mockUser)).rejects.toThrow(serviceError);
     });
   });
 
@@ -548,13 +506,9 @@ describe('AuthController', () => {
       };
       authService.refreshToken.mockResolvedValue(newTokens);
       const refreshResult = await controller.refreshToken(mockUser, mockResponse as Response);
-      
+
       expect(refreshResult.accessToken).toBe('new-access-token');
-      expect(mockResponse.cookie).toHaveBeenCalledWith(
-        'refreshToken',
-        'new-refresh-token',
-        COOKIE_OPTIONS,
-      );
+      expect(mockResponse.cookie).toHaveBeenCalledWith('refreshToken', 'new-refresh-token', COOKIE_OPTIONS);
     });
 
     it('should handle OAuth authentication workflow', async () => {
@@ -563,10 +517,7 @@ describe('AuthController', () => {
 
       // OAuth login
       authService.oauthLogin.mockResolvedValue(mockLoginResponse);
-      await controller.googleAuthRedirect(
-        mockOAuthRequest as Request,
-        mockResponse as Response,
-      );
+      await controller.googleAuthRedirect(mockOAuthRequest as Request, mockResponse as Response);
 
       expect(authService.oauthLogin).toHaveBeenCalledWith(oauthUser);
       expect(mockResponse.cookie).toHaveBeenCalled();
@@ -619,14 +570,9 @@ describe('AuthController', () => {
       const mockOAuthRequest = createMockRequest({ user: oauthUser });
       authService.oauthLogin.mockResolvedValue(mockLoginResponse);
 
-      await controller.googleAuthRedirect(
-        mockOAuthRequest as Request,
-        mockResponse as Response,
-      );
+      await controller.googleAuthRedirect(mockOAuthRequest as Request, mockResponse as Response);
 
-      expect(mockResponse.redirect).toHaveBeenCalledWith(
-        expect.stringContaining('http://localhost:3000'),
-      );
+      expect(mockResponse.redirect).toHaveBeenCalledWith(expect.stringContaining('http://localhost:3000'));
     });
   });
 
@@ -638,11 +584,7 @@ describe('AuthController', () => {
 
       await controller.login(mockLoginDto, mockResponse as Response);
 
-      expect(mockResponse.cookie).toHaveBeenCalledWith(
-        'refreshToken',
-        'mock-refresh-token',
-        COOKIE_OPTIONS,
-      );
+      expect(mockResponse.cookie).toHaveBeenCalledWith('refreshToken', 'mock-refresh-token', COOKIE_OPTIONS);
     });
 
     it('should ensure refresh token cookie is cleared on logout', async () => {
@@ -680,14 +622,9 @@ describe('AuthController', () => {
       const errorMessage = 'OAuth failed: Special characters @#$%';
       authService.oauthLogin.mockRejectedValue(new Error(errorMessage));
 
-      await controller.googleAuthRedirect(
-        mockOAuthRequest as Request,
-        mockResponse as Response,
-      );
+      await controller.googleAuthRedirect(mockOAuthRequest as Request, mockResponse as Response);
 
-      expect(mockResponse.redirect).toHaveBeenCalledWith(
-        expect.stringContaining(encodeURIComponent(errorMessage)),
-      );
+      expect(mockResponse.redirect).toHaveBeenCalledWith(expect.stringContaining(encodeURIComponent(errorMessage)));
     });
   });
 });

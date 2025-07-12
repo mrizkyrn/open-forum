@@ -110,6 +110,11 @@ const UserManagementPage = () => {
 
   const columns = [
     {
+      header: 'ID',
+      accessor: (user: User) => user.id,
+      className: 'text-gray-500 whitespace-nowrap',
+    },
+    {
       header: 'User',
       accessor: (user: User) => (
         <div className="flex items-center">

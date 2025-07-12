@@ -1,11 +1,13 @@
 import { DataSource } from 'typeorm';
+import { UserRole } from '../../../common/enums/user-role.enum';
 import { DiscussionSpace, SpaceType } from '../../../modules/discussion/entities/discussion-space.entity';
 import { User } from '../../../modules/user/entities/user.entity';
 
-export async function seedDiscussionSpaces(dataSource: DataSource, users: User[]): Promise<void> {
+export async function seedDiscussionSpaces(dataSource: DataSource): Promise<void> {
   console.log('🌱 Seeding discussion spaces...');
 
   const spaceRepository = dataSource.getRepository(DiscussionSpace);
+  const userRepository = dataSource.getRepository(User);
 
   // Check if spaces already exist
   const spaceCount = await spaceRepository.count();
@@ -15,7 +17,10 @@ export async function seedDiscussionSpaces(dataSource: DataSource, users: User[]
   }
 
   // Get admin and faculty users
-  const adminUser = users.find((user) => user.username === 'admin');
+  const adminUser = await userRepository.findOne({
+    where: { role: UserRole.ADMIN },
+    select: ['id'],
+  });
 
   if (!adminUser) {
     console.error('❌ Admin user not found, skipping space seeding');

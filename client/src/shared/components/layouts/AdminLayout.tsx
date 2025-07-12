@@ -1,5 +1,5 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { BookOpen, Building, Flag, FolderKanban, LayoutDashboard, MessagesSquare, Users } from 'lucide-react';
+import { BookOpen, Bug, Building, Flag, FolderKanban, LayoutDashboard, MessagesSquare, Users } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 
@@ -40,6 +40,7 @@ const AdminLayout = () => {
     { icon: <MessagesSquare size={18} />, label: 'Discussions', path: '/admin/discussions' },
     { icon: <FolderKanban size={18} />, label: 'Spaces', path: '/admin/spaces' },
     { icon: <Flag size={18} />, label: 'Reports', path: '/admin/reports', badgeCount: ReportStatsResponse?.pending },
+    { icon: <Bug size={18} />, label: 'Bug Reports', path: '/admin/bug-reports' },
   ];
 
   const handleNavigation = (path: string) => {

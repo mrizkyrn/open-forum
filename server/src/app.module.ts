@@ -11,6 +11,7 @@ import { AdminModule } from './modules/admin/admin.module';
 import { AnalyticModule } from './modules/analytic/analytic.module';
 import { AttachmentModule } from './modules/attachment/attachment.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { BugReportModule } from './modules/bug-report/bug-report.module';
 import { CommentModule } from './modules/comment/comment.module';
 import { DiscussionModule } from './modules/discussion/discussion.module';
 import { NotificationModule } from './modules/notification/notification.module';
@@ -33,6 +34,7 @@ import { VoteModule } from './modules/vote/vote.module';
     WebsocketModule,
     FileModule,
     ReportModule,
+    BugReportModule,
     AdminModule,
     UserModule,
     NotificationModule,

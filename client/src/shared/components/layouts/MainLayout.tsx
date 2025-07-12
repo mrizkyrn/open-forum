@@ -1,5 +1,5 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { Bell, Bookmark, Home, Layers, LogOut, Menu, Plus, Search, User, X } from 'lucide-react';
+import { Bell, Bookmark, Bug, Home, Layers, LogOut, Menu, Plus, Search, User, X } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 
@@ -79,6 +79,7 @@ const MainLayout = () => {
   const pathMappings = {
     '/profile': '/profile',
     '/bookmarks': '/bookmarks',
+    '/bug-reports': '/bug-reports',
     '/spaces': '/spaces',
     '/explore': '/explore',
     '/search': '/explore',
@@ -125,6 +126,7 @@ const MainLayout = () => {
       icon: <User size={20} />,
     },
     { name: 'Bookmarks', path: '/bookmarks', icon: <Bookmark size={20} /> },
+    { name: 'Bug Reports', path: '/bug-reports', icon: <Bug size={20} /> },
   ];
 
   const onLogout = async () => {
@@ -244,6 +246,11 @@ const MainLayout = () => {
               icon={<Bookmark size={18} />}
               label="Bookmarks"
               onClick={() => navigateAndClose('/bookmarks')}
+            />
+            <MobileMenuItem
+              icon={<Bug size={18} />}
+              label="Bug Reports"
+              onClick={() => navigateAndClose('/bug-reports')}
             />
 
             {/* Create Discussion Button */}
