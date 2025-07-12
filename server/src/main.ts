@@ -10,7 +10,9 @@ import { TransformInterceptor } from './common/interceptors/transform.intercepto
 import { createLoggerForApp } from './core/logger/winston.config';
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
+    logger: createLoggerForApp(),
+  });
   const configService = app.get(ConfigService);
 
   // Add global validation pipe
@@ -46,8 +48,8 @@ async function bootstrap() {
 
   // Swagger setup
   const config = new DocumentBuilder()
-    .setTitle('UPNVJ Forum API')
-    .setDescription('The UPNVJ Forum API documentation')
+    .setTitle('Open Forum API')
+    .setDescription('The Open Forum API documentation')
     .setVersion('1.0')
     .addTag('Auth', 'Authentication API')
     .addTag('Users', 'Users API')

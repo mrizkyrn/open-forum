@@ -44,6 +44,6 @@ export default new DataSource({
     Vote,
     PushSubscription,
   ],
-  migrations: isDevelopment ? ['dist/migrations/*.js'] : ['src/migrations/*.ts'],
+  migrations: isDevelopment ? ['dist/src/core/database/migrations/*.js'] : ['src/core/database/migrations/*.ts'],
   migrationsTableName: 'typeorm_migrations',
 });

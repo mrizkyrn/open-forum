@@ -2,12 +2,13 @@ services:
   # PostgreSQL Database
   postgres:
     image: postgres:17-alpine
-    container_name: upnvj-forum-postgres
+    container_name: open-forum-postgres
     restart: always
     environment:
-      POSTGRES_DB: upnvj_forum
+      POSTGRES_DB: open_forum
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --lc-collate=C --lc-ctype=C"
     ports:
       - "5433:5432"
     volumes:
@@ -16,9 +17,9 @@ services:
     secrets:
       - postgres_password
     networks:
-      - upnvj-forum-network
+      - open-forum-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d upnvj_forum"]
+      test: ["CMD-SHELL", "pg_isready -U postgres -d open_forum"]
       interval: 30s
       timeout: 10s
       retries: 5
@@ -31,38 +32,13 @@ services:
         reservations:
           memory: 512M
           cpus: '0.25'
-
-  # Redis for Pub/Sub
-  redis:
-    image: redis:7-alpine
-    container_name: upnvj-forum-redis
-    restart: always
-    # ports:
-    #   - "6379:6379"
-    volumes:
-      - redis_data:/data
-      - ./redis.conf:/usr/local/etc/redis/redis.conf:ro
-    networks:
-      - upnvj-forum-network
-    command: redis-server /usr/local/etc/redis/redis.conf
-    environment:
-      REDIS_PASSWORD_FILE: /run/secrets/redis_password
-    secrets:
-      - redis_password
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-      start_period: 30s
-    deploy:
-      resources:
-        limits:
-          memory: 512M
-          cpus: '0.25'
-        reservations:
-          memory: 256M
-          cpus: '0.1'
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /run
+      - /var/run
 
   # NestJS Application
   app:
@@ -72,7 +48,10 @@ services:
       args:
         NODE_ENV: production
         BUILDKIT_INLINE_CACHE: 1
-    container_name: upnvj-forum-app
+      cache_from:
+        - open-forum-app:latest
+    image: open-forum-app:latest
+    container_name: open-forum-app
     restart: always
     env_file:
       - .env.production
@@ -80,11 +59,9 @@ services:
       - ./uploads:/app/uploads
       - ./logs:/app/logs
     networks:
-      - upnvj-forum-network
+      - open-forum-network
     depends_on:
       postgres:
-        condition: service_healthy
-      redis:
         condition: service_healthy
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
@@ -104,21 +81,28 @@ services:
         condition: on-failure
         delay: 5s
         max_attempts: 3
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /app/.npm
 
   # Nginx Reverse Proxy
   nginx:
     image: nginx:alpine
-    container_name: upnvj-forum-nginx
+    container_name: open-forum-nginx
     restart: always
     ports:
       - "80:80"
-      # - "443:443"
+      - "443:443"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./nginx/ssl:/etc/nginx/ssl:ro
       - ./nginx/logs:/var/log/nginx
+      - ./uploads:/var/www/uploads:ro
     networks:
-      - upnvj-forum-network
+      - open-forum-network
     depends_on:
       app:
         condition: service_healthy
@@ -136,19 +120,17 @@ services:
         reservations:
           memory: 128M
           cpus: '0.1'
+    security_opt:
+      - no-new-privileges:true
 
 volumes:
   postgres_data:
     driver: local
-  redis_data:
-    driver: local
 
 networks:
-  upnvj-forum-network:
+  open-forum-network:
     driver: bridge
 
 secrets:
   postgres_password:
     file: ./secrets/postgres_password.txt
-  redis_password:
-    file: ./secrets/redis_password.txt
