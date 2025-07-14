@@ -16,7 +16,7 @@ export async function seedDiscussionSpaces(dataSource: DataSource): Promise<void
     return;
   }
 
-  // Get admin and faculty users
+  // Check if admin user exists
   const adminUser = await userRepository.findOne({
     where: { role: UserRole.ADMIN },
     select: ['id'],

@@ -13,7 +13,7 @@ export async function seedDatabase(dataSource: DataSource): Promise<void> {
     }
 
     // Seed in sequence to maintain referential integrity
-    // await seedUsers(dataSource);
+    await seedUsers(dataSource);
     await seedDiscussionSpaces(dataSource);
     await seedReportReasons(dataSource);
 

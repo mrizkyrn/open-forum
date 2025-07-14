@@ -1,13 +1,16 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class InitialSchema1751990876537 implements MigrationInterface {
-    name = 'InitialSchema1751990876537'
+export class InitalSchema1752394502902 implements MigrationInterface {
+    name = 'InitalSchema1752394502902'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`CREATE TYPE "public"."users_role_enum" AS ENUM('admin', 'user')`);
-        await queryRunner.query(`CREATE TABLE "users" ("id" SERIAL NOT NULL, "created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), "deleted_at" TIMESTAMP, "email" character varying(100), "username" character varying(100) NOT NULL, "password" character varying(100), "full_name" character varying(100) NOT NULL, "avatar_url" character varying(255), "role" "public"."users_role_enum" NOT NULL DEFAULT 'user', "last_active_at" TIMESTAMP, "oauth_provider" character varying(50), CONSTRAINT "UQ_97672ac88f789774dd47f7c8be3" UNIQUE ("email"), CONSTRAINT "UQ_fe0bb3f6520ee0469504521e710" UNIQUE ("username"), CONSTRAINT "PK_a3ffb1c0c8416b9fc6f907b7433" PRIMARY KEY ("id"))`);
-        await queryRunner.query(`CREATE UNIQUE INDEX "IDX_97672ac88f789774dd47f7c8be" ON "users" ("email") `);
-        await queryRunner.query(`CREATE UNIQUE INDEX "IDX_fe0bb3f6520ee0469504521e71" ON "users" ("username") `);
+        await queryRunner.query(`CREATE TABLE "users" ("id" SERIAL NOT NULL, "created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), "deleted_at" TIMESTAMP, "email" character varying(100), "username" character varying(25) NOT NULL, "password" character varying(255), "full_name" character varying(100) NOT NULL, "avatar_url" character varying(500), "role" "public"."users_role_enum" NOT NULL DEFAULT 'user', "last_active_at" TIMESTAMP, "oauth_provider" character varying(50), CONSTRAINT "UQ_97672ac88f789774dd47f7c8be3" UNIQUE ("email"), CONSTRAINT "UQ_fe0bb3f6520ee0469504521e710" UNIQUE ("username"), CONSTRAINT "PK_a3ffb1c0c8416b9fc6f907b7433" PRIMARY KEY ("id")); COMMENT ON COLUMN "users"."email" IS 'User email address - unique and optional'; COMMENT ON COLUMN "users"."username" IS 'Unique username for login'; COMMENT ON COLUMN "users"."password" IS 'Hashed password - excluded from default selects'; COMMENT ON COLUMN "users"."full_name" IS 'User full name'; COMMENT ON COLUMN "users"."avatar_url" IS 'URL to user avatar image'; COMMENT ON COLUMN "users"."role" IS 'User role in the system'; COMMENT ON COLUMN "users"."last_active_at" IS 'Last time user was active in the system'; COMMENT ON COLUMN "users"."oauth_provider" IS 'OAuth provider used for authentication (google, github, etc.)'`);
+        await queryRunner.query(`CREATE INDEX "idx_user_oauth_provider" ON "users" ("oauth_provider") `);
+        await queryRunner.query(`CREATE INDEX "idx_user_last_active" ON "users" ("last_active_at") `);
+        await queryRunner.query(`CREATE INDEX "idx_user_role" ON "users" ("role") `);
+        await queryRunner.query(`CREATE INDEX "idx_user_username" ON "users" ("username") `);
+        await queryRunner.query(`CREATE INDEX "idx_user_email" ON "users" ("email") `);
         await queryRunner.query(`CREATE TYPE "public"."user_activities_type_enum" AS ENUM('create_discussion', 'create_comment', 'vote_discussion', 'vote_comment', 'bookmark_discussion', 'remove_bookmark', 'follow_space', 'unfollow_space', 'report_content', 'edit_discussion', 'edit_comment', 'delete_discussion', 'delete_comment')`);
         await queryRunner.query(`CREATE TYPE "public"."user_activities_entity_type_enum" AS ENUM('discussion', 'comment', 'discussion_space', 'report', 'user')`);
         await queryRunner.query(`CREATE TABLE "user_activities" ("id" SERIAL NOT NULL, "created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), "deleted_at" TIMESTAMP, "user_id" integer NOT NULL, "type" "public"."user_activities_type_enum" NOT NULL, "entity_type" "public"."user_activities_entity_type_enum" NOT NULL, "entity_id" integer NOT NULL, "metadata" jsonb NOT NULL DEFAULT '{}', "ip_address" character varying(45), "user_agent" character varying(255), CONSTRAINT "PK_1245d4d2cf04ba7743f2924d951" PRIMARY KEY ("id"))`);
@@ -17,6 +20,12 @@ export class InitialSchema1751990876537 implements MigrationInterface {
         await queryRunner.query(`CREATE TABLE "attachments" ("id" SERIAL NOT NULL, "created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), "deleted_at" TIMESTAMP, "original_name" character varying(255) NOT NULL, "name" character varying(255) NOT NULL, "mime_type" character varying(100) NOT NULL, "size" integer NOT NULL, "url" character varying(500) NOT NULL, "entity_type" "public"."attachments_entity_type_enum" NOT NULL, "entity_id" integer NOT NULL, "is_image" boolean NOT NULL DEFAULT false, "display_order" integer NOT NULL DEFAULT '0', CONSTRAINT "PK_5e1f050bcff31e3084a1d662412" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE INDEX "IDX_a893a08d151195e1d3bf7a109c" ON "attachments" ("entity_type") `);
         await queryRunner.query(`CREATE INDEX "IDX_f627d55b75ca1d0c0012a4a93a" ON "attachments" ("entity_id") `);
+        await queryRunner.query(`CREATE TYPE "public"."bug_reports_priority_enum" AS ENUM('low', 'medium', 'high', 'critical')`);
+        await queryRunner.query(`CREATE TYPE "public"."bug_reports_status_enum" AS ENUM('open', 'in_progress', 'resolved', 'closed')`);
+        await queryRunner.query(`CREATE TABLE "bug_reports" ("id" SERIAL NOT NULL, "created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), "deleted_at" TIMESTAMP, "title" character varying(255) NOT NULL, "description" text NOT NULL, "stepsToReproduce" text, "environment" character varying(255), "priority" "public"."bug_reports_priority_enum" NOT NULL DEFAULT 'medium', "status" "public"."bug_reports_status_enum" NOT NULL DEFAULT 'open', "reporter_id" integer NOT NULL, "assigned_to_id" integer, "resolution" text, CONSTRAINT "PK_ad13bef7131f2fed8b2fb9fbb00" PRIMARY KEY ("id")); COMMENT ON COLUMN "bug_reports"."title" IS 'Bug report title'; COMMENT ON COLUMN "bug_reports"."description" IS 'Detailed description of the bug'; COMMENT ON COLUMN "bug_reports"."stepsToReproduce" IS 'Steps to reproduce the bug'; COMMENT ON COLUMN "bug_reports"."environment" IS 'Browser/Platform where bug occurred'; COMMENT ON COLUMN "bug_reports"."priority" IS 'Priority level of the bug'; COMMENT ON COLUMN "bug_reports"."status" IS 'Current status of the bug report'; COMMENT ON COLUMN "bug_reports"."reporter_id" IS 'ID of the user who reported the bug'; COMMENT ON COLUMN "bug_reports"."assigned_to_id" IS 'ID of the user assigned to fix the bug'; COMMENT ON COLUMN "bug_reports"."resolution" IS 'Resolution notes or comments'`);
+        await queryRunner.query(`CREATE INDEX "idx_bug_report_reporter" ON "bug_reports" ("reporter_id") `);
+        await queryRunner.query(`CREATE INDEX "idx_bug_report_priority" ON "bug_reports" ("priority") `);
+        await queryRunner.query(`CREATE INDEX "idx_bug_report_status" ON "bug_reports" ("status") `);
         await queryRunner.query(`CREATE TYPE "public"."discussion_spaces_space_type_enum" AS ENUM('general', 'academic', 'organization', 'campus', 'other')`);
         await queryRunner.query(`CREATE TABLE "discussion_spaces" ("id" SERIAL NOT NULL, "created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), "deleted_at" TIMESTAMP, "name" character varying(100) NOT NULL, "description" text, "slug" character varying(100) NOT NULL, "creator_id" integer NOT NULL, "space_type" "public"."discussion_spaces_space_type_enum" NOT NULL DEFAULT 'other', "icon_url" character varying(255), "banner_url" character varying(255), "follower_count" integer NOT NULL DEFAULT '0', CONSTRAINT "UQ_fd8dd64173fad798693ca2df762" UNIQUE ("slug"), CONSTRAINT "PK_5723b93e8d863c05d926cebb557" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE INDEX "IDX_fd8dd64173fad798693ca2df76" ON "discussion_spaces" ("slug") `);
@@ -37,11 +46,17 @@ export class InitialSchema1751990876537 implements MigrationInterface {
         await queryRunner.query(`CREATE INDEX "IDX_9f4244cd79aecec15dd41a2c73" ON "reports" ("target_type", "target_id") `);
         await queryRunner.query(`CREATE TABLE "report_reasons" ("id" SERIAL NOT NULL, "created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), "deleted_at" TIMESTAMP, "name" character varying(100) NOT NULL, "description" text, "isActive" boolean NOT NULL DEFAULT true, CONSTRAINT "PK_b3e556babb07559ce99a7fb158e" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TYPE "public"."votes_entity_type_enum" AS ENUM('discussion', 'comment')`);
-        await queryRunner.query(`CREATE TABLE "votes" ("id" SERIAL NOT NULL, "created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), "deleted_at" TIMESTAMP, "entity_type" "public"."votes_entity_type_enum" NOT NULL, "entity_id" integer NOT NULL, "value" integer NOT NULL, "user_id" integer NOT NULL, CONSTRAINT "PK_f3d9fd4a0af865152c3f59db8ff" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TABLE "votes" ("id" SERIAL NOT NULL, "created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), "deleted_at" TIMESTAMP, "entity_type" "public"."votes_entity_type_enum" NOT NULL, "entity_id" integer NOT NULL, "value" integer NOT NULL, "user_id" integer NOT NULL, CONSTRAINT "uq_vote_user_entity" UNIQUE ("user_id", "entity_type", "entity_id"), CONSTRAINT "PK_f3d9fd4a0af865152c3f59db8ff" PRIMARY KEY ("id")); COMMENT ON COLUMN "votes"."entity_type" IS 'Type of entity being voted on (discussion or comment)'; COMMENT ON COLUMN "votes"."entity_id" IS 'ID of the entity being voted on'; COMMENT ON COLUMN "votes"."value" IS 'Vote value: 1 for upvote, -1 for downvote'; COMMENT ON COLUMN "votes"."user_id" IS 'ID of the user who cast the vote'`);
+        await queryRunner.query(`CREATE INDEX "idx_vote_created" ON "votes" ("created_at") `);
+        await queryRunner.query(`CREATE INDEX "idx_vote_value" ON "votes" ("value") `);
+        await queryRunner.query(`CREATE INDEX "idx_vote_user" ON "votes" ("user_id") `);
+        await queryRunner.query(`CREATE INDEX "idx_vote_entity" ON "votes" ("entity_type", "entity_id") `);
         await queryRunner.query(`CREATE TABLE "discussion_space_followers" ("space_id" integer NOT NULL, "user_id" integer NOT NULL, CONSTRAINT "PK_36df393061267ceb8aedbb0ebc4" PRIMARY KEY ("space_id", "user_id"))`);
         await queryRunner.query(`CREATE INDEX "IDX_90ad6c411b7a54e12110f6d673" ON "discussion_space_followers" ("space_id") `);
         await queryRunner.query(`CREATE INDEX "IDX_f4f78f05248b172b42025e06c0" ON "discussion_space_followers" ("user_id") `);
         await queryRunner.query(`ALTER TABLE "user_activities" ADD CONSTRAINT "FK_a283f37e08edf5e37d38b375eec" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "bug_reports" ADD CONSTRAINT "FK_ed51d9830efe4c8515960d2d512" FOREIGN KEY ("reporter_id") REFERENCES "users"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "bug_reports" ADD CONSTRAINT "FK_2a7b3cc9890ef5ddb94125267b7" FOREIGN KEY ("assigned_to_id") REFERENCES "users"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE "discussions" ADD CONSTRAINT "FK_cedb0b583906c7f01fc7bd4972c" FOREIGN KEY ("author_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE "discussions" ADD CONSTRAINT "FK_c49c16cd1783ddb8f4e5d2f9b15" FOREIGN KEY ("space_id") REFERENCES "discussion_spaces"("id") ON DELETE CASCADE ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE "comments" ADD CONSTRAINT "FK_e6d38899c31997c45d128a8973b" FOREIGN KEY ("author_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE NO ACTION`);
@@ -81,10 +96,16 @@ export class InitialSchema1751990876537 implements MigrationInterface {
         await queryRunner.query(`ALTER TABLE "comments" DROP CONSTRAINT "FK_e6d38899c31997c45d128a8973b"`);
         await queryRunner.query(`ALTER TABLE "discussions" DROP CONSTRAINT "FK_c49c16cd1783ddb8f4e5d2f9b15"`);
         await queryRunner.query(`ALTER TABLE "discussions" DROP CONSTRAINT "FK_cedb0b583906c7f01fc7bd4972c"`);
+        await queryRunner.query(`ALTER TABLE "bug_reports" DROP CONSTRAINT "FK_2a7b3cc9890ef5ddb94125267b7"`);
+        await queryRunner.query(`ALTER TABLE "bug_reports" DROP CONSTRAINT "FK_ed51d9830efe4c8515960d2d512"`);
         await queryRunner.query(`ALTER TABLE "user_activities" DROP CONSTRAINT "FK_a283f37e08edf5e37d38b375eec"`);
         await queryRunner.query(`DROP INDEX "public"."IDX_f4f78f05248b172b42025e06c0"`);
         await queryRunner.query(`DROP INDEX "public"."IDX_90ad6c411b7a54e12110f6d673"`);
         await queryRunner.query(`DROP TABLE "discussion_space_followers"`);
+        await queryRunner.query(`DROP INDEX "public"."idx_vote_entity"`);
+        await queryRunner.query(`DROP INDEX "public"."idx_vote_user"`);
+        await queryRunner.query(`DROP INDEX "public"."idx_vote_value"`);
+        await queryRunner.query(`DROP INDEX "public"."idx_vote_created"`);
         await queryRunner.query(`DROP TABLE "votes"`);
         await queryRunner.query(`DROP TYPE "public"."votes_entity_type_enum"`);
         await queryRunner.query(`DROP TABLE "report_reasons"`);
@@ -106,6 +127,12 @@ export class InitialSchema1751990876537 implements MigrationInterface {
         await queryRunner.query(`DROP INDEX "public"."IDX_fd8dd64173fad798693ca2df76"`);
         await queryRunner.query(`DROP TABLE "discussion_spaces"`);
         await queryRunner.query(`DROP TYPE "public"."discussion_spaces_space_type_enum"`);
+        await queryRunner.query(`DROP INDEX "public"."idx_bug_report_status"`);
+        await queryRunner.query(`DROP INDEX "public"."idx_bug_report_priority"`);
+        await queryRunner.query(`DROP INDEX "public"."idx_bug_report_reporter"`);
+        await queryRunner.query(`DROP TABLE "bug_reports"`);
+        await queryRunner.query(`DROP TYPE "public"."bug_reports_status_enum"`);
+        await queryRunner.query(`DROP TYPE "public"."bug_reports_priority_enum"`);
         await queryRunner.query(`DROP INDEX "public"."IDX_f627d55b75ca1d0c0012a4a93a"`);
         await queryRunner.query(`DROP INDEX "public"."IDX_a893a08d151195e1d3bf7a109c"`);
         await queryRunner.query(`DROP TABLE "attachments"`);
@@ -115,8 +142,11 @@ export class InitialSchema1751990876537 implements MigrationInterface {
         await queryRunner.query(`DROP TABLE "user_activities"`);
         await queryRunner.query(`DROP TYPE "public"."user_activities_entity_type_enum"`);
         await queryRunner.query(`DROP TYPE "public"."user_activities_type_enum"`);
-        await queryRunner.query(`DROP INDEX "public"."IDX_fe0bb3f6520ee0469504521e71"`);
-        await queryRunner.query(`DROP INDEX "public"."IDX_97672ac88f789774dd47f7c8be"`);
+        await queryRunner.query(`DROP INDEX "public"."idx_user_email"`);
+        await queryRunner.query(`DROP INDEX "public"."idx_user_username"`);
+        await queryRunner.query(`DROP INDEX "public"."idx_user_role"`);
+        await queryRunner.query(`DROP INDEX "public"."idx_user_last_active"`);
+        await queryRunner.query(`DROP INDEX "public"."idx_user_oauth_provider"`);
         await queryRunner.query(`DROP TABLE "users"`);
         await queryRunner.query(`DROP TYPE "public"."users_role_enum"`);
     }

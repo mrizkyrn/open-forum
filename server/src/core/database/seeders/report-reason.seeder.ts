@@ -2,7 +2,7 @@ import { DataSource } from 'typeorm';
 import { ReportReason } from '../../../modules/report/entities/report-reason.entity';
 
 export async function seedReportReasons(dataSource: DataSource): Promise<void> {
-  console.log('🚩 Seeding report reasons...');
+  console.log('🌱 Seeding report reasons...');
 
   const reportReasonRepository = dataSource.getRepository(ReportReason);
 

@@ -2,7 +2,7 @@ import useAxios from '@/features/auth/hooks/useAxios';
 import { RouterProvider } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import { router } from './routes';
-import './App.css';
+import './app.css';
 
 function App() {
   useAxios();

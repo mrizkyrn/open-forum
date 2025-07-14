@@ -3,7 +3,7 @@ import { DataSource } from 'typeorm';
 import { UserRole } from '../../../common/enums/user-role.enum';
 import { User } from '../../../modules/user/entities/user.entity';
 
-export async function seedUsers(dataSource: DataSource): Promise<User[]> {
+export async function seedUsers(dataSource: DataSource): Promise<void> {
   console.log('🌱 Seeding users...');
 
   const userRepository = dataSource.getRepository(User);
@@ -11,35 +11,31 @@ export async function seedUsers(dataSource: DataSource): Promise<User[]> {
   // Check if admin specifically exists
   const adminExists = await userRepository.findOne({ where: { username: 'admin' } });
   if (adminExists) {
-    console.log('👥 Admin user already exists from migration, skipping user seeding');
-    return [adminExists];
+    console.log('👥 Admin user already exists, skipping seeding');
+    return;
   }
 
-  // Create default password
-  const password = await bcrypt.hash('password123', 10);
+  // Define the admin username and password
+  const username = process.env.ADMIN_USERNAME;
+  const password = process.env.ADMIN_PASSWORD;
 
-  // Generate random date between now and a month ago
-  const getRandomDate = (): Date => {
-    const now = new Date();
-    const oneMonthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
-    return new Date(oneMonthAgo.getTime() + Math.random() * (now.getTime() - oneMonthAgo.getTime()));
-  };
+  if (!username || !password) {
+    throw new Error('ADMIN_USERNAME and ADMIN_PASSWORD must be set in the environment variables');
+  }
 
-  // Create sample users
-  const users = [
-    // Admin
-    userRepository.create({
-      username: 'admin',
-      password,
-      fullName: 'Administrator',
-      role: UserRole.ADMIN,
-      createdAt: getRandomDate(),
-    }),
-  ];
+  // Hash the password
+  const hashedPassword = await bcrypt.hash(password, 10);
 
-  // Save users to database
-  const savedUsers = await userRepository.save(users);
-  console.log(`👥 Created ${savedUsers.length} users`);
+  // Create the admin user
+  const adminUser = userRepository.create({
+    username,
+    password: hashedPassword,
+    fullName: 'Administrator',
+    role: UserRole.ADMIN,
+  });
 
-  return savedUsers;
+  // Save the admin user to the database
+  await userRepository.save(adminUser);
+
+  console.log(`👤 Admin user created successfully`);
 }
