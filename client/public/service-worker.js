@@ -1,5 +1,5 @@
 // Cache name for PWA
-const CACHE_NAME = 'upnvj-forum-v1';
+const CACHE_NAME = 'open-forum-v1';
 
 // Listen for push events
 self.addEventListener('push', function (event) {
@@ -10,7 +10,7 @@ self.addEventListener('push', function (event) {
 
     const notificationOptions = {
       body: payload.body,
-      icon: '/upnvj-forum-logo.png',
+      icon: '/open-forum-logo.png',
       badge: '/favicon.ico',
       data: payload.data || {},
       actions: payload.actions || [],

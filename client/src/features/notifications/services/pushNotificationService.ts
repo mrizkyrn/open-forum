@@ -255,8 +255,8 @@ class PushNotificationService {
   public async sendTestNotification(): Promise<void> {
     try {
       new Notification('Test Notification', {
-        body: 'This is a test notification from UPNVJ Forum',
-        icon: '/upnvj-forum-logo.png',
+        body: 'This is a test notification from Open Forum',
+        icon: '/open-forum-logo.png',
       });
     } catch (error) {
       console.error('Error sending test notification:', error);

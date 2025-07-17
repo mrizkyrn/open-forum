@@ -57,7 +57,7 @@ const AdminSidebar = ({
             <div className="bg-primary/10 flex h-8 w-8 items-center justify-center rounded-md">
               <span className="text-primary font-bold">U</span>
             </div>
-            <h1 className="ml-2 text-base font-semibold tracking-tight text-gray-800">UPNVJ Admin</h1>
+            <h1 className="ml-2 text-base font-semibold tracking-tight text-gray-800">Open Forum Admin</h1>
           </div>
         )}
       </div>

@@ -2,6 +2,7 @@ import { Eye, EyeOff } from 'lucide-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import OpenForumLogo from '@/assets/open-forum-logo.png';
 import { RegisterRequest } from '@/features/auth/types';
 import MainButton from '@/shared/components/ui/buttons/MainButton';
 import { authApi } from '../services';
@@ -68,7 +69,7 @@ const RegisterForm: React.FC = () => {
   };
 
   return (
-    <div className="relative flex w-full my-5 max-w-sm flex-col gap-5 rounded-2xl bg-white px-6 py-8">
+    <div className="relative my-5 flex w-full max-w-sm flex-col gap-5 rounded-2xl bg-white px-6 py-8">
       <div className="bg-primary absolute top-0 right-0 h-1.5 w-full rounded-t-2xl" />
 
       {/* Success State */}
@@ -88,7 +89,7 @@ const RegisterForm: React.FC = () => {
           </div>
 
           {/* Success Message */}
-          <h2 className="mb-2 text-xl font-semibold text-gray-800">Welcome to UPNVJ Forum!</h2>
+          <h2 className="mb-2 text-xl font-semibold text-gray-800">Welcome to Open Forum!</h2>
           <p className="mb-6 max-w-xs text-sm leading-relaxed text-gray-600">{successMessage}</p>
 
           {/* Action Button */}
@@ -103,16 +104,16 @@ const RegisterForm: React.FC = () => {
 
           {/* Additional Info */}
           <p className="text-xs text-gray-500">
-            You can now participate in discussions and connect with the UPNVJ community.
+            You can now participate in discussions and connect with the Open Forum community.
           </p>
         </div>
       ) : (
         <>
           {/* Logo */}
           <div className="flex justify-center gap-4 py-5">
-            <img src="src/assets/logo-upnvj.png" alt="UPNVJ Logo" className="h-20 w-20" />
+            <img src={OpenForumLogo} alt="Open Forum Logo" className="h-20 w-20" />
             <div className="flex flex-col justify-center">
-              <h1 className="text-sm font-bold text-gray-600">UPNVJ</h1>
+              <h1 className="text-sm font-bold text-gray-600">OPEN</h1>
               <h1 className="text-primary text-4xl font-bold">FORUM</h1>
             </div>
           </div>
@@ -140,7 +141,7 @@ const RegisterForm: React.FC = () => {
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-3">
             <div className="space-y-2">
-              <label htmlFor="username" className="block text-xs md:text-sm font-semibold text-gray-600">
+              <label htmlFor="username" className="block text-xs font-semibold text-gray-600 md:text-sm">
                 Username
               </label>
               <input
@@ -156,7 +157,7 @@ const RegisterForm: React.FC = () => {
             </div>
 
             <div className="space-y-2">
-              <label htmlFor="fullName" className="block text-xs md:text-sm font-semibold text-gray-600">
+              <label htmlFor="fullName" className="block text-xs font-semibold text-gray-600 md:text-sm">
                 Full Name
               </label>
               <input
@@ -172,7 +173,7 @@ const RegisterForm: React.FC = () => {
             </div>
 
             <div className="space-y-2">
-              <label htmlFor="password" className="block text-xs md:text-sm font-semibold text-gray-600">
+              <label htmlFor="password" className="block text-xs font-semibold text-gray-600 md:text-sm">
                 Password
               </label>
               <div className="relative">
@@ -201,7 +202,7 @@ const RegisterForm: React.FC = () => {
             </div>
 
             <div className="space-y-2">
-              <label htmlFor="confirmPassword" className="block text-xs md:text-sm font-semibold text-gray-600">
+              <label htmlFor="confirmPassword" className="block text-xs font-semibold text-gray-600 md:text-sm">
                 Confirm Password
               </label>
               <div className="relative">

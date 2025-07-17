@@ -2,6 +2,7 @@ import { Eye, EyeOff } from 'lucide-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import OpenForumLogo from '@/assets/open-forum-logo.png';
 import { useAuth } from '@/features/auth/hooks/useAuth';
 import { LoginRequest } from '@/features/auth/types';
 import { UserRole } from '@/features/users/types';
@@ -51,9 +52,9 @@ const LoginForm: React.FC = () => {
 
       {/* Logo */}
       <div className="flex justify-center gap-4 py-5">
-        <img src="src/assets/logo-upnvj.png" alt="UPNVJ Logo" className="h-20 w-20" />
+        <img src={OpenForumLogo} alt="Open Forum Logo" className="h-20 w-20" />
         <div className="flex flex-col justify-center">
-          <h1 className="text-sm font-bold text-gray-600">UPNVJ</h1>
+          <h1 className="text-sm font-bold text-gray-600">Open</h1>
           <h1 className="text-primary text-4xl font-bold">FORUM</h1>
         </div>
       </div>
@@ -81,7 +82,7 @@ const LoginForm: React.FC = () => {
       {/* Form */}
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="space-y-2">
-          <label htmlFor="username" className="block text-xs md:text-sm font-semibold text-gray-600">
+          <label htmlFor="username" className="block text-xs font-semibold text-gray-600 md:text-sm">
             Username
           </label>
           <input
@@ -96,7 +97,7 @@ const LoginForm: React.FC = () => {
           />
         </div>
         <div className="space-y-2">
-          <label htmlFor="password" className="block text-xs md:text-sm font-semibold text-gray-600">
+          <label htmlFor="password" className="block text-xs font-semibold text-gray-600 md:text-sm">
             Password
           </label>
           <div className="relative">
