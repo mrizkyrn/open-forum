@@ -394,7 +394,7 @@ export class UserService {
    * @param endDate - End date
    * @returns Array of date/count pairs
    */
-  async getUserRegistrationTimeSeries(startDate: Date, endDate: Date): Promise<{ date: string; count: string }[]> {
+  async getTimeSeries(startDate: Date, endDate: Date): Promise<{ date: string; count: string }[]> {
     return this.userRepository
       .createQueryBuilder('user')
       .select('DATE(user.createdAt)', 'date')

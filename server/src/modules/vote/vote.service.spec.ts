@@ -482,7 +482,7 @@ describe('VoteService', () => {
       });
     });
 
-    describe('getVoteTimeSeries', () => {
+    describe('getTimeSeries', () => {
       it('should return time series data', async () => {
         const startDate = new Date('2023-01-01');
         const endDate = new Date('2023-12-31');
@@ -492,7 +492,7 @@ describe('VoteService', () => {
         ];
         queryBuilder.getRawMany.mockResolvedValue(mockTimeSeries);
 
-        const result = await service.getVoteTimeSeries(startDate, endDate);
+        const result = await service.getTimeSeries(startDate, endDate);
 
         expect(queryBuilder.where).toHaveBeenCalledWith('vote.createdAt BETWEEN :startDate AND :endDate', {
           startDate,

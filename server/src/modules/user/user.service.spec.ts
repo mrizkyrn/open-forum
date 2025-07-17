@@ -653,7 +653,7 @@ describe('UserService', () => {
       });
     });
 
-    describe('getUserRegistrationTimeSeries', () => {
+    describe('getTimeSeries', () => {
       it('should return time series data', async () => {
         const startDate = new Date('2023-01-01');
         const endDate = new Date('2023-12-31');
@@ -663,7 +663,7 @@ describe('UserService', () => {
         ];
         queryBuilder.getRawMany.mockResolvedValue(mockTimeSeries);
 
-        const result = await service.getUserRegistrationTimeSeries(startDate, endDate);
+        const result = await service.getTimeSeries(startDate, endDate);
 
         expect(queryBuilder.where).toHaveBeenCalledWith('user.createdAt BETWEEN :startDate AND :endDate', {
           startDate,

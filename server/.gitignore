@@ -36,7 +36,6 @@ lerna-debug.log*
 !.vscode/extensions.json
 
 # dotenv environment variable files
-secrets/
 *.env* 
 !.env.example
 
@@ -53,5 +52,9 @@ pids
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
-# Nginx
-nginx/ssl
+# Persistent data directories
+/backups
+/data
+/logs
+/secrets
+/uploads

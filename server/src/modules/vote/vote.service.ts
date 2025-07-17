@@ -161,7 +161,7 @@ export class VoteService {
    * @param endDate - End date
    * @returns Array of date/count pairs
    */
-  async getVoteTimeSeries(startDate: Date, endDate: Date): Promise<{ date: string; count: string }[]> {
+  async getTimeSeries(startDate: Date, endDate: Date): Promise<{ date: string; count: string }[]> {
     this.logger.debug(`Getting vote time series from ${startDate} to ${endDate}`);
 
     return this.voteRepository

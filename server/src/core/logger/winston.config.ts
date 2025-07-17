@@ -1,102 +1,119 @@
 import { WinstonModule } from 'nest-winston';
-import { format, transports } from 'winston';
+import { format, transports, transport as WinstonTransport } from 'winston';
 import * as DailyRotateFile from 'winston-daily-rotate-file';
 import { loggerConfig } from '../../config';
 
-const { combine, timestamp, printf, colorize, errors } = format;
+const { combine, timestamp, printf, colorize, errors, json } = format;
 
-// Custom format for logs
-const logFormat = printf(({ level, message, timestamp, context, trace }) => {
-  return `${timestamp} [${context}] ${level}: ${message}${trace ? `\n${trace}` : ''}`;
-});
+// --- Custom Formatters ---
+
+// Custom format for console logs (human-readable)
+const consoleLogFormat = combine(
+  colorize(),
+  timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
+  printf(({ level, message, timestamp, context, trace }) => {
+    return `${timestamp} [${context || 'Application'}] ${level}: ${message}${trace ? `\n${trace}` : ''}`;
+  }),
+);
+
+// Custom format for file logs (machine-readable)
+const fileLogFormat = combine(
+  timestamp(),
+  errors({ stack: true }),
+  json(),
+);
+
+// --- Logger Creation ---
 
 export const createWinstonLogger = () => {
-  // Get validated logger configuration
   const config = loggerConfig();
+  const loggerTransports: WinstonTransport[] = [];
 
-  const loggerTransports: any[] = [];
-
-  // Console transport (based on config)
+  // Console Transport (typically for development)
   if (config.console) {
+    loggerTransports.push(new transports.Console({ format: consoleLogFormat }));
+  }
+
+  // File Transports (typically for production)
+  if (config.file) {
+    // Shared configuration for daily rotating files
+    const dailyRotateFileOptions = {
+      datePattern: 'YYYY-MM-DD',
+      zippedArchive: true,
+      maxSize: config.maxSize,
+      format: fileLogFormat,
+    };
+
+    // Transport for all 'info' level and above logs
     loggerTransports.push(
-      new transports.Console({
-        format: combine(colorize(), timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }), logFormat),
+      new DailyRotateFile({
+        ...dailyRotateFileOptions,
+        filename: 'logs/application-%DATE%.log',
+        level: 'info',
+        maxFiles: config.maxFiles,
+      }),
+    );
+
+    // Transport for 'error' level logs only
+    loggerTransports.push(
+      new DailyRotateFile({
+        ...dailyRotateFileOptions,
+        filename: 'logs/error-%DATE%.log',
+        level: 'error',
+        maxFiles: config.errorMaxFiles,
       }),
     );
   }
 
-  // File transports (only if file logging is enabled)
-  if (config.file) {
-    loggerTransports.push(
-      // All logs
-      new DailyRotateFile({
-        filename: 'logs/application-%DATE%.log',
-        datePattern: 'YYYY-MM-DD',
-        zippedArchive: true,
-        maxSize: config.maxSize,
-        maxFiles: config.maxFiles,
-        format: combine(timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }), logFormat),
-      }),
+  // --- Exception/Rejection Handlers ---
+  let exceptionHandlers: WinstonTransport[] = [];
+  let rejectionHandlers: WinstonTransport[] = [];
 
-      // Error logs only
+  if (config.file) {
+    const crashHandlerOptions = {
+      datePattern: 'YYYY-MM-DD',
+      zippedArchive: true,
+      maxSize: config.maxSize,
+      maxFiles: config.errorMaxFiles,
+      format: fileLogFormat,
+    };
+
+    exceptionHandlers = [
       new DailyRotateFile({
-        filename: 'logs/error-%DATE%.log',
-        datePattern: 'YYYY-MM-DD',
-        zippedArchive: true,
-        maxSize: config.maxSize,
-        maxFiles: config.errorMaxFiles,
-        level: 'error',
-        format: combine(timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }), logFormat),
+        ...crashHandlerOptions,
+        filename: 'logs/exceptions-%DATE%.log',
       }),
-    );
+    ];
+
+    rejectionHandlers = [
+      new DailyRotateFile({
+        ...crashHandlerOptions,
+        filename: 'logs/rejections-%DATE%.log',
+      }),
+    ];
   }
 
   return WinstonModule.createLogger({
     level: config.level,
-    format: combine(timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }), errors({ stack: true }), logFormat),
+    format: fileLogFormat,
     transports: loggerTransports,
-    // Handle uncaught exceptions and unhandled rejections
-    exceptionHandlers: config.file
-      ? [
-          new DailyRotateFile({
-            filename: 'logs/exceptions-%DATE%.log',
-            datePattern: 'YYYY-MM-DD',
-            zippedArchive: true,
-            maxSize: config.maxSize,
-            maxFiles: config.errorMaxFiles,
-          }),
-        ]
-      : [],
-    rejectionHandlers: config.file
-      ? [
-          new DailyRotateFile({
-            filename: 'logs/rejections-%DATE%.log',
-            datePattern: 'YYYY-MM-DD',
-            zippedArchive: true,
-            maxSize: config.maxSize,
-            maxFiles: config.errorMaxFiles,
-          }),
-        ]
-      : [],
-    exitOnError: false, // Don't exit on handled exceptions
+    exceptionHandlers,
+    rejectionHandlers,
+    exitOnError: false,
   });
 };
 
-// Convenience function for creating logger with dependency injection support
+// --- Fallback Logger ---
+
+// This convenience function remains an excellent pattern for bootstrapping the app
 export const createLoggerForApp = () => {
   try {
     return createWinstonLogger();
   } catch (error) {
-    // Fallback logger if config is not available (useful during bootstrap)
-    console.warn('Logger config not available, using fallback configuration:', error.message);
+    console.warn('Logger config not available, using fallback console logger:', error.message);
     return WinstonModule.createLogger({
       level: 'info',
-      format: combine(timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }), errors({ stack: true }), logFormat),
-      transports: [
-        new transports.Console({
-          format: combine(colorize(), timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }), logFormat),
-        }),
-      ],
+      transports: [new transports.Console({ format: consoleLogFormat })],
     });
   }
 };
