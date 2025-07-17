@@ -51,9 +51,13 @@ export interface SpaceQueryParams extends BaseQueryParams {
 // ===== ENUMS =====
 
 export enum SpaceType {
-  ACADEMIC = 'academic',
+  GENERAL = 'general',
+  INTEREST = 'interest',
+  PROFESSIONAL = 'professional',
+  COMMUNITY = 'community',
   ORGANIZATION = 'organization',
-  CAMPUS = 'campus',
+  EVENT = 'event',
+  SUPPORT = 'support',
   OTHER = 'other',
 }
 

@@ -165,14 +165,6 @@ export class DiscussionSpaceService {
     this.verifyCreator(space, currentUser.id);
     await this.validateSlugUniqueness(updateDto.slug, space.slug, id);
 
-    switch (updateDto.spaceType) {
-      case SpaceType.ACADEMIC:
-      case SpaceType.ORGANIZATION:
-      case SpaceType.CAMPUS:
-      case SpaceType.OTHER:
-        break;
-    }
-
     const queryRunner = this.spaceRepository.manager.connection.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
@@ -409,7 +401,7 @@ export class DiscussionSpaceService {
       .skip(offset)
       .take(limit);
 
-    if (sortBy === SpaceSortBy.followerCount) {
+    if (sortBy === SpaceSortBy.FOLLOWER_COUNT) {
       queryBuilder = queryBuilder.addOrderBy('space.id', 'ASC');
     }
 

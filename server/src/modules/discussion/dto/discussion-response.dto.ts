@@ -17,10 +17,14 @@ class DiscussionSpaceDto {
   slug: string;
 }
 
+/**
+ * DTO for returning discussion details
+ */
 export class DiscussionResponseDto {
   @ApiProperty({
     description: 'Unique identifier of the discussion',
     example: 1,
+    type: Number,
   })
   id: number;
 
@@ -33,6 +37,7 @@ export class DiscussionResponseDto {
   @ApiProperty({
     description: 'Whether the author identity is hidden',
     example: false,
+    type: Boolean,
   })
   isAnonymous: boolean;
 
@@ -40,12 +45,14 @@ export class DiscussionResponseDto {
     description: 'Tags/categories for the discussion',
     example: ['nestjs', 'authentication', 'jwt'],
     type: [String],
+    isArray: true,
   })
   tags?: string[];
 
   @ApiProperty({
     description: 'Creation timestamp',
     example: '2023-01-01T00:00:00Z',
+    type: String,
   })
   createdAt: Date;
 

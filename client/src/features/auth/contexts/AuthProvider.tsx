@@ -32,7 +32,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     (userData: Partial<User>) => {
       if (state.user) {
         const updatedUser = { ...state.user, ...userData };
-        console.log('Updating user in AuthProvider:', updatedUser);
         storageUtils.setUser(updatedUser);
         dispatch({
           type: 'UPDATE_USER',

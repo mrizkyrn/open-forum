@@ -54,8 +54,6 @@ export class DiscussionService {
     currentUser: User,
     files?: Express.Multer.File[],
   ): Promise<DiscussionResponseDto> {
-    const { clientRequestTime, ...create } = createDiscussionDto;
-
     if (!currentUser?.id) {
       throw new BadRequestException('User information is required');
     }
@@ -80,7 +78,7 @@ export class DiscussionService {
 
       try {
         const discussion = this.discussionRepository.create({
-          ...create,
+          ...createDiscussionDto,
           authorId: currentUser.id,
           commentCount: 0,
           upvoteCount: 0,
@@ -630,7 +628,7 @@ export class DiscussionService {
       .leftJoinAndSelect('discussion.author', 'author')
       .leftJoinAndSelect('discussion.space', 'space');
 
-    if (sortBy === DiscussionSortBy.voteCount) {
+    if (sortBy === DiscussionSortBy.VOTE_COUNT) {
       queryBuilder
         .addSelect('COALESCE(discussion.upvote_count, 0) - COALESCE(discussion.downvote_count, 0)', 'net_votes')
         .addOrderBy('net_votes', sortOrder);

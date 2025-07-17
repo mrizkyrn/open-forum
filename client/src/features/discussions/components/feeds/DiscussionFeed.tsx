@@ -39,8 +39,6 @@ const DiscussionFeed = ({ search, preselectedSpaceId, feedType = 'regular' }: Di
 
     // Handle global new discussions (only if we're on the home feed without a space filter)
     const handleNewDiscussion = (data: any) => {
-      console.log('New discussion received:', data);
-      console.log('Preselected space ID:', preselectedSpaceId);
       if (feedType === 'regular' && !preselectedSpaceId && data.authorId !== user?.id) {
         setNewDiscussions((prev) => prev + 1);
       } else if (feedType === 'space' && data.spaceId === preselectedSpaceId && data.authorId !== user?.id) {

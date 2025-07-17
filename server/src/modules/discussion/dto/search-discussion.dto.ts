@@ -1,85 +1,94 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Transform, Type } from 'class-transformer';
 import { IsArray, IsBoolean, IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
 import { SearchDto } from '../../../common/dto/search.dto';
 
 export enum DiscussionSortBy {
-  createdAt = 'createdAt',
-  updatedAt = 'updatedAt',
-  commentCount = 'commentCount',
-  voteCount = 'voteCount',
+  CREATED_AT = 'createdAt',
+  UPDATED_AT = 'updatedAt',
+  COMMENT_COUNT = 'commentCount',
+  VOTE_COUNT = 'voteCount',
 }
 
 export class SearchDiscussionDto extends SearchDto {
-  @ApiProperty({
+  @ApiPropertyOptional({
     description: 'Filter by discussion tags (comma separated or array)',
     example: ['nestjs', 'authentication', 'jwt'],
     type: [String],
-    required: false,
+    isArray: true,
   })
   @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
+  @IsArray({ message: 'Tags must be an array' })
+  @IsString({ each: true, message: 'Each tag must be a string' })
   @Transform(({ value }) => {
-    return Array.isArray(value) ? value : typeof value === 'string' ? value.split(',').map((t) => t.trim()) : [];
+    if (Array.isArray(value)) return value.map((t) => t.trim());
+    if (typeof value === 'string') {
+      return value
+        .split(',')
+        .map((t) => t.trim())
+        .filter(Boolean);
+    }
+    return [];
   })
   tags?: string[];
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     description: 'Field to sort by',
     enum: DiscussionSortBy,
-    default: DiscussionSortBy.createdAt,
-    required: false,
+    enumName: 'DiscussionSortBy',
+    default: DiscussionSortBy.CREATED_AT,
+    example: DiscussionSortBy.CREATED_AT,
   })
   @IsOptional()
-  @IsEnum(DiscussionSortBy)
-  sortBy: DiscussionSortBy = DiscussionSortBy.createdAt;
+  @IsEnum(DiscussionSortBy, { message: 'Sort field must be a valid discussion field' })
+  @Type(() => String)
+  sortBy: DiscussionSortBy = DiscussionSortBy.CREATED_AT;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     description: 'Filter by author ID',
     example: 42,
-    required: false,
+    type: Number,
   })
   @IsOptional()
   @Type(() => Number)
-  @IsNumber()
+  @IsNumber({}, { message: 'authorId must be a number' })
   authorId?: number;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     description: 'Filter anonymous/non-anonymous posts',
     example: true,
-    required: false,
+    type: Boolean,
   })
   @IsOptional()
   @Transform(({ value }) => {
-    if (value === 'true') return true;
-    if (value === 'false') return false;
+    if (value === 'true' || value === true) return true;
+    if (value === 'false' || value === false) return false;
     return value;
   })
-  @IsBoolean()
+  @IsBoolean({ message: 'isAnonymous must be a boolean' })
   isAnonymous?: boolean;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     description: 'Filter by space id',
     example: 2,
-    required: false,
+    type: Number,
   })
   @IsOptional()
   @Type(() => Number)
-  @IsNumber()
+  @IsNumber({}, { message: 'spaceId must be a number' })
   spaceId?: number;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     description: 'Only show discussions from spaces the user follows',
     example: true,
-    required: false,
+    type: Boolean,
   })
   @IsOptional()
   @Transform(({ value }) => {
-    if (value === 'true') return true;
-    if (value === 'false') return false;
+    if (value === 'true' || value === true) return true;
+    if (value === 'false' || value === false) return false;
     return value;
   })
-  @IsBoolean()
+  @IsBoolean({ message: 'onlyFollowedSpaces must be a boolean' })
   onlyFollowedSpaces?: boolean;
 }

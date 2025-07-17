@@ -164,11 +164,10 @@ const MainLayout = () => {
   // Listen for new notifications via socket
   useEffect(() => {
     if (!socket || !isConnected || !user?.id) return;
-    console.log('Socket connected, listening for new notifications...');
+
     const handleNewNotification = (notification: any) => {
       refetchUnreadCount();
       setNewNotificationReceived(true);
-      console.log('New notification received:', notification);
       queryClient.invalidateQueries({ queryKey: ['notifications'] });
 
       if (notification.entityType === 'report' && notification.data.isContentDeleted) {

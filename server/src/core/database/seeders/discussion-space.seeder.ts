@@ -38,136 +38,264 @@ export async function seedDiscussionSpaces(dataSource: DataSource): Promise<void
     bannerUrl?: string;
   }> = [];
 
-  // 1. CAMPUS spaces
+  // GENERAL spaces for discussion without space type
   spaces.push(
     {
       name: 'General',
-      description: 'General discussion space for all students and faculty',
+      description: 'A space for general discussions and topics',
       slug: 'general',
       creatorId: adminUser.id,
-      spaceType: SpaceType.CAMPUS,
+      spaceType: SpaceType.GENERAL,
+    }
+  );
+
+  // INTEREST spaces
+  spaces.push(
+    {
+      name: 'Tech & Innovation',
+      description: 'Discussions about technology trends and innovations',
+      slug: 'tech-innovation',
+      creatorId: adminUser.id,
+      spaceType: SpaceType.INTEREST,
     },
     {
-      name: 'UPNVJ Campus Hub',
-      description: 'Central discussion space for all UPNVJ campus activities and announcements',
-      slug: 'upnvj-campus-hub',
+      name: 'Arts & Culture',
+      description: 'For all arts and cultural activities',
+      slug: 'arts-culture',
       creatorId: adminUser.id,
-      spaceType: SpaceType.CAMPUS,
+      spaceType: SpaceType.INTEREST,
     },
     {
-      name: 'Campus Events',
-      description: 'Stay updated with all events happening around the campus',
-      slug: 'campus-events',
+      name: 'Sports & Fitness',
+      description: 'Share and discuss sports, fitness, and wellness',
+      slug: 'sports-fitness',
       creatorId: adminUser.id,
-      spaceType: SpaceType.CAMPUS,
+      spaceType: SpaceType.INTEREST,
     },
     {
-      name: 'Campus Facilities',
-      description: 'Discussions about campus facilities, maintenance, and improvements',
-      slug: 'campus-facilities',
+      name: 'Gaming',
+      description: 'Gaming news, tips, and community',
+      slug: 'gaming',
       creatorId: adminUser.id,
-      spaceType: SpaceType.CAMPUS,
+      spaceType: SpaceType.INTEREST,
+    },
+    {
+      name: 'Books & Literature',
+      description: 'Discuss books, authors, and literature',
+      slug: 'books-literature',
+      creatorId: adminUser.id,
+      spaceType: SpaceType.INTEREST,
+    },
+    {
+      name: 'Travel & Adventure',
+      description: 'Share travel stories and tips',
+      slug: 'travel-adventure',
+      creatorId: adminUser.id,
+      spaceType: SpaceType.INTEREST,
     },
   );
 
-  // 2. ACADEMIC spaces
+  // PROFESSIONAL spaces
   spaces.push(
-    {
-      name: 'Research Discussions',
-      description: 'Academic space dedicated to research methodologies and findings',
-      slug: 'research-discussions',
-      creatorId: adminUser.id,
-      spaceType: SpaceType.ACADEMIC,
-    },
-    {
-      name: 'Academic Resources',
-      description: 'Share and discuss academic resources, papers, and learning materials',
-      slug: 'academic-resources',
-      creatorId: adminUser.id,
-      spaceType: SpaceType.ACADEMIC,
-    },
-    {
-      name: 'Scholarship Information',
-      description: 'Information and discussions about scholarships and academic funding',
-      slug: 'scholarship-info',
-      creatorId: adminUser.id,
-      spaceType: SpaceType.ACADEMIC,
-    },
-    {
-      name: 'Academic Conferences',
-      description: 'Updates and discussions about academic conferences and symposiums',
-      slug: 'academic-conferences',
-      creatorId: adminUser.id,
-      spaceType: SpaceType.ACADEMIC,
-    },
-  );
-
-  // 3. ORGANIZATION spaces
-  spaces.push(
-    {
-      name: 'Student Government',
-      description: 'Official space for the university student government',
-      slug: 'student-government',
-      creatorId: adminUser.id,
-      spaceType: SpaceType.ORGANIZATION,
-    },
-    {
-      name: 'Academic Senate',
-      description: 'Discussion space for Academic Senate matters',
-      slug: 'academic-senate',
-      creatorId: adminUser.id,
-      spaceType: SpaceType.ORGANIZATION,
-    },
-    {
-      name: 'Debate Club',
-      description: 'UPNVJ Debate Club official discussion space',
-      slug: 'debate-club',
-      creatorId: adminUser.id,
-      spaceType: SpaceType.ORGANIZATION,
-    },
-    {
-      name: 'Computer Science Society',
-      description: 'Space for the Computer Science Student Society',
-      slug: 'cs-society',
-      creatorId: adminUser.id,
-      spaceType: SpaceType.ORGANIZATION,
-    },
-    {
-      name: 'Arts & Culture Association',
-      description: 'For all arts and cultural activities in the university',
-      slug: 'arts-culture-assoc',
-      creatorId: adminUser.id,
-      spaceType: SpaceType.ORGANIZATION,
-    },
-  );
-
-  // 4. OTHER spaces
-  spaces.push(
-    {
-      name: 'Student Marketplace',
-      description: 'Buy, sell, and exchange items with other students',
-      slug: 'student-marketplace',
-      creatorId: adminUser.id,
-      spaceType: SpaceType.OTHER,
-    },
-    {
-      name: 'Housing & Accommodation',
-      description: 'Discussions about student housing and accommodation options',
-      slug: 'housing-accommodation',
-      creatorId: adminUser.id,
-      spaceType: SpaceType.OTHER,
-    },
     {
       name: 'Career Development',
       description: 'Career advice, job opportunities, and professional development',
       slug: 'career-development',
       creatorId: adminUser.id,
+      spaceType: SpaceType.PROFESSIONAL,
+    },
+    {
+      name: 'Networking',
+      description: 'Connect and network with professionals',
+      slug: 'networking',
+      creatorId: adminUser.id,
+      spaceType: SpaceType.PROFESSIONAL,
+    },
+    {
+      name: 'Entrepreneurship',
+      description: 'Share ideas and resources for entrepreneurs',
+      slug: 'entrepreneurship',
+      creatorId: adminUser.id,
+      spaceType: SpaceType.PROFESSIONAL,
+    },
+    {
+      name: 'Remote Work',
+      description: 'Tips and discussions about working remotely',
+      slug: 'remote-work',
+      creatorId: adminUser.id,
+      spaceType: SpaceType.PROFESSIONAL,
+    },
+    {
+      name: 'Freelancing',
+      description: 'Resources and support for freelancers',
+      slug: 'freelancing',
+      creatorId: adminUser.id,
+      spaceType: SpaceType.PROFESSIONAL,
+    },
+  );
+
+  // COMMUNITY spaces
+  spaces.push(
+    {
+      name: 'Marketplace',
+      description: 'Buy, sell, and exchange items with the community',
+      slug: 'marketplace',
+      creatorId: adminUser.id,
+      spaceType: SpaceType.COMMUNITY,
+    },
+    {
+      name: 'Local Events',
+      description: 'Share and discover local events',
+      slug: 'local-events',
+      creatorId: adminUser.id,
+      spaceType: SpaceType.COMMUNITY,
+    },
+    {
+      name: 'Neighborhood Watch',
+      description: 'Community safety and awareness',
+      slug: 'neighborhood-watch',
+      creatorId: adminUser.id,
+      spaceType: SpaceType.COMMUNITY,
+    },
+    {
+      name: 'Volunteering',
+      description: 'Find and share volunteering opportunities',
+      slug: 'volunteering',
+      creatorId: adminUser.id,
+      spaceType: SpaceType.COMMUNITY,
+    },
+  );
+
+  // ORGANIZATION spaces
+  spaces.push(
+    {
+      name: 'Community Groups',
+      description: 'Official space for community organizations',
+      slug: 'community-groups',
+      creatorId: adminUser.id,
+      spaceType: SpaceType.ORGANIZATION,
+    },
+    {
+      name: 'Nonprofits',
+      description: 'Discussion space for nonprofit organizations',
+      slug: 'nonprofits',
+      creatorId: adminUser.id,
+      spaceType: SpaceType.ORGANIZATION,
+    },
+    {
+      name: 'Clubs & Societies',
+      description: 'Clubs, societies, and interest groups',
+      slug: 'clubs-societies',
+      creatorId: adminUser.id,
+      spaceType: SpaceType.ORGANIZATION,
+    },
+    {
+      name: 'Professional Associations',
+      description: 'Connect with professional associations',
+      slug: 'professional-associations',
+      creatorId: adminUser.id,
+      spaceType: SpaceType.ORGANIZATION,
+    },
+  );
+
+  // EVENT spaces
+  spaces.push(
+    {
+      name: 'Events',
+      description: 'Stay updated with all public events and meetups',
+      slug: 'events',
+      creatorId: adminUser.id,
+      spaceType: SpaceType.EVENT,
+    },
+    {
+      name: 'Workshops & Seminars',
+      description: 'Find and discuss workshops and seminars',
+      slug: 'workshops-seminars',
+      creatorId: adminUser.id,
+      spaceType: SpaceType.EVENT,
+    },
+    {
+      name: 'Concerts & Festivals',
+      description: 'Share and discover concerts and festivals',
+      slug: 'concerts-festivals',
+      creatorId: adminUser.id,
+      spaceType: SpaceType.EVENT,
+    },
+    {
+      name: 'Webinars',
+      description: 'Online webinars and virtual events',
+      slug: 'webinars',
+      creatorId: adminUser.id,
+      spaceType: SpaceType.EVENT,
+    },
+  );
+
+  // SUPPORT spaces
+  spaces.push(
+    {
+      name: 'Support & Help',
+      description: 'Get help and support from other members',
+      slug: 'support-help',
+      creatorId: adminUser.id,
+      spaceType: SpaceType.SUPPORT,
+    },
+    {
+      name: 'Q&A',
+      description: 'Ask questions and get answers from the community',
+      slug: 'qna',
+      creatorId: adminUser.id,
+      spaceType: SpaceType.SUPPORT,
+    },
+    {
+      name: 'Mental Health',
+      description: 'Support and resources for mental health',
+      slug: 'mental-health',
+      creatorId: adminUser.id,
+      spaceType: SpaceType.SUPPORT,
+    },
+    {
+      name: 'Parenting & Family',
+      description: 'Advice and support for parents and families',
+      slug: 'parenting-family',
+      creatorId: adminUser.id,
+      spaceType: SpaceType.SUPPORT,
+    },
+    {
+      name: 'Legal Advice',
+      description: 'Get legal advice and share experiences',
+      slug: 'legal-advice',
+      creatorId: adminUser.id,
+      spaceType: SpaceType.SUPPORT,
+    },
+  );
+
+  // OTHER spaces
+  spaces.push(
+    {
+      name: 'Housing & Accommodation',
+      description: 'Discussions about housing and accommodation options',
+      slug: 'housing-accommodation',
+      creatorId: adminUser.id,
       spaceType: SpaceType.OTHER,
     },
     {
-      name: 'Tech Discussions',
-      description: 'Discussions about technology trends and innovations',
-      slug: 'tech-discussions',
+      name: 'Feedback & Suggestions',
+      description: 'Share feedback and suggestions for the platform',
+      slug: 'feedback-suggestions',
+      creatorId: adminUser.id,
+      spaceType: SpaceType.OTHER,
+    },
+    {
+      name: 'Lost & Found',
+      description: 'Report and find lost items',
+      slug: 'lost-found',
+      creatorId: adminUser.id,
+      spaceType: SpaceType.OTHER,
+    },
+    {
+      name: 'Random',
+      description: 'Anything that doesn’t fit other categories',
+      slug: 'random',
       creatorId: adminUser.id,
       spaceType: SpaceType.OTHER,
     },

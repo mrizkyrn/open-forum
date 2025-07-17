@@ -291,9 +291,12 @@ const SpaceFormModal = ({ isOpen, onClose, space }: SpaceFormModalProps) => {
                 errors.spaceType ? 'border-red-300' : 'border-gray-300'
               } px-3 py-2 focus:border-green-500 focus:ring-green-500 focus:outline-none sm:text-sm`}
             >
-              <option value={SpaceType.ACADEMIC}>Academic</option>
+              <option value={SpaceType.INTEREST}>Interest</option>
+              <option value={SpaceType.PROFESSIONAL}>Professional</option>
+              <option value={SpaceType.COMMUNITY}>Community</option>
               <option value={SpaceType.ORGANIZATION}>Organization</option>
-              <option value={SpaceType.CAMPUS}>Campus</option>
+              <option value={SpaceType.EVENT}>Event</option>
+              <option value={SpaceType.SUPPORT}>Support</option>
               <option value={SpaceType.OTHER}>Other</option>
             </select>
             {errors.spaceType && <p className="mt-1 text-sm text-red-600">{errors.spaceType}</p>}
