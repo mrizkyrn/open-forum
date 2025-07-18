@@ -35,15 +35,7 @@ services:
 
   # NestJS Application
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        NODE_ENV: production
-        BUILDKIT_INLINE_CACHE: 1
-      cache_from:
-        - open-forum-app:latest
-    image: open-forum-app:latest
+    image: ghcr.io/mrizkyrn/open-forum:latest
     container_name: open-forum-app
     restart: always
     env_file:
@@ -78,10 +70,7 @@ services:
 
   # Migration Service
   migrate:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    image: open-forum-app:latest
+    image: ghcr.io/mrizkyrn/open-forum:latest
     profiles:
       - migrate
     command: npx typeorm migration:run -d dist/core/database/data-source.js
