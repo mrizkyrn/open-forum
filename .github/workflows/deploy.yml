@@ -8,6 +8,9 @@ on:
     paths:
       - 'server/**'
 
+  # Allow manual triggering of the workflow
+  workflow_dispatch:
+
 # Environment variables available to all jobs
 env:
   REGISTRY: ghcr.io
@@ -21,6 +24,9 @@ jobs:
     permissions:
       contents: read
       packages: write
+    outputs:
+      image: ${{ steps.meta.outputs.tags }}
+      labels: ${{ steps.meta.outputs.labels }}
 
     steps:
       - name: Checkout repository
@@ -54,6 +60,11 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=sha,prefix={{branch}}-
+            type=raw,value=latest,enable={{is_default_branch}}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
@@ -87,81 +98,38 @@ jobs:
       - name: Deploy application via SSH
         run: |
           ssh ${{ secrets.DOCKER_SERVER_USERNAME }}@${{ secrets.DOCKER_SERVER_IP }} << 'EOF'
-            # Navigate to the project directory
-            cd ~/open-forum
 
-            # Pull the latest changes from the repository
-            git pull
+          # Navigate to the project directory
+          cd ~/open-forum
 
-            # Navigate into the server directory where docker-compose.yml is located
-            cd server
+          # Pull the latest changes from the main branch
+          git fetch origin
+          git reset --hard origin/main
 
-            # Create necessary directories if they do not exist
-            mkdir -p secrets uploads backups logs
+          # Navigate into the server directory where dockercompose.yml is located
+          cd server
 
-            # Create production environment files from GitHub Secrets
-            echo "${{ secrets.POSTGRES_PASSWORD }}" > secrets/postgres_password.txt
-            
-            # --- Create the complete .env.production file ---
-            cat <<EOT > .env.production
-            # Application Configuration
-            NODE_ENV=production
-            PORT=3000
-            API_PREFIX=api/v1
+          # Create necessary directories if they do not exist
+          mkdir -p secrets uploads backups logs
 
-            # CORS Configuration
-            CORS_ORIGIN=https://api.open-forum.social
-            CLIENT_URL=https://open-forum.social
-            CORS_CREDENTIALS=true
+          # Create secrets file for PostgreSQL password
+          echo "${{ secrets.POSTGRES_PASSWORD }}" > secrets/postgres_password.txt
 
-            # Database Configuration
-            DB_HOST=postgres
-            DB_PORT=5432
-            DB_USER=postgres
-            DB_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
-            DB_NAME=open_forum
+          # Log in to GitHub Container Registry
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.REGISTRY }} -u ${{ github.actor }} --password-stdin
 
-            # JWT Configuration
-            ACCESS_TOKEN_SECRET=${{ secrets.ACCESS_TOKEN_SECRET }}
-            ACCESS_TOKEN_EXPIRES=15m
-            REFRESH_TOKEN_SECRET=${{ secrets.REFRESH_TOKEN_SECRET }}
-            REFRESH_TOKEN_EXPIRES=7d
+          # Pull the latest Docker images
+          docker compose pull
 
-            # Logging Configuration
-            LOG_LEVEL=info
-            LOG_CONSOLE=false
-            LOG_FILE=true
-            LOG_MAX_SIZE=25m
-            LOG_MAX_FILES=30d
-            LOG_ERROR_MAX_FILES=90d
+          # Start the application stack
+          docker compose up -d --force-recreate --remove-orphans
 
-            # Web Push Notifications (VAPID)
-            VAPID_PUBLIC_KEY=${{ secrets.VAPID_PUBLIC_KEY }}
-            VAPID_PRIVATE_KEY=${{ secrets.VAPID_PRIVATE_KEY }}
-            VAPID_SUBJECT=${{ secrets.VAPID_SUBJECT }}
+          # Wait for services to be healthy
+          sleep 30
 
-            # Google OAuth
-            GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}
-            GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}
-            GOOGLE_CALLBACK_URL=https://api.open-forum.social/api/v1/auth/google/callback
+          # Run database migrations
+          docker compose run --rm migrate
 
-            # Admin User Configuration
-            ADMIN_USERNAME=${{ secrets.ADMIN_USERNAME }}
-            ADMIN_PASSWORD=${{ secrets.ADMIN_PASSWORD }}
-            EOT
-
-            # Log in to GitHub Container Registry
-            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.REGISTRY }} -u ${{ github.actor }} --password-stdin
-
-            # Pull the latest services defined in docker-compose.yml
-            docker-compose pull
-
-            # Start the application stack
-            docker-compose up -d --force-recreate --remove-orphans
-
-            # Run database migrations
-            docker-compose --profile migrate up
-
-            # Clean up old Docker images to save space
-            docker image prune -af
+          # Clean up old Docker images to save space
+          docker image prune -af
           EOF
