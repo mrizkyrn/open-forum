@@ -156,7 +156,8 @@ export class ReportService {
 
       // 1. Notify content author if requested and if we have their ID
       if (targetAuthorId && handleDto.notifyAuthor) {
-        const authorMessage = this.getReportAuthorMessage(handleDto.deleteContent, report.status);
+        const contentType = report.targetType === ReportTargetType.DISCUSSION ? 'discussion' : 'comment';
+        const authorMessage = this.getReportAuthorMessage(handleDto.deleteContent, contentType);
 
         notifications.push(
           this.notificationService.createNotificationIfNotExists(

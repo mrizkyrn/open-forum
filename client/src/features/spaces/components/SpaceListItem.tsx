@@ -1,9 +1,10 @@
 import { Users } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-import { Space, SpaceType } from '@/features/spaces/types';
+import { Space } from '@/features/spaces/types';
 import MainButton from '@/shared/components/ui/buttons/MainButton';
 import { getFileUrl } from '@/utils/helpers';
+import SpaceBadge from './SpaceBadge';
 
 interface SpaceListItemProps {
   space: Space;
@@ -13,28 +14,6 @@ interface SpaceListItemProps {
 }
 
 const SpaceListItem = ({ space, onFollowToggle, isFollowLoading, followingMap }: SpaceListItemProps) => {
-  const colors: Record<SpaceType, { bg: string; text: string }> = {
-    [SpaceType.GENERAL]: { bg: 'bg-gray-100', text: 'text-gray-700' },
-    [SpaceType.INTEREST]: { bg: 'bg-purple-100', text: 'text-purple-700' },
-    [SpaceType.PROFESSIONAL]: { bg: 'bg-blue-100', text: 'text-blue-700' },
-    [SpaceType.COMMUNITY]: { bg: 'bg-green-100', text: 'text-green-700' },
-    [SpaceType.ORGANIZATION]: { bg: 'bg-orange-100', text: 'text-orange-700' },
-    [SpaceType.EVENT]: { bg: 'bg-yellow-100', text: 'text-yellow-700' },
-    [SpaceType.SUPPORT]: { bg: 'bg-pink-100', text: 'text-pink-700' },
-    [SpaceType.OTHER]: { bg: 'bg-gray-100', text: 'text-gray-700' },
-  };
-
-  const labels: Record<SpaceType, string> = {
-    [SpaceType.GENERAL]: 'General',
-    [SpaceType.INTEREST]: 'Interest',
-    [SpaceType.PROFESSIONAL]: 'Professional',
-    [SpaceType.COMMUNITY]: 'Community',
-    [SpaceType.ORGANIZATION]: 'Organization',
-    [SpaceType.EVENT]: 'Event',
-    [SpaceType.SUPPORT]: 'Support',
-    [SpaceType.OTHER]: 'Other',
-  };
-
   return (
     <div className="flex items-center justify-between gap-7 rounded-lg border border-gray-200 bg-white p-3 sm:p-4">
       <div className="flex min-w-0 flex-grow items-start space-x-3 sm:items-center sm:space-x-4">
@@ -59,11 +38,7 @@ const SpaceListItem = ({ space, onFollowToggle, isFollowLoading, followingMap }:
             </h3>
 
             {/* Space Type Badge */}
-            <span
-              className={`rounded-full px-2 py-0.5 text-xs ${colors[space.spaceType].bg} ${colors[space.spaceType].text} font-medium`}
-            >
-              {labels[space.spaceType]}
-            </span>
+            <SpaceBadge spaceType={space.spaceType} />
           </div>
 
           {/* Mobile layout: Stacked */}

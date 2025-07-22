@@ -22,7 +22,7 @@ export class LoginDto {
     message: 'Username is required',
   })
   @MinLength(3, {
-    message: 'Username must be at least 3 characters long',
+    message: 'Invalid credentials',
   })
   @MaxLength(100, {
     message: 'Username must not exceed 100 characters',
@@ -44,7 +44,7 @@ export class LoginDto {
     message: 'Password is required',
   })
   @MinLength(8, {
-    message: 'Password must be at least 8 characters long',
+    message: 'Invalid credentials',
   })
   @MaxLength(128, {
     message: 'Password must not exceed 128 characters',

@@ -17,14 +17,19 @@ interface MentionTextareaProps {
 const MentionTextarea = ({ value, onChange, onFocus, isReply = false, initialFocus = false }: MentionTextareaProps) => {
   const [showMentionDropdown, setShowMentionDropdown] = useState(false);
   const [mentionQuery, setMentionQuery] = useState('');
-  const [mentionPosition, setMentionPosition] = useState({ top: 0, left: 0, placement: 'bottom' });
+  const [mentionPosition, setMentionPosition] = useState<{
+    top?: number;
+    left: number;
+    bottom?: number;
+    placement: 'top' | 'bottom';
+  }>({ left: 0, placement: 'bottom' });
   const [cursorPosition, setCursorPosition] = useState(0);
   const debouncedMentionQuery = useDebounce(mentionQuery, 300);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
   // Constants for dropdown size and spacing
-  const DROPDOWN_HEIGHT = 250; // Estimated max height
+  const DROPDOWN_HEIGHT = 200; // Estimated max height
   const DROPDOWN_WIDTH = 256; // From w-64
   const SAFETY_MARGIN = 10; // Extra margin to avoid touching edges
 
@@ -50,7 +55,8 @@ const MentionTextarea = ({ value, onChange, onFocus, isReply = false, initialFoc
         adjustTextareaHeight();
       }, 50);
     }
-  }, [initialFocus, value]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialFocus]);
 
   // Close mention dropdown when clicking outside
   useEffect(() => {
@@ -77,69 +83,72 @@ const MentionTextarea = ({ value, onChange, onFocus, isReply = false, initialFoc
     setCursorPosition(cursorPos);
     onChange(newValue);
 
-    // Check if need to show mention dropdown
     const textBeforeCursor = newValue.substring(0, cursorPos);
     const mentionMatch = textBeforeCursor.match(/@(\w*)$/);
 
-    if (mentionMatch) {
+    if (mentionMatch && textareaRef.current) {
       const query = mentionMatch[1];
       setMentionQuery(query);
+      setShowMentionDropdown(true);
 
-      // Calculate position for dropdown
-      if (textareaRef.current) {
-        // Get the position of the textarea and the text before cursor
-        const { top, left, height } = textareaRef.current.getBoundingClientRect();
+      const textarea = textareaRef.current;
+      const styles = window.getComputedStyle(textarea);
+      const rect = textarea.getBoundingClientRect();
 
-        // Create a temporary element to measure text width
-        const tempEl = document.createElement('div');
-        tempEl.style.position = 'absolute';
-        tempEl.style.visibility = 'hidden';
-        tempEl.style.whiteSpace = 'pre';
-        tempEl.style.font = window.getComputedStyle(textareaRef.current).font;
-        tempEl.textContent = textBeforeCursor;
-        document.body.appendChild(tempEl);
+      // --- Horizontal Positioning ---
+      const lastNewline = textBeforeCursor.lastIndexOf('\n');
+      const textOnCurrentLine = textBeforeCursor.substring(lastNewline + 1);
+      const textToMeasure = textOnCurrentLine.substring(0, textOnCurrentLine.length - mentionMatch[0].length);
 
-        const textWidth = tempEl.getBoundingClientRect().width;
-        document.body.removeChild(tempEl);
+      const tempEl = document.createElement('span');
+      tempEl.style.position = 'absolute';
+      tempEl.style.visibility = 'hidden';
+      tempEl.style.whiteSpace = 'pre';
+      tempEl.style.font = styles.font;
+      tempEl.textContent = textToMeasure;
+      document.body.appendChild(tempEl);
+      const caretHorizontalOffset = tempEl.getBoundingClientRect().width;
+      document.body.removeChild(tempEl);
 
-        // Calculate horizontal position
-        let dropdownLeft = left + textWidth - mentionMatch[0].length + window.scrollX;
+      const textareaPaddingLeft = parseFloat(styles.paddingLeft);
+      let dropdownLeft = rect.left + textareaPaddingLeft + caretHorizontalOffset;
 
-        // Ensure dropdown doesn't go off screen horizontally
-        if (dropdownLeft + DROPDOWN_WIDTH > window.innerWidth) {
-          dropdownLeft = window.innerWidth - DROPDOWN_WIDTH - SAFETY_MARGIN;
-        }
-
-        // Determine if should show dropdown above or below
-        const viewportHeight = window.innerHeight;
-        // Remove unused 'dropdownBottom' variable
-        const spaceBelow = viewportHeight - (top + height);
-
-        let dropdownTop;
-        let placement;
-
-        if (spaceBelow < DROPDOWN_HEIGHT + SAFETY_MARGIN && top > DROPDOWN_HEIGHT + SAFETY_MARGIN) {
-          // Not enough space below, but enough space above, so place it above
-          dropdownTop = top - DROPDOWN_HEIGHT + window.scrollY;
-          placement = 'top';
-        } else {
-          // Default: place below
-          dropdownTop = top + height + window.scrollY;
-          placement = 'bottom';
-        }
-
-        setMentionPosition({
-          top: dropdownTop,
-          left: dropdownLeft,
-          placement,
-        });
+      if (dropdownLeft + DROPDOWN_WIDTH > window.innerWidth) {
+        dropdownLeft = window.innerWidth - DROPDOWN_WIDTH - SAFETY_MARGIN;
       }
 
-      setShowMentionDropdown(true);
+      // ✅ --- REVISED Vertical Positioning ---
+      const lineHeight = parseFloat(styles.lineHeight);
+      const textareaPaddingTop = parseFloat(styles.paddingTop);
+      const lineCount = textBeforeCursor.split('\n').length;
+      const caretVerticalOffset = (lineCount - 1) * lineHeight;
+
+      const currentLineTopY = rect.top + textareaPaddingTop + caretVerticalOffset;
+      const currentLineBottomY = currentLineTopY + lineHeight;
+
+      const spaceBelowLine = window.innerHeight - currentLineBottomY;
+      const spaceAboveLine = currentLineTopY;
+
+      if (spaceBelowLine < DROPDOWN_HEIGHT + SAFETY_MARGIN && spaceAboveLine > DROPDOWN_HEIGHT + SAFETY_MARGIN) {
+        // Place ABOVE: Calculate the `bottom` property.
+        const dropdownBottom = window.innerHeight - currentLineTopY + 5;
+        setMentionPosition({
+          left: dropdownLeft,
+          bottom: dropdownBottom,
+          placement: 'top',
+        });
+      } else {
+        // Place BELOW: Calculate the `top` property.
+        const dropdownTop = currentLineBottomY + 5;
+        setMentionPosition({
+          left: dropdownLeft,
+          top: dropdownTop,
+          placement: 'bottom',
+        });
+      }
     } else {
       setShowMentionDropdown(false);
     }
-
     adjustTextareaHeight();
   };
 
@@ -187,15 +196,16 @@ const MentionTextarea = ({ value, onChange, onFocus, isReply = false, initialFoc
       />
 
       {/* Mention dropdown */}
-      {showMentionDropdown && (
+      {showMentionDropdown && debouncedMentionQuery.length > 0 && (
         <div
           ref={dropdownRef}
           className={`fixed z-10 max-h-60 w-64 overflow-y-auto rounded-md border border-gray-200 bg-white shadow-lg ${
             mentionPosition.placement === 'top' ? 'origin-bottom' : 'origin-top'
           }`}
           style={{
-            top: `${mentionPosition.top}px`,
             left: `${mentionPosition.left}px`,
+            ...(mentionPosition.top !== undefined && { top: `${mentionPosition.top}px` }),
+            ...(mentionPosition.bottom !== undefined && { bottom: `${mentionPosition.bottom}px` }),
           }}
         >
           {loadingMentions ? (
@@ -204,12 +214,12 @@ const MentionTextarea = ({ value, onChange, onFocus, isReply = false, initialFoc
             mentionUsers.items.map((user: User) => (
               <div
                 key={user.id}
-                className="flex cursor-pointer items-center gap-2 p-2 hover:bg-gray-100"
+                className="flex cursor-pointer items-center gap-2 px-2 py-1 hover:bg-gray-100"
                 onClick={() => handleSelectMention(user.username)}
               >
-                <UserAvatar fullName={user.fullName} avatarUrl={user.avatarUrl} size="sm" />
+                <UserAvatar fullName={user.fullName} avatarUrl={user.avatarUrl} size="xs" />
                 <div>
-                  <div className="text-sm font-medium">{user.fullName}</div>
+                  <div className="text-xs font-medium">{user.fullName}</div>
                   <div className="text-xs text-gray-500">@{user.username}</div>
                 </div>
               </div>

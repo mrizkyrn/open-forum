@@ -127,13 +127,6 @@ const UserProfilePage = () => {
       {/* Details section */}
       {activeTab === 'profile' ? (
         <>
-          {/* Academic Information */}
-          <div className="rounded-lg border border-gray-100 bg-white p-6">
-            <h2 className="text-lg font-medium text-gray-900">Academic Information</h2>
-            <div className="mt-4 grid gap-6 sm:grid-cols-2"></div>
-          </div>
-
-          {/* Account Information */}
           <div className="rounded-lg border border-gray-100 bg-white p-6">
             <h2 className="text-lg font-medium text-gray-900">Account Information</h2>
             <div className="mt-4 grid gap-4 sm:grid-cols-2">

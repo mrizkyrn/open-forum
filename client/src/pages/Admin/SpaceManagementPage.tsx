@@ -13,6 +13,7 @@ import {
   SpaceFormModal,
 } from '@/features/admin/components';
 import { adminApi } from '@/features/admin/services';
+import SpaceBadge from '@/features/spaces/components/SpaceBadge';
 import { useSpaces } from '@/features/spaces/hooks/useSpaces';
 import { Space, SpaceType } from '@/features/spaces/types';
 import ConfirmationModal from '@/shared/components/modals/ConfirmationModal';
@@ -48,28 +49,6 @@ const SpaceManagementPage = () => {
     handleTypeFilterChange,
     handleResetFilters,
   } = useSpaces();
-
-  const colors: Record<SpaceType, { bg: string; text: string }> = {
-    [SpaceType.GENERAL]: { bg: 'bg-gray-100', text: 'text-gray-700' },
-    [SpaceType.INTEREST]: { bg: 'bg-purple-100', text: 'text-purple-700' },
-    [SpaceType.PROFESSIONAL]: { bg: 'bg-blue-100', text: 'text-blue-700' },
-    [SpaceType.COMMUNITY]: { bg: 'bg-green-100', text: 'text-green-700' },
-    [SpaceType.ORGANIZATION]: { bg: 'bg-orange-100', text: 'text-orange-700' },
-    [SpaceType.EVENT]: { bg: 'bg-yellow-100', text: 'text-yellow-700' },
-    [SpaceType.SUPPORT]: { bg: 'bg-pink-100', text: 'text-pink-700' },
-    [SpaceType.OTHER]: { bg: 'bg-gray-100', text: 'text-gray-700' },
-  };
-
-  const labels: Record<SpaceType, string> = {
-    [SpaceType.GENERAL]: 'General',
-    [SpaceType.INTEREST]: 'Interest',
-    [SpaceType.PROFESSIONAL]: 'Professional',
-    [SpaceType.COMMUNITY]: 'Community',
-    [SpaceType.ORGANIZATION]: 'Organization',
-    [SpaceType.EVENT]: 'Event',
-    [SpaceType.SUPPORT]: 'Support',
-    [SpaceType.OTHER]: 'Other',
-  };
 
   const handleToggleDropdown = (spaceId: number) => {
     if (activeDropdownId === spaceId) {
@@ -157,13 +136,7 @@ const SpaceManagementPage = () => {
     },
     {
       header: 'Type',
-      accessor: (space: Space) => (
-        <span
-          className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${colors[space.spaceType].bg} ${colors[space.spaceType].text}`}
-        >
-          {labels[space.spaceType]}
-        </span>
-      ),
+      accessor: (space: Space) => <SpaceBadge spaceType={space.spaceType} />,
     },
     {
       header: 'Followers',
@@ -244,7 +217,7 @@ const SpaceManagementPage = () => {
       >
         <SelectFilter
           options={Object.values(SpaceType).map((type) => ({
-            label: labels[type],
+            label: type.charAt(0).toUpperCase() + type.slice(1),
             value: type,
           }))}
           value={filters.spaceType || ''}
